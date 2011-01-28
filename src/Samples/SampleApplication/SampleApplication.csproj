@@ -6,7 +6,7 @@
     <ProductVersion>8.0.30703</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{83042F56-9FAD-4827-B542-6873F93D7940}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>Exe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>SampleApplication</RootNamespace>
     <AssemblyName>SampleApplication</AssemblyName>
@@ -30,6 +30,9 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject>SampleApplication.Program</StartupObject>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -42,6 +45,32 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\DbUp\DbUp.csproj">
+      <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
+      <Name>DbUp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Scripts\Script0002 - Create tables.sql" />
+    <EmbeddedResource Include="Scripts\Script0003 - Default feed.sql" />
+    <EmbeddedResource Include="Scripts\Script0004 - Settings.sql" />
+    <EmbeddedResource Include="Scripts\Script0005 - Redirects.sql" />
+    <EmbeddedResource Include="Scripts\Script0006.sql" />
+    <EmbeddedResource Include="Scripts\Script0007.sql" />
+    <EmbeddedResource Include="Scripts\Script0008.sql" />
+    <EmbeddedResource Include="Scripts\Script0009.sql" />
+    <EmbeddedResource Include="Scripts\Script0010.sql" />
+    <EmbeddedResource Include="Scripts\Script0011.sql" />
+    <EmbeddedResource Include="Scripts\Script0012.sql" />
+    <EmbeddedResource Include="Scripts\Script0013.sql" />
+    <EmbeddedResource Include="Scripts\Script0014.sql" />
+    <EmbeddedResource Include="Scripts\Script0015.sql" />
+    <EmbeddedResource Include="Scripts\Script0016.sql" />
+    <EmbeddedResource Include="Scripts\Script0017.sql" />
+    <EmbeddedResource Include="Scripts\Script0018.sql" />
+    <EmbeddedResource Include="Scripts\Script0019.sql" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
