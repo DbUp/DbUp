@@ -1,8 +1,37 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 11.00
 # Visual Studio 2010
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Tests", "DbUp.Tests\DbUp.Tests.csproj", "{E74E00CB-8324-40B5-A626-42D9FC9F43ED}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C6A39A77-AEF6-421D-8198-E15821B80F9D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication", "Samples\SampleApplication\SampleApplication.csproj", "{83042F56-9FAD-4827-B542-6873F93D7940}"
+EndProject
 Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E74E00CB-8324-40B5-A626-42D9FC9F43ED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E74E00CB-8324-40B5-A626-42D9FC9F43ED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E74E00CB-8324-40B5-A626-42D9FC9F43ED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E74E00CB-8324-40B5-A626-42D9FC9F43ED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{83042F56-9FAD-4827-B542-6873F93D7940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{83042F56-9FAD-4827-B542-6873F93D7940}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{83042F56-9FAD-4827-B542-6873F93D7940}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{83042F56-9FAD-4827-B542-6873F93D7940}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{83042F56-9FAD-4827-B542-6873F93D7940} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
 	EndGlobalSection
 EndGlobal
