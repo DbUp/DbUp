@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="ConsoleLog.cs" />
     <Compile Include="DatabaseUpgrader.cs" />
     <Compile Include="DatabaseUpgradeResult.cs" />
@@ -52,6 +53,7 @@
     <Compile Include="ScriptProviders\IScriptProvider.cs" />
     <Compile Include="Journal\IJournal.cs" />
     <Compile Include="Journal\TableJournal.cs" />
+    <Compile Include="Helpers\TemporarySqlDatabase.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

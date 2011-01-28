@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using DbUp.Execution;
 using DbUp.Journal;
@@ -20,11 +21,19 @@ namespace DbUp
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseUpgrader"/> class.
         /// </summary>
+        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider) 
+            : this(connectionString, scriptProvider, null, null)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="DatabaseUpgrader"/> class.
+        /// </summary>
         public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor)
         {
             this.connectionString = connectionString;
-            this.scriptExecutor = scriptExecutor;
-            this.versionTracker = versionTracker;
+            this.scriptExecutor = scriptExecutor ?? new SqlScriptExecutor();
+            this.versionTracker = versionTracker ?? new TableJournal();
             this.scriptProvider = scriptProvider;
         }
 
@@ -39,6 +48,35 @@ namespace DbUp
 
             var scriptsToExecute = allScripts.Where(x => executedScripts.Any(y => y == x.Name)).ToList();
             return scriptsToExecute.Count != 0;
+        }
+
+        /// <summary>
+        /// Tries to connect to the database.
+        /// </summary>
+        /// <param name="errorMessage">Any error message encountered.</param>
+        /// <returns></returns>
+        public bool TryConnect(out string errorMessage)
+        {
+            try
+            {
+                var csb = new SqlConnectionStringBuilder(connectionString);
+                csb.Pooling = false;
+                csb.ConnectTimeout = 5;
+
+                errorMessage = "";
+                using (var connection = new SqlConnection(csb.ConnectionString))
+                {
+                    connection.Open();
+
+                    new SqlCommand("select 1", connection).ExecuteScalar();
+                }
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return false;
+            }
         }
 
         /// <summary>
