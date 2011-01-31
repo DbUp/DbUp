@@ -13,25 +13,37 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Information", "Information"
 		Information\VersionInfo.cs = Information\VersionInfo.cs
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Specification", "DbUp.Specification\DbUp.Specification.csproj", "{80A9E08A-13F3-4721-9849-C55167FE21A5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
+		Default|Any CPU = Default|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|Any CPU.Build.0 = Release|Any CPU
 		{83042F56-9FAD-4827-B542-6873F93D7940}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{83042F56-9FAD-4827-B542-6873F93D7940}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{83042F56-9FAD-4827-B542-6873F93D7940}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{83042F56-9FAD-4827-B542-6873F93D7940}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
-	GlobalSection(SolutionProperties) = preSolution
-		HideSolutionNode = FALSE
-	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{83042F56-9FAD-4827-B542-6873F93D7940} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
+	EndGlobalSection
+	GlobalSection(MonoDevelopProperties) = preSolution
+		StartupItem = DbUp\DbUp.csproj
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
 	EndGlobalSection
 EndGlobal
