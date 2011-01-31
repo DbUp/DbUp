@@ -1,5 +1,8 @@
 syntax: glob
 
+*.userprefs
+*.test-cache
+*.pidb
 *.*scc
 *.FileListAbsolute.txt
 *.aps
@@ -48,6 +51,7 @@ UpgradeLog*.*
 [Oo]bj/
 [Rr]elease/
 [Tt]humbs.db
+test-results/
 _UpgradeReport_Files
 _[Rr]e[Ss]harper.*/
 hgignore[.-]*
