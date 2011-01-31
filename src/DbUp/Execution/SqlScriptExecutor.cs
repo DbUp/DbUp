@@ -27,6 +27,7 @@ namespace DbUp.Execution
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="script">The script.</param>
+        /// <param name="log">The log.</param>
         public void Execute(string connectionString, SqlScript script, ILog log)
         {
             log.WriteInformation("Executing SQL Server script '{0}'", script.Name);

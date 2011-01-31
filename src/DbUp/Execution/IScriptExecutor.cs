@@ -12,6 +12,7 @@ namespace DbUp.Execution
         /// </summary>
         /// <param name="connectionString">The connection string.</param>
         /// <param name="script">The script.</param>
+        /// <param name="log">The log.</param>
         void Execute(string connectionString, SqlScript script, ILog log);
     }
 }

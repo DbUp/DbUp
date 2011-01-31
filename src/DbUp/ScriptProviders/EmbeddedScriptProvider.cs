@@ -33,6 +33,10 @@ namespace DbUp.ScriptProviders
             this.filter = filter;
         }
 
+        /// <summary>
+        /// Gets all scripts that should be executed.
+        /// </summary>
+        /// <returns></returns>
         public IEnumerable<SqlScript> GetScripts()
         {
             return assembly

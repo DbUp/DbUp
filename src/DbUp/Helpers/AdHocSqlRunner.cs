@@ -5,15 +5,28 @@ using System.Data.SqlClient;
 
 namespace DbUp.Helpers
 {
+    /// <summary>
+    /// A helper for executing SQL queries easily.
+    /// </summary>
     public class AdHocSqlRunner
     {
         private readonly string connectionString;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
+        /// </summary>
+        /// <param name="connectionString">The connection string.</param>
         public AdHocSqlRunner(string connectionString)
         {
             this.connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Executes a scalar query.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         public object ExecuteScalar(string query, params Func<string, object>[] parameters)
         {
             object result = null;
@@ -25,6 +38,12 @@ namespace DbUp.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Executes a query that returns the number of records modified.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         public int ExecuteNonQuery(string query, params Func<string, object>[] parameters)
         {
             int result = 0;
@@ -36,6 +55,12 @@ namespace DbUp.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Executes a select query or procedure.
+        /// </summary>
+        /// <param name="query">The query.</param>
+        /// <param name="parameters">The parameters.</param>
+        /// <returns></returns>
         public List<Dictionary<string, string>> ExecuteReader(string query, params Func<string, object>[] parameters)
         {
             var results = new List<Dictionary<string, string>>();

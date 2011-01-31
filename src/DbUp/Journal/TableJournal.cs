@@ -15,16 +15,30 @@ namespace DbUp.Journal
         private readonly string tableName;
         private readonly string schemaTableName;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableJournal"/> class.
+        /// </summary>
         public TableJournal() : this("dbo", "SchemaVersions")
         {
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableJournal"/> class.
+        /// </summary>
+        /// <param name="schemaName">Name of the schema.</param>
+        /// <param name="tableName">Name of the table.</param>
         public TableJournal(string schemaName, string tableName)
         {
             this.tableName = tableName;
             schemaTableName = schemaName + "." + tableName;
         }
 
+        /// <summary>
+        /// Recalls the version number of a database specified in a given connection string.
+        /// </summary>
+        /// <param name="connectionString">The connection string.</param>
+        /// <param name="log">The log.</param>
+        /// <returns></returns>
         public string[] GetExecutedScripts(string connectionString, ILog log)
         {
             log.WriteInformation("Fetching list of already executed scripts.");
@@ -53,6 +67,12 @@ namespace DbUp.Journal
             return scripts.ToArray();
         }
 
+        /// <summary>
+        /// Records a database upgrade for a database specified in a given connection string.
+        /// </summary>
+        /// <param name="connectionString">The connection string.</param>
+        /// <param name="script">The script.</param>
+        /// <param name="log">The log.</param>
         public void StoreExecutedScript(string connectionString, SqlScript script, ILog log)
         {
             var exists = DoesTableExist(connectionString);

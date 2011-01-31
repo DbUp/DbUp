@@ -4,6 +4,9 @@ using System.Diagnostics;
 
 namespace DbUp.Helpers
 {
+    /// <summary>
+    /// Used to create databases that are deleted at the end of a unit test.
+    /// </summary>
     public class TemporarySqlDatabase : IDisposable
     {
         private readonly string connectionString;
@@ -11,6 +14,10 @@ namespace DbUp.Helpers
         private readonly string databaseName;
         private readonly AdHocSqlRunner master;
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TemporarySqlDatabase"/> class.
+        /// </summary>
+        /// <param name="name">The name.</param>
         public TemporarySqlDatabase(string name)
         {
             databaseName = name;
@@ -23,35 +30,48 @@ namespace DbUp.Helpers
             master = new AdHocSqlRunner(builder.ToString());
         }
 
+        /// <summary>
+        /// Gets the connection string.
+        /// </summary>
+        /// <value>The connection string.</value>
         public string ConnectionString
         {
             get { return connectionString; }
         }
 
+        /// <summary>
+        /// Gets a tool to run ad-hoc SQL queries.
+        /// </summary>
+        /// <value>The ad hoc.</value>
         public AdHocSqlRunner AdHoc
         {
             get { return database; }
         }
 
+        /// <summary>
+        /// Creates the database.
+        /// </summary>
         public void Create()
         {
             try
             {
                 master.ExecuteNonQuery("drop database [" + databaseName + "]");
             }
-            catch (Exception ex)
+            catch
             {
-                Trace.WriteLine(string.Format("Could not drop integration test database: {0}", ex));
             }
             master.ExecuteNonQuery("create database [" + databaseName + "]");
         }
 
+        /// <summary>
+        /// Deletes the database.
+        /// </summary>
         public void Dispose()
         {
             master.ExecuteNonQuery("drop database [" + databaseName + "]");
         }
 
-        public class TraceLog : ILog
+        internal class TraceLog : ILog
         {
             public void WriteInformation(string format, params object[] args)
             {

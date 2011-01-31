@@ -61,7 +61,7 @@
     </ItemGroup>
     <Zip Files="@(SourceFilesToZip)"
       WorkingDirectory="$(Root)"
-      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(Major).$(Minor).$(Build).$(Revision)-source.zip"
+      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(Major).$(Minor).$(Build)-source.zip"
       ZipLevel="9"
       />
     
@@ -78,6 +78,18 @@
       <Net35Files Include="$(Root)\src\DbUp\bin\*.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\lib\NET35" />
+    
+    <!-- Zip binaries -->
+    <ItemGroup>
+      <BinaryFilesToZip Include="$(Root)\build\Published\**\*.*" />
+    </ItemGroup>
+    <Zip Files="@(BinaryFilesToZip)"
+      WorkingDirectory="$(Root)\build\Published"
+      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(Major).$(Minor).$(Build).zip"
+      ZipLevel="9"
+      />
+    
+    <!-- Add NuGet files-->    
     <ItemGroup>
       <NuSpecFiles Include="$(Root)\build\dbup.nuspec" />
     </ItemGroup>
