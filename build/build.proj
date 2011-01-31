@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="lib\MSBuild.Community.Tasks.Targets" />
+  <Import Project="lib\MSBuild.Deployment.Tasks.Targets" />
+  <Import Project="lib\MSBuild.Community.Tasks.Targets"/>
+  <Import Project="lib\MSBuild.Mercurial.tasks"/>
+  
+  <PropertyGroup>
+    <Root>$(MSBuildStartupDirectory)</Root>
+    <nunitconsoleexe>$(Root)\lib\NUnit\exe\nunit-console-x86.exe</nunitconsoleexe>
+  </PropertyGroup>
+
+  <PropertyGroup>
+    <Major>1</Major>
+    <Minor>0</Minor>
+    <Build>0</Build>
+    <Revision>0</Revision>
+  </PropertyGroup>
+  
+  <Target Name="Version">
+    <HgVersion LocalPath=".">
+      <Output TaskParameter="Revision" PropertyName="Build" />
+    </HgVersion>
+  </Target>
+  
+  <Target Name="Build" DependsOnTargets="Version">
+    <!-- Diagnostics -->
+    <Message Text="Diagnostics:"/>
+    <Message Text="Build Number:    $(Major).$(Minor).$(Build).$(Revision)" />
+    <Message Text="Build dir:       $(MSBuildProjectDirectory)" />
+    <Message Text="Project root:    $(Root)" />
+    <Message Text="NUnit Console:   $(nunitconsoleexe)" />
+
+    <!-- Clean up -->
+    <ItemGroup>
+      <FilesToDelete Include="$(Root)\src\**\bin\**\*.*" />
+      <FilesToDelete Include="$(Root)\src\**\obj\**\*.*" />
+      <FilesToDelete Include="$(Root)\build\Published\**\*.*" />
+      <FilesToDelete Include="$(Root)\build\Artifacts\**\*.*" />
+    </ItemGroup>
+    <Delete Files="@(FilesToDelete)" ContinueOnError="true" />
+
+    <!-- Ensure directories exists -->
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Artifacts" Condition="!Exists('$(MSBuildProjectDirectory)\Artifacts')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published" Condition="!Exists('$(MSBuildProjectDirectory)\Published')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\lib" Condition="!Exists('$(MSBuildProjectDirectory)\Published\lib')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\lib\NET40" Condition="!Exists('$(MSBuildProjectDirectory)\Published\lib\NET40')" />
+
+    <!-- Version Info -->
+    <AssemblyInfo
+      CodeLanguage="CS"
+      OutputFile="$(Root)\src\Information\VersionInfo.cs"
+      AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      />
+    
+    <!-- Zip source -->
+    <ItemGroup>
+      <SourceFilesToZip Include="$(Root)\src\**\*.*" />
+      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\NUnit\Exe\**\*.*" />
+    </ItemGroup>
+    <Zip Files="@(SourceFilesToZip)"
+      WorkingDirectory="$(Root)"
+      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(Major).$(Minor).$(Build).$(Revision)-source.zip"
+      ZipLevel="9"
+      />
+    
+    <!-- Compile -->
+    <ItemGroup>
+      <ProjectToBuild Include="$(Root)\src\DbUp.sln" />
+    </ItemGroup>
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Build" Properties="Configuration=Release">
+      <Output TaskParameter="TargetOutputs" ItemName="AssembliesBuiltByChildProjects" />
+    </MSBuild>
+
+    <!-- Copy binaries -->
+    <ItemGroup>
+      <Net35Files Include="$(Root)\src\DbUp\bin\*.dll" />
+    </ItemGroup>
+    <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\lib\NET35" />
+    <ItemGroup>
+      <NuSpecFiles Include="$(Root)\build\dbup.nuspec" />
+    </ItemGroup>
+    <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published" />
+
+    <FileUpdate Files="$(Root)\build\Published\dbup.nuspec" Regex="(\d+)\.(\d+)\.(\d+)" ReplacementText="$(Major).$(Minor).$(Build)" />
+
+	<!-- Pack -->
+	<Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\dbup.nuspec -b $(Root)\build\Published -o $(Root)\build\Artifacts" />
+
+    <!-- Test 
+    <ItemGroup>
+      <TestAssemblies Include="$(Root)\src\FunnelWeb.Tests\bin\Release\FunnelWeb.Tests.dll"/>
+    </ItemGroup>
+    <Exec Condition="$(teamcity_dotnet_nunitlauncher) != ''" Command="$(teamcity_dotnet_nunitlauncher) v4.0 x86 NUnit-2.5.0 @(TestAssemblies->'%(FullPath)', '%20')" />
+    <Exec Condition="$(teamcity_dotnet_nunitlauncher) == ''" Command="$(nunitconsoleexe) @(TestAssemblies->'%(FullPath)', '%20')" />
+    -->
+  </Target>
+</Project>

@@ -1,0 +1,581 @@
+<?xml version="1.0" encoding="utf-8"?>
+<xs:schema xmlns:msb="http://schemas.microsoft.com/developer/msbuild/2003" elementFormDefault="qualified" targetNamespace="http://schemas.microsoft.com/developer/msbuild/2003" xmlns:xs="http://www.w3.org/2001/XMLSchema">
+  <xs:include schemaLocation="Microsoft.Build.Commontypes.xsd" />
+  <xs:element name="BitlyUrl" substitutionGroup="msb:Task">
+    <xs:annotation>
+      <xs:documentation>Takes a url and uses the bit.ly service to 'shorten' the url</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="ApiKey" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the API key.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="Log" />
+          <xs:attribute name="OutputUrl" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the output URL.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyHost" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy host.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPassword" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPort" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy port.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyUser" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy user.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Timeout" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the timeout in seconds.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Url" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the URL.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Username" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the username.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CodePlexCreateRelease" substitutionGroup="msb:Task">
+    <xs:annotation>
+      <xs:documentation>Creates a release on a codeplex project site</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="Description" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the description.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="IsDefaultRelease" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether this instance is default release.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="IsShownToPublic" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether this instance is shown to public.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Log" />
+          <xs:attribute name="Password" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Project" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the name of the project.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProjectFriendlyName" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the name of the project friendly.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyHost" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy host.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPassword" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPort" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy port.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyUser" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy user.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ReleaseDate" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the release date.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ReleaseId" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the release id.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ReleaseName" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the name.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ReleaseUrl" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the release URL.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Status" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the status.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Timeout" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the timeout in seconds.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Username" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the username.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Version" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the version.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="CodePlexUpload" substitutionGroup="msb:Task">
+    <xs:annotation>
+      <xs:documentation>Uploads a file to a codeplex project</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="File" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the file.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="FileType" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the type of the file.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="Log" />
+          <xs:attribute name="Password" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Project" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the project.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyHost" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy host.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPassword" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPort" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy port.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyUser" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy user.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ReleaseName" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the name of the release.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Timeout" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the timeout in seconds.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Username" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the username.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="GoogleCodeUpload" substitutionGroup="msb:Task">
+    <xs:annotation>
+      <xs:documentation>Uploads a file to the google code project site.</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="File" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the file.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="FileUrl" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the file URL.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="Labels" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the labels.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Log" />
+          <xs:attribute name="Password" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Project" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the project.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyHost" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy host.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPassword" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPort" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy port.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyUser" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy user.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Summary" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the summary.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TargetFile" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the target file.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Timeout" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the timeout in seconds.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Username" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the username.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="ReadTextFile" substitutionGroup="msb:Task">
+    <xs:annotation>
+      <xs:documentation>reads the data from the specified files</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="Files" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the files.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="Log" />
+          <xs:attribute name="OutputText" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the output text.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SkyDriveCreateRelease" substitutionGroup="msb:Task">
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="Log" />
+          <xs:attribute name="Password" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Project" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the project.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyHost" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy host.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPassword" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPort" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy port.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyUser" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy user.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ReleasePath" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the release path.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="RootFolder" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the root folder.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ShareType" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the type of the share.
+            
+            Values:
+            Private (Default)PeopleSelectedNoneMyNetworkPublic</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Timeout" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the timeout in seconds.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Username" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the username.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Version" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the version.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="SkyDriveUpload" substitutionGroup="msb:Task">
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="DownloadUrl" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets the download URL.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="File" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the file.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="Log" />
+          <xs:attribute name="Password" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="PathUrl" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] [Output] Gets or sets the path URL.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyHost" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy host.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPassword" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPort" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy port.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyUser" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy user.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ReleasePath" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the release path.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Timeout" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the timeout in seconds.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Username" type="msb:non_empty_string" use="required">
+            <xs:annotation>
+              <xs:documentation>Gets or sets the username.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+  <xs:element name="Tweet" substitutionGroup="msb:Task">
+    <xs:annotation>
+      <xs:documentation>Sends a status update to Twitter</xs:documentation>
+    </xs:annotation>
+    <xs:complexType>
+      <xs:complexContent mixed="false">
+        <xs:extension base="msb:TaskType">
+          <xs:attribute name="BuildEngine" />
+          <xs:attribute name="BuildEngine2" />
+          <xs:attribute name="HostObject" />
+          <xs:attribute name="Log" />
+          <xs:attribute name="Message" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the message.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Password" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyHost" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy host.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPassword" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy password.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyPort" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy port.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="ProxyUser" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the proxy user.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Timeout" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the timeout in seconds.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="TreatErrorsAsWarnings" type="msb:non_empty_string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets a value indicating whether to treat errors as warnings.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+          <xs:attribute name="Username" type="xs:string">
+            <xs:annotation>
+              <xs:documentation>[Optional] Gets or sets the username.</xs:documentation>
+            </xs:annotation>
+          </xs:attribute>
+        </xs:extension>
+      </xs:complexContent>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

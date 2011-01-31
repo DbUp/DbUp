@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.BitlyUrl" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.CodePlexCreateRelease" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.CodePlexUpload" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.GoogleCodeUpload" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.ReadTextFile" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.SkyDriveCreateRelease" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.SkyDriveUpload" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+  <UsingTask TaskName="MSBuild.Deployment.Tasks.Tweet" AssemblyFile="MSBuild.Deployment.Tasks.dll" />
+</Project>

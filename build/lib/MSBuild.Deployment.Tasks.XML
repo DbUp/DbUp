@@ -1,0 +1,2087 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MSBuild.Deployment.Tasks</name>
+    </assembly>
+    <members>
+        <member name="T:ReleaseService">
+            <summary>
+            
+            </summary>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:ReleaseService"/> class.
+            </summary>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.CreateARelease(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String,System.String)">
+            <summary>
+            Creates the A release.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.BeginCreateARelease(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String,System.String,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins the create A release.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="callback">The callback.</param>
+            <param name="asyncState">State of the async.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.EndCreateARelease(System.IAsyncResult)">
+            <summary>
+            Ends the create A release.
+            </summary>
+            <param name="asyncResult">The async result.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.CreateAReleaseAsync(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String,System.String)">
+            <summary>
+            Creates the A release async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.CreateAReleaseAsync(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.String,System.String,System.Object)">
+            <summary>
+            Creates the A release async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="userState">State of the user.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.OnCreateAReleaseOperationCompleted(System.Object)">
+            <summary>
+            Called when [create A release operation completed].
+            </summary>
+            <param name="arg">The arg.</param>
+        </member>
+        <member name="M:ReleaseService.CreateRelease(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.String)">
+            <summary>
+            Creates the release.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="showOnHomePage">if set to <c>true</c> [show on home page].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.BeginCreateRelease(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.String,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins the create release.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="showOnHomePage">if set to <c>true</c> [show on home page].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="callback">The callback.</param>
+            <param name="asyncState">State of the async.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.EndCreateRelease(System.IAsyncResult)">
+            <summary>
+            Ends the create release.
+            </summary>
+            <param name="asyncResult">The async result.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.CreateReleaseAsync(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.String)">
+            <summary>
+            Creates the release async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="showOnHomePage">if set to <c>true</c> [show on home page].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.CreateReleaseAsync(System.String,System.String,System.String,System.String,System.String,System.Boolean,System.Boolean,System.Boolean,System.String,System.String,System.Object)">
+            <summary>
+            Creates the release async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="name">The name.</param>
+            <param name="description">The description.</param>
+            <param name="releaseDate">The release date.</param>
+            <param name="status">The status.</param>
+            <param name="showToPublic">if set to <c>true</c> [show to public].</param>
+            <param name="showOnHomePage">if set to <c>true</c> [show on home page].</param>
+            <param name="isDefaultRelease">if set to <c>true</c> [is default release].</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="userState">State of the user.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.OnCreateReleaseOperationCompleted(System.Object)">
+            <summary>
+            Called when [create release operation completed].
+            </summary>
+            <param name="arg">The arg.</param>
+        </member>
+        <member name="M:ReleaseService.UploadReleaseFiles(System.String,System.String,ReleaseFile[],System.String,System.String)">
+            <summary>
+            Uploads the release files.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.BeginUploadReleaseFiles(System.String,System.String,ReleaseFile[],System.String,System.String,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins the upload release files.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="callback">The callback.</param>
+            <param name="asyncState">State of the async.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.EndUploadReleaseFiles(System.IAsyncResult)">
+            <summary>
+            Ends the upload release files.
+            </summary>
+            <param name="asyncResult">The async result.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.UploadReleaseFilesAsync(System.String,System.String,ReleaseFile[],System.String,System.String)">
+            <summary>
+            Uploads the release files async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.UploadReleaseFilesAsync(System.String,System.String,ReleaseFile[],System.String,System.String,System.Object)">
+            <summary>
+            Uploads the release files async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="userState">State of the user.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.OnUploadReleaseFilesOperationCompleted(System.Object)">
+            <summary>
+            Called when [upload release files operation completed].
+            </summary>
+            <param name="arg">The arg.</param>
+        </member>
+        <member name="M:ReleaseService.UploadTheReleaseFiles(System.String,System.String,ReleaseFile[],System.String,System.String,System.String)">
+            <summary>
+            Uploads the release files.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="recommendedFileName">Name of the recommended file.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.BeginUploadTheReleaseFiles(System.String,System.String,ReleaseFile[],System.String,System.String,System.String,System.AsyncCallback,System.Object)">
+            <summary>
+            Begins the upload the release files.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="recommendedFileName">Name of the recommended file.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="callback">The callback.</param>
+            <param name="asyncState">State of the async.</param>
+            <returns></returns>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.EndUploadTheReleaseFiles(System.IAsyncResult)">
+            <summary>
+            Ends the upload the release files.
+            </summary>
+            <param name="asyncResult">The async result.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.UploadTheReleaseFilesAsync(System.String,System.String,ReleaseFile[],System.String,System.String,System.String)">
+            <summary>
+            Uploads the release files async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="recommendedFileName">Name of the recommended file.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.UploadTheReleaseFilesAsync(System.String,System.String,ReleaseFile[],System.String,System.String,System.String,System.Object)">
+            <summary>
+            Uploads the release files async.
+            </summary>
+            <param name="projectName">Name of the project.</param>
+            <param name="releaseName">Name of the release.</param>
+            <param name="files">The files.</param>
+            <param name="recommendedFileName">Name of the recommended file.</param>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <param name="userState">State of the user.</param>
+            <remarks/>
+        </member>
+        <member name="M:ReleaseService.CancelAsync(System.Object)">
+            <remarks/>
+        </member>
+        <member name="E:ReleaseService.CreateAReleaseCompleted">
+            <remarks/>
+        </member>
+        <member name="E:ReleaseService.CreateReleaseCompleted">
+            <remarks/>
+        </member>
+        <member name="E:ReleaseService.UploadReleaseFilesCompleted">
+            <remarks/>
+        </member>
+        <member name="E:ReleaseService.UploadTheReleaseFilesCompleted">
+            <remarks/>
+        </member>
+        <member name="T:ReleaseFile">
+            <summary>
+            
+            </summary>
+            <remarks/>
+        </member>
+        <member name="P:ReleaseFile.FileData">
+            <summary>
+            Gets or sets the file data.
+            </summary>
+            <value>The file data.</value>
+            <remarks/>
+        </member>
+        <member name="P:ReleaseFile.FileName">
+            <summary>
+            Gets or sets the name of the file.
+            </summary>
+            <value>The name of the file.</value>
+            <remarks/>
+        </member>
+        <member name="P:ReleaseFile.FileType">
+            <summary>
+            Gets or sets the type of the file.
+            </summary>
+            <value>The type of the file.</value>
+            <remarks/>
+        </member>
+        <member name="P:ReleaseFile.MimeType">
+            <summary>
+            Gets or sets the type of the MIME.
+            </summary>
+            <value>The type of the MIME.</value>
+            <remarks/>
+        </member>
+        <member name="P:ReleaseFile.Name">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>The name.</value>
+            <remarks/>
+        </member>
+        <member name="T:CreateAReleaseCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CreateAReleaseCompletedEventArgs">
+            <summary>
+            
+            </summary>
+            <remarks/>
+        </member>
+        <member name="M:CreateAReleaseCompletedEventArgs.#ctor(System.Object[],System.Exception,System.Boolean,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CreateAReleaseCompletedEventArgs"/> class.
+            </summary>
+            <param name="results">The results.</param>
+            <param name="exception">The exception.</param>
+            <param name="cancelled">if set to <c>true</c> [cancelled].</param>
+            <param name="userState">State of the user.</param>
+        </member>
+        <member name="P:CreateAReleaseCompletedEventArgs.Result">
+            <summary>
+            Gets the result.
+            </summary>
+            <value>The result.</value>
+            <remarks/>
+        </member>
+        <member name="T:CreateReleaseCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:CreateReleaseCompletedEventArgs">
+            <remarks/>
+        </member>
+        <member name="M:CreateReleaseCompletedEventArgs.#ctor(System.Object[],System.Exception,System.Boolean,System.Object)">
+            <summary>
+            Initializes a new instance of the <see cref="T:CreateReleaseCompletedEventArgs"/> class.
+            </summary>
+            <param name="results">The results.</param>
+            <param name="exception">The exception.</param>
+            <param name="cancelled">if set to <c>true</c> [cancelled].</param>
+            <param name="userState">State of the user.</param>
+        </member>
+        <member name="P:CreateReleaseCompletedEventArgs.Result">
+            <summary>
+            Gets the result.
+            </summary>
+            <value>The result.</value>
+            <remarks/>
+        </member>
+        <member name="T:UploadReleaseFilesCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:UploadTheReleaseFilesCompletedEventHandler">
+            <remarks/>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.BitlyUrl">
+            <summary>
+            Takes a url and uses the bit.ly service to 'shorten' the url
+            </summary>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.IProxyTask">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.IProxyTask.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.IProxyTask.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.IProxyTask.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.IProxyTask.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.ITimeoutTask">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.ITimeoutTask.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.ITreatErrorsAsWarningsTask">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.ITreatErrorsAsWarningsTask.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.BitlyUrl.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.BitlyUrl"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.BitlyUrl.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.ApiKey">
+            <summary>
+            Gets or sets the API key.
+            </summary>
+            <value>The API key.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.Url">
+            <summary>
+            Gets or sets the URL.
+            </summary>
+            <value>The URL.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.OutputUrl">
+            <summary>
+            Gets or sets the output URL.
+            </summary>
+            <value>The output URL.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.BitlyUrl.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.CodePlexCreateRelease">
+            <summary>
+            Creates a release on a codeplex project site
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.CodePlexCreateRelease.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.CodePlexCreateRelease"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Project">
+            <summary>
+            Gets or sets the name of the project.
+            </summary>
+            <value>The name of the project.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Description">
+            <summary>
+            Gets or sets the description.
+            </summary>
+            <value>The description.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ProjectFriendlyName">
+            <summary>
+            Gets or sets the name of the project friendly.
+            </summary>
+            <value>The name of the project friendly.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Version">
+            <summary>
+            Gets or sets the version.
+            </summary>
+            <value>The version.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.IsDefaultRelease">
+            <summary>
+            Gets or sets a value indicating whether this instance is default release.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is default release; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.IsShownToPublic">
+            <summary>
+            Gets or sets a value indicating whether this instance is shown to public.
+            </summary>
+            <value>
+            	<c>true</c> if this instance is shown to public; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ReleaseStatus">
+            <summary>
+            Gets or sets the release status.
+            </summary>
+            <value>The status.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Status">
+            <summary>
+            Gets or sets the status.
+            </summary>
+            <value>The status.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ReleaseDate">
+            <summary>
+            Gets or sets the release date.
+            </summary>
+            <value>The release date.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ReleaseId">
+            <summary>
+            Gets or sets the release id.
+            </summary>
+            <value>The release id.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ReleaseName">
+            <summary>
+            Gets or sets the name.
+            </summary>
+            <value>The name.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ReleaseUrl">
+            <summary>
+            Gets or sets the release URL.
+            </summary>
+            <value>The release URL.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexCreateRelease.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Alpha">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Beta">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Stable">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexCreateRelease.DevelopmentStatus.Planning">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.CodePlexUpload">
+            <summary>
+            Uploads a file to a codeplex project
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.CodePlexUpload.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.CodePlexUpload"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.CodePlexUpload.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.CodePlexUpload.Upload">
+            <summary>
+            Uploads this instance.
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.Project">
+            <summary>
+            Gets or sets the project.
+            </summary>
+            <value>The project.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.ReleaseName">
+            <summary>
+            Gets or sets the name of the release.
+            </summary>
+            <value>The name of the release.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.File">
+            <summary>
+            Gets or sets the file.
+            </summary>
+            <value>The file.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.FileType">
+            <summary>
+            Gets or sets the type of the file.
+            </summary>
+            <value>The type of the file.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.ResourceType">
+            <summary>
+            Gets or sets the type of the resource.
+            </summary>
+            <value>The type of the resource.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.CodePlexUpload.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.RuntimeBinary">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.SourceCode">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.Documentation">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.CodePlexUpload.FileResourceType.Example">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.GoogleCodeUpload">
+            <summary>
+            Uploads a file to the google code project site.
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.GoogleCodeUpload.BASEURL">
+            <summary>
+            Base Url
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.GoogleCodeUpload.BOUNDARY">
+            <summary>
+            A Boundry Value
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.GoogleCodeUpload.NEWLINE">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.GoogleCodeUpload.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.GoogleCodeUpload"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.GoogleCodeUpload.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.GoogleCodeUpload.UploadFile">
+            <summary>
+            Uploads the contents of the file to the project's Google Code upload url.
+            Performs the basic http authentication required by Google Code.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.GoogleCodeUpload.WriteFile(System.IO.Stream,System.String)">
+            <summary>
+            Writes the specified file to the specified stream.
+            </summary>
+            <param name="outStream">The out stream.</param>
+            <param name="file">The file.</param>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.GoogleCodeUpload.WriteLine(System.IO.Stream,System.String)">
+            <summary>
+            Writes the string to the specified stream.
+            </summary>
+            <param name="outputStream">The output stream.</param>
+            <param name="value">The value.</param>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.GoogleCodeUpload.CreateAuthorizationToken(System.String,System.String)">
+            <summary>
+            Creates the authorization token.
+            </summary>
+            <param name="username">The username.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.Project">
+            <summary>
+            Gets or sets the project.
+            </summary>
+            <value>The project.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.File">
+            <summary>
+            Gets or sets the file.
+            </summary>
+            <value>The file.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.TargetFile">
+            <summary>
+            Gets or sets the target file.
+            </summary>
+            <value>The target file.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.Summary">
+            <summary>
+            Gets or sets the summary.
+            </summary>
+            <value>The summary.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.Labels">
+            <summary>
+            Gets or sets the labels.
+            </summary>
+            <value>The labels.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.FileUrl">
+            <summary>
+            Gets or sets the file URL.
+            </summary>
+            <value>The file URL.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.GoogleCodeUpload.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.MimeType">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.FindMimeFromData(System.UInt32,System.String,System.Byte[],System.UInt32,System.String,System.UInt32,System.IntPtr@,System.UInt32)">
+            <summary>
+            Finds the mime type from data.
+            </summary>
+            <param name="pBC">The p BC.</param>
+            <param name="pwzUrl">The PWZ URL.</param>
+            <param name="pBuffer">The p buffer.</param>
+            <param name="cbSize">Size of the cb.</param>
+            <param name="pbwMimeProposed">The PBW MIME proposed.</param>
+            <param name="dwMimeFlags">The dw MIME flags.</param>
+            <param name="ppwzMimeOut">The PPWZ MIME out.</param>
+            <param name="dwReserved">The dw reserved.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.#cctor">
+            <summary>
+            Initializes the <see cref="T:MSBuild.Deployment.Tasks.MimeType"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.Create(System.IO.FileInfo)">
+            <summary>
+            Creates a new MimeType from the specified file.
+            </summary>
+            <param name="file">The file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.Create(System.String)">
+            <summary>
+            Creates a new MimeType from the specified extension.
+            </summary>
+            <param name="extension">The extension.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.#ctor(System.IO.FileInfo)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.MimeType"/> class.
+            </summary>
+            <param name="file">The file.</param>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.#ctor(System.String)">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.MimeType"/> class.
+            </summary>
+            <param name="extension">The extension.</param>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.GetContentType(System.IO.FileInfo)">
+            <summary>
+            Gets the type of the content.
+            </summary>
+            <param name="file">The file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.GetContentTypeFromData(System.Byte[])">
+            <summary>
+            Gets the content type from data.
+            </summary>
+            <param name="data">A byte array containing the bytes of data from the file.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.MimeType.GetContentTypeFromRegistry(System.String)">
+            <summary>
+            Gets the content type from registry.
+            </summary>
+            <param name="extension">The extension.</param>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.MimeType.DefaultContentType">
+            <summary>
+            Gets the default type of the content.
+            </summary>
+            <value>The default type of the content.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.MimeType.ContentType">
+            <summary>
+            Gets or sets the type of the content.
+            </summary>
+            <value>The type of the content.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.MimeType.Extension">
+            <summary>
+            Gets or sets the extension.
+            </summary>
+            <value>The extension.</value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.ReadTextFile">
+            <summary>
+            reads the data from the specified files
+            </summary>
+            <example>
+            <ReadTextFile Files="@(InputFiles)">
+            	<Output PropertyName="OutputText" TaskParameter="OutputText" />
+            </ReadTextFile>
+            </example>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.ReadTextFile.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.ReadTextFile.Files">
+            <summary>
+            Gets or sets the files.
+            </summary>
+            <value>The files.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.ReadTextFile.OutputText">
+            <summary>
+            Gets or sets the output text.
+            </summary>
+            <value>The output text.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.ReadTextFile.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Services.BitlyResult">
+            <summary>
+            Represents the results of the bitly request.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.BitlyResult.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.Services.BitlyResult"/> class.
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.ErrorCode">
+            <summary>
+            Gets or sets the error code.
+            </summary>
+            <value>The error code.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.ErrorMessage">
+            <summary>
+            Gets or sets the error message.
+            </summary>
+            <value>The error message.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.Results">
+            <summary>
+            Gets or sets the results.
+            </summary>
+            <value>The results.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.Status">
+            <summary>
+            Gets or sets the status.
+            </summary>
+            <value>The status.</value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue.UserHash">
+            <summary>
+            Gets or sets the user hash.
+            </summary>
+            <value>The user hash.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue.ShortKeyWordUrl">
+            <summary>
+            Gets or sets the short key word URL.
+            </summary>
+            <value>The short key word URL.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue.Hash">
+            <summary>
+            Gets or sets the hash.
+            </summary>
+            <value>The hash.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue.NodeKey">
+            <summary>
+            Gets or sets the node key.
+            </summary>
+            <value>The node key.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyResult.NodeKeyValue.ShortUrl">
+            <summary>
+            Gets or sets the short URL.
+            </summary>
+            <value>The short URL.</value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Services.BitlyService">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.BitlyService.Shorten(System.String,System.String,System.String)">
+            <summary>
+            Shortens the specified url.
+            </summary>
+            <param name="username">The username.</param>
+            <param name="apiKey">The API key.</param>
+            <param name="url">The URL.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.BitlyService.BuildBitlyRequestUrl(System.String,System.String,System.String)">
+            <summary>
+            Builds the bitly request URL.
+            </summary>
+            <param name="username">The username.</param>
+            <param name="apikey">The apikey.</param>
+            <param name="longUrl">The long URL.</param>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyService.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyService.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyService.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyService.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.BitlyService.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Services.Twitter">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.TwitterBaseUrlFormat">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.Services.Twitter"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetObjectTypeString(MSBuild.Deployment.Tasks.Services.Twitter.ObjectType)">
+            <summary>
+            Gets the object type string.
+            </summary>
+            <param name="objectType">Type of the object.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetActionTypeString(MSBuild.Deployment.Tasks.Services.Twitter.ActionType)">
+            <summary>
+            Gets the action type string.
+            </summary>
+            <param name="actionType">Type of the action.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFormatTypeString(MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the format type string.
+            </summary>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.ExecuteGetCommand(System.String,System.String,System.String)">
+            <summary>
+            Executes an HTTP GET command and retrives the information.		
+            </summary>
+            <param name="url">The URL to perform the GET operation</param>
+            <param name="userName">The username to use with the request</param>
+            <param name="password">The password to use with the request</param>
+            <returns>The response of the request, or null if we got 404 or nothing.</returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.ExecutePostCommand(System.String,System.String,System.String,System.String)">
+            <summary>
+            Executes an HTTP POST command and retrives the information.		
+            This function will automatically include a "source" parameter if the "Source" property is set.
+            </summary>
+            <param name="url">The URL to perform the POST operation</param>
+            <param name="userName">The username to use with the request</param>
+            <param name="password">The password to use with the request</param>
+            <param name="data">The data to post</param> 
+            <returns>The response of the request, or null if we got 404 or nothing.</returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetPublicTimeline(MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the public timeline.
+            </summary>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetPublicTimelineAsJSON">
+            <summary>
+            Gets the public timeline as JSON.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetPublicTimelineAsXML(MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the public timeline as XML.
+            </summary>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetPublicTimelineAsXML">
+            <summary>
+            Gets the public timeline as XML.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetPublicTimelineAsRSS">
+            <summary>
+            Gets the public timeline as RSS.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetPublicTimelineAsAtom">
+            <summary>
+            Gets the public timeline as atom.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimeline(System.String,System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the user timeline.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimeline(System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the user timeline.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsJSON(System.String,System.String)">
+            <summary>
+            Gets the user timeline as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsJSON(System.String,System.String,System.String)">
+            <summary>
+            Gets the user timeline as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsXML(System.String,System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the user timeline as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsXML(System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the user timeline as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsXML(System.String,System.String,System.String)">
+            <summary>
+            Gets the user timeline as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsXML(System.String,System.String)">
+            <summary>
+            Gets the user timeline as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsRSS(System.String,System.String,System.String)">
+            <summary>
+            Gets the user timeline as RSS.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsRSS(System.String,System.String)">
+            <summary>
+            Gets the user timeline as RSS.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsAtom(System.String,System.String,System.String)">
+            <summary>
+            Gets the user timeline as atom.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetUserTimelineAsAtom(System.String,System.String)">
+            <summary>
+            Gets the user timeline as atom.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsTimeline(System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the friends timeline.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsTimelineAsJSON(System.String,System.String)">
+            <summary>
+            Gets the friends timeline as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsTimelineAsXML(System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the friends timeline as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsTimelineAsXML(System.String,System.String)">
+            <summary>
+            Gets the friends timeline as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsTimelineAsRSS(System.String,System.String)">
+            <summary>
+            Gets the friends timeline as RSS.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsTimelineAsAtom(System.String,System.String)">
+            <summary>
+            Gets the friends timeline as atom.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriends(System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the friends.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriends(System.String,System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the friends.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsAsJSON(System.String,System.String,System.String)">
+            <summary>
+            Gets the friends as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsAsJSON(System.String,System.String)">
+            <summary>
+            Gets the friends as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsAsXML(System.String,System.String,System.String)">
+            <summary>
+            Gets the friends as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFriendsAsXML(System.String,System.String)">
+            <summary>
+            Gets the friends as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFollowers(System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the followers.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFollowersAsJSON(System.String,System.String)">
+            <summary>
+            Gets the followers as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFollowersAsXML(System.String,System.String)">
+            <summary>
+            Gets the followers as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.Update(System.String,System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Updates the specified user name.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="status">The status.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.UpdateAsJSON(System.String,System.String,System.String)">
+            <summary>
+            Updates as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="text">The text.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.UpdateAsXML(System.String,System.String,System.String)">
+            <summary>
+            Updates as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="text">The text.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFeatured(System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Gets the featured.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFeaturedAsJSON(System.String,System.String)">
+            <summary>
+            Gets the featured as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.GetFeaturedAsXML(System.String,System.String)">
+            <summary>
+            Gets the featured as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.Show(System.String,System.String,System.String,MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType)">
+            <summary>
+            Shows the specified user name.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <param name="format">The format.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.ShowAsJSON(System.String,System.String,System.String)">
+            <summary>
+            Shows as JSON.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Services.Twitter.ShowAsXML(System.String,System.String,System.String)">
+            <summary>
+            Shows as XML.
+            </summary>
+            <param name="userName">Name of the user.</param>
+            <param name="password">The password.</param>
+            <param name="IDorScreenName">Name of the I dor screen.</param>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.Twitter.Proxy">
+            <summary>
+            Gets or sets the proxy.
+            </summary>
+            <value>The proxy.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.Twitter.Source">
+            <summary>
+            Source is an additional parameters that will be used to fill the "From" field.
+            Currently you must talk to the developers of Twitter at:
+            http://groups.google.com/group/twitter-development-talk/
+            Otherwise, Twitter will simply ignore this parameter and set the "From" field to "web".
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.Twitter.TwitterClient">
+            <summary>
+            Sets the name of the Twitter client.
+            According to the Twitter Fan Wiki at http://twitter.pbwiki.com/API-Docs and supported by
+            the Twitter developers, this will be used in the future (hopefully near) to set more information
+            in Twitter about the client posting the information as well as future usage in a clients directory.
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.Twitter.TwitterClientVersion">
+            <summary>
+            Sets the version of the Twitter client.
+            According to the Twitter Fan Wiki at http://twitter.pbwiki.com/API-Docs and supported by
+            the Twitter developers, this will be used in the future (hopefully near) to set more information
+            in Twitter about the client posting the information as well as future usage in a clients directory.
+            </summary>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Services.Twitter.TwitterClientUrl">
+            <summary>
+            Sets the URL of the Twitter client.
+            Must be in the XML format documented in the "Request Headers" section at:
+            http://twitter.pbwiki.com/API-Docs.
+            According to the Twitter Fan Wiki at http://twitter.pbwiki.com/API-Docs and supported by
+            the Twitter developers, this will be used in the future (hopefully near) to set more information
+            in Twitter about the client posting the information as well as future usage in a clients directory.		
+            </summary>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType">
+            <summary>
+            The output formats supported by Twitter. Not all of them can be used with all of the functions.
+            For more information about the output formats and the supported functions Check the 
+            Twitter documentation at: http://groups.google.com/group/twitter-development-talk/web/api-documentation
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.JSON">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.XML">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.RSS">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.OutputFormatType.Atom">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType">
+            <summary>
+            The various object types supported at Twitter.
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType.Statuses">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType.Account">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ObjectType.Users">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Services.Twitter.ActionType">
+            <summary>
+            The various actions used at Twitter. Not all actions works on all object types.
+            For more information about the actions types and the supported functions Check the 
+            Twitter documentation at: http://groups.google.com/group/twitter-development-talk/web/api-documentation
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Public_Timeline">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.User_Timeline">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Friends_Timeline">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Friends">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Followers">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Update">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Account_Settings">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Featured">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="F:MSBuild.Deployment.Tasks.Services.Twitter.ActionType.Show">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.SkyDriveCreateRelease">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.SkyDriveCreateRelease"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.Project">
+            <summary>
+            Gets or sets the project.
+            </summary>
+            <value>The project.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.Version">
+            <summary>
+            Gets or sets the version.
+            </summary>
+            <value>The version.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.RootFolder">
+            <summary>
+            Gets or sets the root folder.
+            </summary>
+            <value>The root folder.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.ReleasePath">
+            <summary>
+            Gets or sets the release path.
+            </summary>
+            <value>The release path.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.ShareType">
+            <summary>
+            Gets or sets the type of the share.
+            <p>
+            Values:
+            <ul>
+            	<li>Private (Default)</li>
+            	<li>PeopleSelected</li>
+            	<li>None</li>
+            	<li>MyNetwork</li>
+            	<li>Public</li>
+            </ul>
+            </p>
+            </summary>
+            <value>The type of the share.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveCreateRelease.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.SkyDriveUpload">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.SkyDriveUpload.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.SkyDriveUpload"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.SkyDriveUpload.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.SkyDriveUpload.GetReleaseFolder">
+            <summary>
+            Gets the release folder.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.SkyDriveUpload.UploadFile(HgCo.WindowsLive.SkyDrive.WebFolderInfo)">
+            <summary>
+            Uploads the file.
+            </summary>
+            <param name="parent">The parent.</param>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.ReleasePath">
+            <summary>
+            Gets or sets the release path.
+            </summary>
+            <value>The release path.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.File">
+            <summary>
+            Gets or sets the file.
+            </summary>
+            <value>The file.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.DownloadUrl">
+            <summary>
+            Gets the download URL.
+            </summary>
+            <value>The download URL.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.PathUrl">
+            <summary>
+            Gets or sets the path URL.
+            </summary>
+            <value>The path URL.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.Client">
+            <summary>
+            Gets or sets the client.
+            </summary>
+            <value>The client.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.SkyDriveUpload.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.TaskUserAgent">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.TaskUserAgent.GetUserAgent(Microsoft.Build.Utilities.Task)">
+            <summary>
+            Gets the user agent.
+            </summary>
+            <param name="task">The task.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.TaskUserAgent.GetUserAgent(MSBuild.Deployment.Tasks.Services.BitlyService)">
+            <summary>
+            Gets the user agent.
+            </summary>
+            <param name="task">The task.</param>
+            <returns></returns>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.TaskUserAgent.GetUserAgent(System.Object)">
+            <summary>
+            Gets the user agent.
+            </summary>
+            <param name="obj">The obj.</param>
+            <returns></returns>
+        </member>
+        <member name="T:MSBuild.Deployment.Tasks.Tweet">
+            <summary>
+            Sends a status update to Twitter
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Tweet.#ctor">
+            <summary>
+            Initializes a new instance of the <see cref="T:MSBuild.Deployment.Tasks.Tweet"/> class.
+            </summary>
+        </member>
+        <member name="M:MSBuild.Deployment.Tasks.Tweet.Execute">
+            <summary>
+            Executes this instance.
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.Username">
+            <summary>
+            Gets or sets the username.
+            </summary>
+            <value>The username.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.Password">
+            <summary>
+            Gets or sets the password.
+            </summary>
+            <value>The password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.Message">
+            <summary>
+            Gets or sets the message.
+            </summary>
+            <value>The message.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.ProxyHost">
+            <summary>
+            Gets or sets the proxy host.
+            </summary>
+            <value>The proxy host.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.ProxyPort">
+            <summary>
+            Gets or sets the proxy port.
+            </summary>
+            <value>The proxy port.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.ProxyUser">
+            <summary>
+            Gets or sets the proxy user.
+            </summary>
+            <value>The proxy user.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.ProxyPassword">
+            <summary>
+            Gets or sets the proxy password.
+            </summary>
+            <value>The proxy password.</value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.TreatErrorsAsWarnings">
+            <summary>
+            Gets or sets a value indicating whether to treat errors as warnings.
+            </summary>
+            <value>
+            	<c>true</c> if treat errors as warnings; otherwise, <c>false</c>.
+            </value>
+        </member>
+        <member name="P:MSBuild.Deployment.Tasks.Tweet.Timeout">
+            <summary>
+            Gets or sets the timeout in seconds.
+            </summary>
+            <value>The timeout in seconds.</value>
+        </member>
+    </members>
+</doc>

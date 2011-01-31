@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003"
+         ToolsVersion="3.5">
+
+  <PropertyGroup>
+    <MSBuildMercurialTasksPath Condition=" '$(MSBuildMercurialPath)' == '' ">$(MSBuildExtensionsPath)\MSBuild.Mercurial</MSBuildMercurialTasksPath>
+    <MSBuildMercurialTasksLib>MSBuild.Mercurial.dll</MSBuildMercurialTasksLib>
+  </PropertyGroup>
+
+  <UsingTask TaskName="MSBuild.Mercurial.HgAdd" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgClone" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgCommit" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgForget" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgInit" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgPull" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgPush" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgRemove" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgTag" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgUpdate" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+  <UsingTask TaskName="MSBuild.Mercurial.HgVersion" AssemblyFile="$(MSBuildMercurialTasksLib)" />
+
+</Project>
