@@ -69,3 +69,4 @@ glob:build/TestResult.xml
 [pP]ublish
 
 Views\Extensions\*
+.DS_Store
