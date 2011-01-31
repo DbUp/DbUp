@@ -76,6 +76,7 @@
     <!-- Copy binaries -->
     <ItemGroup>
       <Net35Files Include="$(Root)\src\DbUp\bin\*.dll" />
+      <Net35Files Include="$(Root)\src\DbUp\bin\*.xml" />
     </ItemGroup>
     <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\lib\NET35" />
     
