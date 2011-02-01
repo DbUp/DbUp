@@ -6,8 +6,8 @@ using DbUp.Specification.Contexts;
 
 namespace DbUp.Specification.Concerning
 {
-	[TestFixture]
-	public class UpgradingADatabase : GivenAnOutOfDateDatabase
+    [TestFixture]
+	public class UpgradingAnOutOfDateDatabase : GivenAnOutOfDateDatabase
 	{
 		[Test]
 		public void ShouldDetermineIfUpgradeIsRequired ()

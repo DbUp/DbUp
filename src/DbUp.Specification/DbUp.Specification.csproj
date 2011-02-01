@@ -43,6 +43,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concerning\UpgradingADatabase.cs" />
+    <Compile Include="Concerning\CreatingANewDatabase.cs" />
+    <Compile Include="Contexts\EmptyDatabase.cs" />
     <Compile Include="Contexts\GivenAnOutOfDateDatabase.cs" />
     <Compile Include="Contexts\GivenANewDatabase.cs" />
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
