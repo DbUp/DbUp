@@ -43,6 +43,18 @@ namespace DbUp.Specification.Concerning
 			Log.Received ().WriteInformation ("Beginning database upgrade. Connection string is: '{0}'", ConnectionString);
 			
 		}
+
+        [Test]
+        public void ShouldTrackExecutedScripts()
+        {
+            DbUpgrader
+                .PerformUpgrade(Log)
+                .Scripts.ToList()
+                .ForEach(script =>
+                {
+                    VersionTracker.Received().StoreExecutedScript(ConnectionString, script, Log);
+                });
+        }
 	}
 }
 

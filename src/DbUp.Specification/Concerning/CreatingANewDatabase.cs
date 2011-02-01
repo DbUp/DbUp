@@ -47,5 +47,16 @@ namespace DbUp.Specification.Concerning
             Assert.That(result.Scripts.Count() == 0);
             Assert.That(result.Error == ex);
         }
+
+        [Test]
+        public void ShouldTrackExecutedScripts()
+        {
+            DbUpgrader
+                .PerformUpgrade(Log)
+                .Scripts.ToList()
+                .ForEach(script => {
+                    VersionTracker.Received().StoreExecutedScript(ConnectionString, script, Log);
+                });
+        }
     }
 }
