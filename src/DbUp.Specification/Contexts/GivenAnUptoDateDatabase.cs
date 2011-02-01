@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using DbUp.ScriptProviders;
 using NSubstitute;
 using System.Linq;
+using NUnit.Framework;
 
 namespace DbUp.Specification
 {
@@ -12,15 +13,16 @@ namespace DbUp.Specification
         public override void BeforeEach()
         {
             base.BeforeEach();
-            AllScripts = new List<SqlScript>() {
-                new SqlScript("1.sql", ""),
-                new SqlScript("2.sql", ""),
-                new SqlScript("3.sql", "")
+            var executedScripts = new[] { "0001.sql", "0002.sql", "0004.sql" };
+            AllScripts = new List<SqlScript>()
+            {
+                new SqlScript("0001.sql", ""),
+                new SqlScript("0004.sql", ""),
+                new SqlScript("0002.sql", "")
             };
 
-            this.ScriptProvider.GetScripts().Returns(AllScripts);
-            this.VersionTracker.GetExecutedScripts(ConnectionString, Log).Returns(AllScripts.Select(s=>s.Name));
-
+            ScriptProvider.GetScripts().Returns(AllScripts);
+            VersionTracker.GetExecutedScripts(ConnectionString, Log).Returns(executedScripts);
         }
 	}
 }
