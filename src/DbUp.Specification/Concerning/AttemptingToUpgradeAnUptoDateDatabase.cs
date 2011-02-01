@@ -30,5 +30,13 @@ namespace DbUp.Specification.Concerning
             Log.Received().WriteInformation("No new scripts need to be executed - completing.");
             Log.Received().WriteInformation("Beginning database upgrade. Connection string is: '{0}'", ConnectionString);
         }
+
+        [Test]
+        public void ShouldNotStoreAnyScripts()
+        {
+            DbUpgrader.PerformUpgrade(Log);
+
+            VersionTracker.DidNotReceiveWithAnyArgs().StoreExecutedScript("", null, null);
+        }
     }
 }
