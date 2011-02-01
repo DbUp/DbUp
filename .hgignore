@@ -1,5 +1,7 @@
 syntax: glob
 
+*.*[~]
+*.swp
 *.userprefs
 *.test-cache
 *.pidb
