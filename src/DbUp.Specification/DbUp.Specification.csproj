@@ -42,6 +42,7 @@
     <Reference Include="System.Core" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Concerning\AttemptingToUpgradeAnUptoDateDatabase.cs" />
     <Compile Include="Concerning\UpgradingADatabase.cs" />
     <Compile Include="Concerning\CreatingANewDatabase.cs" />
     <Compile Include="Contexts\EmptyDatabase.cs" />

@@ -19,16 +19,20 @@ namespace DbUp.Specification.Concerning
 		public void ShouldReturnSuccessfulResult ()
 		{
 			var result = DbUpgrader.PerformUpgrade (Log);
-			var expectedScript = AllScripts.Last ();
-			
-			ScriptExecutor.Received ().Execute (ConnectionString, expectedScript, Log);
-			VersionTracker.Received ().StoreExecutedScript (ConnectionString, expectedScript, Log);
-			
-			Log.ReceivedWithAnyArgs ().WriteInformation ("");
-			
 			Assert.IsTrue (result.Successful);
-			Assert.AreEqual (expectedScript, result.Scripts.First ());
 		}
+
+        [Test]
+        public void ShouldExecuteCorrectScript()
+        {
+            var result = DbUpgrader.PerformUpgrade(Log);
+            var expectedScript = AllScripts.Last();
+            
+            ScriptExecutor.Received().Execute(ConnectionString, expectedScript, Log);
+            VersionTracker.Received().StoreExecutedScript(ConnectionString, expectedScript, Log);
+
+            Assert.AreEqual(expectedScript, result.Scripts.First());
+        }
 		
 		[Test]
 		public void ShouldLogInformation ()
