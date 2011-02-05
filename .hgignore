@@ -72,3 +72,4 @@ glob:build/TestResult.xml
 
 Views\Extensions\*
 .DS_Store
+glob:*.pidb
