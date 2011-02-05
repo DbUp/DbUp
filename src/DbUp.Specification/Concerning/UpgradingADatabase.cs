@@ -39,9 +39,8 @@ namespace DbUp.Specification.Concerning
 		{
 			DbUpgrader.PerformUpgrade (Log);
 			
-			Log.Received ().WriteInformation ("Upgrade successful");
 			Log.Received ().WriteInformation ("Beginning database upgrade. Connection string is: '{0}'", ConnectionString);
-			
+            Log.Received().WriteInformation("Upgrade successful");
 		}
 
         [Test]

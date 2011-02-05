@@ -26,9 +26,9 @@ namespace DbUp.Specification.Concerning
         public void ShouldLogNoAction()
         {
             DbUpgrader.PerformUpgrade(Log);
-
-            Log.Received().WriteInformation("No new scripts need to be executed - completing.");
+           
             Log.Received().WriteInformation("Beginning database upgrade. Connection string is: '{0}'", ConnectionString);
+            Log.Received().WriteInformation("No new scripts need to be executed - completing.");
         }
 
         [Test]
