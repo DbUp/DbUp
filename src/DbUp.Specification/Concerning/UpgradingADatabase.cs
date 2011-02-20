@@ -29,7 +29,7 @@ namespace DbUp.Specification.Concerning
             var expectedScript = AllScripts.Last();
             
             ScriptExecutor.Received().Execute(ConnectionString, expectedScript, Log);
-            VersionTracker.Received().StoreExecutedScript(ConnectionString, expectedScript, Log);
+            VersionTracker.Received().StoreExecutedScript(expectedScript, Log);
 
             Assert.AreEqual(expectedScript, result.Scripts.First());
         }
@@ -49,10 +49,7 @@ namespace DbUp.Specification.Concerning
             DbUpgrader
                 .PerformUpgrade(Log)
                 .Scripts.ToList()
-                .ForEach(script =>
-                {
-                    VersionTracker.Received().StoreExecutedScript(ConnectionString, script, Log);
-                });
+                .ForEach(script => VersionTracker.Received().StoreExecutedScript(script, Log));
         }
 	}
 }

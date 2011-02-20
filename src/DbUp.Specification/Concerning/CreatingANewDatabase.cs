@@ -54,9 +54,7 @@ namespace DbUp.Specification.Concerning
             DbUpgrader
                 .PerformUpgrade(Log)
                 .Scripts.ToList()
-                .ForEach(script => {
-                    VersionTracker.Received().StoreExecutedScript(ConnectionString, script, Log);
-                });
+                .ForEach(script => VersionTracker.Received().StoreExecutedScript(script, Log));
         }
     }
 }

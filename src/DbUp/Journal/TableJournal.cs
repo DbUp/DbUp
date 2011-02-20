@@ -14,12 +14,14 @@ namespace DbUp.Journal
     {
         private readonly string tableName;
         private readonly string schemaTableName;
+        private readonly string dbConnectionString;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
         /// </summary>
-        public TableJournal() : this("dbo", "SchemaVersions")
+        public TableJournal(string targetDbConnectionString) : this("dbo", "SchemaVersions")
         {
+            dbConnectionString = targetDbConnectionString;
         }
 
         /// <summary>
@@ -34,15 +36,14 @@ namespace DbUp.Journal
         }
 
         /// <summary>
-        /// Recalls the version number of a database specified in a given connection string.
+        /// Recalls the version number of the database.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
         /// <param name="log">The log.</param>
-        /// <returns></returns>
-        public string[] GetExecutedScripts(string connectionString, ILog log)
+        /// <returns>All executed scripts.</returns>
+        public string[] GetExecutedScripts(ILog log)
         {
             log.WriteInformation("Fetching list of already executed scripts.");
-            var exists = DoesTableExist(connectionString);
+            var exists = DoesTableExist(dbConnectionString);
             if (!exists)
             {
                 log.WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", schemaTableName));
@@ -50,7 +51,7 @@ namespace DbUp.Journal
             }
 
             var scripts = new List<string>();
-            using (var connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(dbConnectionString))
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = string.Format("select [ScriptName] from {0} order by [ScriptName]", schemaTableName);
@@ -70,17 +71,16 @@ namespace DbUp.Journal
         /// <summary>
         /// Records a database upgrade for a database specified in a given connection string.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
         /// <param name="script">The script.</param>
         /// <param name="log">The log.</param>
-        public void StoreExecutedScript(string connectionString, SqlScript script, ILog log)
+        public void StoreExecutedScript(SqlScript script, ILog log)
         {
-            var exists = DoesTableExist(connectionString);
+            var exists = DoesTableExist(dbConnectionString);
             if (!exists)
             {
                 log.WriteInformation(string.Format("Creating the {0} table", schemaTableName));
 
-                using (var connection = new SqlConnection(connectionString))
+                using (var connection = new SqlConnection(dbConnectionString))
                 using (var command = connection.CreateCommand())
                 {
                     command.CommandText = string.Format(
@@ -100,7 +100,7 @@ namespace DbUp.Journal
             }
 
 
-            using (var connection = new SqlConnection(connectionString))
+            using (var connection = new SqlConnection(dbConnectionString))
             using (var command = connection.CreateCommand())
             {
                 command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, (getutcdate()))", schemaTableName);

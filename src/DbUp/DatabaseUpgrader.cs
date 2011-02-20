@@ -33,7 +33,7 @@ namespace DbUp
         {
             this.connectionString = connectionString;
             this.scriptExecutor = scriptExecutor ?? new SqlScriptExecutor();
-            this.versionTracker = versionTracker ?? new TableJournal();
+            this.versionTracker = versionTracker ?? new TableJournal(connectionString);
             this.scriptProvider = scriptProvider;
         }
 
@@ -44,7 +44,7 @@ namespace DbUp
         public bool IsUpgradeRequired(ILog log)
         {
             var allScripts = scriptProvider.GetScripts();
-            var executedScripts = versionTracker.GetExecutedScripts(connectionString, log);
+            var executedScripts = versionTracker.GetExecutedScripts(log);
 
             var scriptsToExecute = allScripts.Where(x => executedScripts.Any(y => y == x.Name)).ToList();
             return scriptsToExecute.Count != 0;
@@ -90,7 +90,7 @@ namespace DbUp
                 log.WriteInformation("Beginning database upgrade. Connection string is: '{0}'", connectionString);
 
                 var allScripts = scriptProvider.GetScripts();
-                var executedScripts = versionTracker.GetExecutedScripts(connectionString, log);
+                var executedScripts = versionTracker.GetExecutedScripts(log);
 
                 var scriptsToExecute = allScripts.Where(x => !executedScripts.Any(y => y == x.Name)).ToList();
                 if (scriptsToExecute.Count == 0)
@@ -103,7 +103,7 @@ namespace DbUp
                 {
                     scriptExecutor.Execute(connectionString, script, log);
 
-                    versionTracker.StoreExecutedScript(connectionString, script, log);
+                    versionTracker.StoreExecutedScript(script, log);
 
                     executed.Add(script);
                 }

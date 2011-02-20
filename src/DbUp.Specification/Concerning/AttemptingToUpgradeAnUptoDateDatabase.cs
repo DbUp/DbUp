@@ -36,7 +36,7 @@ namespace DbUp.Specification.Concerning
         {
             DbUpgrader.PerformUpgrade(Log);
 
-            VersionTracker.DidNotReceiveWithAnyArgs().StoreExecutedScript("", null, null);
+            VersionTracker.DidNotReceiveWithAnyArgs().StoreExecutedScript(null, null);
         }
     }
 }

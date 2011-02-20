@@ -8,19 +8,17 @@ namespace DbUp.Journal
     public interface IJournal
     {
         /// <summary>
-        /// Recalls the version number of a database specified in a given connection string.
+        /// Recalls the version number of the database.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
         /// <param name="log">The log.</param>
         /// <returns></returns>
-        string[] GetExecutedScripts(string connectionString, ILog log);
+        string[] GetExecutedScripts(ILog log);
 
         /// <summary>
-        /// Records a database upgrade for a database specified in a given connection string.
+        /// Records an upgrade script for a database.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
         /// <param name="script">The script.</param>
         /// <param name="log">The log.</param>
-        void StoreExecutedScript(string connectionString, SqlScript script, ILog log);
+        void StoreExecutedScript(SqlScript script, ILog log);
     }
 }

@@ -20,7 +20,7 @@ namespace DbUp.Specification.Contexts
 			};
 			
 			ScriptProvider.GetScripts().Returns(AllScripts);
-			VersionTracker.GetExecutedScripts(ConnectionString, Log).Returns(new [] {"0001.southwind.sql"});
+			VersionTracker.GetExecutedScripts(Log).Returns(new [] {"0001.southwind.sql"});
 		}
 	}
 }
