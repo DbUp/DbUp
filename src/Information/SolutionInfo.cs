@@ -1,4 +1,5 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: AssemblyConfiguration("")]
@@ -6,3 +7,4 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyProduct("DbUp")]
 [assembly: AssemblyCopyright("Copyright © DbUp Contributors 2010")]
 [assembly: ComVisible(false)]
+[assembly: CLSCompliant(true)]
