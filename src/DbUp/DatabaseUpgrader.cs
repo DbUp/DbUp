@@ -32,7 +32,7 @@ namespace DbUp
         public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor)
         {
             this.connectionString = connectionString;
-            this.scriptExecutor = scriptExecutor ?? new SqlScriptExecutor();
+            this.scriptExecutor = scriptExecutor ?? new SqlScriptExecutor(connectionString);
             this.versionTracker = versionTracker ?? new TableJournal(connectionString);
             this.scriptProvider = scriptProvider;
         }
@@ -101,7 +101,7 @@ namespace DbUp
 
                 foreach (var script in scriptsToExecute)
                 {
-                    scriptExecutor.Execute(connectionString, script, log);
+                    scriptExecutor.Execute(script, log);
 
                     versionTracker.StoreExecutedScript(script, log);
 

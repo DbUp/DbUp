@@ -10,9 +10,8 @@ namespace DbUp.Execution
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
         /// <param name="script">The script.</param>
         /// <param name="log">The log.</param>
-        void Execute(string connectionString, SqlScript script, ILog log);
+        void Execute(SqlScript script, ILog log);
     }
 }

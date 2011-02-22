@@ -28,7 +28,7 @@ namespace DbUp.Specification.Concerning
             var result = DbUpgrader.PerformUpgrade(Log);
             var expectedScript = AllScripts.Last();
             
-            ScriptExecutor.Received().Execute(ConnectionString, expectedScript, Log);
+            ScriptExecutor.Received().Execute(expectedScript, Log);
             VersionTracker.Received().StoreExecutedScript(expectedScript, Log);
 
             Assert.AreEqual(expectedScript, result.Scripts.First());

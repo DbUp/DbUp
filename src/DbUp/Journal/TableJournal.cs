@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Runtime.InteropServices;
 using DbUp.ScriptProviders;
 
 namespace DbUp.Journal
@@ -19,7 +20,7 @@ namespace DbUp.Journal
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
         /// </summary>
-        public TableJournal(string targetDbConnectionString) : this("dbo", "SchemaVersions")
+        public TableJournal(string targetDbConnectionString) : this(targetDbConnectionString, "dbo", "SchemaVersions")
         {
             dbConnectionString = targetDbConnectionString;
         }
@@ -27,12 +28,17 @@ namespace DbUp.Journal
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
         /// </summary>
-        /// <param name="schemaName">Name of the schema.</param>
-        /// <param name="tableName">Name of the table.</param>
-        public TableJournal(string schemaName, string tableName)
+        /// <param name="targetDbConnectionString">The connection to the target database.</param>
+        /// <param name="schema">The schema that contains the table.</param>
+        /// <param name="table">The table name.</param>
+        /// <example>
+        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True;", "dbo", "MyVersionTable");
+        /// </example>
+        public TableJournal(string targetDbConnectionString, string schema, string table)
         {
-            this.tableName = tableName;
-            schemaTableName = schemaName + "." + tableName;
+            dbConnectionString = targetDbConnectionString;
+            tableName = table;
+            schemaTableName = schema + "." + tableName;
         }
 
         /// <summary>
@@ -58,12 +64,20 @@ namespace DbUp.Journal
                 command.CommandType = CommandType.Text;
                 connection.Open();
 
-                var reader = command.ExecuteReader();
-                while (reader.Read())
+                using(var reader = command.ExecuteReader())
                 {
-                    scripts.Add((string)reader[0]);
+                    if (reader == null)
+                    {
+                        var message =
+                            String.Format(
+                                "Expected to be able to read from the database. Command execution failed to return a result.\r\nCommand Text:\t{0}",
+                                command.CommandText);
+                        throw new InvalidOperationException(message);
+                    }
+
+                    while (reader.Read())
+                        scripts.Add((string) reader[0]);
                 }
-                reader.Close();
             }
             return scripts.ToArray();
         }

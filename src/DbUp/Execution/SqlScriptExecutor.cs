@@ -13,6 +13,17 @@ namespace DbUp.Execution
     /// </summary>
     public sealed class SqlScriptExecutor : IScriptExecutor
     {
+        private string dbConnectionString;
+
+        ///<summary>
+        /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
+        ///</summary>
+        ///<param name="connectionString">The connection string representing the database to act against.</param>
+        public SqlScriptExecutor(string connectionString)
+        {
+            dbConnectionString = connectionString;
+        }
+
         private static IEnumerable<string> SplitByGoStatements(string script)
         {
             var scriptStatements = Regex.Split(script, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
@@ -25,18 +36,17 @@ namespace DbUp.Execution
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
         /// <param name="script">The script.</param>
         /// <param name="log">The log.</param>
-        public void Execute(string connectionString, SqlScript script, ILog log)
+        public void Execute(SqlScript script, ILog log)
         {
             log.WriteInformation("Executing SQL Server script '{0}'", script.Name);
-            var connection = new SqlConnection(connectionString);
+            
             var scriptStatements = SplitByGoStatements(script.Contents);
             var index = -1;
             try
             {
-                using (connection)
+                using (var connection = new SqlConnection(dbConnectionString))
                 {
                     connection.Open();
 
