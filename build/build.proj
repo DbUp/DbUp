@@ -6,7 +6,7 @@
   
   <PropertyGroup>
     <Root>$(MSBuildStartupDirectory)</Root>
-    <nunitconsoleexe>$(Root)\src\packages\NUnit.2.5.9.10348\Tools\nunit-console.exe</nunitconsoleexe>
+    <nunitconsoleexe>$(Root)\lib\NUnit.2.5.9.10348\Tools\nunit-console.exe</nunitconsoleexe>
   </PropertyGroup>
 
   <PropertyGroup>
@@ -58,8 +58,8 @@
     <!-- Zip source -->
     <ItemGroup>
       <SourceFilesToZip Include="$(Root)\src\**\*.*" />
-      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\src\packages\NUnit.2.5.9.10348\**\*.*" />
-      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\src\packages\NSubstitute.1.0.0.0\**\*.*" />
+      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\packages\NUnit.2.5.9.10348\**\*.*" />
+      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\packages\NSubstitute.1.0.0.0\**\*.*" />
     </ItemGroup>
 
     <Zip Files="@(SourceFilesToZip)"
