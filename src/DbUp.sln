@@ -19,6 +19,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C6CF2BB4
 	ProjectSection(SolutionItems) = preProject
 		..\build\build.proj = ..\build\build.proj
 		..\build\dbup.nuspec = ..\build\dbup.nuspec
+		nuget.config = nuget.config
 	EndProjectSection
 EndProject
 Global
