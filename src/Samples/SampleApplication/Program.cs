@@ -14,7 +14,7 @@ namespace SampleApplication
             using (var database = new TemporarySqlDatabase("SampleApplication"))
             {
                 database.Create();
-
+                
                 // Deploy the schema
                 var upgrader = new DatabaseUpgrader(
                     database.ConnectionString,
@@ -23,7 +23,7 @@ namespace SampleApplication
                     new SqlScriptExecutor(database.ConnectionString)
                     );
 
-                var result = upgrader.PerformUpgrade(new ConsoleLog());
+                var result = upgrader.PerformUpgrade();
 
                 // Display the result
                 if (result.Successful)

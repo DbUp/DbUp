@@ -16,13 +16,13 @@ namespace DbUp.Journal
         private readonly string tableName;
         private readonly string schemaTableName;
         private readonly string dbConnectionString;
+        private readonly ILog   log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
         /// </summary>
-        public TableJournal(string targetDbConnectionString) : this(targetDbConnectionString, "dbo", "SchemaVersions")
+        public TableJournal(string targetDbConnectionString) : this(targetDbConnectionString, "dbo", "SchemaVersions", new ConsoleLog())
         {
-            dbConnectionString = targetDbConnectionString;
         }
 
         /// <summary>
@@ -31,22 +31,23 @@ namespace DbUp.Journal
         /// <param name="targetDbConnectionString">The connection to the target database.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
+        /// <param name="logger">The log.</param>
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True;", "dbo", "MyVersionTable");
         /// </example>
-        public TableJournal(string targetDbConnectionString, string schema, string table)
+        public TableJournal(string targetDbConnectionString, string schema, string table, ILog logger)
         {
             dbConnectionString = targetDbConnectionString;
             tableName = table;
             schemaTableName = schema + "." + tableName;
+            log = logger;
         }
 
         /// <summary>
         /// Recalls the version number of the database.
         /// </summary>
-        /// <param name="log">The log.</param>
         /// <returns>All executed scripts.</returns>
-        public string[] GetExecutedScripts(ILog log)
+        public string[] GetExecutedScripts()
         {
             log.WriteInformation("Fetching list of already executed scripts.");
             var exists = DoesTableExist(dbConnectionString);
@@ -86,8 +87,7 @@ namespace DbUp.Journal
         /// Records a database upgrade for a database specified in a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        /// <param name="log">The log.</param>
-        public void StoreExecutedScript(SqlScript script, ILog log)
+        public void StoreExecutedScript(SqlScript script)
         {
             var exists = DoesTableExist(dbConnectionString);
             if (!exists)

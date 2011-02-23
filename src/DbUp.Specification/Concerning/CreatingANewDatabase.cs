@@ -12,7 +12,7 @@ namespace DbUp.Specification.Concerning
         [Test]
         public void ShouldRunAllScripts()
         {
-            var result = DbUpgrader.PerformUpgrade(Log);
+            var result = DbUpgrader.PerformUpgrade();
             Assert.IsTrue(result.Scripts.All(script => 
                 AllScripts.Contains(script)
             ));
@@ -21,7 +21,7 @@ namespace DbUp.Specification.Concerning
         [Test]
         public void ShouldRunAllScriptsInTheOrderProvided()
         {
-            var result = DbUpgrader.PerformUpgrade(Log);
+            var result = DbUpgrader.PerformUpgrade();
             Assert.AreEqual("0001.sql", result.Scripts.ElementAt(0).Name);
             Assert.AreEqual("0004.sql", result.Scripts.ElementAt(1).Name);
             Assert.AreEqual("0002.sql", result.Scripts.ElementAt(2).Name);
@@ -32,8 +32,8 @@ namespace DbUp.Specification.Concerning
         {
             var ex = new InvalidOperationException();
             ScriptProvider.GetScripts().Returns(provider => { throw ex; });
-            DbUpgrader.PerformUpgrade(Log);
-            Log.Received().WriteError("Upgrade failed", ex);
+            DbUpgrader.PerformUpgrade();
+            Log.Received().WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
         }
 
         [Test]
@@ -41,7 +41,7 @@ namespace DbUp.Specification.Concerning
         {
             var ex = new InvalidOperationException();
             ScriptProvider.GetScripts().Returns(provider => { throw ex; });
-            var result = DbUpgrader.PerformUpgrade(Log);
+            var result = DbUpgrader.PerformUpgrade();
             
             Assert.That(result.Successful == false);
             Assert.That(result.Scripts.Count() == 0);
@@ -52,9 +52,9 @@ namespace DbUp.Specification.Concerning
         public void ShouldTrackExecutedScripts()
         {
             DbUpgrader
-                .PerformUpgrade(Log)
+                .PerformUpgrade()
                 .Scripts.ToList()
-                .ForEach(script => VersionTracker.Received().StoreExecutedScript(script, Log));
+                .ForEach(script => VersionTracker.Received().StoreExecutedScript(script));
         }
     }
 }

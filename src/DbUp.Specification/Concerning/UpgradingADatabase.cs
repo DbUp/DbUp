@@ -18,18 +18,18 @@ namespace DbUp.Specification.Concerning
 		[Test]
 		public void ShouldReturnSuccessfulResult ()
 		{
-			var result = DbUpgrader.PerformUpgrade (Log);
+			var result = DbUpgrader.PerformUpgrade ();
 			Assert.IsTrue (result.Successful);
 		}
 
         [Test]
         public void ShouldExecuteCorrectScript()
         {
-            var result = DbUpgrader.PerformUpgrade(Log);
+            var result = DbUpgrader.PerformUpgrade();
             var expectedScript = AllScripts.Last();
             
-            ScriptExecutor.Received().Execute(expectedScript, Log);
-            VersionTracker.Received().StoreExecutedScript(expectedScript, Log);
+            ScriptExecutor.Received().Execute(expectedScript);
+            VersionTracker.Received().StoreExecutedScript(expectedScript);
 
             Assert.AreEqual(expectedScript, result.Scripts.First());
         }
@@ -37,7 +37,7 @@ namespace DbUp.Specification.Concerning
 		[Test]
 		public void ShouldLogInformation ()
 		{
-			DbUpgrader.PerformUpgrade (Log);
+			DbUpgrader.PerformUpgrade ();
 			
 			Log.Received ().WriteInformation ("Beginning database upgrade. Connection string is: '{0}'", ConnectionString);
             Log.Received().WriteInformation("Upgrade successful");
@@ -47,9 +47,9 @@ namespace DbUp.Specification.Concerning
         public void ShouldTrackExecutedScripts()
         {
             DbUpgrader
-                .PerformUpgrade(Log)
+                .PerformUpgrade()
                 .Scripts.ToList()
-                .ForEach(script => VersionTracker.Received().StoreExecutedScript(script, Log));
+                .ForEach(script => VersionTracker.Received().StoreExecutedScript(script));
         }
 	}
 }

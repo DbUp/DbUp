@@ -10,15 +10,13 @@ namespace DbUp.Journal
         /// <summary>
         /// Recalls the version number of the database.
         /// </summary>
-        /// <param name="log">The log.</param>
         /// <returns></returns>
-        string[] GetExecutedScripts(ILog log);
+        string[] GetExecutedScripts();
 
         /// <summary>
         /// Records an upgrade script for a database.
         /// </summary>
         /// <param name="script">The script.</param>
-        /// <param name="log">The log.</param>
-        void StoreExecutedScript(SqlScript script, ILog log);
+        void StoreExecutedScript(SqlScript script);
     }
 }

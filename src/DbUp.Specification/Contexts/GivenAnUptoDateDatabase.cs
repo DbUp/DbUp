@@ -22,7 +22,7 @@ namespace DbUp.Specification
             };
 
             ScriptProvider.GetScripts().Returns(AllScripts);
-            VersionTracker.GetExecutedScripts(Log).Returns(executedScripts);
+            VersionTracker.GetExecutedScripts().Returns(executedScripts);
         }
 	}
 }

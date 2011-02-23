@@ -13,15 +13,26 @@ namespace DbUp.Execution
     /// </summary>
     public sealed class SqlScriptExecutor : IScriptExecutor
     {
-        private string dbConnectionString;
+        private readonly string dbConnectionString;
+        private readonly ILog log;
 
         ///<summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         ///</summary>
         ///<param name="connectionString">The connection string representing the database to act against.</param>
-        public SqlScriptExecutor(string connectionString)
+        public SqlScriptExecutor(string connectionString) : this(connectionString, new ConsoleLog())
+        {
+        }
+
+        ///<summary>
+        /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
+        ///</summary>
+        ///<param name="connectionString">The connection string representing the database to act against.</param>
+        ///<param name="log">The logging mechanism.</param>
+        public SqlScriptExecutor(string connectionString, ILog log)
         {
             dbConnectionString = connectionString;
+            this.log = log;
         }
 
         private static IEnumerable<string> SplitByGoStatements(string script)
@@ -37,8 +48,7 @@ namespace DbUp.Execution
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        /// <param name="log">The log.</param>
-        public void Execute(SqlScript script, ILog log)
+        public void Execute(SqlScript script)
         {
             log.WriteInformation("Executing SQL Server script '{0}'", script.Name);
             

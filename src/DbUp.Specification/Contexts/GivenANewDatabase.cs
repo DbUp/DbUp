@@ -18,7 +18,7 @@ namespace DbUp.Specification
             };
 
             ScriptProvider.GetScripts().Returns(AllScripts);
-            VersionTracker.GetExecutedScripts(Log).Returns(new string[] { });
+            VersionTracker.GetExecutedScripts().Returns(new string[] { });
         }
 	}
 }
