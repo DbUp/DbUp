@@ -9,7 +9,7 @@
     <OutputType>Library</OutputType>
     <RootNamespace>DbUp.Specification</RootNamespace>
     <AssemblyName>DbUp.Specification</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -48,6 +48,9 @@
     <Compile Include="Contexts\GivenAnOutOfDateDatabase.cs" />
     <Compile Include="Contexts\GivenANewDatabase.cs" />
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
+    <Compile Include="FileSystemScriptProviderTests.cs" />
+    <Compile Include="SpecificationFor.cs" />
+    <Compile Include="ThenAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
@@ -58,5 +61,11 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="TestScripts\20110301_1_Test1.sql" />
+    <EmbeddedResource Include="TestScripts\20110301_2_Test2.sql" />
+    <EmbeddedResource Include="TestScripts\20110302_1_Test3.sql" />
   </ItemGroup>
 </Project>

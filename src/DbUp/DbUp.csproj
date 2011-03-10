@@ -58,6 +58,7 @@
     <Compile Include="ILog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptProvider.cs" />
+    <Compile Include="ScriptProviders\FileSystemScriptProvider.cs" />
     <Compile Include="ScriptProviders\SqlScript.cs" />
     <Compile Include="ScriptProviders\IScriptProvider.cs" />
     <Compile Include="Journal\IJournal.cs" />
