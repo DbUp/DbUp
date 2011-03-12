@@ -48,6 +48,7 @@
     <Compile Include="Contexts\GivenAnOutOfDateDatabase.cs" />
     <Compile Include="Contexts\GivenANewDatabase.cs" />
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
+    <Compile Include="DatabaseUpgraderTests.cs" />
     <Compile Include="FileSystemScriptProviderTests.cs" />
     <Compile Include="SpecificationFor.cs" />
     <Compile Include="ThenAttribute.cs" />

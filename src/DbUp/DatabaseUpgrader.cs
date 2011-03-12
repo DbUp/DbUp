@@ -108,10 +108,8 @@ namespace DbUp
             {
                 log.WriteInformation("Beginning database upgrade. Connection string is: '{0}'", connectionString);
 
-                var allScripts = scriptProvider.GetScripts();
-                var executedScripts = versionTracker.GetExecutedScripts();
+                var scriptsToExecute = GetScriptsToExecute();
 
-                var scriptsToExecute = allScripts.Where(x => !executedScripts.Any(y => y == x.Name)).ToList();
                 if (scriptsToExecute.Count == 0)
                 {
                     log.WriteInformation("No new scripts need to be executed - completing.");
@@ -134,6 +132,38 @@ namespace DbUp
             {
                 log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(executed, false, ex);
+            }
+        }
+
+        private List<SqlScript> GetScriptsToExecute()
+        {
+            var allScripts = scriptProvider.GetScripts();
+            var executedScripts = versionTracker.GetExecutedScripts();
+
+            return allScripts.Where(x => !executedScripts.Any(y => y == x.Name)).ToList();
+        }
+
+        public DatabaseUpgradeResult MarkAsExecuted()
+        {
+            var marked = new List<SqlScript>();
+            try
+            {
+                var scriptsToExecute = GetScriptsToExecute();
+
+                foreach (var script in scriptsToExecute)
+                {
+                    versionTracker.StoreExecutedScript(script);
+                    log.WriteInformation("Marking script {0} as executed", script.Name);
+                    marked.Add(script);
+                }
+
+                log.WriteInformation("Script marking successful");
+                return new DatabaseUpgradeResult(marked, true, null);
+            }
+            catch (Exception ex)
+            {
+                log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                return new DatabaseUpgradeResult(marked, false, ex);
             }
         }
     }

@@ -21,6 +21,7 @@ namespace DbUp.Console
             var directory = "";
             var username = "";
             var password = "";
+            bool mark = false;
 
 
             bool show_help = false;
@@ -32,6 +33,7 @@ namespace DbUp.Console
             { "u|user=", "Database username", u => username = u},
             { "p|password=", "Database password", p => password = p},
             { "h|help",  "show this message and exit", v => show_help = v != null },
+            {"mark", "Mark scripts as executed but take no action", m => mark = true},
         };
 
             optionSet.Parse(args);
@@ -52,7 +54,14 @@ namespace DbUp.Console
             var dbup = new DatabaseUpgrader(connectionString, new FileSystemScriptProvider(directory),
                                             new TableJournal(connectionString), new SqlScriptExecutor(connectionString),
                                             new ConsoleLog());
-            dbup.PerformUpgrade();
+            if (!mark)
+            {
+                dbup.PerformUpgrade();
+            }
+            else
+            {
+                dbup.MarkAsExecuted();
+            }
 
         }
 
