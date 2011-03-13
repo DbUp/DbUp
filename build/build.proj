@@ -87,6 +87,7 @@
     <ItemGroup>
       <Net35Files Include="$(Root)\src\DbUp\bin\*.dll" />
       <Net35Files Include="$(Root)\src\DbUp\bin\*.xml" />
+      <Net35Files Include="$(Root)\src\DbUp\bin\*.exe" />
     </ItemGroup>
     <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\lib\NET35" />
     
