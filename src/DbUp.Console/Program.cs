@@ -22,6 +22,7 @@ namespace DbUp.Console
             var username = "";
             var password = "";
             bool mark = false;
+            var connectionString = "";
 
 
             bool show_help = false;
@@ -32,6 +33,7 @@ namespace DbUp.Console
             { "d|directory=", "directory containing SQL Update files", dir => directory = dir },
             { "u|user=", "Database username", u => username = u},
             { "p|password=", "Database password", p => password = p},
+            { "cs|connectionString=", "Full connection string", cs => connectionString = cs},
             { "h|help",  "show this message and exit", v => show_help = v != null },
             {"mark", "Mark scripts as executed but take no action", m => mark = true},
         };
@@ -48,8 +50,11 @@ namespace DbUp.Console
                 return;
                 
             }
-            string connectionString = BuildConnectionString(server, database, username, password);
 
+            if (String.IsNullOrEmpty(connectionString))
+            {
+                connectionString = BuildConnectionString(server, database, username, password);
+            }
 
             var dbup = new DatabaseUpgrader(connectionString, new FileSystemScriptProvider(directory),
                                             new TableJournal(connectionString), new SqlScriptExecutor(connectionString),
