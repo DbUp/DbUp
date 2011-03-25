@@ -143,6 +143,11 @@ namespace DbUp
             return allScripts.Where(x => !executedScripts.Any(y => y == x.Name)).ToList();
         }
 
+        ///<summary>
+        /// Creates version record for any new migration scripts without executing them.
+        /// Useful for bringing development environments into sync with automated environments
+        ///</summary>
+        ///<returns></returns>
         public DatabaseUpgradeResult MarkAsExecuted()
         {
             var marked = new List<SqlScript>();
