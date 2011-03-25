@@ -12,7 +12,7 @@ namespace DbUp.Specification.Concerning
 		[Test]
 		public void ShouldDetermineIfUpgradeIsRequired ()
 		{
-			Assert.IsTrue(DbUpgrader.IsUpgradeRequired(Log));
+			Assert.IsTrue(DbUpgrader.IsUpgradeRequired());
 		}
 		
 		[Test]
