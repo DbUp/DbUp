@@ -9,6 +9,12 @@ namespace DbUp.Specification.Concerning
     public class AttemptingToUpgradeAnUptoDateDatabase : GivenAnUptoDateDatabase
     {
         [Test]
+        public void ShouldNotRequireUpgrades()
+        {
+            Assert.IsFalse(DbUpgrader.IsUpgradeRequired());
+        }
+
+        [Test]
         public void ShouldNotRunAnyScripts()
         {
             var result = DbUpgrader.PerformUpgrade();

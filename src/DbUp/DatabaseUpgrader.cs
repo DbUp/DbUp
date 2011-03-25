@@ -59,14 +59,14 @@ namespace DbUp
         /// <summary>
         /// Determines whether the database is out of date and can be upgraded.
         /// </summary>
-        /// <param name="log">The log.</param>
-        public bool IsUpgradeRequired(ILog log)
+        public bool IsUpgradeRequired()
         {
             var allScripts = scriptProvider.GetScripts();
             var executedScripts = versionTracker.GetExecutedScripts();
 
-            var scriptsToExecute = allScripts.Where(x => executedScripts.Any(y => y == x.Name)).ToList();
-            return scriptsToExecute.Count != 0;
+
+            var scriptsToExecute = allScripts.Where(s => ! executedScripts.Contains(s.Name));
+            return scriptsToExecute.Count() != 0;
         }
 
         /// <summary>
