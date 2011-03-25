@@ -20,6 +20,9 @@ namespace DbUp.ScriptProviders
             _directoryPath = directoryPath;
         }
 
+        /// <summary>
+        /// Gets all scripts that should be executed.
+        /// </summary>
         public IEnumerable<SqlScript> GetScripts()
         {
             return Directory.GetFiles(_directoryPath, "*.sql").Select(ReadFileAsScript).ToList();
