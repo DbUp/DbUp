@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
 using DbUp.Execution;
 using DbUp.Journal;
 using DbUp.ScriptProviders;
@@ -15,7 +11,6 @@ namespace DbUp.Console
     {
         static void Main(string[] args)
         {
-
             var server = "";
             var database = "";
             var directory = "";
@@ -24,19 +19,18 @@ namespace DbUp.Console
             bool mark = false;
             var connectionString = "";
 
-
             bool show_help = false;
 
             var optionSet = new OptionSet() {
-            { "s|server=", "the SQL Server host", s => server = s },
-            { "db|database=", "database to upgrade", d => database = d},
-            { "d|directory=", "directory containing SQL Update files", dir => directory = dir },
-            { "u|user=", "Database username", u => username = u},
-            { "p|password=", "Database password", p => password = p},
-            { "cs|connectionString=", "Full connection string", cs => connectionString = cs},
-            { "h|help",  "show this message and exit", v => show_help = v != null },
-            {"mark", "Mark scripts as executed but take no action", m => mark = true},
-        };
+                { "s|server=", "the SQL Server host", s => server = s },
+                { "db|database=", "database to upgrade", d => database = d},
+                { "d|directory=", "directory containing SQL Update files", dir => directory = dir },
+                { "u|user=", "Database username", u => username = u},
+                { "p|password=", "Database password", p => password = p},
+                { "cs|connectionString=", "Full connection string", cs => connectionString = cs},
+                { "h|help",  "show this message and exit", v => show_help = v != null },
+                {"mark", "Mark scripts as executed but take no action", m => mark = true},
+            };
 
             optionSet.Parse(args);
 
@@ -44,11 +38,11 @@ namespace DbUp.Console
                 show_help = true;
 
 
-            if ( show_help )
+            if (show_help)
             {
                 optionSet.WriteOptionDescriptions(System.Console.Out);
                 return;
-                
+
             }
 
             if (String.IsNullOrEmpty(connectionString))
@@ -56,9 +50,14 @@ namespace DbUp.Console
                 connectionString = BuildConnectionString(server, database, username, password);
             }
 
-            var dbup = new DatabaseUpgrader(connectionString, new FileSystemScriptProvider(directory),
-                                            new TableJournal(connectionString), new SqlScriptExecutor(connectionString),
-                                            new ConsoleLog());
+            var dbup = new DatabaseUpgrader(
+                connectionString,
+                new FileSystemScriptProvider(directory)
+                );
+            dbup.Journal = new TableJournal(connectionString);
+            dbup.ScriptExecutor = new SqlScriptExecutor(connectionString);
+            dbup.Log = new ConsoleLog();
+
             if (!mark)
             {
                 dbup.PerformUpgrade();
@@ -67,7 +66,6 @@ namespace DbUp.Console
             {
                 dbup.MarkAsExecuted();
             }
-
         }
 
         private static string BuildConnectionString(string server, string database, string username, string password)
