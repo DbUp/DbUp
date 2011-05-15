@@ -18,9 +18,7 @@ namespace SampleApplication
                 // Deploy the schema
                 var upgrader = new DatabaseUpgrader(
                     database.ConnectionString,
-                    new EmbeddedScriptProvider(typeof (Program).Assembly),
-                    new TableJournal(database.ConnectionString),
-                    new SqlScriptExecutor(database.ConnectionString)
+                    new EmbeddedScriptProvider(typeof (Program).Assembly)
                     );
 
                 var result = upgrader.PerformUpgrade();

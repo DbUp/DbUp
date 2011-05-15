@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using DbUp.Execution;
@@ -13,48 +15,50 @@ namespace DbUp
     /// </summary>
     public class DatabaseUpgrader
     {
-        private readonly string connectionString;
+        private readonly Func<IDbConnection> connectionFactory;
         private readonly IScriptProvider scriptProvider;
-        private readonly IJournal versionTracker;
-        private readonly IScriptExecutor scriptExecutor;
-        private readonly ILog log;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="DatabaseUpgrader"/> class.
-        /// </summary>
-        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider) 
-            : this(connectionString, scriptProvider, null, null, null)
-        {
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseUpgrader"/> class.
         /// </summary>
         /// <param name="connectionString">The target database connection string.</param>
         /// <param name="scriptProvider">The script provider instance.</param>
-        /// <param name="versionTracker">The version tracking instance.</param>
-        /// <param name="scriptExecutor">The script executor instance.</param>
-        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor) : this(connectionString, scriptProvider, versionTracker, scriptExecutor, null)
+        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider)
+            : this(() => new SqlConnection(connectionString), scriptProvider)
         {
         }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseUpgrader"/> class.
         /// </summary>
-        /// <param name="connectionString">The target database connection string.</param>
+        /// <param name="connectionFactory">A delegate that creates new connections for the data provider you are using.</param>
         /// <param name="scriptProvider">The script provider instance.</param>
-        /// <param name="versionTracker">The version tracking instance.</param>
-        /// <param name="scriptExecutor">The script executor instance.</param>
-        /// <param name="log">The logging mechanism.</param>
-        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor, ILog log)
+        public DatabaseUpgrader(Func<IDbConnection> connectionFactory, IScriptProvider scriptProvider)
         {
-            this.connectionString = connectionString;
+            this.connectionFactory = connectionFactory;
             this.scriptProvider = scriptProvider;
-            this.log = log ?? new ConsoleLog();
-            this.scriptExecutor = scriptExecutor ?? new SqlScriptExecutor(connectionString, this.log);
-            this.versionTracker = versionTracker ?? new TableJournal(connectionString, "dbo", "SchemaVersions", this.log);
-            
+            Log = new ConsoleLog();
+            ScriptExecutor = new SqlScriptExecutor(connectionFactory, this.Log);
+            Journal = new TableJournal(connectionFactory, "dbo", "SchemaVersions", this.Log);
         }
+
+        /// <summary>
+        /// Gets or sets the version tracker.
+        /// </summary>
+        public IJournal Journal { get; set; }
+
+        /// <summary>
+        /// Gets or sets an object that will execute scripts against the database.
+        /// </summary>
+        /// <value>
+        /// The script executor.
+        /// </value>
+        public IScriptExecutor ScriptExecutor { get; set; }
+
+        /// <summary>
+        /// Gets or sets an object that will receive log messages.
+        /// </summary>
+        public ILog Log { get; set; }
 
         /// <summary>
         /// Determines whether the database is out of date and can be upgraded.
@@ -62,8 +66,7 @@ namespace DbUp
         public bool IsUpgradeRequired()
         {
             var allScripts = scriptProvider.GetScripts();
-            var executedScripts = versionTracker.GetExecutedScripts();
-
+            var executedScripts = Journal.GetExecutedScripts();
 
             var scriptsToExecute = allScripts.Where(s => ! executedScripts.Contains(s.Name));
             return scriptsToExecute.Count() != 0;
@@ -78,16 +81,14 @@ namespace DbUp
         {
             try
             {
-                var csb = new SqlConnectionStringBuilder(connectionString);
-                csb.Pooling = false;
-                csb.ConnectTimeout = 5;
-
                 errorMessage = "";
-                using (var connection = new SqlConnection(csb.ConnectionString))
+                using (var connection = connectionFactory())
                 {
                     connection.Open();
 
-                    new SqlCommand("select 1", connection).ExecuteScalar();
+                    var command = connection.CreateCommand();
+                    command.CommandText = "select 1";
+                    command.ExecuteScalar();
                 }
                 return true;
             }
@@ -106,31 +107,31 @@ namespace DbUp
             var executed = new List<SqlScript>();
             try
             {
-                log.WriteInformation("Beginning database upgrade. Connection string is: '{0}'", connectionString);
+                Log.WriteInformation("Beginning database upgrade");
 
                 var scriptsToExecute = GetScriptsToExecute();
 
                 if (scriptsToExecute.Count == 0)
                 {
-                    log.WriteInformation("No new scripts need to be executed - completing.");
+                    Log.WriteInformation("No new scripts need to be executed - completing.");
                     return new DatabaseUpgradeResult(executed, true, null);
                 }
 
                 foreach (var script in scriptsToExecute)
                 {
-                    scriptExecutor.Execute(script);
+                    ScriptExecutor.Execute(script);
 
-                    versionTracker.StoreExecutedScript(script);
+                    Journal.StoreExecutedScript(script);
 
                     executed.Add(script);
                 }
 
-                log.WriteInformation("Upgrade successful");
+                Log.WriteInformation("Upgrade successful");
                 return new DatabaseUpgradeResult(executed, true, null);
             }
             catch (Exception ex)
             {
-                log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(executed, false, ex);
             }
         }
@@ -138,7 +139,7 @@ namespace DbUp
         private List<SqlScript> GetScriptsToExecute()
         {
             var allScripts = scriptProvider.GetScripts();
-            var executedScripts = versionTracker.GetExecutedScripts();
+            var executedScripts = Journal.GetExecutedScripts();
 
             return allScripts.Where(x => !executedScripts.Any(y => y == x.Name)).ToList();
         }
@@ -157,17 +158,17 @@ namespace DbUp
 
                 foreach (var script in scriptsToExecute)
                 {
-                    versionTracker.StoreExecutedScript(script);
-                    log.WriteInformation("Marking script {0} as executed", script.Name);
+                    Journal.StoreExecutedScript(script);
+                    Log.WriteInformation("Marking script {0} as executed", script.Name);
                     marked.Add(script);
                 }
 
-                log.WriteInformation("Script marking successful");
+                Log.WriteInformation("Script marking successful");
                 return new DatabaseUpgradeResult(marked, true, null);
             }
             catch (Exception ex)
             {
-                log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(marked, false, ex);
             }
         }

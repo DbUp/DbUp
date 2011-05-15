@@ -12,20 +12,21 @@ namespace DbUp.Specification
 
         public class when_marking_scripts_as_read : SpecificationFor<DatabaseUpgrader>
         {
-            private IJournal _versionTracker;
-            private IScriptProvider _scriptProvider;
-            private IScriptExecutor _scriptExecutor;
+            private IJournal versionTracker;
+            private IScriptProvider scriptProvider;
+            private IScriptExecutor scriptExecutor;
 
             public override DatabaseUpgrader Given()
             {
-                _scriptProvider = Substitute.For<IScriptProvider>();
-                _scriptProvider.GetScripts().Returns(new List<SqlScript> {new SqlScript("1234", "foo")});
+                scriptProvider = Substitute.For<IScriptProvider>();
+                scriptProvider.GetScripts().Returns(new List<SqlScript> {new SqlScript("1234", "foo")});
+                versionTracker = Substitute.For<IJournal>();
+                scriptExecutor = Substitute.For<IScriptExecutor>();
 
-                _versionTracker = Substitute.For<IJournal>();
-
-                _scriptExecutor = Substitute.For<IScriptExecutor>();
-
-                return new DatabaseUpgrader("connstr", _scriptProvider, _versionTracker, _scriptExecutor);
+                var upgrader = new DatabaseUpgrader("connstr", scriptProvider);
+                upgrader.Journal = versionTracker;
+                upgrader.ScriptExecutor = scriptExecutor;
+                return upgrader;
             }
 
             public override void When()
@@ -36,13 +37,13 @@ namespace DbUp.Specification
             [Then]
             public void the_scripts_are_journalled()
             {
-                _versionTracker.Received().StoreExecutedScript(Arg.Is<SqlScript>(s => s.Name == "1234"));
+                versionTracker.Received().StoreExecutedScript(Arg.Is<SqlScript>(s => s.Name == "1234"));
             }
 
             [Then]
             public void the_scripts_are_not_run()
             {
-                _scriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
+                scriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
             }
         }
 

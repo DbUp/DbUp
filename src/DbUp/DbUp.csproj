@@ -57,6 +57,7 @@
     <Compile Include="Execution\SqlScriptExecutor.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptProviders\DelegateScriptProvider.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptProvider.cs" />
     <Compile Include="ScriptProviders\FileSystemScriptProvider.cs" />
     <Compile Include="ScriptProviders\SqlScript.cs" />

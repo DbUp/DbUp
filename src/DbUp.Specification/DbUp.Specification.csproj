@@ -39,6 +39,11 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\lib\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Concerning\AttemptingToUpgradeAnUptoDateDatabase.cs" />
@@ -51,6 +56,7 @@
     <Compile Include="DatabaseUpgraderTests.cs" />
     <Compile Include="FileSystemScriptProviderTests.cs" />
     <Compile Include="SpecificationFor.cs" />
+    <Compile Include="SqlCeSupportTests.cs" />
     <Compile Include="ThenAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -69,4 +75,11 @@
     <EmbeddedResource Include="TestScripts\20110301_2_Test2.sql" />
     <EmbeddedResource Include="TestScripts\20110302_1_Test3.sql" />
   </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+xcopy /s /y "$(SolutionDir)..\lib\SqlServerCompact.4.0.8482.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+xcopy /s /y "$(SolutionDir)..\lib\SqlServerCompact.4.0.8482.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
 </Project>
