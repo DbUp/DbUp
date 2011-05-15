@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -9,29 +11,29 @@ namespace DbUp.Execution
 {
     /// <summary>
     /// A standard implementation of the IScriptExecutor interface that executes against a SQL Server 
-    /// database using SQL Server SMO.
+    /// database.
     /// </summary>
     public sealed class SqlScriptExecutor : IScriptExecutor
     {
-        private readonly string dbConnectionString;
+        private readonly Func<IDbConnection> connectionFactory;
         private readonly ILog log;
 
         ///<summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         ///</summary>
         ///<param name="connectionString">The connection string representing the database to act against.</param>
-        public SqlScriptExecutor(string connectionString) : this(connectionString, new ConsoleLog())
+        public SqlScriptExecutor(string connectionString) : this(() => new SqlConnection(connectionString), new ConsoleLog())
         {
         }
 
-        ///<summary>
+        /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
-        ///</summary>
-        ///<param name="connectionString">The connection string representing the database to act against.</param>
-        ///<param name="log">The logging mechanism.</param>
-        public SqlScriptExecutor(string connectionString, ILog log)
+        /// </summary>
+        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="log">The logging mechanism.</param>
+        public SqlScriptExecutor(Func<IDbConnection> connectionFactory, ILog log)
         {
-            dbConnectionString = connectionString;
+            this.connectionFactory = connectionFactory;
             this.log = log;
         }
 
@@ -56,14 +58,15 @@ namespace DbUp.Execution
             var index = -1;
             try
             {
-                using (var connection = new SqlConnection(dbConnectionString))
+                using (var connection = connectionFactory())
                 {
                     connection.Open();
 
                     foreach (var statement in scriptStatements)
                     {
                         index++;
-                        var command = new SqlCommand(statement, connection);
+                        var command = connection.CreateCommand();
+                        command.CommandText = statement;
                         command.ExecuteNonQuery();
                     }
                 }
@@ -72,6 +75,13 @@ namespace DbUp.Execution
             {
                 log.WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
                 log.WriteError("Script block number: {0}; Block line {1}; Message: {2}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
+                log.WriteError(sqlException.ToString());
+                throw;
+            }
+            catch (DbException sqlException)
+            {
+                log.WriteInformation("DB exception has occured in script: '{0}'", script.Name);
+                log.WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
                 log.WriteError(sqlException.ToString());
                 throw;
             }

@@ -24,7 +24,10 @@ namespace DbUp.Specification.Contexts
 			VersionTracker = Substitute.For<IJournal> ();
 			ScriptExecutor = Substitute.For<IScriptExecutor> ();
 			Log = Substitute.For<ILog> ();
-            DbUpgrader = new DatabaseUpgrader(ConnectionString, ScriptProvider, VersionTracker, ScriptExecutor, Log);
+            DbUpgrader = new DatabaseUpgrader(ConnectionString, ScriptProvider);
+            DbUpgrader.Journal = VersionTracker;
+            DbUpgrader.ScriptExecutor = ScriptExecutor;
+            DbUpgrader.Log = Log;
         }
 
         [TearDown]
