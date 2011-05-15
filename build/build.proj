@@ -6,7 +6,7 @@
   
   <PropertyGroup>
     <Root>$(MSBuildStartupDirectory)</Root>
-    <nunitconsoleexe>$(Root)\lib\NUnit.2.5.9.10348\Tools\nunit-console.exe</nunitconsoleexe>
+    <nunitconsoleexe>$(Root)\lib\NUnit.2.5.10.11092\Tools\nunit-console.exe</nunitconsoleexe>
   </PropertyGroup>
 
   <PropertyGroup>
