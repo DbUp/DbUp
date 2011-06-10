@@ -34,7 +34,8 @@ namespace DbUp
         /// <param name="scriptProvider">The script provider instance.</param>
         /// <param name="versionTracker">The version tracking instance.</param>
         /// <param name="scriptExecutor">The script executor instance.</param>
-        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor) : this(connectionString, scriptProvider, versionTracker, scriptExecutor, null)
+        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor) 
+            : this(connectionString, scriptProvider, versionTracker, scriptExecutor, null)
         {
         }
 
