@@ -20,8 +20,7 @@ namespace SampleApplication
                     database.ConnectionString,
                     new EmbeddedScriptProvider(typeof (Program).Assembly),
                     new TableJournal(database.ConnectionString),
-                    new SqlScriptExecutor(database.ConnectionString)
-                    );
+                    new SqlScriptExecutor(database.ConnectionString));
 
                 var result = upgrader.PerformUpgrade();
 
