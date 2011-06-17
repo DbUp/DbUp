@@ -80,6 +80,9 @@ namespace DbUp.Execution
             Execute(script, null);
         }
 
+	/// <summary>
+	/// Verifies the existence of targeted schema. If schema is not verified, will check for the existence of the dbo schema.
+	/// </summary>
         public void VerifySchema()
         {
             var sqlRunner = new AdHocSqlRunner(dbConnectionString, schema);
