@@ -46,6 +46,7 @@ namespace DbUp.Helpers
         public object ExecuteScalar(string query, params Func<string, object>[] parameters)
         {
             object result = null;
+            query = Preprocess(query);
             Execute(query, parameters, 
                     command =>
                         {
