@@ -16,6 +16,7 @@ namespace DbUp.Journal
         private readonly string schemaTableName;
         private readonly string dbConnectionString;
         private readonly ILog   log;
+        private readonly string schema;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
@@ -56,6 +57,7 @@ namespace DbUp.Journal
         {
             dbConnectionString = targetDbConnectionString;
             tableName = table;
+            this.schema = schema;
             schemaTableName = schema + "." + tableName;
             log = logger;
         }
@@ -141,7 +143,11 @@ namespace DbUp.Journal
             {
                 using (var command = connection.CreateCommand())
                 {
-                    command.CommandText = string.Format("select count(*) from sys.objects where type='U' and name='{0}'", tableName);
+                    command.CommandText = string.Format(
+@"select count(*)
+from sys.objects 
+inner join sys.schemas on objects.schema_id = schemas.schema_id
+where type='U' and objects.name = '{0}' and schemas.name = '{1}'", tableName, schema);
                     command.CommandType = CommandType.Text;
                     connection.Open();
 
@@ -151,6 +157,7 @@ namespace DbUp.Journal
                     return result != 0;
                 }
             }
+
         }
     }
 }
