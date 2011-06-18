@@ -34,7 +34,6 @@ namespace DbUp.ScriptProviders
             using (var reader = new StreamReader(path))
             {
                 contents = reader.ReadToEnd();
-                reader.Close();
             }
             var fileName = new FileInfo(path).Name;
             return new SqlScript (fileName, contents);
