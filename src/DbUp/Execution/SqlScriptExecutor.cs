@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DbUp.Helpers;
 using DbUp.Preprocessors;
 using DbUp.ScriptProviders;
 
@@ -69,6 +70,7 @@ namespace DbUp.Execution
                                        .Select(x => x.Trim())
                                        .Where(x => x.Length > 0)
                                        .ToArray();
+
             return scriptStatements;
         }
 
@@ -79,6 +81,17 @@ namespace DbUp.Execution
         public void Execute(SqlScript script)
         {
             Execute(script, null);
+        }
+
+	/// <summary>
+	/// Verifies the existence of targeted schema. If schema is not verified, will check for the existence of the dbo schema.
+	/// </summary>
+        public void VerifySchema()
+        {
+            var sqlRunner = new AdHocSqlRunner(dbConnectionString, schema);
+
+            sqlRunner.ExecuteNonQuery(string.Format(
+                @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", schema));
         }
 
         /// <summary>
