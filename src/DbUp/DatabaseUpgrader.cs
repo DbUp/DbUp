@@ -122,6 +122,8 @@ namespace DbUp
                     return new DatabaseUpgradeResult(executed, true, null);
                 }
 
+                scriptExecutor.VerifySchema();
+
                 foreach (var script in scriptsToExecute)
                 {
                     ScriptExecutor.Execute(script);

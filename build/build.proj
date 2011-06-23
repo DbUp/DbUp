@@ -81,7 +81,7 @@
         <TestAssembly Include="$(Root)\src\DbUp.Specification\bin\Release\DbUp.Specification.dll" />
     </ItemGroup>
 
-    <!--<Exec Command="$(nunitconsoleexe) @(TestAssembly)" />-->
+    <Exec Command="$(nunitconsoleexe) @(TestAssembly)" />
 
     <!-- Copy binaries -->
     <ItemGroup>
