@@ -34,6 +34,11 @@ namespace DbUp
         /// <param name="connectionFactory">A delegate that creates new connections for the data provider you are using.</param>
         /// <param name="scriptProvider">The script provider instance.</param>
         public DatabaseUpgrader(Func<IDbConnection> connectionFactory, IScriptProvider scriptProvider)
+        /// <param name="versionTracker">The version tracking instance.</param>
+        /// <param name="scriptExecutor">The script executor instance.</param>
+        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor) 
+        public DatabaseUpgrader(string connectionString, IScriptProvider scriptProvider, IJournal versionTracker, IScriptExecutor scriptExecutor) : this(connectionString, scriptProvider, versionTracker, scriptExecutor, null)
+            : this(connectionString, scriptProvider, versionTracker, scriptExecutor, null)
         {
             this.connectionFactory = connectionFactory;
             this.scriptProvider = scriptProvider;
