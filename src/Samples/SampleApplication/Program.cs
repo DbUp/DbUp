@@ -19,6 +19,9 @@ namespace SampleApplication
                 var upgrader = new DatabaseUpgrader(
                     database.ConnectionString,
                     new EmbeddedScriptProvider(typeof (Program).Assembly)
+                    new EmbeddedScriptProvider(typeof (Program).Assembly),
+                    new TableJournal(database.ConnectionString),
+                    new SqlScriptExecutor(database.ConnectionString));
                     );
 
                 var result = upgrader.PerformUpgrade();
