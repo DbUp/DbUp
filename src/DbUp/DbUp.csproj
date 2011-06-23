@@ -49,28 +49,42 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Information\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Information\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
+    <Compile Include="Builder\StandardExtensions.cs" />
+    <Compile Include="Builder\UpgradeConfiguration.cs" />
+    <Compile Include="Builder\UpgradeEngineBuilder.cs" />
+    <Compile Include="DeployChanges.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
-    <Compile Include="ConsoleLog.cs" />
-    <Compile Include="DatabaseUpgrader.cs" />
-    <Compile Include="DatabaseUpgradeResult.cs" />
-    <Compile Include="Execution\IScriptExecutor.cs" />
-    <Compile Include="Execution\SqlScriptExecutor.cs" />
-    <Compile Include="Preprocessors\IScriptPreprocessor.cs" />
-    <Compile Include="Preprocessors\VariableSubstitutionPreprocessor.cs" />
-    <Compile Include="ILog.cs" />
+    <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
+    <Compile Include="Engine\UpgradeEngine.cs" />
+    <Compile Include="Engine\DatabaseUpgradeResult.cs" />
+    <Compile Include="Engine\IScriptExecutor.cs" />
+    <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
+    <Compile Include="Engine\IScriptPreprocessor.cs" />
+    <Compile Include="Engine\Preprocessors\VariableSubstitutionPreprocessor.cs" />
+    <Compile Include="Engine\Output\IUpgradeLog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="ScriptProviders\DelegateScriptProvider.cs" />
+    <Compile Include="ScriptProviders\StaticScriptProvider.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptProvider.cs" />
     <Compile Include="ScriptProviders\FileSystemScriptProvider.cs" />
-    <Compile Include="ScriptProviders\SqlScript.cs" />
-    <Compile Include="ScriptProviders\IScriptProvider.cs" />
-    <Compile Include="Journal\IJournal.cs" />
-    <Compile Include="Journal\TableJournal.cs" />
+    <Compile Include="Engine\SqlScript.cs" />
+    <Compile Include="Engine\IScriptProvider.cs" />
+    <Compile Include="Engine\IJournal.cs" />
+    <Compile Include="Support\SqlServer\SqlTableJournal.cs" />
     <Compile Include="Helpers\TemporarySqlDatabase.cs" />
+    <Compile Include="Engine\Output\TraceUpgradeLog.cs" />
+    <Compile Include="Support\SqlServer\SqlServerExtensions.cs" />
+    <Compile Include="Builder\SupportedDatabases.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

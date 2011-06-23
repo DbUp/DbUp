@@ -1,11 +1,9 @@
-﻿using System;
-
-namespace DbUp
+﻿namespace DbUp.Engine.Output
 {
     /// <summary>
     /// Implemented by objects which record the internal details of the database migration.
     /// </summary>
-    public interface ILog
+    public interface IUpgradeLog
     {
         /// <summary>
         /// Writes an informational message to the log.

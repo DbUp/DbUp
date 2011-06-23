@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlClient;
 using System.Diagnostics;
+using DbUp.Engine.Output;
 
 namespace DbUp.Helpers
 {
@@ -22,12 +23,12 @@ namespace DbUp.Helpers
         {
             databaseName = name;
             connectionString = string.Format("Server=(local)\\SQLEXPRESS;Database={0};Trusted_connection=true;Pooling=false", databaseName);
-            database = new AdHocSqlRunner(connectionString);
+            database = new AdHocSqlRunner(( ) => new SqlConnection(connectionString), "dbo");
 
             var builder = new SqlConnectionStringBuilder(connectionString);
             builder.InitialCatalog = "master";
 
-            master = new AdHocSqlRunner(builder.ToString());
+            master = new AdHocSqlRunner(() => new SqlConnection(builder.ToString()), "dbo");
         }
 
         /// <summary>
@@ -71,7 +72,7 @@ namespace DbUp.Helpers
             master.ExecuteNonQuery("drop database [" + databaseName + "]");
         }
 
-        internal class TraceLog : ILog
+        internal class TraceLog : IUpgradeLog
         {
             public void WriteInformation(string format, params object[] args)
             {

@@ -1,5 +1,5 @@
 ﻿
-namespace DbUp.ScriptProviders
+namespace DbUp.Engine
 {
     /// <summary>
     /// Represents a SQL Server script that comes from an embedded resource in an assembly. 

@@ -1,9 +1,7 @@
 ﻿using System;
+using System.Reflection;
 using DbUp;
-using DbUp.Execution;
 using DbUp.Helpers;
-using DbUp.Journal;
-using DbUp.ScriptProviders;
 
 namespace SampleApplication
 {
@@ -14,15 +12,13 @@ namespace SampleApplication
             using (var database = new TemporarySqlDatabase("SampleApplication"))
             {
                 database.Create();
-                
-                // Deploy the schema
-                var upgrader = new DatabaseUpgrader(
-                    database.ConnectionString,
-                    new EmbeddedScriptProvider(typeof (Program).Assembly)
-                    new EmbeddedScriptProvider(typeof (Program).Assembly),
-                    new TableJournal(database.ConnectionString),
-                    new SqlScriptExecutor(database.ConnectionString));
-                    );
+
+                var upgrader = 
+                    DeployChanges.To
+                    .SqlDatabase(database.ConnectionString)
+                    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
+                    .LogToConsole()
+                    .Build();
 
                 var result = upgrader.PerformUpgrade();
 

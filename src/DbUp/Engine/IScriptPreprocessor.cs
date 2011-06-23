@@ -1,6 +1,4 @@
-using System;
-
-namespace DbUp.Preprocessors
+namespace DbUp.Engine
 {
     /// <summary>
     /// Preprocessor that executes before scripts are executed against the database

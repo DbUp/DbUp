@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using DbUp.ScriptProviders;
 
-namespace DbUp
+namespace DbUp.Engine
 {
     /// <summary>
     /// Represents the results of a database upgrade.

@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using DbUp.Preprocessors;
+using DbUp.Engine;
+using DbUp.Engine.Preprocessors;
 
 namespace DbUp.Helpers
 {
@@ -12,27 +13,19 @@ namespace DbUp.Helpers
     /// </summary>
     public class AdHocSqlRunner
     {
-        private readonly string connectionString;
+        private readonly Func<IDbConnection> connectionFactory;
         private readonly string schema;
         private readonly IScriptPreprocessor[] additionalScriptPreprocessors;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
         /// </summary>
-        /// <param name="connectionString">The connection string.</param>
-        public AdHocSqlRunner(string connectionString) : this(connectionString, "dbo")
+        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="schema">The schema.</param>
+        /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
+        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
         {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
-        /// </summary>
-        /// <param name="connectionString">The connection string.</param>
-        /// <param name="schema"></param>
-        /// <param name="additionalScriptPreprocessors"></param>
-        public AdHocSqlRunner(string connectionString, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
-        {
-            this.connectionString = connectionString;
+            this.connectionFactory = connectionFactory;
             this.schema = schema;
             this.additionalScriptPreprocessors = additionalScriptPreprocessors;
         }
@@ -114,14 +107,19 @@ namespace DbUp.Helpers
 
         private void Execute(string commandText, IEnumerable<Func<string, object>> parameters, Action<IDbCommand> executor)
         {
-            using (var connection = new SqlConnection(connectionString))
-            using (var command = new SqlCommand(commandText, connection))
+            using (var connection = connectionFactory())
+            using (var command = connection.CreateCommand())
             {
-                foreach (var p in parameters)
+                command.CommandText = commandText;
+
+                foreach (var param in parameters)
                 {
-                    var key = p.Method.GetParameters()[0].Name;
-                    var value = p(null);
-                    command.Parameters.AddWithValue(key, value);
+                    var key = param.Method.GetParameters()[0].Name;
+                    var value = param(null);
+                    var p = command.CreateParameter();
+                    p.ParameterName = key;
+                    p.Value = value;
+                    command.Parameters.Add(p);
                 }
 
                 connection.Open();

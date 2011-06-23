@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using DbUp.Engine;
 
 namespace DbUp.ScriptProviders
 {
@@ -13,14 +14,6 @@ namespace DbUp.ScriptProviders
     {
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        public EmbeddedScriptProvider(Assembly assembly) : this(assembly, x => true)
-        {
-        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.

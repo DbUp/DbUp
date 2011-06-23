@@ -1,6 +1,4 @@
-﻿using DbUp.ScriptProviders;
-
-namespace DbUp.Journal
+﻿namespace DbUp.Engine
 {
     /// <summary>
     /// This interface is provided to allow different projects to store version information differently.
