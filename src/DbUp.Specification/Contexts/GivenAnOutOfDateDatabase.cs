@@ -1,10 +1,9 @@
 using System;
 using System.Collections.Generic;
+using DbUp.Engine;
 using DbUp.ScriptProviders;
 using NSubstitute;
 using NUnit.Framework;
-using DbUp.Journal;
-using DbUp.Execution;
 
 namespace DbUp.Specification.Contexts
 {

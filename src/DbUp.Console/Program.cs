@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Data.SqlClient;
-using DbUp.Execution;
-using DbUp.Journal;
-using DbUp.ScriptProviders;
 using NDesk.Options;
 
 namespace DbUp.Console
@@ -50,13 +47,11 @@ namespace DbUp.Console
                 connectionString = BuildConnectionString(server, database, username, password);
             }
 
-            var dbup = new DatabaseUpgrader(
-                connectionString,
-                new FileSystemScriptProvider(directory)
-                );
-            dbup.Journal = new TableJournal(connectionString);
-            dbup.ScriptExecutor = new SqlScriptExecutor(connectionString);
-            dbup.Log = new ConsoleLog();
+            var dbup = DeployChanges.To
+                .SqlDatabase(connectionString)
+                .LogToConsole()
+                .WithScriptsFromFileSystem(directory)
+                .Build();
 
             if (!mark)
             {

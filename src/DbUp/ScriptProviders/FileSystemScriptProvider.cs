@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using DbUp.Engine;
 
 namespace DbUp.ScriptProviders
 {
@@ -10,14 +11,14 @@ namespace DbUp.ScriptProviders
     ///</summary>
     public class FileSystemScriptProvider : IScriptProvider
     {
-        private readonly string _directoryPath;
+        private readonly string directoryPath;
 
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         public FileSystemScriptProvider(string directoryPath)
         {
-            _directoryPath = directoryPath;
+            this.directoryPath = directoryPath;
         }
 
         /// <summary>
@@ -25,19 +26,14 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts()
         {
-            return Directory.GetFiles(_directoryPath, "*.sql").Select(ReadFileAsScript).ToList();
+            return Directory.GetFiles(directoryPath, "*.sql").Select(ReadFileAsScript).ToList();
         }
 
         private static SqlScript ReadFileAsScript(string path)
         {
-            string contents = "";
-            using (var reader = new StreamReader(path))
-            {
-                contents = reader.ReadToEnd();
-            }
+            var contents = File.ReadAllText(path);
             var fileName = new FileInfo(path).Name;
             return new SqlScript (fileName, contents);
-
         }
     }
 }

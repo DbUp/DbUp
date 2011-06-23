@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace DbUp.ScriptProviders
+namespace DbUp.Engine
 {
     /// <summary>
     /// Provides scripts to be executed.
