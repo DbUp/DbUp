@@ -3,58 +3,24 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using DbUp.ScriptProviders;
+using DbUp.Engine;
+using DbUp.Engine.Output;
 
-namespace DbUp.Journal
+namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// SQL Server database using a table called dbo.SchemaVersions.
     /// </summary>
-    public sealed class TableJournal : IJournal
+    public sealed class SqlTableJournal : IJournal
     {
         private readonly Func<IDbConnection> connectionFactory;
         private readonly string tableName;
         private readonly string schemaTableName;
-        private readonly ILog log;
-        private readonly string schema;
-
+        private readonly IUpgradeLog log;
+        
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableJournal"/> class.
-        /// </summary>
-        public TableJournal(string targetDbConnectionString) : this(() => new SqlConnection(targetDbConnectionString), "dbo", "SchemaVersions", new ConsoleLog())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TableJournal"/> class.
-        /// </summary>
-        public TableJournal(Func<IDbConnection> connectionFactory, string schemaName)
-            : this(connectionFactory, schemaName, "SchemaVersions", new ConsoleLog())
-        /// <param name="targetDbConnectionString">The connection to the target database.</param>
-        /// <example>
-        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
-        /// </example>
-        public TableJournal(string targetDbConnectionString)
-            : this(targetDbConnectionString, "dbo", "SchemaVersions", new ConsoleLog())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TableJournal"/> class.
-        /// </summary>
-        /// <param name="targetDbConnectionString">The connection to the target database.</param>
-        /// <param name="schema">The schema that contains the table.</param>
-        /// <example>
-        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo");
-        /// </example>
-        public TableJournal(string targetDbConnectionString, string schema)
-            : this(targetDbConnectionString, schema, "SchemaVersions", new ConsoleLog())
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="TableJournal"/> class.
+        /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
         /// </summary>
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="schema">The schema that contains the table.</param>
@@ -63,11 +29,10 @@ namespace DbUp.Journal
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         ///   </example>
-        public TableJournal(Func<IDbConnection> connectionFactory, string schema, string table, ILog logger)
+        public SqlTableJournal(Func<IDbConnection> connectionFactory, string schema, string table, IUpgradeLog logger)
         {
             this.connectionFactory = connectionFactory;
             schemaTableName = tableName = table;
-            this.schema = schema;
             if (!string.IsNullOrEmpty(schema))
                 schemaTableName = schema + "." + tableName;
             log = logger;
@@ -160,16 +125,11 @@ namespace DbUp.Journal
                 {
                     using (var command = connection.CreateCommand())
                     {
-                        command.CommandText = string.Format("select count(*) from {0}", tableName);
-@"select count(*)
-from sys.objects 
-inner join sys.schemas on objects.schema_id = schemas.schema_id
-where type='U' and objects.name = '{0}' and schemas.name = '{1}'", tableName, schema);
+                        command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
                         command.CommandType = CommandType.Text;
                         connection.Open();
                         command.ExecuteScalar();
-                        sddsdssreturn true;
-                    int result;
+                        return true;
                     }
                 }
             }

@@ -1,6 +1,4 @@
-﻿using DbUp.ScriptProviders;
-
-namespace DbUp.Execution
+﻿namespace DbUp.Engine
 {
     /// <summary>
     /// This interface is implemented by classes that execute upgrade scripts against a database.

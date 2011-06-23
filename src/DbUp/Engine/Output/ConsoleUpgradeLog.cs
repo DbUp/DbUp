@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace DbUp
+namespace DbUp.Engine.Output
 {
     /// <summary>
     /// A log that writes to the console in a colorful way.
     /// </summary>
-    public class ConsoleLog : ILog
+    public class ConsoleUpgradeLog : IUpgradeLog
     {
         /// <summary>
         /// Writes an informational message to the log.

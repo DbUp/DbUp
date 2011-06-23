@@ -1,4 +1,5 @@
 using System;
+using DbUp.Engine;
 using DbUp.Specification.Contexts;
 using System.Collections.Generic;
 using DbUp.ScriptProviders;

@@ -1,19 +1,20 @@
 ﻿using System.Collections.Generic;
+using DbUp.Builder;
+using DbUp.Engine;
+using DbUp.Engine.Output;
 using NUnit.Framework;
 using DbUp.ScriptProviders;
-using DbUp.Journal;
-using DbUp.Execution;
 using NSubstitute;
 
 namespace DbUp.Specification.Contexts
 {
     public abstract class EmptyDatabase
     {
-        public DatabaseUpgrader DbUpgrader;
+        public UpgradeEngine DbUpgrader;
         public IScriptExecutor ScriptExecutor;
         public IJournal VersionTracker;
         public IScriptProvider ScriptProvider;
-        public ILog Log;
+        public IUpgradeLog Log;
         public IEnumerable<SqlScript> AllScripts;
         public const string ConnectionString = "sqlite:memory:";
 
@@ -23,11 +24,15 @@ namespace DbUp.Specification.Contexts
             ScriptProvider = Substitute.For<IScriptProvider> ();
 			VersionTracker = Substitute.For<IJournal> ();
 			ScriptExecutor = Substitute.For<IScriptExecutor> ();
-			Log = Substitute.For<ILog> ();
-            DbUpgrader = new DatabaseUpgrader(ConnectionString, ScriptProvider);
-            DbUpgrader.Journal = VersionTracker;
-            DbUpgrader.ScriptExecutor = ScriptExecutor;
-            DbUpgrader.Log = Log;
+			Log = Substitute.For<IUpgradeLog> ();
+
+            var config = new UpgradeConfiguration();
+            config.ScriptProviders.Add(ScriptProvider);
+            config.ScriptExecutor = ScriptExecutor;
+            config.Journal = VersionTracker;
+            config.Log = Log;
+
+            DbUpgrader = new UpgradeEngine(config);
         }
 
         [TearDown]
