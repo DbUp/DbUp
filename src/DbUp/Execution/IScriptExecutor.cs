@@ -12,5 +12,10 @@ namespace DbUp.Execution
         /// </summary>
         /// <param name="script">The script.</param>
         void Execute(SqlScript script);
+
+        /// <summary>
+        /// Verifies the specified schema exists and is valid
+        /// </summary>
+        void VerifySchema();
     }
 }
