@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
-using System.Runtime.InteropServices;
 using DbUp.ScriptProviders;
 
 namespace DbUp.Journal
@@ -31,6 +30,25 @@ namespace DbUp.Journal
         /// </summary>
         public TableJournal(Func<IDbConnection> connectionFactory, string schemaName)
             : this(connectionFactory, schemaName, "SchemaVersions", new ConsoleLog())
+        /// <param name="targetDbConnectionString">The connection to the target database.</param>
+        /// <example>
+        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
+        /// </example>
+        public TableJournal(string targetDbConnectionString)
+            : this(targetDbConnectionString, "dbo", "SchemaVersions", new ConsoleLog())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="TableJournal"/> class.
+        /// </summary>
+        /// <param name="targetDbConnectionString">The connection to the target database.</param>
+        /// <param name="schema">The schema that contains the table.</param>
+        /// <example>
+        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo");
+        /// </example>
+        public TableJournal(string targetDbConnectionString, string schema)
+            : this(targetDbConnectionString, schema, "SchemaVersions", new ConsoleLog())
         {
         }
 
@@ -42,7 +60,7 @@ namespace DbUp.Journal
         /// <param name="table">The table name.</param>
         /// <param name="logger">The log.</param>
         /// <example>
-        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True;", "dbo", "MyVersionTable");
+        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         ///   </example>
         public TableJournal(Func<IDbConnection> connectionFactory, string schema, string table, ILog logger)
         {
@@ -77,15 +95,6 @@ namespace DbUp.Journal
 
                 using(var reader = command.ExecuteReader())
                 {
-                    if (reader == null)
-                    {
-                        var message =
-                            String.Format(
-                                "Expected to be able to read from the database. Command execution failed to return a result.\r\nCommand Text:\t{0}",
-                                command.CommandText);
-                        throw new InvalidOperationException(message);
-                    }
-
                     while (reader.Read())
                         scripts.Add((string) reader[0]);
                 }
@@ -153,7 +162,8 @@ namespace DbUp.Journal
                         command.CommandType = CommandType.Text;
                         connection.Open();
                         command.ExecuteScalar();
-                        return true;
+                        sddsdssreturn true;
+                    int result;
                     }
                 }
             }

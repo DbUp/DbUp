@@ -55,6 +55,8 @@
     <Compile Include="DatabaseUpgradeResult.cs" />
     <Compile Include="Execution\IScriptExecutor.cs" />
     <Compile Include="Execution\SqlScriptExecutor.cs" />
+    <Compile Include="Preprocessors\IScriptPreprocessor.cs" />
+    <Compile Include="Preprocessors\VariableSubstitutionPreprocessor.cs" />
     <Compile Include="ILog.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ScriptProviders\DelegateScriptProvider.cs" />
