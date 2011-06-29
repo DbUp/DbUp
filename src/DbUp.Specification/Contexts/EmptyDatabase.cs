@@ -2,6 +2,7 @@
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Preprocessors;
 using NUnit.Framework;
 using DbUp.ScriptProviders;
 using NSubstitute;
@@ -16,6 +17,7 @@ namespace DbUp.Specification.Contexts
         public IScriptProvider ScriptProvider;
         public IUpgradeLog Log;
         public IEnumerable<SqlScript> AllScripts;
+        public IScriptPreprocessor ScriptPreprocessor;
         public const string ConnectionString = "sqlite:memory:";
 
         [SetUp]
@@ -24,9 +26,13 @@ namespace DbUp.Specification.Contexts
             ScriptProvider = Substitute.For<IScriptProvider> ();
 			VersionTracker = Substitute.For<IJournal> ();
 			ScriptExecutor = Substitute.For<IScriptExecutor> ();
+            ScriptPreprocessor = Substitute.For<IScriptPreprocessor>();
+
 			Log = Substitute.For<IUpgradeLog> ();
 
             var config = new UpgradeConfiguration();
+
+            config.ScriptPreprocessors.Add(ScriptPreprocessor);
             config.ScriptProviders.Add(ScriptProvider);
             config.ScriptExecutor = ScriptExecutor;
             config.Journal = VersionTracker;
