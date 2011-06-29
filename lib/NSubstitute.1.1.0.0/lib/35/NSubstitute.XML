@@ -4,6 +4,31 @@
         <name>NSubstitute</name>
     </assembly>
     <members>
+        <member name="M:NSubstitute.Core.Extensions.Zip``3(System.Collections.Generic.IEnumerable{``0},System.Collections.Generic.IEnumerable{``1},System.Func{``0,``1,``2})">
+            <summary>
+            Combines two enumerables into a new enumerable using the given selector.
+            </summary>
+            <typeparam name="TFirst"></typeparam>
+            <typeparam name="TSecond"></typeparam>
+            <typeparam name="TResult"></typeparam>
+            <param name="first"></param>
+            <param name="second"></param>
+            <param name="selector"></param>
+            <returns></returns>
+            <remarks>
+            This implementation was sanity-checked against the 
+            <a href="http://msmvps.com/blogs/jon_skeet/archive/2011/01/14/reimplementing-linq-to-objects-part-35-zip.aspx">Edulinq implementation</a> and
+            <a href="http://blogs.msdn.com/b/ericlippert/archive/2009/05/07/zip-me-up.aspx">Eric Lippert's implementation</a>.
+            </remarks>
+        </member>
+        <member name="T:NSubstitute.Core.RobustThreadLocal`1">
+            <summary>
+            Delegates to ThreadLocal&lt;T&gt;, but wraps Value property access in try/catch to swallow ObjectDisposedExceptions.
+            These can occur if the Value property is accessed from the finalizer thread. Because we can't detect this, we'll
+            just swallow the exception (the finalizer thread won't be using any of the values from thread local storage anyway).
+            </summary>
+            <typeparam name="T"></typeparam>
+        </member>
         <member name="M:NSubstitute.Raise.EventWith``1(System.Object,``0)">
             <summary>
             Raise an event for an <c>EventHandler&lt;TEventArgs&gt;</c> event with the provided <paramref name="sender"/> and <paramref name="eventArgs"/>.

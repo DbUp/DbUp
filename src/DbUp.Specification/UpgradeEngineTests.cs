@@ -7,7 +7,7 @@ using NSubstitute;
 
 namespace DbUp.Specification
 {
-    public class DatabaseUpgraderTests
+    public class UpgradeEngineTests
     {
 
         public class when_marking_scripts_as_read : SpecificationFor<UpgradeEngine>
