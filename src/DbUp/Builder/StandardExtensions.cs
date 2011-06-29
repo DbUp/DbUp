@@ -200,5 +200,17 @@ public static class StandardExtensions
     {
         return WithPreprocessor(builder, new VariableSubstitutionPreprocessor(variables));
     }
+
+    /// <summary>
+    /// Adds a single variable that will be replaced before scripts are executed.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="variableName">The name of the variable.</param>
+    /// <param name="value">The value to be substituted.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithVariable(this UpgradeEngineBuilder builder, string variableName, string value)
+    {
+        return WithVariables(builder, new Dictionary<string, string> {{variableName, value}});
+    }
 }
 
