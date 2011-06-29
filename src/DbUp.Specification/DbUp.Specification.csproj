@@ -32,16 +32,16 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NSubstitute">
-      <HintPath>..\..\lib\NSubstitute.1.0.0.0\lib\35\NSubstitute.dll</HintPath>
+      <HintPath>..\..\lib\NSubstitute.1.1.0.0\lib\35\NSubstitute.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.framework">
-      <HintPath>..\..\lib\NUnit.2.5.10.11092\lib\nunit.framework.dll</HintPath>
+    <Reference Include="nunit.framework, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\NUnit.2.5.9.10348\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="nunit.mocks">
-      <HintPath>..\..\lib\NUnit.2.5.10.11092\lib\nunit.mocks.dll</HintPath>
+    <Reference Include="nunit.mocks, Version=2.5.9.10348, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\NUnit.2.5.9.10348\lib\nunit.mocks.dll</HintPath>
     </Reference>
-    <Reference Include="pnunit.framework">
-      <HintPath>..\..\lib\NUnit.2.5.10.11092\lib\pnunit.framework.dll</HintPath>
+    <Reference Include="pnunit.framework, Version=1.0.4000.25744, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\lib\NUnit.2.5.9.10348\lib\pnunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -55,11 +55,13 @@
     <Compile Include="Concerning\AttemptingToUpgradeAnUptoDateDatabase.cs" />
     <Compile Include="Concerning\UpgradingADatabase.cs" />
     <Compile Include="Concerning\CreatingANewDatabase.cs" />
+    <Compile Include="Concerning\UpgradingDatabaseWithVariablesSpecified.cs" />
     <Compile Include="Contexts\EmptyDatabase.cs" />
     <Compile Include="Contexts\GivenAnOutOfDateDatabase.cs" />
     <Compile Include="Contexts\GivenANewDatabase.cs" />
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
-    <Compile Include="DatabaseUpgraderTests.cs" />
+    <Compile Include="Contexts\GivenScriptsWithVariableSubstitutions.cs" />
+    <Compile Include="UpgradeEngineTests.cs" />
     <Compile Include="FileSystemScriptProviderTests.cs" />
     <Compile Include="SpecificationFor.cs" />
     <Compile Include="SqlCeSupportTests.cs" />

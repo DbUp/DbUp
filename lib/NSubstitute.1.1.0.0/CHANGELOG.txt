@@ -1,6 +1,13 @@
-1.0.0
-* [FIX] Using Returns(null) for value types throws, rather than returning
-default(T).
+1.1.0 (May 2011)
+* [UPDATE] Updated to Castle.Core 2.5.3.
+* [FIX] Fixed bug when raising a delegate event with a null argument.
+* [FIX] CallInfo.Arg<T>() now works more reliably, including for null arguments.
+* [FIX] Better exception when accidentally calling substitute extension method with a null reference (e.g. foo.Received().Call() when foo is null)
+* [UPDATE] Exceptions thrown in custom argument matchers (Arg.Is<T>(x => ...)) will now silently fail to match the argument, rather than allowing exceptions to bubble up.
+* [NEW] Support for test fixtures run in parallel.
+
+1.0.0 (Dec 2010)
+* [FIX] Using Returns(null) for value types throws, rather than returning default(T).
 
 0.9.5 Release Candidate
 * [FIX] Fixed bug when trying to return null from a call to a substitute.

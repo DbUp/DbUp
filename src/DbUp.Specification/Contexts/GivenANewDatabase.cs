@@ -11,6 +11,7 @@ namespace DbUp.Specification
         public override void BeforeEach()
         {
             base.BeforeEach();
+
             AllScripts = new List<SqlScript>()
             {
                 new SqlScript("0001.sql", ""),
