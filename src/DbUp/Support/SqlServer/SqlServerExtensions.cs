@@ -65,8 +65,6 @@ public static class SqlServerExtensions
     /// </returns>
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<IDbConnection> connectionFactory, string schema)
     {
-        schema = schema ?? "dbo";
-
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionFactory = connectionFactory);
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, schema, c.ScriptPreprocessors));
@@ -83,8 +81,6 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        schema = schema ?? "dbo";
-
         builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, schema, table, c.Log));
         return builder;
     }
