@@ -13,12 +13,15 @@ using DbUp.ScriptProviders;
 // NOTE: DO NOT MOVE THIS TO A NAMESPACE
 // Since the class just contains extension methods, we leave it in the root so that it is always discovered
 // and people don't have to manually add using statements.
+// ReSharper disable CheckNamespace
 public static class StandardExtensions
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Logs to a custom logger.
     /// </summary>
-    /// <param name="builder">The logger.</param>
+    /// <param name="builder"></param>
+    /// <param name="log">The logger.</param>
     /// <returns>
     /// The same builder
     /// </returns>
@@ -198,7 +201,8 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithVariables(this UpgradeEngineBuilder builder, IDictionary<string, string> variables)
     {
-        return WithPreprocessor(builder, new VariableSubstitutionPreprocessor(variables));
+        builder.Configure(c=>c.AddVariables(variables));
+        return builder;
     }
 
     /// <summary>

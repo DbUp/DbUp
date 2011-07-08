@@ -52,6 +52,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="BuilderTests.cs" />
     <Compile Include="Concerning\AttemptingToUpgradeAnUptoDateDatabase.cs" />
     <Compile Include="Concerning\UpgradingADatabase.cs" />
     <Compile Include="Concerning\CreatingANewDatabase.cs" />
@@ -61,6 +62,7 @@
     <Compile Include="Contexts\GivenANewDatabase.cs" />
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
     <Compile Include="Contexts\GivenScriptsWithVariableSubstitutions.cs" />
+    <Compile Include="SqlScriptExecutorTests.cs" />
     <Compile Include="UpgradeEngineTests.cs" />
     <Compile Include="FileSystemScriptProviderTests.cs" />
     <Compile Include="SpecificationFor.cs" />

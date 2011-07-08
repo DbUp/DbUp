@@ -1,13 +1,9 @@
 using System;
 using DbUp.Engine;
-using DbUp.Specification.Contexts;
 using System.Collections.Generic;
-using DbUp.ScriptProviders;
 using NSubstitute;
-using System.Linq;
-using NUnit.Framework;
 
-namespace DbUp.Specification
+namespace DbUp.Specification.Contexts
 {
 	public class GivenAnUptoDateDatabase : EmptyDatabase
 	{

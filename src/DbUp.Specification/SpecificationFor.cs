@@ -5,7 +5,6 @@ namespace DbUp.Specification
     [TestFixture]
     public abstract class SpecificationFor<T>
     {
-
         public T Subject;
 
         public abstract T Given();
@@ -17,6 +16,5 @@ namespace DbUp.Specification
             Subject = Given();
             When();
         }
-
     }
 }

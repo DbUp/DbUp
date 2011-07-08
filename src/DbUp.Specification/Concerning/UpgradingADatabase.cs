@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using NUnit.Framework;
 using NSubstitute;
@@ -28,7 +29,7 @@ namespace DbUp.Specification.Concerning
             var result = DbUpgrader.PerformUpgrade();
             var expectedScript = AllScripts.Last();
             
-            ScriptExecutor.Received().Execute(expectedScript);
+            ScriptExecutor.Received().Execute(expectedScript, Arg.Any<IDictionary<string, string>>());
             VersionTracker.Received().StoreExecutedScript(expectedScript);
 
             Assert.AreEqual(expectedScript, result.Scripts.First());
