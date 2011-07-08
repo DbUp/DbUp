@@ -1,3 +1,3 @@
 ﻿-- Initial setup data
 
-insert into Feed([Name], [Title]) values ('default', 'Blog Feed');
+insert into $schema$.Feed([Name], [Title]) values ('default', 'Blog Feed');

@@ -15,7 +15,7 @@ namespace SampleApplication
 
                 var upgrader = 
                     DeployChanges.To
-                    .SqlDatabase(database.ConnectionString)
+                    .SqlDatabase(database.ConnectionString, null) //null or "" for default schema for user
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
                     .Build();
