@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using System.Data.SqlClient;
 using DbUp.Builder;
 using DbUp.Support.SqlServer;
@@ -9,7 +10,9 @@ using DbUp.Support.SqlServer;
 // NOTE: DO NOT MOVE THIS TO A NAMESPACE
 // Since the class just contains extension methods, we leave it in the root so that it is always discovered
 // and people don't have to manually add using statements.
+// ReSharper disable CheckNamespace
 public static class SqlServerExtensions
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Creates an upgrader for SQL Server databases.
@@ -46,7 +49,7 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<SqlConnection> connectionFactory)
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<IDbConnection> connectionFactory)
     {
         return SqlDatabase(supported, connectionFactory, null);
     }
@@ -60,12 +63,12 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<SqlConnection> connectionFactory, string schema)
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<IDbConnection> connectionFactory, string schema)
     {
         schema = schema ?? "dbo";
 
         var builder = new UpgradeEngineBuilder();
-        builder.Configure(c => c.ConnectionFactory = () => connectionFactory());
+        builder.Configure(c => c.ConnectionFactory = connectionFactory);
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, schema, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, schema, "SchemaVersions", c.Log));
         return builder;
@@ -80,6 +83,8 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
+        schema = schema ?? "dbo";
+
         builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, schema, table, c.Log));
         return builder;
     }

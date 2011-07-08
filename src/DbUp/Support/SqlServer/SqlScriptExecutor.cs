@@ -20,7 +20,6 @@ namespace DbUp.Support.SqlServer
     {
         private readonly Func<IDbConnection> connectionFactory;
         private readonly Func<IUpgradeLog> log;
-        private readonly string schema;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
 
         /// <summary>
@@ -34,9 +33,14 @@ namespace DbUp.Support.SqlServer
         {
             this.connectionFactory = connectionFactory;
             this.log = log;
-            this.schema = schema;
+            Schema = schema;
             this.scriptPreprocessors = scriptPreprocessors;
         }
+
+        /// <summary>
+        /// Database Schema, should be null if database does not support schemas
+        /// </summary>
+        public string Schema { get; set; }
 
         private static IEnumerable<string> SplitByGoStatements(string script)
         {
@@ -63,10 +67,12 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         public void VerifySchema()
         {
-            var sqlRunner = new AdHocSqlRunner(connectionFactory, schema);
+            if (Schema == null) return;
+
+            var sqlRunner = new AdHocSqlRunner(connectionFactory, Schema);
 
             sqlRunner.ExecuteNonQuery(string.Format(
-                @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", schema));
+                @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", Schema));
         }
 
         /// <summary>
@@ -78,13 +84,17 @@ namespace DbUp.Support.SqlServer
         {
             if (variables == null)
                 variables = new Dictionary<string, string>();
-            if (!variables.ContainsKey("schema"))
-                variables.Add("schema", schema);
+            if (Schema != null && !variables.ContainsKey("schema"))
+                variables.Add("schema", Schema);
 
             log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
 
-            var contents = new VariableSubstitutionPreprocessor(variables).Process(script.Contents);
-            contents = scriptPreprocessors.Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
+            var contents = script.Contents;
+            if (Schema == null)
+                contents = new StripSchemaPreprocessor().Process(contents);
+            contents = new VariableSubstitutionPreprocessor(variables).Process(contents);
+            contents = (scriptPreprocessors??new IScriptPreprocessor[0])
+                .Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
 
             var scriptStatements = SplitByGoStatements(contents);
             var index = -1;

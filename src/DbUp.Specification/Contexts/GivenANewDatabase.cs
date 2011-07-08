@@ -1,10 +1,9 @@
 using System;
 using DbUp.Engine;
-using DbUp.Specification.Contexts;
 using System.Collections.Generic;
-using DbUp.ScriptProviders;
 using NSubstitute;
-namespace DbUp.Specification
+
+namespace DbUp.Specification.Contexts
 {
 	public class GivenANewDatabase : EmptyDatabase
 	{
@@ -12,15 +11,15 @@ namespace DbUp.Specification
         {
             base.BeforeEach();
 
-            AllScripts = new List<SqlScript>()
-            {
-                new SqlScript("0001.sql", ""),
-                new SqlScript("0004.sql", ""),
-                new SqlScript("0002.sql", "")
-            };
+            AllScripts = new List<SqlScript>
+                             {
+                                 new SqlScript("0001.sql", ""),
+                                 new SqlScript("0004.sql", ""),
+                                 new SqlScript("0002.sql", "")
+                             };
 
             ScriptProvider.GetScripts().Returns(AllScripts);
-            VersionTracker.GetExecutedScripts().Returns(new string[] { });
+            VersionTracker.GetExecutedScripts().Returns(new string[] {});
         }
 	}
 }

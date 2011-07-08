@@ -2,14 +2,12 @@ using System;
 using System.Collections.Generic;
 using DbUp.Builder;
 using DbUp.Engine;
-using DbUp.ScriptProviders;
 using NSubstitute;
 
 namespace DbUp.Specification
 {
     public class UpgradeEngineTests
     {
-
         public class when_marking_scripts_as_read : SpecificationFor<UpgradeEngine>
         {
             private IJournal versionTracker;
@@ -49,6 +47,5 @@ namespace DbUp.Specification
                 scriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
             }
         }
-
     }
 }

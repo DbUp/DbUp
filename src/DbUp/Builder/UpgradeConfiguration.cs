@@ -13,6 +13,7 @@ namespace DbUp.Builder
     {
         private readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
         private readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
+        private readonly Dictionary<string, string> variables = new Dictionary<string, string>(); 
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.
@@ -56,6 +57,14 @@ namespace DbUp.Builder
         public IScriptExecutor ScriptExecutor { get; set; }
 
         /// <summary>
+        /// A collection of variables to be replaced in scripts before they are run
+        /// </summary>
+        public Dictionary<string, string> Variables
+        {
+            get { return variables; }
+        }
+
+        /// <summary>
         /// Ensures all expectations have been met regarding this configuration.
         /// </summary>
         public void Validate()
@@ -65,6 +74,18 @@ namespace DbUp.Builder
             if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build()");
             if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build()");
             if (ConnectionFactory == null) throw new ArgumentException("The ConnectionFactory is null. What do you expect to upgrade?");
+        }
+
+        /// <summary>
+        /// Adds variables to the configuration which will be substituted for every script
+        /// </summary>
+        /// <param name="newVariables">The variables </param>
+        public void AddVariables(IDictionary<string, string> newVariables)
+        {
+            foreach (var variable in newVariables)
+            {
+                Variables.Add(variable.Key, variable.Value);
+            }
         }
     }
 }

@@ -1,4 +1,6 @@
-﻿namespace DbUp.Engine
+﻿using System.Collections.Generic;
+
+namespace DbUp.Engine
 {
     /// <summary>
     /// This interface is implemented by classes that execute upgrade scripts against a database.
@@ -10,6 +12,13 @@
         /// </summary>
         /// <param name="script">The script.</param>
         void Execute(SqlScript script);
+
+        /// <summary>
+        /// Executes the specified script against a database at a given connection string.
+        /// </summary>
+        /// <param name="script">The script.</param>
+        /// <param name="variables">Variables to replace in the script</param>
+        void Execute(SqlScript script, IDictionary<string, string> variables);
 
         /// <summary>
         /// Verifies the specified schema exists and is valid

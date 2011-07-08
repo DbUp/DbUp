@@ -20,6 +20,9 @@ namespace DbUp.ScriptProviders
             this.scripts = scripts;
         }
 
+        /// <summary>
+        /// Gets all scripts that should be executed.
+        /// </summary>
         public IEnumerable<SqlScript> GetScripts()
         {
             return scripts;

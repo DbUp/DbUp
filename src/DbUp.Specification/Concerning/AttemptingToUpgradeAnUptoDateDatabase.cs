@@ -1,7 +1,7 @@
-﻿using NUnit.Framework;
+﻿using DbUp.Specification.Contexts;
+using NUnit.Framework;
 using System.Linq;
 using NSubstitute;
-using NSubstitute.Core.Arguments;
 
 namespace DbUp.Specification.Concerning
 {
