@@ -67,7 +67,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         public void VerifySchema()
         {
-            if (Schema == null) return;
+            if (string.IsNullOrEmpty(Schema)) return;
 
             var sqlRunner = new AdHocSqlRunner(connectionFactory, Schema);
 
@@ -90,7 +90,7 @@ namespace DbUp.Support.SqlServer
             log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
 
             var contents = script.Contents;
-            if (Schema == null)
+            if (string.IsNullOrEmpty(Schema))
                 contents = new StripSchemaPreprocessor().Process(contents);
             contents = new VariableSubstitutionPreprocessor(variables).Process(contents);
             contents = (scriptPreprocessors??new IScriptPreprocessor[0])
