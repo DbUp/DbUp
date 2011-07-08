@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.SqlClient;
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Preprocessors;
@@ -14,8 +13,8 @@ namespace DbUp.Helpers
     public class AdHocSqlRunner
     {
         private readonly Func<IDbConnection> connectionFactory;
-        private readonly string schema;
         private readonly IScriptPreprocessor[] additionalScriptPreprocessors;
+        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
@@ -26,9 +25,26 @@ namespace DbUp.Helpers
         public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
         {
             this.connectionFactory = connectionFactory;
-            this.schema = schema;
             this.additionalScriptPreprocessors = additionalScriptPreprocessors;
+            Schema = schema;
         }
+
+        /// <summary>
+        /// Adds a variable to be substituted on Adhoc script
+        /// </summary>
+        /// <param name="variableName"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        public AdHocSqlRunner WithVariable(string variableName, string value)
+        {
+            variables.Add(variableName, value);
+            return this;
+        }
+
+        /// <summary>
+        /// Database Schema, should be null if database does not support schemas
+        /// </summary>
+        public string Schema { get; set; }
 
         /// <summary>
         /// Executes a scalar query.
@@ -39,7 +55,6 @@ namespace DbUp.Helpers
         public object ExecuteScalar(string query, params Func<string, object>[] parameters)
         {
             object result = null;
-            query = Preprocess(query);
             Execute(query, parameters, 
                     command =>
                         {
@@ -57,21 +72,12 @@ namespace DbUp.Helpers
         public int ExecuteNonQuery(string query, params Func<string, object>[] parameters)
         {
             var result = 0;
-            query = Preprocess(query);
             Execute(query, parameters,
                     command =>
                         {
                             result = command.ExecuteNonQuery();
                         });
             return result;
-        }
-
-        private string Preprocess(string query)
-        {
-            var variables = new Dictionary<string, string> {{"schema", schema}};
-            query = new VariableSubstitutionPreprocessor(variables).Process(query);
-            query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
-            return query;
         }
 
         /// <summary>
@@ -82,7 +88,6 @@ namespace DbUp.Helpers
         /// <returns></returns>
         public List<Dictionary<string, string>> ExecuteReader(string query, params Func<string, object>[] parameters)
         {
-            query = Preprocess(query);
             var results = new List<Dictionary<string, string>>();
             Execute(query, parameters,
                     command =>
@@ -107,6 +112,7 @@ namespace DbUp.Helpers
 
         private void Execute(string commandText, IEnumerable<Func<string, object>> parameters, Action<IDbCommand> executor)
         {
+            commandText = Preprocess(commandText);
             using (var connection = connectionFactory())
             using (var command = connection.CreateCommand())
             {
@@ -126,6 +132,15 @@ namespace DbUp.Helpers
 
                 executor(command);
             }
+        }
+
+        private string Preprocess(string query)
+        {
+            if (Schema != null && !variables.ContainsKey("schema"))
+                variables.Add("schema", Schema);
+            query = new VariableSubstitutionPreprocessor(variables).Process(query);
+            query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
+            return query;
         }
     }
 }

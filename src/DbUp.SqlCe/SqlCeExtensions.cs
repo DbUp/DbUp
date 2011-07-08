@@ -9,7 +9,9 @@ using DbUp.Support.SqlServer;
 // NOTE: DO NOT MOVE THIS TO A NAMESPACE
 // Since the class just contains extension methods, we leave it in the root so that it is always discovered
 // and people don't have to manually add using statements.
+// ReSharper disable CheckNamespace
 public static class SqlCeExtensions
+// ReSharper restore CheckNamespace
 {
     /// <summary>
     /// Creates an upgrader for SQL CE databases.
@@ -22,7 +24,7 @@ public static class SqlCeExtensions
     public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, Func<SqlCeConnection> connectionFactory)
     {
         var builder = new UpgradeEngineBuilder();
-        builder.Configure(c => c.ConnectionFactory = () => connectionFactory());
+        builder.Configure(c => c.ConnectionFactory = connectionFactory);
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, null, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, null, "SchemaVersions", c.Log));
         return builder;

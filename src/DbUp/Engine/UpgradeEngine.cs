@@ -78,7 +78,7 @@ namespace DbUp.Engine
 
                 foreach (var script in scriptsToExecute)
                 {
-                    configuration.ScriptExecutor.Execute(script);
+                    configuration.ScriptExecutor.Execute(script, configuration.Variables);
 
                     configuration.Journal.StoreExecutedScript(script);
 

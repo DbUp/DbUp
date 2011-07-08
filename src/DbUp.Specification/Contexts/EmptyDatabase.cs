@@ -2,9 +2,7 @@
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
-using DbUp.Engine.Preprocessors;
 using NUnit.Framework;
-using DbUp.ScriptProviders;
 using NSubstitute;
 
 namespace DbUp.Specification.Contexts

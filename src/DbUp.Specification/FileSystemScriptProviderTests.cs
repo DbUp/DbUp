@@ -14,39 +14,37 @@ namespace DbUp.Specification
         [TestFixture]
         public class when_returning_scripts_from_a_directory : SpecificationFor<FileSystemScriptProvider>
         {
-            private string _testPath;
-            private IEnumerable<SqlScript> _filesToExecute;
+            private string testPath;
+            private IEnumerable<SqlScript> filesToExecute;
 
             public override FileSystemScriptProvider Given()
             {
                 CreateTestFiles();
 
 
-                return new FileSystemScriptProvider(_testPath);
+                return new FileSystemScriptProvider(testPath);
             }
-
 
             [TearDown]
             public void CleanUp()
             {
-                Directory.Delete(_testPath, true);
+                Directory.Delete(testPath, true);
             }
-
 
             private void CreateTestFiles()
             {
                 var assembly = Assembly.GetExecutingAssembly();
                 var directory = new FileInfo(assembly.Location).DirectoryName;
 
-                _testPath = Path.Combine(directory, "sqlfiles");
-                Directory.CreateDirectory(_testPath);
+                testPath = Path.Combine(directory, "sqlfiles");
+                Directory.CreateDirectory(testPath);
 
 
                 foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.Contains(".sql")))
                 {
                     using (var stream = assembly.GetManifestResourceStream(scriptName))
                     {
-                        var filePath = Path.Combine(_testPath, scriptName);
+                        var filePath = Path.Combine(testPath, scriptName);
                         using (var writer = new FileStream(filePath, FileMode.CreateNew))
                         {
                             
@@ -61,21 +59,19 @@ namespace DbUp.Specification
 
             public override void When()
             {
-                _filesToExecute = Subject.GetScripts();
+                filesToExecute = Subject.GetScripts();
             }
-
-
 
             [Then]
             public void it_should_return_all_sql_files()
             {
-                Assert.AreEqual(3, _filesToExecute.Count());
+                Assert.AreEqual(3, filesToExecute.Count());
             }
 
             [Then]
             public void the_file_should_contain_content()
             {
-                foreach (var sqlScript in _filesToExecute)
+                foreach (var sqlScript in filesToExecute)
                 {
                     Assert.IsTrue(sqlScript.Contents.Length > 0);
                 }
@@ -84,8 +80,8 @@ namespace DbUp.Specification
             [Then]
             public void the_files_should_be_correctly_ordered()
             {
-                Assert.That(_filesToExecute.First().Name.EndsWith("20110301_1_Test1.sql"));
-                Assert.That(_filesToExecute.Last().Name.EndsWith("20110302_1_Test3.sql"));
+                Assert.That(filesToExecute.First().Name.EndsWith("20110301_1_Test1.sql"));
+                Assert.That(filesToExecute.Last().Name.EndsWith("20110302_1_Test3.sql"));
             }
         }
     }

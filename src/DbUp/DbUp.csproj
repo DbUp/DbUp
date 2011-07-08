@@ -59,6 +59,7 @@
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
     <Compile Include="DeployChanges.cs" />
+    <Compile Include="Engine\Preprocessors\StripSchemaPreprocessor.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
     <Compile Include="Engine\UpgradeEngine.cs" />
