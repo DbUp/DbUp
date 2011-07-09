@@ -141,7 +141,6 @@ namespace DbUp.Support.SqlServer
             {
                 return false;
             }
-
         }
     }
 }
