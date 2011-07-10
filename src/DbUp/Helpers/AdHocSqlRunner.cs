@@ -136,7 +136,7 @@ namespace DbUp.Helpers
 
         private string Preprocess(string query)
         {
-            if (string.IsNullOrEmpty(Schema) && !variables.ContainsKey("schema"))
+            if (!string.IsNullOrEmpty(Schema) && !variables.ContainsKey("schema"))
                 variables.Add("schema", Schema);
             query = new VariableSubstitutionPreprocessor(variables).Process(query);
             query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
