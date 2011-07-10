@@ -7,6 +7,9 @@ namespace DbUp.SqlCe
     /// </summary>
     public class SqlCePreprocessor : IScriptPreprocessor
     {
+        /// <summary>
+        /// Performs some proprocessing step on a script
+        /// </summary>
         public string Process(string contents)
         {
             return contents.Replace("nvarchar(max)", "ntext");

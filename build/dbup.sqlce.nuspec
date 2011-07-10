@@ -1,12 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <package> 
   <metadata> 
-    <id>dbup</id> 
+    <id>dbup-sqlce</id> 
     <version>0.0.0</version> 
     <authors>Paul Stovell</authors>
-    <description>DbUp makes it easy to deploy and upgrade SQL Server databases.</description> 
+    <description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SqlCe support</description> 
     <language>en-US</language>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
     <projectUrl>http://code.google.com/p/dbup/</projectUrl>
+    <dependencies>
+        <dependency id="SqlServerCompact" version="4.0.8482.1" />
+        <dependency id="DbUp" version="0.0.0" />
+    </dependencies>
   </metadata>
 </package>
