@@ -1,4 +1,5 @@
-﻿using DbUp.Engine;
+﻿using System.Text.RegularExpressions;
+using DbUp.Engine;
 
 namespace DbUp.SqlCe
 {
@@ -12,7 +13,7 @@ namespace DbUp.SqlCe
         /// </summary>
         public string Process(string contents)
         {
-            return contents.Replace("nvarchar(max)", "ntext");
+            return Regex.Replace(contents, @"nvarchar\s?\(max\)", "ntext", RegexOptions.IgnoreCase);
         }
     }
 }
