@@ -10,7 +10,7 @@
   </PropertyGroup>
 
   <PropertyGroup>
-    <Major>1</Major>
+    <Major>2</Major>
     <Minor>0</Minor>
     <Build>0</Build>
     <Revision>0</Revision>
@@ -42,8 +42,12 @@
     <!-- Ensure directories exists -->
     <MakeDir Directories="$(MSBuildProjectDirectory)\Artifacts" Condition="!Exists('$(MSBuildProjectDirectory)\Artifacts')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published" Condition="!Exists('$(MSBuildProjectDirectory)\Published')" />
-    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\lib" Condition="!Exists('$(MSBuildProjectDirectory)\Published\lib')" />
-    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\lib\NET40" Condition="!Exists('$(MSBuildProjectDirectory)\Published\lib\NET40')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp\Published')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp\Published\lib')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp\Published\lib\NET35')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SqlCe" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SqlCe\Published')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SqlCe\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SqlCe\Published\lib')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SqlCe\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SqlCe\Published\lib\NET35')" />
 
     <!-- Version Info -->
     <AssemblyInfo
@@ -53,13 +57,11 @@
       AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
       />
 
-   
-
     <!-- Zip source -->
     <ItemGroup>
       <SourceFilesToZip Include="$(Root)\src\**\*.*" />
-      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\packages\NUnit.2.5.9.10348\**\*.*" />
-      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\packages\NSubstitute.1.0.0.0\**\*.*" />
+      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\NUnit.*\**\*.*" />
+      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\NSubstitute.*\**\*.*" />
     </ItemGroup>
 
     <Zip Files="@(SourceFilesToZip)"
@@ -88,15 +90,18 @@
       <Net35Files Include="$(Root)\src\DbUp\bin\*.dll" />
       <Net35Files Include="$(Root)\src\DbUp\bin\*.xml" />
       <Net35Files Include="$(Root)\src\DbUp\bin\*.exe" />
+      <Net35SqlCeFiles Include="$(Root)\src\DbUp.SqlCe\bin\Release\DbUp.SqlCe.dll" />
+      <Net35SqlCeFiles Include="$(Root)\src\DbUp.SqlCe\bin\Release\DbUp.SqlCe.xml" />
     </ItemGroup>
-    <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\lib\NET35" />
+    <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\DbUp\lib\NET35" />
+    <Copy SourceFiles="@(Net35SqlCeFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe\lib\NET35" />
     
     <!-- Zip binaries -->
     <ItemGroup>
-      <BinaryFilesToZip Include="$(Root)\build\Published\**\*.*" />
+      <BinaryFilesToZip Include="$(Root)\build\Published\DbUp\**\*.*" />
     </ItemGroup>
     <Zip Files="@(BinaryFilesToZip)"
-      WorkingDirectory="$(Root)\build\Published"
+      WorkingDirectory="$(Root)\build\Published\DbUp"
       ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(Major).$(Minor).$(Build).zip"
       ZipLevel="9"
       />
@@ -104,13 +109,17 @@
     <!-- Add NuGet files-->    
     <ItemGroup>
       <NuSpecFiles Include="$(Root)\build\dbup.nuspec" />
+      <SqlCeNuSpecFiles Include="$(Root)\build\dbup.sqlce.nuspec" />
     </ItemGroup>
-    <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published" />
+    <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp" />
+    <Copy SourceFiles="@(SqlCeNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe" />
 
-    <FileUpdate Files="$(Root)\build\Published\dbup.nuspec" Regex="(\d+)\.(\d+)\.(\d+)" ReplacementText="$(Major).$(Minor).$(Build)" />
-
+    <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(Major).$(Minor).$(Build)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(Major).$(Minor).$(Build)" />
+    
     <!-- Pack -->
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\dbup.nuspec -b $(Root)\build\Published -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -b $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec -b $(Root)\build\Published\DbUp-SqlCe -o $(Root)\build\Artifacts" />
    
   </Target>
 </Project>
