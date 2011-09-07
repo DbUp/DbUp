@@ -24,6 +24,11 @@ namespace DbUp.Support.SqlServer
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
 
         /// <summary>
+        /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
+        /// </summary>
+        public int? ExecutionTimeoutSeconds { get; set; }
+
+        /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
         /// <param name="connectionFactory">The connection factory.</param>
@@ -99,6 +104,8 @@ namespace DbUp.Support.SqlServer
                         index++;
                         var command = connection.CreateCommand();
                         command.CommandText = statement;
+                        if (ExecutionTimeoutSeconds != null)
+                            command.CommandTimeout = ExecutionTimeoutSeconds.Value;
                         command.ExecuteNonQuery();
                     }
                 }
@@ -124,5 +131,6 @@ namespace DbUp.Support.SqlServer
                 throw;
             }
         }
+
     }
 }
