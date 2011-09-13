@@ -24,5 +24,10 @@ namespace DbUp.Engine
         /// Verifies the specified schema exists and is valid
         /// </summary>
         void VerifySchema();
+
+        /// <summary>
+        /// Timeout for each section of the script in seconds. If not set, the default timeout for the executor is used.
+        /// </summary>
+        int? ExecutionTimeoutSeconds { get; set; }
     }
 }
