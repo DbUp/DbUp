@@ -4,7 +4,6 @@ using System.Reflection;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
-using DbUp.Engine.Preprocessors;
 using DbUp.ScriptProviders;
 
 /// <summary>
