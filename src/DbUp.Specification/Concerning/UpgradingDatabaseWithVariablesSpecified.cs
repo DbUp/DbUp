@@ -8,7 +8,7 @@ using NUnit.Framework;
 namespace DbUp.Specification.Concerning
 {
     [TestFixture]
-    public class UpgradingDatabaseWithVariablesSpecified : GivenScriptsWithVariableSubstitutions
+    public class UpgradingDatabaseWithVariablesSpecifiedSubstitutesVariables : GivenScriptsWithVariableSubstitutions
     {
         [Test]
         public void ShouldCallPreprocessor()
