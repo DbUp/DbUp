@@ -2,7 +2,6 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="lib\MSBuild.Community.Tasks.Targets" />
   <Import Project="lib\MSBuild.Deployment.Tasks.Targets" />
-  <Import Project="lib\MSBuild.Mercurial.tasks"/>
   
   <PropertyGroup>
     <Root>$(MSBuildStartupDirectory)</Root>
@@ -16,13 +15,7 @@
     <Revision>0</Revision>
   </PropertyGroup>
   
-  <Target Name="Version">
-    <HgVersion LocalPath=".">
-      <Output TaskParameter="Revision" PropertyName="Build" />
-    </HgVersion>
-  </Target>
-  
-  <Target Name="Build" DependsOnTargets="Version">
+  <Target Name="Build">
     <!-- Diagnostics -->
     <Message Text="Diagnostics:"/>
     <Message Text="Build Number:    $(Major).$(Minor).$(Build).$(Revision)" />
