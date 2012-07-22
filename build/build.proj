@@ -8,17 +8,10 @@
     <nunitconsoleexe>$(Root)\lib\NUnit.2.5.10.11092\Tools\nunit-console.exe</nunitconsoleexe>
   </PropertyGroup>
 
-  <PropertyGroup>
-    <Major>2</Major>
-    <Minor>0</Minor>
-    <Build>0</Build>
-    <Revision>0</Revision>
-  </PropertyGroup>
-  
   <Target Name="Build">
     <!-- Diagnostics -->
     <Message Text="Diagnostics:"/>
-    <Message Text="Build Number:    $(Major).$(Minor).$(Build).$(Revision)" />
+    <Message Text="Build Number:    $(build_number)" />
     <Message Text="Build dir:       $(MSBuildProjectDirectory)" />
     <Message Text="Project root:    $(Root)" />
     <Message Text="NUnit Console:   $(nunitconsoleexe)" />
@@ -46,8 +39,8 @@
     <AssemblyInfo
       CodeLanguage="CS"
       OutputFile="$(Root)\src\Information\VersionInfo.cs"
-      AssemblyVersion="$(Major).$(Minor).$(Build).$(Revision)"
-      AssemblyFileVersion="$(Major).$(Minor).$(Build).$(Revision)"
+      AssemblyVersion="$(build_number).*"
+      AssemblyFileVersion="$(build_number).0"
       />
 
     <!-- Zip source -->
@@ -59,7 +52,7 @@
 
     <Zip Files="@(SourceFilesToZip)"
       WorkingDirectory="$(Root)"
-      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(Major).$(Minor).$(Build)-source.zip"
+      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(build_number)-source.zip"
       ZipLevel="9"
       />
     
@@ -95,7 +88,7 @@
     </ItemGroup>
     <Zip Files="@(BinaryFilesToZip)"
       WorkingDirectory="$(Root)\build\Published\DbUp"
-      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(Major).$(Minor).$(Build).zip"
+      ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(build_number).zip"
       ZipLevel="9"
       />
     
@@ -107,8 +100,8 @@
     <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp" />
     <Copy SourceFiles="@(SqlCeNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe" />
 
-    <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(Major).$(Minor).$(Build)" />
-    <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(Major).$(Minor).$(Build)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(build_number)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(build_number)" />
     
     <!-- Pack -->
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -b $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
