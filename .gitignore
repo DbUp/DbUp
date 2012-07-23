@@ -61,6 +61,7 @@ UpgradeLog*.*
 test-results/
 _UpgradeReport_Files
 _[Rr]e[Ss]harper.*/
+_TeamCity.*/
 hgignore[.-]*
 ignore[.-]*
 svnignore[.-]*
