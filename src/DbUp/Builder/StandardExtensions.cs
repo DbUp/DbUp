@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Reflection;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -187,15 +186,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(() =>
-        {
-            Func<IDbConnection> dbConnection = null;
-            builder.Configure(c =>
-            {
-                dbConnection = c.ConnectionFactory;
-            });
-            return dbConnection();
-        }, assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
     }
 
     /// <summary>
@@ -209,15 +200,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(() =>
-        {
-            Func<IDbConnection> dbConnection = null;
-            builder.Configure(c =>
-            {
-                dbConnection = c.ConnectionFactory;
-            });
-            return dbConnection();
-        }, assembly, filter));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
     }
 
     /// <summary>

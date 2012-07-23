@@ -13,34 +13,20 @@ namespace DbUp.ScriptProviders
     public class EmbeddedScriptAndCodeProvider : IScriptProvider
     {
         private readonly EmbeddedScriptProvider embeddedScriptProvider;
-        private readonly Func<IDbConnection> connectionFactory;
         private readonly Assembly assembly;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
-        /// <param name="connectionFactory">The sql connection factory</param>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded sql script filter.</param>
-        public EmbeddedScriptAndCodeProvider(Func<IDbConnection> connectionFactory, Assembly assembly, Func<string, bool> filter)
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter)
         {
-            this.connectionFactory = connectionFactory;
             this.assembly = assembly;
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
-        public IEnumerable<SqlScript> GetScripts()
-        {
-            var sqlScripts = embeddedScriptProvider
-                .GetScripts()
-                .Concat(ScriptsFromScriptClasses())
-                .OrderBy(x => x.Name)
-                .ToList();
-
-            return sqlScripts;
-        }
-
-        private IEnumerable<SqlScript> ScriptsFromScriptClasses()
+        private IEnumerable<SqlScript> ScriptsFromScriptClasses(Func<IDbConnection> connectionFactory)
         {
             var script = typeof(IScript);
             return assembly
@@ -48,6 +34,20 @@ namespace DbUp.ScriptProviders
                 .Where(type => script.IsAssignableFrom(type) && type.IsClass)
                 .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", () => ((IScript)Activator.CreateInstance(s)).ProvideScript(connectionFactory())))
                 .ToList();
+        }
+
+        /// <summary>
+        /// Gets all scripts that should be executed.
+        /// </summary>
+        public IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory)
+        {
+            var sqlScripts = embeddedScriptProvider
+                .GetScripts(connectionFactory)
+                .Concat(ScriptsFromScriptClasses(connectionFactory))
+                .OrderBy(x => x.Name)
+                .ToList();
+
+            return sqlScripts;
         }
     }
 }

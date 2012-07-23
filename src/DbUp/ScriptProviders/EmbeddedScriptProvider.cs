@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -30,7 +31,7 @@ namespace DbUp.ScriptProviders
         /// Gets all scripts that should be executed.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<SqlScript> GetScripts()
+        public IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory)
         {
             return assembly
                 .GetManifestResourceNames()

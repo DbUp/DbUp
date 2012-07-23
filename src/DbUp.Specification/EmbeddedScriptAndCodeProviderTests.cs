@@ -14,12 +14,12 @@ namespace DbUp.Specification
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            return new EmbeddedScriptAndCodeProvider(() => null, assembly, s=>true);
+            return new EmbeddedScriptAndCodeProvider(assembly, s=>true);
         }
 
         public override void When()
         {
-            scriptsToExecute = Subject.GetScripts().ToArray();
+            scriptsToExecute = Subject.GetScripts(() => null).ToArray();
         }
 
         [Then]

@@ -21,6 +21,10 @@ namespace DbUp.Engine
             this.contentProvider = contentProvider;
         }
 
+        /// <summary>
+        /// Gets the contents of the script.
+        /// </summary>
+        /// <value></value>
         public override string Contents
         {
             get { return content ?? (content = contentProvider()); }
