@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Reflection;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -177,6 +178,49 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assembly">The assembly.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
+    {
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(() =>
+        {
+            Func<IDbConnection> dbConnection = null;
+            builder.Configure(c =>
+            {
+                dbConnection = c.ConnectionFactory;
+            });
+            return dbConnection();
+        }, assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
+    }
+
+    /// <summary>
+    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assembly">The assembly.</param>
+    /// <param name="filter">The Sql Script filter (only affects embdeeded scripts, does not filter IScript files). Don't forget to ignore any non- .SQL files.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
+    {
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(() =>
+        {
+            Func<IDbConnection> dbConnection = null;
+            builder.Configure(c =>
+            {
+                dbConnection = c.ConnectionFactory;
+            });
+            return dbConnection();
+        }, assembly, filter));
+    }
+
+    /// <summary>
     /// Adds a preprocessor that can replace portions of a script.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -200,7 +244,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithVariables(this UpgradeEngineBuilder builder, IDictionary<string, string> variables)
     {
-        builder.Configure(c=>c.AddVariables(variables));
+        builder.Configure(c => c.AddVariables(variables));
         return builder;
     }
 
@@ -213,7 +257,7 @@ public static class StandardExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder WithVariable(this UpgradeEngineBuilder builder, string variableName, string value)
     {
-        return WithVariables(builder, new Dictionary<string, string> {{variableName, value}});
+        return WithVariables(builder, new Dictionary<string, string> { { variableName, value } });
     }
 }
 

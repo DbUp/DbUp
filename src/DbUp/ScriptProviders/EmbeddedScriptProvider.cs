@@ -10,7 +10,7 @@ namespace DbUp.ScriptProviders
     /// <summary>
     /// The default <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts embedded in an assembly.
     /// </summary>
-    public sealed class EmbeddedScriptProvider : IScriptProvider
+    public class EmbeddedScriptProvider : IScriptProvider
     {
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
