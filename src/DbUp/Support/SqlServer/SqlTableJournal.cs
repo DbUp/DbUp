@@ -85,7 +85,7 @@ namespace DbUp.Support.SqlServer
                 {
                     command.CommandText = string.Format(
 @"create table {0} (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key nonclustered ,
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key clustered ,
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
 )", schemaTableName);
