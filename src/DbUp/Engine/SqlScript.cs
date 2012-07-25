@@ -4,7 +4,7 @@ namespace DbUp.Engine
     /// <summary>
     /// Represents a SQL Server script that comes from an embedded resource in an assembly. 
     /// </summary>
-    public sealed class SqlScript
+    public class SqlScript
     {
         private readonly string contents;
         private readonly string name;
@@ -24,7 +24,7 @@ namespace DbUp.Engine
         /// Gets the contents of the script.
         /// </summary>
         /// <value></value>
-        public string Contents
+        public virtual string Contents
         {
             get { return contents; }
         }

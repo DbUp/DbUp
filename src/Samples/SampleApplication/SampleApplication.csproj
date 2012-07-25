@@ -58,6 +58,9 @@
     <EmbeddedResource Include="Scripts\Script0003 - Settings.sql" />
     <EmbeddedResource Include="Scripts\Script0004 - Redirects.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Scripts\Script0005 - ComplexUpdate.cs" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
