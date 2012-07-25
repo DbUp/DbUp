@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -10,7 +11,7 @@ namespace DbUp.ScriptProviders
     /// <summary>
     /// The default <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts embedded in an assembly.
     /// </summary>
-    public sealed class EmbeddedScriptProvider : IScriptProvider
+    public class EmbeddedScriptProvider : IScriptProvider
     {
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
@@ -30,7 +31,7 @@ namespace DbUp.ScriptProviders
         /// Gets all scripts that should be executed.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<SqlScript> GetScripts()
+        public IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory)
         {
             return assembly
                 .GetManifestResourceNames()
