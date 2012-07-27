@@ -73,7 +73,7 @@ namespace DbUp.Specification
             executor.Execute(new SqlScript("Test", "create $schema$.Table"));
 
             command.Received().ExecuteNonQuery();
-            Assert.AreEqual("create foo.Table", command.CommandText);
+            Assert.AreEqual("create [foo].Table", command.CommandText);
         }
     }
 }
