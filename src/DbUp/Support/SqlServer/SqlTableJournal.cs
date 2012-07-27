@@ -32,9 +32,9 @@ namespace DbUp.Support.SqlServer
         public SqlTableJournal(Func<IDbConnection> connectionFactory, string schema, string table, IUpgradeLog logger)
         {
             this.connectionFactory = connectionFactory;
-            schemaTableName = tableName = table;
+            schemaTableName = tableName = SqlObjectParser.QuoteSqlObjectName(table);
             if (!string.IsNullOrEmpty(schema))
-                schemaTableName = schema + "." + tableName;
+                schemaTableName = SqlObjectParser.QuoteSqlObjectName(schema) + "." + tableName;
             log = logger;
         }
 

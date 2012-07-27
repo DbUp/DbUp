@@ -26,7 +26,7 @@ namespace DbUp.Specification
 
             upgradeEngine.PerformUpgrade();
 
-            Assert.AreEqual("DbUp is awesome", command.CommandText);
+            Assert.AreEqual("[Db]Up is awesome", command.CommandText);
         }
     }
 }

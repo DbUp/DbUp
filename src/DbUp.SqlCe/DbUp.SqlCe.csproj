@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\DbUp.SqlCe.XML</DocumentationFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -51,6 +57,7 @@
     <Compile Include="SqlCePreprocessor.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
