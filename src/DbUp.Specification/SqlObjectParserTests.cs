@@ -94,5 +94,16 @@ namespace DbUp.Specification
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
+
+        [Test]
+        public void QuoteSqlObjectName_without_trim_should_leave_start_and_end_whitespace_intact()
+        {
+            var objectName = "    MyObject   ";
+            var quotedObjectName = "[    MyObject   ]";
+
+            var result = SqlObjectParser.QuoteSqlObjectName(objectName, ObjectNameOptions.None);
+
+            Assert.That(result, Is.EqualTo(quotedObjectName));
+        }
     }
 }
