@@ -18,18 +18,32 @@ namespace DbUp.Support.SqlServer
 
     internal class SqlObjectParser
     {
-
+        /// <summary>
+        /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
+        /// This function implements System.Data.SqlClient.SqlCommandBuilder.QuoteIdentifier() with an additional
+        /// validation which is missing from the SqlCommandBuilder version.
+        /// </summary>
+        /// <param name="objectName">Name of the object to quote.</param>
+        /// <returns>The quoted object name with trimmed whitespace</returns>
         internal static string QuoteSqlObjectName(string objectName)
         {
             return QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
         }
 
-        internal static string QuoteSqlObjectName(string objectName, ObjectNameOptions trimSettings)
+        /// <summary>
+        /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
+        /// This function implements System.Data.SqlClient.SqlCommandBuilder.QuoteIdentifier() with an additional
+        /// validation which is missing from the SqlCommandBuilder version.
+        /// </summary>
+        /// <param name="objectName">Name of the object to quote.</param>
+        /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
+        /// <returns>The quoted object name</returns>
+        internal static string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
                 throw new ArgumentNullException();
 
-            if (ObjectNameOptions.Trim == trimSettings)
+            if (ObjectNameOptions.Trim == objectNameOptions)
                 objectName = objectName.Trim();
 
             const int SqlSysnameLength = 128;
