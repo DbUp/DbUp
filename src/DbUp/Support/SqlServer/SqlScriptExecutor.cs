@@ -21,6 +21,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IDbConnection> connectionFactory;
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
+        private string schema;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -45,7 +46,11 @@ namespace DbUp.Support.SqlServer
         /// <summary>
         /// Database Schema, should be null if database does not support schemas
         /// </summary>
-        public string Schema { get; set; }
+        public string Schema 
+        { 
+            get { return schema; }
+            set { schema = null == value ? value : SqlObjectParser.QuoteSqlObjectName(value); }
+        }
 
         private static IEnumerable<string> SplitByGoStatements(string script)
         {
