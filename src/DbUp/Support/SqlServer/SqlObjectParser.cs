@@ -3,7 +3,7 @@ using System.Linq;
 
 namespace DbUp.Support.SqlServer
 {
-    internal enum ObjectNameOptions
+    public enum ObjectNameOptions
     {
         /// <summary>
         /// No options are set.
@@ -16,7 +16,7 @@ namespace DbUp.Support.SqlServer
         Trim
     }
 
-    internal class SqlObjectParser
+    public class SqlObjectParser
     {
         /// <summary>
         /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
@@ -25,7 +25,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="objectName">Name of the object to quote.</param>
         /// <returns>The quoted object name with trimmed whitespace</returns>
-        internal static string QuoteSqlObjectName(string objectName)
+        public static string QuoteSqlObjectName(string objectName)
         {
             return QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
         }
@@ -38,7 +38,7 @@ namespace DbUp.Support.SqlServer
         /// <param name="objectName">Name of the object to quote.</param>
         /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
         /// <returns>The quoted object name</returns>
-        internal static string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
+        public static string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
                 throw new ArgumentNullException();
