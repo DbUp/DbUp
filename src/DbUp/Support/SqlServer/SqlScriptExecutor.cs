@@ -21,6 +21,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IDbConnection> connectionFactory;
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
+        private readonly Func<bool> variablesEnabled;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -33,12 +34,14 @@ namespace DbUp.Support.SqlServer
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
+        /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IDbConnection> connectionFactory, Func<IUpgradeLog> log, string schema, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
+        public SqlScriptExecutor(Func<IDbConnection> connectionFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             this.connectionFactory = connectionFactory;
             this.log = log;
             Schema = schema;
+            this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
         }
 
@@ -74,7 +77,7 @@ namespace DbUp.Support.SqlServer
         {
             if (string.IsNullOrEmpty(Schema)) return;
 
-            var sqlRunner = new AdHocSqlRunner(connectionFactory, Schema);
+            var sqlRunner = new AdHocSqlRunner(connectionFactory, Schema, () => true);
 
             sqlRunner.ExecuteNonQuery(string.Format(
                 @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", Schema));
@@ -97,7 +100,8 @@ namespace DbUp.Support.SqlServer
             var contents = script.Contents;
             if (string.IsNullOrEmpty(Schema))
                 contents = new StripSchemaPreprocessor().Process(contents);
-            contents = new VariableSubstitutionPreprocessor(variables).Process(contents);
+            if (variablesEnabled())
+                contents = new VariableSubstitutionPreprocessor(variables).Process(contents);
             contents = (scriptPreprocessors??new IScriptPreprocessor[0])
                 .Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
 

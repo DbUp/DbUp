@@ -21,6 +21,7 @@ namespace DbUp.Builder
         public UpgradeConfiguration()
         {
             Log = new TraceUpgradeLog();
+            VariablesEnabled = true;
         }
 
         /// <summary>
@@ -63,6 +64,11 @@ namespace DbUp.Builder
         {
             get { return variables; }
         }
+
+        /// <summary>
+        /// Determines if variables should be replaced in scripts before they are run.
+        /// </summary>
+        public bool VariablesEnabled { get; set; }
 
         /// <summary>
         /// Ensures all expectations have been met regarding this configuration.

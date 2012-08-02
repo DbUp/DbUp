@@ -23,12 +23,12 @@ namespace DbUp.Helpers
         {
             databaseName = name;
             connectionString = string.Format("Server=(local)\\SQLEXPRESS;Database={0};Trusted_connection=true;Pooling=false", databaseName);
-            database = new AdHocSqlRunner(( ) => new SqlConnection(connectionString), "dbo");
+            database = new AdHocSqlRunner(( ) => new SqlConnection(connectionString), "dbo", () => true);
 
             var builder = new SqlConnectionStringBuilder(connectionString);
             builder.InitialCatalog = "master";
 
-            master = new AdHocSqlRunner(() => new SqlConnection(builder.ToString()), "dbo");
+            master = new AdHocSqlRunner(() => new SqlConnection(builder.ToString()), "dbo", () => true);
         }
 
         /// <summary>
