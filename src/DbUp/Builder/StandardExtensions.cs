@@ -242,5 +242,27 @@ public static class StandardExtensions
     {
         return WithVariables(builder, new Dictionary<string, string> { { variableName, value } });
     }
+
+    /// <summary>
+    /// Sets a configuration flag which will cause the engine to skip variable expansion.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithVariablesDisabled(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.VariablesEnabled = false);
+        return builder;
+    }
+
+    /// <summary>
+    /// Sets a configuration flag which will cause the engine to perform variable expansion.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithVariablesEnabled(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.VariablesEnabled = true);
+        return builder;
+    }
 }
 

@@ -10,7 +10,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Information", "Information", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
 		Information\SolutionInfo.cs = Information\SolutionInfo.cs
-		Information\VersionInfo.cs = Information\VersionInfo.cs
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Specification", "DbUp.Specification\DbUp.Specification.csproj", "{80A9E08A-13F3-4721-9849-C55167FE21A5}"
