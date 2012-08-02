@@ -26,7 +26,7 @@ public static class SqlCeExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionFactory = connectionFactory);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, null, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, null, "SchemaVersions", c.Log));
         builder.WithPreprocessor(new SqlCePreprocessor());
         return builder;

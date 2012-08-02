@@ -28,7 +28,7 @@ namespace DbUp.Specification
                 dbConnection = Substitute.For<IDbConnection>();
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
-                scriptExecutor = new SqlScriptExecutor(()=>dbConnection, ()=>new TraceUpgradeLog(), null, null);
+                scriptExecutor = new SqlScriptExecutor(()=>dbConnection, ()=>new TraceUpgradeLog(), null, () => true, null);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
