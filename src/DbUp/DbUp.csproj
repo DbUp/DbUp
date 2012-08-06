@@ -35,7 +35,7 @@
     <DocumentationFile>bin\DbUp.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
