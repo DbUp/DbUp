@@ -61,7 +61,7 @@ namespace DbUp.Engine
         /// </summary>
         public DatabaseUpgradeResult PerformUpgrade()
         {
-            var executed = new List<SqlScript>();
+            var executed = new List<IScript>();
             try
             {
                 configuration.Log.WriteInformation("Beginning database upgrade");
@@ -74,14 +74,13 @@ namespace DbUp.Engine
                     return new DatabaseUpgradeResult(executed, true, null);
                 }
 
-                configuration.ScriptExecutor.VerifySchema();
+                configuration.SqlScriptExecutor.VerifySchema(configuration);
 
                 foreach (var script in scriptsToExecute)
                 {
-                    configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                    script.Execute(configuration);
 
                     configuration.Journal.StoreExecutedScript(script);
-
                     executed.Add(script);
                 }
 
@@ -95,12 +94,12 @@ namespace DbUp.Engine
             }
         }
 
-        private List<SqlScript> GetScriptsToExecute()
+        private List<IScript> GetScriptsToExecute()
         {
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionFactory));
             var executedScripts = configuration.Journal.GetExecutedScripts();
 
-            return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
+            return allScripts.Where(s => executedScripts.All(y => y != s.Name)).ToList();
         }
 
         ///<summary>
@@ -110,7 +109,7 @@ namespace DbUp.Engine
         ///<returns></returns>
         public DatabaseUpgradeResult MarkAsExecuted()
         {
-            var marked = new List<SqlScript>();
+            var marked = new List<IScript>();
             try
             {
                 var scriptsToExecute = GetScriptsToExecute();

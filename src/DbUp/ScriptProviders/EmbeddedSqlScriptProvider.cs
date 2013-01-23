@@ -11,17 +11,17 @@ namespace DbUp.ScriptProviders
     /// <summary>
     /// The default <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts embedded in an assembly.
     /// </summary>
-    public class EmbeddedScriptProvider : IScriptProvider
+    public class EmbeddedSqlScriptProvider : IScriptProvider
     {
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// Initializes a new instance of the <see cref="EmbeddedSqlScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter)
+        public EmbeddedSqlScriptProvider(Assembly assembly, Func<string, bool> filter)
         {
             this.assembly = assembly;
             this.filter = filter;
@@ -31,7 +31,7 @@ namespace DbUp.ScriptProviders
         /// Gets all scripts that should be executed.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory)
+        public IEnumerable<IScript> GetScripts(Func<IDbConnection> connectionFactory)
         {
             return assembly
                 .GetManifestResourceNames()
@@ -41,16 +41,10 @@ namespace DbUp.ScriptProviders
                 .ToList();
         }
 
-        private SqlScript ReadResourceAsScript(string scriptName)
+        private IScript ReadResourceAsScript(string scriptName)
         {
-            string contents;
             var resourceStream = assembly.GetManifestResourceStream(scriptName);
-            using (var resourceStreamReader = new StreamReader(resourceStream))
-            {
-                contents = resourceStreamReader.ReadToEnd();
-            }
-
-            return new SqlScript(scriptName, contents);
+            return SqlScript.FromStream(scriptName, resourceStream);
         }
     }
 }

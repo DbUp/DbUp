@@ -1,13 +1,18 @@
 ﻿
+using System;
+using System.Data;
+using System.IO;
+using DbUp.Builder;
+
 namespace DbUp.Engine
 {
     /// <summary>
     /// Represents a SQL Server script that comes from an embedded resource in an assembly. 
     /// </summary>
-    public class SqlScript
+    public class SqlScript : IScript
     {
-        private readonly string contents;
-        private readonly string name;
+        protected string contents;
+        protected string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlScript"/> class.
@@ -18,6 +23,10 @@ namespace DbUp.Engine
         {
             this.name = name;
             this.contents = contents;
+        }
+
+        public SqlScript()
+        {
         }
 
         /// <summary>
@@ -33,9 +42,30 @@ namespace DbUp.Engine
         /// Gets the name of the script.
         /// </summary>
         /// <value></value>
-        public string Name
+        public virtual string Name
         {
             get { return name; }
+        }
+
+        public virtual void Execute(UpgradeConfiguration configuration)
+        {
+            configuration.SqlScriptExecutor.Execute(this, configuration);
+        }
+
+        public static SqlScript FromFile(string path)
+        {
+            var contents = File.ReadAllText(path);
+            var fileName = new FileInfo(path).Name;
+            return new SqlScript(fileName, contents);
+        }
+
+        public static SqlScript FromStream(string scriptName, Stream stream)
+        {
+            using (var resourceStreamReader = new StreamReader(stream))
+            {
+                string c = resourceStreamReader.ReadToEnd();
+                return new SqlScript(scriptName, c);
+            }
         }
     }
 }

@@ -6,15 +6,15 @@ using NUnit.Framework;
 
 namespace DbUp.Specification
 {
-    public class EmbeddedScriptAndCodeProviderTests : SpecificationFor<EmbeddedScriptAndCodeProvider>
+    public class EmbeddedScriptAndCodeProviderTests : SpecificationFor<EmbeddedSqlAndCodeScriptProvider>
     {
-        private SqlScript[] scriptsToExecute;
+        private IScript[] scriptsToExecute;
 
-        public override EmbeddedScriptAndCodeProvider Given()
+        public override EmbeddedSqlAndCodeScriptProvider Given()
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            return new EmbeddedScriptAndCodeProvider(assembly, s=>true);
+            return new EmbeddedSqlAndCodeScriptProvider(assembly, s=>true);
         }
 
         public override void When()
@@ -31,7 +31,7 @@ namespace DbUp.Specification
         [Then]
         public void should_provide_content_for_code_script()
         {
-            Assert.AreEqual("test4", scriptsToExecute.Last().Contents);
+            Assert.AreEqual("test4", scriptsToExecute.OfType<SqlScriptGeneratedAtRuntimeBase>().Last().ProvideScript(null));
         }
     }
 }
