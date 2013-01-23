@@ -59,9 +59,10 @@
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
     <Compile Include="DeployChanges.cs" />
-    <Compile Include="Engine\CodeScriptBase.cs" />
+    <Compile Include="Scripts\CodeScriptBase.cs" />
     <Compile Include="Engine\IScript.cs" />
     <Compile Include="Engine\Preprocessors\StripSchemaPreprocessor.cs" />
+    <Compile Include="Scripts\SqlScriptGeneratedAtRuntimeBase.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
     <Compile Include="Engine\UpgradeEngine.cs" />
@@ -76,7 +77,7 @@
     <Compile Include="ScriptProviders\StaticScriptProvider.cs" />
     <Compile Include="ScriptProviders\EmbeddedSqlScriptProvider.cs" />
     <Compile Include="ScriptProviders\FileSystemScriptProvider.cs" />
-    <Compile Include="Engine\SqlScript.cs" />
+    <Compile Include="Scripts\SqlScript.cs" />
     <Compile Include="Engine\IScriptProvider.cs" />
     <Compile Include="Engine\IJournal.cs" />
     <Compile Include="Support\SqlServer\SqlTableJournal.cs" />
