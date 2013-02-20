@@ -61,7 +61,7 @@ namespace DbUp.Specification
 
             public override void When()
             {
-                filesToExecute = Subject.GetScripts(Arg.Any<Func<IDbConnection>>()).Cast<SqlScript>();
+                filesToExecute = Subject.GetScripts().Cast<SqlScript>();
             }
 
             [Then]

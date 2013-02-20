@@ -23,7 +23,7 @@ namespace DbUp.Specification
             public override UpgradeEngine Given()
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
-                scriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
+                scriptProvider.GetScripts().Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
                 versionTracker = Substitute.For<IJournal>();
                 dbConnection = Substitute.For<IDbConnection>();
                 dbCommand = Substitute.For<IDbCommand>();
@@ -65,7 +65,7 @@ namespace DbUp.Specification
             public override UpgradeEngine Given()
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
-                scriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
+                scriptProvider.GetScripts().Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
                 versionTracker = Substitute.For<IJournal>();
                 sqlScriptExecutor = Substitute.For<ISqlScriptExecutor>();
 

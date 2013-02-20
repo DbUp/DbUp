@@ -19,7 +19,7 @@ namespace DbUp.Specification
 
         public override void When()
         {
-            scriptsToExecute = Subject.GetScripts(() => null).ToArray();
+            scriptsToExecute = Subject.GetScripts().ToArray();
         }
 
         [Then]

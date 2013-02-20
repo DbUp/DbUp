@@ -26,7 +26,7 @@ namespace DbUp.ScriptProviders
             embeddedSqlScriptProvider = new EmbeddedSqlScriptProvider(assembly, filter);
         }
 
-        private IEnumerable<IScript> ScriptsFromScriptClasses(Func<IDbConnection> connectionFactory)
+        private IEnumerable<IScript> ScriptsFromScriptClasses()
         {
             var script = typeof(IScript);
             return assembly
@@ -39,11 +39,11 @@ namespace DbUp.ScriptProviders
         /// <summary>
         /// Gets all scripts that should be executed.
         /// </summary>
-        public IEnumerable<IScript> GetScripts(Func<IDbConnection> connectionFactory)
+        public IEnumerable<IScript> GetScripts()
         {
             var sqlScripts = embeddedSqlScriptProvider
-                .GetScripts(connectionFactory)
-                .Concat(ScriptsFromScriptClasses(connectionFactory))
+                .GetScripts()
+                .Concat(ScriptsFromScriptClasses())
                 .OrderBy(x => x.Name)
                 .ToList();
 

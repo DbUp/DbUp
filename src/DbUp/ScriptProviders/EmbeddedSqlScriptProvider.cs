@@ -31,7 +31,7 @@ namespace DbUp.ScriptProviders
         /// Gets all scripts that should be executed.
         /// </summary>
         /// <returns></returns>
-        public IEnumerable<IScript> GetScripts(Func<IDbConnection> connectionFactory)
+        public IEnumerable<IScript> GetScripts()
         {
             return assembly
                 .GetManifestResourceNames()

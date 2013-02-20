@@ -32,7 +32,7 @@ namespace DbUp.Specification.Concerning
         public void ShouldLogAnErrorWhenUpgradeFails()
         {
             var ex = new InvalidOperationException();
-            ScriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(provider => { throw ex; });
+            ScriptProvider.GetScripts().Returns(provider => { throw ex; });
             DbUpgrader.PerformUpgrade();
             Log.Received().WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
         }
@@ -41,7 +41,7 @@ namespace DbUp.Specification.Concerning
         public void ShouldReturnFailedResult()
         {
             var ex = new InvalidOperationException();
-            ScriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(provider => { throw ex; });
+            ScriptProvider.GetScripts().Returns(provider => { throw ex; });
             var result = DbUpgrader.PerformUpgrade();
             
             Assert.That(result.Successful == false);

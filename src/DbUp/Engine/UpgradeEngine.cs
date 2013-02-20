@@ -96,7 +96,7 @@ namespace DbUp.Engine
 
         private List<IScript> GetScriptsToExecute()
         {
-            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionFactory));
+            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts());
             var executedScripts = configuration.Journal.GetExecutedScripts();
 
             return allScripts.Where(s => executedScripts.All(y => y != s.Name)).ToList();

@@ -19,7 +19,7 @@ namespace DbUp.Specification.Contexts
                 new SqlScript("0002.sql", "")
             };
 
-            ScriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(AllScripts);
+            ScriptProvider.GetScripts().Returns(AllScripts);
             VersionTracker.GetExecutedScripts().Returns(executedScripts);
         }
 	}
