@@ -10,13 +10,13 @@ namespace DbUp.ScriptProviders
     /// </summary>
     public sealed class StaticScriptProvider : IScriptProvider
     {
-        private readonly IEnumerable<SqlScript> scripts;
+        private readonly IEnumerable<IScript> scripts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StaticScriptProvider"/> class.
         /// </summary>
         /// <param name="scripts">The scripts.</param>
-        public StaticScriptProvider(IEnumerable<SqlScript> scripts)
+        public StaticScriptProvider(IEnumerable<IScript> scripts)
         {
             this.scripts = scripts;
         }
@@ -24,7 +24,7 @@ namespace DbUp.ScriptProviders
         /// <summary>
         /// Gets all scripts that should be executed.
         /// </summary>
-        public IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory)
+        public IEnumerable<IScript> GetScripts()
         {
             return scripts;
         }

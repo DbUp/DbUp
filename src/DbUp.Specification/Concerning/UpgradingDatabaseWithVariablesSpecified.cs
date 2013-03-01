@@ -1,5 +1,6 @@
 ﻿﻿using System;
 ﻿using System.Collections.Generic;
+﻿using DbUp.Builder;
 ﻿using DbUp.Engine;
 ﻿using DbUp.Specification.Contexts;
 using NSubstitute;
@@ -15,7 +16,7 @@ namespace DbUp.Specification.Concerning
         {
             DbUpgrader.PerformUpgrade();
 
-            ScriptExecutor.Received().Execute(Arg.Any<SqlScript>(), Arg.Any<IDictionary<string, string>>());
+            SqlScriptExecutor.Received().Execute(Arg.Any<SqlScript>(), Arg.Any<UpgradeConfiguration>());
         }
     }
 }

@@ -8,7 +8,7 @@ namespace DbUp.Engine.Preprocessors
     /// <summary>
     /// Substitutes variables for values in SqlScripts
     /// </summary>
-    public class VariableSubstitutionPreprocessor : IScriptPreprocessor
+    public class VariableSubstitutionPreprocessor : ISqlScriptPreprocessor
     {
         private readonly IDictionary<string, string> variables;
         private static readonly Regex tokenRegex = new Regex(@"\$(?<variableName>\w+)\$");

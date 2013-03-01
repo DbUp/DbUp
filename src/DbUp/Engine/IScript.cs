@@ -1,17 +1,25 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
+using System.Text;
+using DbUp.Builder;
 
 namespace DbUp.Engine
 {
-    /// <summary>
-    /// A class which represents a script, allowing you to dynamically generate a sql script at runtime
-    /// </summary>
     public interface IScript
     {
         /// <summary>
-        /// Provides the Sql Script to execute
+        /// Gets the name of the script.
         /// </summary>
-        /// <param name="sqlConnectionString">An open and active database connection</param>
-        /// <returns>The Sql Script contents</returns>
-        string ProvideScript(IDbConnection sqlConnectionString);
+        /// <value></value>
+        string Name { get; }
+
+   
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="configuration"></param>
+        void Execute(UpgradeConfiguration configuration);
     }
 }

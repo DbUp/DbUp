@@ -8,7 +8,7 @@ namespace DbUp.Engine
     /// </summary>
     public sealed class DatabaseUpgradeResult
     {
-        private readonly List<SqlScript> scripts;
+        private readonly List<IScript> scripts;
         private readonly bool successful;
         private readonly Exception error;
 
@@ -18,9 +18,9 @@ namespace DbUp.Engine
         /// <param name="scripts">The scripts that were executed.</param>
         /// <param name="successful">if set to <c>true</c> [successful].</param>
         /// <param name="error">The error.</param>
-        public DatabaseUpgradeResult(IEnumerable<SqlScript> scripts, bool successful, Exception error)
+        public DatabaseUpgradeResult(IEnumerable<IScript> scripts, bool successful, Exception error)
         {
-            this.scripts = new List<SqlScript>();
+            this.scripts = new List<IScript>();
             this.scripts.AddRange(scripts);
             this.successful = successful;
             this.error = error;
@@ -29,7 +29,7 @@ namespace DbUp.Engine
         /// <summary>
         /// Gets the scripts that were executed.
         /// </summary>
-        public IEnumerable<SqlScript> Scripts
+        public IEnumerable<IScript> Scripts
         {
             get { return scripts; }
         }
