@@ -95,7 +95,11 @@ namespace DbUp.Engine
             }
         }
 
-        private List<SqlScript> GetScriptsToExecute()
+        /// <summary>
+        /// Returns a list of scripts that will be executed when the upgrade is performed
+        /// </summary>
+        /// <returns>The scripts to be executed</returns>
+        public List<SqlScript> GetScriptsToExecute()
         {
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionFactory));
             var executedScripts = configuration.Journal.GetExecutedScripts();
