@@ -30,6 +30,12 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="NSubstitute">
       <HintPath>..\..\lib\NSubstitute.1.1.0.0\lib\35\NSubstitute.dll</HintPath>
@@ -64,6 +70,7 @@
     <Compile Include="Contexts\GivenScriptsWithVariableSubstitutions.cs" />
     <Compile Include="EmbeddedScriptAndCodeProviderTests.cs" />
     <Compile Include="SqlScriptExecutorTests.cs" />
+    <Compile Include="SqlObjectParserTests.cs" />
     <Compile Include="UpgradeEngineTests.cs" />
     <Compile Include="FileSystemScriptProviderTests.cs" />
     <Compile Include="SpecificationFor.cs" />
@@ -82,6 +89,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
