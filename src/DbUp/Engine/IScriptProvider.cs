@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 
 namespace DbUp.Engine
 {
@@ -12,6 +11,6 @@ namespace DbUp.Engine
         /// <summary>
         /// Gets all scripts that should be executed.
         /// </summary>
-        IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory);
+        IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager);
     }
 }

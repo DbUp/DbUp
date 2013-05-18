@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -61,7 +60,7 @@ namespace DbUp.Specification
 
             public override void When()
             {
-                filesToExecute = Subject.GetScripts(Arg.Any<Func<IDbConnection>>());
+                filesToExecute = Subject.GetScripts(Arg.Any<IConnectionManager>());
             }
 
             [Then]
