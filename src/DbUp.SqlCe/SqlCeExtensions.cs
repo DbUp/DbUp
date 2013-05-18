@@ -2,6 +2,7 @@
 using System.Data.SqlServerCe;
 using DbUp.Builder;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
 using DbUp.Support.SqlServer;
 

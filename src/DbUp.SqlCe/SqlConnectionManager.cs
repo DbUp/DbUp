@@ -2,43 +2,26 @@
 using System.Data;
 using System.Data.SqlServerCe;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.SqlCe
 {
     /// <summary>
     /// Manages SqlCe Database Connections
     /// </summary>
-    public class SqlCeConnectionManager : IConnectionManager
+    public class SqlCeConnectionManager : DatabaseConnectionManager
     {
-        private readonly string connectionString;
-
         /// <summary>
         /// Manages SqlCe Database Connections
         /// </summary>
         /// <param name="connectionString"></param>
-        public SqlCeConnectionManager(string connectionString)
+        public SqlCeConnectionManager(string connectionString) : base(connectionString)
         {
-            this.connectionString = connectionString;
         }
 
-        public void RunWithManagedConnection(Action<IDbConnection> action)
+        protected override IDbConnection CreateConnection(string connectionString)
         {
-            using (var connection = new SqlCeConnection(connectionString))
-            {
-                connection.Open();
-
-                action(connection);
-            }
-        }
-
-        public T RunWithManagedConnection<T>(Func<IDbConnection, T> actionWithResult)
-        {
-            using (var connection = new SqlCeConnection(connectionString))
-            {
-                connection.Open();
-
-                return actionWithResult(connection);
-            }
+            return new SqlCeConnection(connectionString);
         }
     }
 }

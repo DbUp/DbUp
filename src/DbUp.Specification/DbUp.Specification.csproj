@@ -72,6 +72,9 @@
     <Compile Include="SqlScriptExecutorTests.cs" />
     <Compile Include="SqlObjectParserTests.cs" />
     <Compile Include="TestConnectionManager.cs" />
+    <Compile Include="TransactionManagement\SingleTransactionStrategyTests.cs" />
+    <Compile Include="TransactionManagement\NoTransactionStrategyTests.cs" />
+    <Compile Include="TransactionManagement\TransactionPerScriptStrategyTests.cs" />
     <Compile Include="UpgradeEngineTests.cs" />
     <Compile Include="FileSystemScriptProviderTests.cs" />
     <Compile Include="SpecificationFor.cs" />

@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Data;
+using DbUp.Engine.Output;
 
-namespace DbUp.Engine
+namespace DbUp.Engine.Transactions
 {
     /// <summary>
     /// Allows backwards compatibility with previous API/behaviour of using connection factories with DbUp
@@ -19,22 +20,33 @@ namespace DbUp.Engine
             this.connectionFactory = connectionFactory;
         }
 
-        public void RunWithManagedConnection(Action<IDbConnection> action)
+        public void UpgradeStarting(IUpgradeLog upgradeLog)
+        {
+        }
+
+        public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
         {
             using (var connection = connectionFactory())
             {
                 connection.Open();
-                action(connection);
+                action(()=>connection.CreateCommand());
             }
         }
 
-        public T RunWithManagedConnection<T>(Func<IDbConnection, T> actionWithResult)
+        public T ExecuteCommandsWithManagedConnection<T>(Func<Func<IDbCommand>, T> actionWithResult)
         {
             using (var connection = connectionFactory())
             {
                 connection.Open();
-                return actionWithResult(connection);
+                return actionWithResult(()=>connection.CreateCommand());
             }
+        }
+
+        public TransactionMode TransactionMode { get; set; }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

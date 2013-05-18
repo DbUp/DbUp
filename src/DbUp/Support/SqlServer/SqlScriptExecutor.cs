@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
+using DbUp.Engine.Transactions;
 using DbUp.Helpers;
 
 namespace DbUp.Support.SqlServer
@@ -81,10 +82,13 @@ namespace DbUp.Support.SqlServer
         {
             if (string.IsNullOrEmpty(Schema)) return;
 
-            var sqlRunner = new AdHocSqlRunner(connectionManager, Schema, () => true);
+            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
 
-            sqlRunner.ExecuteNonQuery(string.Format(
-                @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", Schema));
+                sqlRunner.ExecuteNonQuery(string.Format(
+                    @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", Schema));
+            });
         }
 
         /// <summary>
@@ -113,16 +117,18 @@ namespace DbUp.Support.SqlServer
             var index = -1;
             try
             {
-                connectionManager.RunWithManagedConnection(connection =>
+                connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     foreach (var statement in scriptStatements)
                     {
                         index++;
-                        var command = connection.CreateCommand();
-                        command.CommandText = statement;
-                        if (ExecutionTimeoutSeconds != null)
-                            command.CommandTimeout = ExecutionTimeoutSeconds.Value;
-                        command.ExecuteNonQuery();
+                        using (var command = dbCommandFactory())
+                        {
+                            command.CommandText = statement;
+                            if (ExecutionTimeoutSeconds != null)
+                                command.CommandTimeout = ExecutionTimeoutSeconds.Value;
+                            command.ExecuteNonQuery();
+                        }
                     }
                 });
             }

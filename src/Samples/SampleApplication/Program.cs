@@ -18,6 +18,7 @@ namespace SampleApplication
                     .SqlDatabase(database.ConnectionString, null) //null or "" for default schema for user
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
+                    .WithTransaction()
                     .Build();
 
                 var result = upgrader.PerformUpgrade();

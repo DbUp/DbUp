@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.ScriptProviders
 {

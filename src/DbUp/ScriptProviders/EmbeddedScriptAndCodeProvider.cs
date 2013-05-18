@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.ScriptProviders
 {
@@ -29,10 +29,10 @@ namespace DbUp.ScriptProviders
         private IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)
         {
             var script = typeof(IScript);
-            return connectionManager.RunWithManagedConnection(connection => assembly
+            return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory => assembly
                 .GetTypes()
                 .Where(type => script.IsAssignableFrom(type) && type.IsClass)
-                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", () => ((IScript)Activator.CreateInstance(s)).ProvideScript(connection)))
+                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", () => ((IScript)Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
                 .ToList());
         }
 

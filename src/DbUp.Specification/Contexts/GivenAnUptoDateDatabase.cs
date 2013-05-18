@@ -1,6 +1,7 @@
 using System;
 using DbUp.Engine;
 using System.Collections.Generic;
+using DbUp.Engine.Transactions;
 using NSubstitute;
 
 namespace DbUp.Specification.Contexts
