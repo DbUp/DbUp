@@ -22,7 +22,6 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
-        private string schema;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -49,11 +48,7 @@ namespace DbUp.Support.SqlServer
         /// <summary>
         /// Database Schema, should be null if database does not support schemas
         /// </summary>
-        public string Schema 
-        { 
-            get { return schema; }
-            set { schema = null == value ? value : SqlObjectParser.QuoteSqlObjectName(value); }
-        }
+        public string Schema { get; set; }
 
         private static IEnumerable<string> SplitByGoStatements(string script)
         {
@@ -85,7 +80,7 @@ namespace DbUp.Support.SqlServer
             var sqlRunner = new AdHocSqlRunner(connectionFactory, Schema, () => true);
 
             sqlRunner.ExecuteNonQuery(string.Format(
-                @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", Schema));
+                @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA [{0}]')", Schema));
         }
 
         /// <summary>
@@ -98,7 +93,7 @@ namespace DbUp.Support.SqlServer
             if (variables == null)
                 variables = new Dictionary<string, string>();
             if (Schema != null && !variables.ContainsKey("schema"))
-                variables.Add("schema", Schema);
+                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(Schema));
 
             log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
 
@@ -150,6 +145,5 @@ namespace DbUp.Support.SqlServer
                 throw;
             }
         }
-
     }
 }
