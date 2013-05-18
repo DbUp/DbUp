@@ -264,5 +264,28 @@ public static class StandardExtensions
         builder.Configure(c => c.VariablesEnabled = true);
         return builder;
     }
-}
 
+    /// <summary>
+    /// Allows you to set the execution timeout for scripts.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="timeout">A <c>TimeSpan</c> value containing the timeout value or <c>null</c>.</param>
+    /// <exception cref="System.ArgumentOutOfRangeException">The timeout value is less than zero or greater than 2,147,483,647 seconds.</exception>
+    /// <remarks>Setting the timeout parameter to <c>null</c> will use the default timeout of the underlying provider.</remarks>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithExecutionTimeout(this UpgradeEngineBuilder builder, TimeSpan? timeout)
+    {
+        if (timeout == null)
+        {
+            builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = null);
+            return builder;
+        }
+
+        var totalSeconds = timeout.Value.TotalSeconds;
+
+        if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException("timeout", timeout, string.Format("The timeout value must be a value between 1 and {0} seconds", int.MaxValue));
+
+        builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
+        return builder;
+    }
+}
