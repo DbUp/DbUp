@@ -1,4 +1,5 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
 using DbUp.ScriptProviders;
@@ -19,7 +20,7 @@ namespace DbUp.Specification
 
         public override void When()
         {
-            scriptsToExecute = Subject.GetScripts(() => null).ToArray();
+            scriptsToExecute = Subject.GetScripts(new TestConnectionManager()).ToArray();
         }
 
         [Then]

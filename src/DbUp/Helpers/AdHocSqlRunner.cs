@@ -12,7 +12,7 @@ namespace DbUp.Helpers
     /// </summary>
     public class AdHocSqlRunner
     {
-        private readonly Func<IDbConnection> connectionFactory;
+        private readonly IConnectionManager connectionManager;
         private readonly IScriptPreprocessor[] additionalScriptPreprocessors;
         private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
         private readonly Func<bool> variablesEnabled;
@@ -20,24 +20,24 @@ namespace DbUp.Helpers
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
         /// </summary>
-        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="connectionManager">The connection manager.</param>
         /// <param name="schema">The schema.</param>
         /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
         /// <remarks>Sets the <c>variablesEnabled</c> setting to <c>true</c>.</remarks>
-        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
-            : this(connectionFactory, schema, () => true, additionalScriptPreprocessors)
+        public AdHocSqlRunner(IConnectionManager connectionManager, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
+            : this(connectionManager, schema, () => true, additionalScriptPreprocessors)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
         /// </summary>
-        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="connectionManager">The connection factory.</param>
         /// <param name="schema">The schema.</param>
         /// <param name="variablesEnabled">Function indicating <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
-        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, Func<bool> variablesEnabled, params IScriptPreprocessor[] additionalScriptPreprocessors)
+        public AdHocSqlRunner(IConnectionManager connectionManager, string schema, Func<bool> variablesEnabled, params IScriptPreprocessor[] additionalScriptPreprocessors)
         {
-            this.connectionFactory = connectionFactory;
+            this.connectionManager = connectionManager;
             this.variablesEnabled = variablesEnabled;
             this.additionalScriptPreprocessors = additionalScriptPreprocessors;
             Schema = schema;
@@ -127,25 +127,25 @@ namespace DbUp.Helpers
         private void Execute(string commandText, IEnumerable<Func<string, object>> parameters, Action<IDbCommand> executor)
         {
             commandText = Preprocess(commandText);
-            using (var connection = connectionFactory())
-            using (var command = connection.CreateCommand())
+            connectionManager.RunWithManagedConnection(connection =>
             {
-                command.CommandText = commandText;
-
-                foreach (var param in parameters)
+                using (var command = connection.CreateCommand())
                 {
-                    var key = param.Method.GetParameters()[0].Name;
-                    var value = param(null);
-                    var p = command.CreateParameter();
-                    p.ParameterName = key;
-                    p.Value = value;
-                    command.Parameters.Add(p);
+                    command.CommandText = commandText;
+
+                    foreach (var param in parameters)
+                    {
+                        var key = param.Method.GetParameters()[0].Name;
+                        var value = param(null);
+                        var p = command.CreateParameter();
+                        p.ParameterName = key;
+                        p.Value = value;
+                        command.Parameters.Add(p);
+                    }
+
+                    executor(command);
                 }
-
-                connection.Open();
-
-                executor(command);
-            }
+            });
         }
 
         private string Preprocess(string query)

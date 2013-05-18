@@ -39,14 +39,12 @@ namespace DbUp.Engine
             try
             {
                 errorMessage = "";
-                using (var connection = configuration.ConnectionFactory())
+                configuration.ConnectionManager.RunWithManagedConnection(connection =>
                 {
-                    connection.Open();
-
                     var command = connection.CreateCommand();
                     command.CommandText = "select 1";
                     command.ExecuteScalar();
-                }
+                });
                 return true;
             }
             catch (Exception ex)
@@ -101,7 +99,7 @@ namespace DbUp.Engine
         /// <returns>The scripts to be executed</returns>
         public List<SqlScript> GetScriptsToExecute()
         {
-            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionFactory));
+            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
             var executedScripts = configuration.Journal.GetExecutedScripts();
 
             return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
