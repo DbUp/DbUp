@@ -4,6 +4,7 @@ using System.Data;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
@@ -30,8 +31,8 @@ namespace DbUp.Specification
                 dbConnection.CreateCommand().Returns(dbCommand);
                 var connectionManager = Substitute.For<IConnectionManager>();
                 connectionManager
-                    .When(c=>c.RunWithManagedConnection(Arg.Any<Action<IDbConnection>>()))
-                    .Do(c => c.Arg<Action<IDbConnection>>()(dbConnection));
+                    .When(c=>c.ExecuteCommandsWithManagedConnection(Arg.Any<Action<Func<IDbCommand>>>()))
+                    .Do(c => c.Arg<Action<Func<IDbCommand>>>()(dbConnection.CreateCommand));
                 scriptExecutor = new SqlScriptExecutor(connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
 
                 var builder = new UpgradeEngineBuilder()

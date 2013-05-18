@@ -39,11 +39,13 @@ namespace DbUp.Engine
             try
             {
                 errorMessage = "";
-                configuration.ConnectionManager.RunWithManagedConnection(connection =>
+                configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
-                    var command = connection.CreateCommand();
-                    command.CommandText = "select 1";
-                    command.ExecuteScalar();
+                    using (var command = dbCommandFactory())
+                    {
+                        command.CommandText = "select 1";
+                        command.ExecuteScalar();
+                    }
                 });
                 return true;
             }
@@ -59,6 +61,7 @@ namespace DbUp.Engine
         /// </summary>
         public DatabaseUpgradeResult PerformUpgrade()
         {
+            configuration.ConnectionManager.UpgradeStarting(configuration.Log);
             var executed = new List<SqlScript>();
             try
             {
@@ -90,6 +93,10 @@ namespace DbUp.Engine
             {
                 configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(executed, false, ex);
+            }
+            finally
+            {
+                configuration.ConnectionManager.Dispose();
             }
         }
 

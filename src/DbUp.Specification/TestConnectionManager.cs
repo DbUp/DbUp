@@ -1,27 +1,25 @@
 ﻿using System;
 using System.Data;
-using DbUp.Engine;
+using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using NSubstitute;
 
 namespace DbUp.Specification
 {
-    public class TestConnectionManager : IConnectionManager
+    public class TestConnectionManager : DatabaseConnectionManager
     {
         private readonly IDbConnection connection;
 
-        public TestConnectionManager(IDbConnection connection = null)
+        public TestConnectionManager(IDbConnection connection = null, bool startUpgrade = false) : base(null)
         {
             this.connection = connection ?? Substitute.For<IDbConnection>();
+            if (startUpgrade)
+                UpgradeStarting(new ConsoleUpgradeLog());
         }
 
-        public void RunWithManagedConnection(Action<IDbConnection> action)
+        protected override IDbConnection CreateConnection(string connectionString)
         {
-            action(connection);
-        }
-
-        public T RunWithManagedConnection<T>(Func<IDbConnection, T> actionWithResult)
-        {
-            return actionWithResult(connection);
+            return connection;
         }
     }
 }

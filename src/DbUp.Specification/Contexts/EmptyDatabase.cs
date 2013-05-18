@@ -2,6 +2,7 @@
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using NUnit.Framework;
 using NSubstitute;
 
@@ -13,6 +14,7 @@ namespace DbUp.Specification.Contexts
         public IScriptExecutor ScriptExecutor;
         public IJournal VersionTracker;
         public IScriptProvider ScriptProvider;
+        public IConnectionManager ConnectionManager;
         public IUpgradeLog Log;
         public IEnumerable<SqlScript> AllScripts;
         public IScriptPreprocessor ScriptPreprocessor;
@@ -25,12 +27,14 @@ namespace DbUp.Specification.Contexts
 			VersionTracker = Substitute.For<IJournal> ();
 			ScriptExecutor = Substitute.For<IScriptExecutor> ();
             ScriptPreprocessor = Substitute.For<IScriptPreprocessor>();
+            ConnectionManager = new TestConnectionManager();
 
 			Log = Substitute.For<IUpgradeLog> ();
 
             var config = new UpgradeConfiguration();
 
             config.ScriptPreprocessors.Add(ScriptPreprocessor);
+            config.ConnectionManager = ConnectionManager;
             config.ScriptProviders.Add(ScriptProvider);
             config.ScriptExecutor = ScriptExecutor;
             config.Journal = VersionTracker;

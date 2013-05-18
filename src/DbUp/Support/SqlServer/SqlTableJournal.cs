@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Support.SqlServer
 {
@@ -17,7 +18,7 @@ namespace DbUp.Support.SqlServer
         private readonly string schemaTableName;
         private readonly IConnectionManager connectionManager;
         private readonly IUpgradeLog log;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
         /// </summary>
@@ -54,9 +55,9 @@ namespace DbUp.Support.SqlServer
             }
 
             var scripts = new List<string>();
-            connectionManager.RunWithManagedConnection(connection =>
+            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                using (var command = connection.CreateCommand())
+                using (var command = dbCommandFactory())
                 {
                     command.CommandText = string.Format("select [ScriptName] from {0} order by [ScriptName]", schemaTableName);
                     command.CommandType = CommandType.Text;
@@ -68,7 +69,7 @@ namespace DbUp.Support.SqlServer
                     }
                 }
             });
-            
+
             return scripts.ToArray();
         }
 
@@ -83,9 +84,9 @@ namespace DbUp.Support.SqlServer
             {
                 log.WriteInformation(string.Format("Creating the {0} table", schemaTableName));
 
-                connectionManager.RunWithManagedConnection(connection =>
+                connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
-                    using (var command = connection.CreateCommand())
+                    using (var command = dbCommandFactory())
                     {
                         command.CommandText = string.Format(
     @"create table {0} (
@@ -102,9 +103,9 @@ namespace DbUp.Support.SqlServer
                 });
             }
 
-            connectionManager.RunWithManagedConnection(connection =>
+            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                using (var command = connection.CreateCommand())
+                using (var command = dbCommandFactory())
                 {
                     command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("s"));
 
@@ -121,27 +122,27 @@ namespace DbUp.Support.SqlServer
 
         private bool DoesTableExist()
         {
-            try
+            return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                return connectionManager.RunWithManagedConnection(connection =>
+                try
                 {
-                    using (var command = connection.CreateCommand())
+                    using (var command = dbCommandFactory())
                     {
                         command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
                         command.CommandType = CommandType.Text;
                         command.ExecuteScalar();
                         return true;
                     }
-                });
-            }
-            catch (SqlException)
-            {
-                return false;
-            }
-            catch (DbException)
-            {
-                return false;
-            }
+                }
+                catch (SqlException)
+                {
+                    return false;
+                }
+                catch (DbException)
+                {
+                    return false;
+                }
+            });
         }
     }
 }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
 
