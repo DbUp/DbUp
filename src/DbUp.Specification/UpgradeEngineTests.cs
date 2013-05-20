@@ -4,6 +4,7 @@ using System.Data;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
@@ -23,19 +24,23 @@ namespace DbUp.Specification
             public override UpgradeEngine Given()
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
-                scriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
                 versionTracker = Substitute.For<IJournal>();
                 dbConnection = Substitute.For<IDbConnection>();
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
-                scriptExecutor = new SqlScriptExecutor(()=>dbConnection, ()=>new TraceUpgradeLog(), null, () => true, null);
+                var connectionManager = Substitute.For<IConnectionManager>();
+                connectionManager
+                    .When(c=>c.ExecuteCommandsWithManagedConnection(Arg.Any<Action<Func<IDbCommand>>>()))
+                    .Do(c => c.Arg<Action<Func<IDbCommand>>>()(dbConnection.CreateCommand));
+                scriptExecutor = new SqlScriptExecutor(connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
                     .JournalTo(versionTracker)
                     .WithVariable("var", "sub");
                 builder.Configure(c => c.ScriptExecutor = scriptExecutor);
-                builder.Configure(c => c.ConnectionFactory = () => dbConnection);
+                builder.Configure(c => c.ConnectionManager = connectionManager);
 
                 var upgrader = builder.Build();
                 return upgrader;
@@ -62,7 +67,7 @@ namespace DbUp.Specification
             public override UpgradeEngine Given()
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
-                scriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
                 versionTracker = Substitute.For<IJournal>();
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 

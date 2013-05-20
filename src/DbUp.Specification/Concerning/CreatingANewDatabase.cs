@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using DbUp.Engine;
+using DbUp.Engine.Transactions;
 using NUnit.Framework;
 using DbUp.Specification.Contexts;
 using System.Linq;
@@ -32,7 +33,7 @@ namespace DbUp.Specification.Concerning
         public void ShouldLogAnErrorWhenUpgradeFails()
         {
             var ex = new InvalidOperationException();
-            ScriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(provider => { throw ex; });
+            ScriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(provider => { throw ex; });
             DbUpgrader.PerformUpgrade();
             Log.Received().WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
         }
@@ -41,11 +42,11 @@ namespace DbUp.Specification.Concerning
         public void ShouldReturnFailedResult()
         {
             var ex = new InvalidOperationException();
-            ScriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(provider => { throw ex; });
+            ScriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(provider => { throw ex; });
             var result = DbUpgrader.PerformUpgrade();
             
             Assert.That(result.Successful == false);
-            Assert.That(result.Scripts.Count() == 0);
+            Assert.That(!result.Scripts.Any());
             Assert.That(result.Error == ex);
         }
 

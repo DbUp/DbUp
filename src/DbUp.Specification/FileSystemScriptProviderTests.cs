@@ -1,10 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 using NSubstitute;
 using NUnit.Framework;
@@ -61,7 +61,7 @@ namespace DbUp.Specification
 
             public override void When()
             {
-                filesToExecute = Subject.GetScripts(Arg.Any<Func<IDbConnection>>());
+                filesToExecute = Subject.GetScripts(Arg.Any<IConnectionManager>());
             }
 
             [Then]

@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 using NSubstitute;
 
 namespace DbUp.Specification.Contexts
@@ -17,7 +17,7 @@ namespace DbUp.Specification.Contexts
                                  new SqlScript("0001.sql", "CREATE TABLE $sometable$ (Id int)")
                              };
 
-            ScriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(AllScripts);
+            ScriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(AllScripts);
             VersionTracker.GetExecutedScripts().Returns(new string[0]);
         }
     }

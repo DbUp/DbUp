@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Support.SqlServer
 {
@@ -14,27 +15,28 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public sealed class SqlTableJournal : IJournal
     {
-        private readonly Func<IDbConnection> connectionFactory;
-        private readonly string tableName;
         private readonly string schemaTableName;
+        private readonly IConnectionManager connectionManager;
         private readonly IUpgradeLog log;
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
         /// </summary>
-        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="connectionManager">The connection manager.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
         /// <param name="logger">The log.</param>
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
-        public SqlTableJournal(Func<IDbConnection> connectionFactory, string schema, string table, IUpgradeLog logger)
+        public SqlTableJournal(IConnectionManager connectionManager, string schema, string table, IUpgradeLog logger)
         {
-            this.connectionFactory = connectionFactory;
-            schemaTableName = tableName = SqlObjectParser.QuoteSqlObjectName(table);
-            if (!string.IsNullOrEmpty(schema))
-                schemaTableName = SqlObjectParser.QuoteSqlObjectName(schema) + "." + tableName;
+            schemaTableName = SqlObjectParser.QuoteSqlObjectName(table);
+            if (string.IsNullOrEmpty(schema))
+                schemaTableName = SqlObjectParser.QuoteSqlObjectName(table);
+            else
+                schemaTableName = SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(table);
+            this.connectionManager = connectionManager;
             log = logger;
         }
 
@@ -53,19 +55,21 @@ namespace DbUp.Support.SqlServer
             }
 
             var scripts = new List<string>();
-            using (var connection = connectionFactory())
-            using (var command = connection.CreateCommand())
+            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                command.CommandText = string.Format("select [ScriptName] from {0} order by [ScriptName]", schemaTableName);
-                command.CommandType = CommandType.Text;
-                connection.Open();
-
-                using(var reader = command.ExecuteReader())
+                using (var command = dbCommandFactory())
                 {
-                    while (reader.Read())
-                        scripts.Add((string) reader[0]);
+                    command.CommandText = string.Format("select [ScriptName] from {0} order by [ScriptName]", schemaTableName);
+                    command.CommandType = CommandType.Text;
+
+                    using (var reader = command.ExecuteReader())
+                    {
+                        while (reader.Read())
+                            scripts.Add((string)reader[0]);
+                    }
                 }
-            }
+            });
+
             return scripts.ToArray();
         }
 
@@ -80,67 +84,65 @@ namespace DbUp.Support.SqlServer
             {
                 log.WriteInformation(string.Format("Creating the {0} table", schemaTableName));
 
-                using (var connection = connectionFactory())
-                using (var command = connection.CreateCommand())
+                connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
-                    command.CommandText = string.Format(
-@"create table {0} (
+                    using (var command = dbCommandFactory())
+                    {
+                        command.CommandText = string.Format(
+    @"create table {0} (
 	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
 )", schemaTableName);
 
-                    command.CommandType = CommandType.Text;
-                    connection.Open();
+                        command.CommandType = CommandType.Text;
+                        command.ExecuteNonQuery();
+                    }
 
+                    log.WriteInformation(string.Format("The {0} table has been created", schemaTableName));
+                });
+            }
+
+            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                using (var command = dbCommandFactory())
+                {
+                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"));
+
+                    var param = command.CreateParameter();
+                    param.ParameterName = "scriptName";
+                    param.Value = script.Name;
+                    command.Parameters.Add(param);
+
+                    command.CommandType = CommandType.Text;
                     command.ExecuteNonQuery();
                 }
-
-                log.WriteInformation(string.Format("The {0} table has been created", schemaTableName));
-            }
-
-
-            using (var connection = connectionFactory())
-            using (var command = connection.CreateCommand())
-            {
-                command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"));
-                
-                var param = command.CreateParameter();
-                param.ParameterName = "scriptName";
-                param.Value = script.Name;
-                command.Parameters.Add(param);
-
-                command.CommandType = CommandType.Text;
-                connection.Open();
-
-                command.ExecuteNonQuery();
-            }
+            });
         }
 
         private bool DoesTableExist()
         {
-            try
+            return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                using (var connection = connectionFactory())
+                try
                 {
-                    using (var command = connection.CreateCommand())
+                    using (var command = dbCommandFactory())
                     {
                         command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
                         command.CommandType = CommandType.Text;
-                        connection.Open();
                         command.ExecuteScalar();
                         return true;
                     }
                 }
-            }
-            catch (SqlException)
-            {
-                return false;
-            }
-            catch (DbException)
-            {
-                return false;
-            }
+                catch (SqlException)
+                {
+                    return false;
+                }
+                catch (DbException)
+                {
+                    return false;
+                }
+            });
         }
     }
 }

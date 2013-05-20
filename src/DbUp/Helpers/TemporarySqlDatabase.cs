@@ -14,6 +14,8 @@ namespace DbUp.Helpers
         private readonly AdHocSqlRunner database;
         private readonly string databaseName;
         private readonly AdHocSqlRunner master;
+        private readonly SqlConnection sqlConnection;
+        private readonly SqlConnection masterSqlConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemporarySqlDatabase"/> class.
@@ -22,13 +24,14 @@ namespace DbUp.Helpers
         public TemporarySqlDatabase(string name)
         {
             databaseName = name;
-            connectionString = string.Format("Server=(local)\\SQLEXPRESS;Database={0};Trusted_connection=true;Pooling=false", databaseName);
-            database = new AdHocSqlRunner(( ) => new SqlConnection(connectionString), "dbo", () => true);
+            connectionString = string.Format("Server=(local);Database={0};Trusted_connection=true;Pooling=false", databaseName);
+            sqlConnection = new SqlConnection(connectionString);
+            database = new AdHocSqlRunner(sqlConnection.CreateCommand, "dbo", () => true);
 
-            var builder = new SqlConnectionStringBuilder(connectionString);
-            builder.InitialCatalog = "master";
+            var builder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
 
-            master = new AdHocSqlRunner(() => new SqlConnection(builder.ToString()), "dbo", () => true);
+            masterSqlConnection = new SqlConnection(builder.ToString());
+            master = new AdHocSqlRunner(() => masterSqlConnection.CreateCommand(), "dbo", () => true);
         }
 
         /// <summary>
@@ -54,6 +57,7 @@ namespace DbUp.Helpers
         /// </summary>
         public void Create()
         {
+            masterSqlConnection.Open();
             try
             {
                 master.ExecuteNonQuery("drop database [" + databaseName + "]");
@@ -62,6 +66,7 @@ namespace DbUp.Helpers
             {
             }
             master.ExecuteNonQuery("create database [" + databaseName + "]");
+            sqlConnection.Open();
         }
 
         /// <summary>
@@ -70,6 +75,8 @@ namespace DbUp.Helpers
         public void Dispose()
         {
             master.ExecuteNonQuery("drop database [" + databaseName + "]");
+            masterSqlConnection.Dispose();
+            sqlConnection.Close();
         }
 
         internal class TraceLog : IUpgradeLog

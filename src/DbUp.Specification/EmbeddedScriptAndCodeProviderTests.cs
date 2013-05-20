@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
+using DbUp.Engine.Output;
 using DbUp.ScriptProviders;
 using NUnit.Framework;
 
@@ -19,7 +21,9 @@ namespace DbUp.Specification
 
         public override void When()
         {
-            scriptsToExecute = Subject.GetScripts(() => null).ToArray();
+            var testConnectionManager = new TestConnectionManager();
+            testConnectionManager.UpgradeStarting(new ConsoleUpgradeLog());
+            scriptsToExecute = Subject.GetScripts(testConnectionManager).ToArray();
         }
 
         [Then]

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
@@ -8,6 +7,7 @@ using System.Text.RegularExpressions;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
+using DbUp.Engine.Transactions;
 using DbUp.Helpers;
 
 namespace DbUp.Support.SqlServer
@@ -18,7 +18,7 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public sealed class SqlScriptExecutor : IScriptExecutor
     {
-        private readonly Func<IDbConnection> connectionFactory;
+        private readonly IConnectionManager connectionManager;
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
@@ -32,18 +32,18 @@ namespace DbUp.Support.SqlServer
         /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
-        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="connectionManager"></param>
         /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IDbConnection> connectionFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
+        public SqlScriptExecutor(IConnectionManager connectionManager, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
-            this.connectionFactory = connectionFactory;
-            this.log = log;
             Schema = schema;
+            this.log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
+            this.connectionManager = connectionManager;
         }
 
         /// <summary>
@@ -82,10 +82,13 @@ namespace DbUp.Support.SqlServer
         {
             if (string.IsNullOrEmpty(Schema)) return;
 
-            var sqlRunner = new AdHocSqlRunner(connectionFactory, Schema, () => true);
+            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
 
-            sqlRunner.ExecuteNonQuery(string.Format(
-                @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", Schema));
+                sqlRunner.ExecuteNonQuery(string.Format(
+                    @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA {0}')", Schema));
+            });
         }
 
         /// <summary>
@@ -114,20 +117,20 @@ namespace DbUp.Support.SqlServer
             var index = -1;
             try
             {
-                using (var connection = connectionFactory())
+                connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
-                    connection.Open();
-
                     foreach (var statement in scriptStatements)
                     {
                         index++;
-                        var command = connection.CreateCommand();
-                        command.CommandText = statement;
-                        if (ExecutionTimeoutSeconds != null)
-                            command.CommandTimeout = ExecutionTimeoutSeconds.Value;
-                        command.ExecuteNonQuery();
+                        using (var command = dbCommandFactory())
+                        {
+                            command.CommandText = statement;
+                            if (ExecutionTimeoutSeconds != null)
+                                command.CommandTimeout = ExecutionTimeoutSeconds.Value;
+                            command.ExecuteNonQuery();
+                        }
                     }
-                }
+                });
             }
             catch (SqlException sqlException)
             {
@@ -150,6 +153,5 @@ namespace DbUp.Support.SqlServer
                 throw;
             }
         }
-
     }
 }

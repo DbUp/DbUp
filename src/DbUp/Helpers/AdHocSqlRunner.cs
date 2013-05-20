@@ -12,32 +12,32 @@ namespace DbUp.Helpers
     /// </summary>
     public class AdHocSqlRunner
     {
-        private readonly Func<IDbConnection> connectionFactory;
         private readonly IScriptPreprocessor[] additionalScriptPreprocessors;
         private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+        private readonly Func<IDbCommand> commandFactory;
         private readonly Func<bool> variablesEnabled;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
         /// </summary>
-        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="commandFactory">The command factory.</param>
         /// <param name="schema">The schema.</param>
         /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
         /// <remarks>Sets the <c>variablesEnabled</c> setting to <c>true</c>.</remarks>
-        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
-            : this(connectionFactory, schema, () => true, additionalScriptPreprocessors)
+        public AdHocSqlRunner(Func<IDbCommand> commandFactory, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
+            : this(commandFactory, schema, () => true, additionalScriptPreprocessors)
         { }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
         /// </summary>
-        /// <param name="connectionFactory">The connection factory.</param>
+        /// <param name="commandFactory">The command factory.</param>
         /// <param name="schema">The schema.</param>
         /// <param name="variablesEnabled">Function indicating <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
-        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, Func<bool> variablesEnabled, params IScriptPreprocessor[] additionalScriptPreprocessors)
+        public AdHocSqlRunner(Func<IDbCommand> commandFactory, string schema, Func<bool> variablesEnabled, params IScriptPreprocessor[] additionalScriptPreprocessors)
         {
-            this.connectionFactory = connectionFactory;
+            this.commandFactory = commandFactory;
             this.variablesEnabled = variablesEnabled;
             this.additionalScriptPreprocessors = additionalScriptPreprocessors;
             Schema = schema;
@@ -69,11 +69,11 @@ namespace DbUp.Helpers
         public object ExecuteScalar(string query, params Func<string, object>[] parameters)
         {
             object result = null;
-            Execute(query, parameters, 
+            Execute(query, parameters,
                     command =>
-                        {
-                            result = command.ExecuteScalar();
-                        });
+                    {
+                        result = command.ExecuteScalar();
+                    });
             return result;
         }
 
@@ -88,9 +88,9 @@ namespace DbUp.Helpers
             var result = 0;
             Execute(query, parameters,
                     command =>
-                        {
-                            result = command.ExecuteNonQuery();
-                        });
+                    {
+                        result = command.ExecuteNonQuery();
+                    });
             return result;
         }
 
@@ -105,21 +105,21 @@ namespace DbUp.Helpers
             var results = new List<Dictionary<string, string>>();
             Execute(query, parameters,
                     command =>
+                    {
+                        var reader = command.ExecuteReader();
+                        while (reader.Read())
                         {
-                            var reader = command.ExecuteReader();
-                            while (reader.Read())
+                            var line = new Dictionary<string, string>();
+                            for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                var line = new Dictionary<string, string>();
-                                for (int i = 0; i < reader.FieldCount; i++)
-                                {
-                                    var name = reader.GetName(i);
-                                    var value = reader.GetValue(i);
-                                    value = value == DBNull.Value ? null : value.ToString();
-                                    line.Add(name, (string)value);
-                                }
-                                results.Add(line);
+                                var name = reader.GetName(i);
+                                var value = reader.GetValue(i);
+                                value = value == DBNull.Value ? null : value.ToString();
+                                line.Add(name, (string)value);
                             }
-                        });
+                            results.Add(line);
+                        }
+                    });
 
             return results;
         }
@@ -127,8 +127,7 @@ namespace DbUp.Helpers
         private void Execute(string commandText, IEnumerable<Func<string, object>> parameters, Action<IDbCommand> executor)
         {
             commandText = Preprocess(commandText);
-            using (var connection = connectionFactory())
-            using (var command = connection.CreateCommand())
+            using (var command = commandFactory())
             {
                 command.CommandText = commandText;
 
@@ -141,8 +140,6 @@ namespace DbUp.Helpers
                     p.Value = value;
                     command.Parameters.Add(p);
                 }
-
-                connection.Open();
 
                 executor(command);
             }
