@@ -1,15 +1,19 @@
 NSubstitute
 ========
 
+Visit the [NSubstitute website](http://nsubstitute.github.com) for more information.
+
 ### What is it?
 
-NSubstitute is a friendly substitute for .NET mocking frameworks.
+NSubstitute is designed as a friendly substitute for .NET mocking libraries.  
 
-It's like a stub with property behaviour.
-With nice semantics for setting return values.
-It only has one mode - loose semantics, which you can query afterwards.
-It's meant to be simple, succinct and pleasant to use.
+It is an attempt to satisfy our craving for a mocking library with a succinct syntax that helps us keep the focus on the intention of our tests, rather than on the configuration of our test doubles. We've tried to make the most frequently required operations obvious and easy to use, keeping less usual scenarios discoverable and accessible, and all the while maintaining as much natural language as possible.
 
+Perfect for those new to testing, and for others who would just like to to get their tests written with less noise and fewer lambdas.
+
+### Getting help
+
+If you have questions or feedback on NSubstitute, head on over to the [NSubstitute discussion group](http://groups.google.com/group/nsubstitute).
 
 ### Basic use
 
@@ -48,9 +52,11 @@ We can check that our substitute received a call, and did not receive others:
 
 If our Received() assertion fails, NSubstitute tries to give us some help as to what the problem might be:
 
-    NSubstitute.Exceptions.CallNotReceivedException : Expected to receive call:
+
+    NSubstitute.Exceptions.ReceivedCallsException : Expected to receive a call matching:
         Add(1, 2)
-    Actually received (non-matching arguments indicated with '*' characters):
+    Actually received no matching calls.
+    Received 2 non-matching calls (non-matching arguments indicated with '*' characters):
         Add(1, *5*)
         Add(*4*, *7*)
 
@@ -105,9 +111,9 @@ Finally, we can raise events on our substitutes (unfortunately C# dramatically r
 If you have Visual Studio 2008 or 2010 you should be able to compile NSubstitute and run the unit tests using the NUnit GUI or console test runner (see the ThirdParty directory).
 To do full builds you'll also need Ruby and rake to run the rakefile.
 
-### Getting help
+### NOTE: Framework Multi-Targeting
 
-If you have questions or feedback on NSubstitute, head on over to the [NSubstitute discussion group](http://groups.google.com/group/nsubstitute).
+[Brendan](https://github.com/shiftkey) is updating the build process to [support multiple framework versions](https://github.com/nsubstitute/NSubstitute/wiki/Silverlight-port), including Silverlight. See the [Silverlight port](https://github.com/nsubstitute/NSubstitute/wiki/Silverlight-port) wiki page for current status.
 
 
 
