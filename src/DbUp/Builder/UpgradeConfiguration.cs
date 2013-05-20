@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Builder
 {
@@ -69,6 +70,11 @@ namespace DbUp.Builder
         /// Determines if variables should be replaced in scripts before they are run.
         /// </summary>
         public bool VariablesEnabled { get; set; }
+
+        /// <summary>
+        /// Determines what transaction strategy DbUp uses
+        /// </summary>
+        public TransactionMode TransactionMode { get; set; }
 
         /// <summary>
         /// Ensures all expectations have been met regarding this configuration.
