@@ -103,7 +103,7 @@ namespace DbUp.Support.SqlServer
             using (var connection = connectionFactory())
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"));
+                command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("yyyy-MM-dd HH:mm:ss"));
                 
                 var param = command.CreateParameter();
                 param.ParameterName = "scriptName";
