@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Configuration;
 using System.Data;
+using System.Data.Common;
 using System.Data.SqlClient;
 using DbUp.Builder;
 using DbUp.Support.SqlServer;
@@ -52,6 +54,52 @@ public static class SqlServerExtensions
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<IDbConnection> connectionFactory)
     {
         return SqlDatabase(supported, connectionFactory, null);
+    }
+
+    /// <summary>
+    /// Creates an upgrader for SQL Server databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="providerFactory"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, DbProviderFactory providerFactory)
+    {
+        return SqlDatabase(supported, providerFactory.CreateConnection, null);
+    }
+
+    /// <summary>
+    /// Creates an upgrader for SQL Server databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="providerFactory"></param>
+    /// <param name="schema"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, DbProviderFactory providerFactory, string schema)
+    {
+        return SqlDatabase(supported, providerFactory.CreateConnection, schema);
+    }
+
+    /// <summary>
+    /// Creates an upgrader for SQL Server databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionStringSettings"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, ConnectionStringSettings connectionStringSettings)
+    {
+        return SqlDatabase(supported, connectionStringSettings.ConnectionString, null);
+    }
+
+    /// <summary>
+    /// Creates an upgrader for SQL Server databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionStringSettings"></param>
+    /// <param name="schema"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, ConnectionStringSettings connectionStringSettings, string schema)
+    {
+        return SqlDatabase(supported, connectionStringSettings.ConnectionString, schema);
     }
 
     /// <summary>
