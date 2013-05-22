@@ -26,9 +26,6 @@ namespace DbUp.Support.SqlServer
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
         /// <param name="logger">The log.</param>
-        /// <example>
-        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
-        /// </example>
         public SqlTableJournal(Func<IDbConnection> connectionFactory, string schema, string table, IUpgradeLog logger)
         {
             this.connectionFactory = connectionFactory;
