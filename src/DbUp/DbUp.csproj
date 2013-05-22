@@ -42,6 +42,7 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
@@ -68,6 +69,10 @@
     <Compile Include="Engine\DatabaseUpgradeResult.cs" />
     <Compile Include="Engine\IScriptExecutor.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptAndCodeProvider.cs" />
+    <Compile Include="Support\ObjectNameOptions.cs" />
+    <Compile Include="Support\Oracle\OracleExtensions.cs" />
+    <Compile Include="Support\Oracle\OracleScriptExecutor.cs" />
+    <Compile Include="Support\Oracle\OracleTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
     <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
     <Compile Include="Engine\IScriptPreprocessor.cs" />
