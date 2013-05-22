@@ -45,6 +45,7 @@
       <HintPath>..\..\lib\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
@@ -64,6 +65,8 @@
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
     <Compile Include="Contexts\GivenScriptsWithVariableSubstitutions.cs" />
     <Compile Include="EmbeddedScriptAndCodeProviderTests.cs" />
+    <Compile Include="OracleScriptExecutorTests.cs" />
+    <Compile Include="OracleTableJournalTests.cs" />
     <Compile Include="SqlScriptExecutorTests.cs" />
     <Compile Include="SqlObjectParserTests.cs" />
     <Compile Include="UpgradeEngineTests.cs" />
