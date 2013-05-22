@@ -87,7 +87,7 @@ namespace DbUp.Support.Oracle
                     {
                         index++;
                         var command = connection.CreateCommand();
-                        command.CommandText = statement;
+                        command.CommandText = statement.Replace("\r\n", "\n");
                         if (ExecutionTimeoutSeconds != null)
                             command.CommandTimeout = ExecutionTimeoutSeconds.Value;
                         command.ExecuteNonQuery();
