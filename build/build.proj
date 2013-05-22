@@ -5,7 +5,7 @@
   
   <PropertyGroup>
     <Root>$(MSBuildStartupDirectory)</Root>
-    <nunitconsoleexe>$(Root)\lib\NUnit.2.5.10.11092\Tools\nunit-console.exe</nunitconsoleexe>
+    <nunitconsoleexe>$(Root)\lib\NUnit.Runners.2.6.2\tools\nunit-console.exe</nunitconsoleexe>
   </PropertyGroup>
 
   <Target Name="Build">
@@ -69,7 +69,7 @@
         <TestAssembly Include="$(Root)\src\DbUp.Specification\bin\Release\DbUp.Specification.dll" />
     </ItemGroup>
 
-    <Exec Condition="$(teamcity_dotnet_nunitlauncher) != ''" Command="&quot;$(teamcity_dotnet_nunitlauncher)&quot; v4.0 x86 NUnit-2.5.0 @(TestAssembly->'&quot;%(FullPath)&quot;', '%20')" />
+    <Exec Condition="$(teamcity_dotnet_nunitlauncher) != ''" Command="&quot;$(teamcity_dotnet_nunitlauncher)&quot; v4.0 x86 NUnit-2.6.2 @(TestAssembly->'&quot;%(FullPath)&quot;', '%20')" />
     <Exec Condition="$(teamcity_dotnet_nunitlauncher) == ''" Command="&quot;$(nunitconsoleexe)&quot; @(TestAssembly->'&quot;%(FullPath)&quot;', '%20')" />
 
     <!-- Copy binaries -->
