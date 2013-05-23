@@ -37,21 +37,10 @@ namespace DbUp.ScriptProviders
                 .GetManifestResourceNames()
                 .Where(filter)
                 .OrderBy(x => x)
-                .Select(ReadResourceAsScript)
+                .Select(s => SqlScript.FromStream(s, assembly.GetManifestResourceStream(s)))
                 .Cast<IScript>()
                 .ToList();
         }
 
-        private SqlScript ReadResourceAsScript(string scriptName)
-        {
-            string contents;
-            var resourceStream = assembly.GetManifestResourceStream(scriptName);
-            using (var resourceStreamReader = new StreamReader(resourceStream))
-            {
-                contents = resourceStreamReader.ReadToEnd();
-            }
-
-            return new SqlScript(scriptName, contents);
-        }
     }
 }

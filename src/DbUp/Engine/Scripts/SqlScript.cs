@@ -1,4 +1,6 @@
 ﻿
+using System.IO;
+using System.Text;
 using DbUp.Builder;
 
 namespace DbUp.Engine
@@ -43,6 +45,35 @@ namespace DbUp.Engine
         public void Execute(UpgradeConfiguration configuration)
         {
             configuration.SqlScriptExecutor.Execute(this, configuration);
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static SqlScript FromFile(string path)
+        {
+            using (FileStream fileStream = new FileStream(path, FileMode.Open))
+            {
+                var fileName = new FileInfo(path).Name;
+                return FromStream(fileName, fileStream);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scriptName"></param>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static SqlScript FromStream(string scriptName, Stream stream)
+        {
+            using (var resourceStreamReader = new StreamReader(stream, Encoding.Default, true))
+            {
+                string c = resourceStreamReader.ReadToEnd();
+                return new SqlScript(scriptName, c);
+            }
         }
     }
 }
