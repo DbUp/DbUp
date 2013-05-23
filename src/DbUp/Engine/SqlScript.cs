@@ -1,4 +1,7 @@
 ﻿
+using System.IO;
+using System.Text;
+
 namespace DbUp.Engine
 {
     /// <summary>
@@ -36,6 +39,38 @@ namespace DbUp.Engine
         public string Name
         {
             get { return name; }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
+        public static SqlScript FromFile(string path)
+        {
+            using (StreamReader streamReader = new StreamReader(path, Encoding.Default, true))
+            {
+                var contents = streamReader.ReadToEnd();
+                streamReader.Close();
+
+                var fileName = new FileInfo(path).Name;
+                return new SqlScript(fileName, contents);
+            }
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scriptName"></param>
+        /// <param name="stream"></param>
+        /// <returns></returns>
+        public static SqlScript FromStream(string scriptName, Stream stream)
+        {
+            using (var resourceStreamReader = new StreamReader(stream))
+            {
+                string c = resourceStreamReader.ReadToEnd();
+                return new SqlScript(scriptName, c);
+            }
         }
     }
 }
