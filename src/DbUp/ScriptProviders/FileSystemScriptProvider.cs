@@ -25,16 +25,10 @@ namespace DbUp.ScriptProviders
         /// <summary>
         /// Gets all scripts that should be executed.
         /// </summary>
-        public IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory)
+        public IEnumerable<IScript> GetScripts(Func<IDbConnection> connectionFactory)
         {
-            return Directory.GetFiles(directoryPath, "*.sql").Select(ReadFileAsScript).ToList();
+            return Directory.GetFiles(directoryPath, "*.sql").Select(SqlScript.FromFile).Cast<IScript>().ToList();
         }
 
-        private static SqlScript ReadFileAsScript(string path)
-        {
-            var contents = File.ReadAllText(path);
-            var fileName = new FileInfo(path).Name;
-            return new SqlScript (fileName, contents);
-        }
     }
 }

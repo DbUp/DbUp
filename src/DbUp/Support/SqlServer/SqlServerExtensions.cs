@@ -67,7 +67,7 @@ public static class SqlServerExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionFactory = connectionFactory);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.SqlScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, schema));
         builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, schema, "SchemaVersions", c.Log));
         return builder;
     }

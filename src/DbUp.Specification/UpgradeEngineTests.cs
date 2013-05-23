@@ -16,7 +16,7 @@ namespace DbUp.Specification
         {
             private IJournal versionTracker;
             private IScriptProvider scriptProvider;
-            private IScriptExecutor scriptExecutor;
+            private ISqlScriptExecutor sqlScriptExecutor;
             private IDbConnection dbConnection;
             private IDbCommand dbCommand;
 
@@ -28,13 +28,13 @@ namespace DbUp.Specification
                 dbConnection = Substitute.For<IDbConnection>();
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
-                scriptExecutor = new SqlScriptExecutor(()=>dbConnection, ()=>new TraceUpgradeLog(), null, () => true, null);
+                sqlScriptExecutor = new SqlScriptExecutor(()=>dbConnection, null);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
                     .JournalTo(versionTracker)
                     .WithVariable("var", "sub");
-                builder.Configure(c => c.ScriptExecutor = scriptExecutor);
+                builder.Configure(c => c.SqlScriptExecutor = sqlScriptExecutor);
                 builder.Configure(c => c.ConnectionFactory = () => dbConnection);
 
                 var upgrader = builder.Build();
@@ -57,18 +57,18 @@ namespace DbUp.Specification
         {
             private IJournal versionTracker;
             private IScriptProvider scriptProvider;
-            private IScriptExecutor scriptExecutor;
+            private ISqlScriptExecutor sqlScriptExecutor;
 
             public override UpgradeEngine Given()
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
                 scriptProvider.GetScripts(Arg.Any<Func<IDbConnection>>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
                 versionTracker = Substitute.For<IJournal>();
-                scriptExecutor = Substitute.For<IScriptExecutor>();
+                sqlScriptExecutor = Substitute.For<ISqlScriptExecutor>();
 
                 var config = new UpgradeConfiguration();
                 config.ScriptProviders.Add(scriptProvider);
-                config.ScriptExecutor = scriptExecutor;
+                config.SqlScriptExecutor = sqlScriptExecutor;
                 config.Journal = versionTracker;
 
                 var upgrader = new UpgradeEngine(config);
@@ -89,7 +89,7 @@ namespace DbUp.Specification
             [Then]
             public void the_scripts_are_not_run()
             {
-                scriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
+                sqlScriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
             }
         }
     }

@@ -73,7 +73,7 @@ namespace DbUp.Support.SqlServer
         /// Records a database upgrade for a database specified in a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        public void StoreExecutedScript(SqlScript script)
+        public void StoreExecutedScript(IScript script)
         {
             var exists = DoesTableExist();
             if (!exists)
@@ -103,7 +103,7 @@ namespace DbUp.Support.SqlServer
             using (var connection = connectionFactory())
             using (var command = connection.CreateCommand())
             {
-                command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"));
+                command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("yyyy-MM-ddThh:mm:ss"));
                 
                 var param = command.CreateParameter();
                 param.ParameterName = "scriptName";

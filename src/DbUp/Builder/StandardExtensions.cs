@@ -90,7 +90,7 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, IEnumerable<SqlScript> scripts)
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, IEnumerable<IScript> scripts)
     {
         return WithScripts(builder, new StaticScriptProvider(scripts));
     }
@@ -103,9 +103,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params SqlScript[] scripts)
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params IScript[] scripts)
     {
-        return WithScripts(builder, (IEnumerable<SqlScript>)scripts);
+        return WithScripts(builder, (IEnumerable<IScript>)scripts);
     }
 
     /// <summary>
@@ -159,7 +159,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
+        return WithScripts(builder, new EmbeddedSqlScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
     }
 
     /// <summary>
@@ -173,7 +173,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter));
+        return WithScripts(builder, new EmbeddedSqlScriptProvider(assembly, filter));
     }
 
     /// <summary>
@@ -186,7 +186,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
+        return WithScripts(builder, new EmbeddedSqlScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
     }
 
     /// <summary>
@@ -200,7 +200,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
+        return WithScripts(builder, new EmbeddedSqlScriptAndCodeProvider(assembly, filter));
     }
 
     /// <summary>
@@ -211,9 +211,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithPreprocessor(this UpgradeEngineBuilder builder, IScriptPreprocessor preprocessor)
+    public static UpgradeEngineBuilder WithPreprocessor(this UpgradeEngineBuilder builder, ISqlScriptPreprocessor preprocessor)
     {
-        builder.Configure(c => c.ScriptPreprocessors.Add(preprocessor));
+        builder.Configure(c => c.SqlScriptExecutor.ScriptPreprocessors.Add(preprocessor));
         return builder;
     }
 
@@ -277,7 +277,7 @@ public static class StandardExtensions
     {
         if (timeout == null)
         {
-            builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = null);
+            builder.Configure(c => c.SqlScriptExecutor.ExecutionTimeoutSeconds = null);
             return builder;
         }
 
@@ -285,7 +285,7 @@ public static class StandardExtensions
 
         if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException("timeout", timeout, string.Format("The timeout value must be a value between 1 and {0} seconds", int.MaxValue));
 
-        builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
+        builder.Configure(c => c.SqlScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
         return builder;
     }
 }

@@ -10,12 +10,12 @@ namespace DbUp.Specification.Contexts
     public abstract class EmptyDatabase
     {
         public UpgradeEngine DbUpgrader;
-        public IScriptExecutor ScriptExecutor;
+        public ISqlScriptExecutor SqlScriptExecutor;
         public IJournal VersionTracker;
         public IScriptProvider ScriptProvider;
         public IUpgradeLog Log;
         public IEnumerable<SqlScript> AllScripts;
-        public IScriptPreprocessor ScriptPreprocessor;
+        public ISqlScriptPreprocessor SqlScriptPreprocessor;
         public const string ConnectionString = "sqlite:memory:";
 
         [SetUp]
@@ -23,16 +23,16 @@ namespace DbUp.Specification.Contexts
         {
             ScriptProvider = Substitute.For<IScriptProvider> ();
 			VersionTracker = Substitute.For<IJournal> ();
-			ScriptExecutor = Substitute.For<IScriptExecutor> ();
-            ScriptPreprocessor = Substitute.For<IScriptPreprocessor>();
+			SqlScriptExecutor = Substitute.For<ISqlScriptExecutor> ();
+            SqlScriptPreprocessor = Substitute.For<ISqlScriptPreprocessor>();
 
 			Log = Substitute.For<IUpgradeLog> ();
 
             var config = new UpgradeConfiguration();
 
-            config.ScriptPreprocessors.Add(ScriptPreprocessor);
             config.ScriptProviders.Add(ScriptProvider);
-            config.ScriptExecutor = ScriptExecutor;
+            config.SqlScriptExecutor = SqlScriptExecutor;
+            config.SqlScriptExecutor.ScriptPreprocessors.Add(SqlScriptPreprocessor);
             config.Journal = VersionTracker;
             config.Log = Log;
 
@@ -44,7 +44,7 @@ namespace DbUp.Specification.Contexts
         {
             ScriptProvider = null;
             VersionTracker = null;
-            ScriptExecutor = null;
+            SqlScriptExecutor = null;
             Log = null;
             DbUpgrader = null;
         }
