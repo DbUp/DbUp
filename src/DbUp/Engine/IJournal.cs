@@ -15,6 +15,6 @@
         /// Records an upgrade script for a database.
         /// </summary>
         /// <param name="script">The script.</param>
-        void StoreExecutedScript(SqlScript script);
+        void StoreExecutedScript(IScript script);
     }
 }

@@ -13,7 +13,7 @@ namespace DbUp.Helpers
     public class AdHocSqlRunner
     {
         private readonly Func<IDbConnection> connectionFactory;
-        private readonly IScriptPreprocessor[] additionalScriptPreprocessors;
+        private readonly ISqlScriptPreprocessor[] additionalSqlScriptPreprocessors;
         private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
         private readonly Func<bool> variablesEnabled;
 
@@ -22,10 +22,10 @@ namespace DbUp.Helpers
         /// </summary>
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="schema">The schema.</param>
-        /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
+        /// <param name="additionalSqlScriptPreprocessors">The additional script preprocessors.</param>
         /// <remarks>Sets the <c>variablesEnabled</c> setting to <c>true</c>.</remarks>
-        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
-            : this(connectionFactory, schema, () => true, additionalScriptPreprocessors)
+        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, params ISqlScriptPreprocessor[] additionalSqlScriptPreprocessors)
+            : this(connectionFactory, schema, () => true, additionalSqlScriptPreprocessors)
         { }
 
         /// <summary>
@@ -34,12 +34,12 @@ namespace DbUp.Helpers
         /// <param name="connectionFactory">The connection factory.</param>
         /// <param name="schema">The schema.</param>
         /// <param name="variablesEnabled">Function indicating <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
-        /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
-        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, Func<bool> variablesEnabled, params IScriptPreprocessor[] additionalScriptPreprocessors)
+        /// <param name="additionalSqlScriptPreprocessors">The additional script preprocessors.</param>
+        public AdHocSqlRunner(Func<IDbConnection> connectionFactory, string schema, Func<bool> variablesEnabled, params ISqlScriptPreprocessor[] additionalSqlScriptPreprocessors)
         {
             this.connectionFactory = connectionFactory;
             this.variablesEnabled = variablesEnabled;
-            this.additionalScriptPreprocessors = additionalScriptPreprocessors;
+            this.additionalSqlScriptPreprocessors = additionalSqlScriptPreprocessors;
             Schema = schema;
         }
 
@@ -156,7 +156,7 @@ namespace DbUp.Helpers
                 variables.Add("schema", Schema);
             if (variablesEnabled())
                 query = new VariableSubstitutionPreprocessor(variables).Process(query);
-            query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
+            query = additionalSqlScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
             return query;
         }
     }

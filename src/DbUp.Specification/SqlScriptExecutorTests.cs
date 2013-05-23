@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DbUp.Builder;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,7 +15,7 @@ namespace DbUp.Specification
         [Test]
         public void verify_schema_should_not_check_when_schema_is_null()
         {
-            var executor = new SqlScriptExecutor(() => null, () => null, null, () => false, null);
+            var executor = new SqlScriptExecutor(() => null, null);
 
             executor.VerifySchema();
         }
@@ -23,12 +23,15 @@ namespace DbUp.Specification
         [Test]
         public void when_schema_is_null_schema_is_stripped_from_scripts()
         {
+
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
             dbConnection.CreateCommand().Returns(command);
-            var executor = new SqlScriptExecutor(() => dbConnection, () => new ConsoleUpgradeLog(), null, () => true, null);
 
-            executor.Execute(new SqlScript("Test", "create $schema$.Table"));
+            var executor = new SqlScriptExecutor(() => dbConnection, null);
+            UpgradeConfiguration configuration = new UpgradeConfiguration {ConnectionFactory = () => dbConnection};
+
+            executor.Execute(new SqlScript("Test", "create $schema$.Table"), configuration);
 
             command.Received().ExecuteNonQuery();
             Assert.AreEqual("create Table", command.CommandText);
@@ -40,9 +43,13 @@ namespace DbUp.Specification
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
             dbConnection.CreateCommand().Returns(command);
-            var executor = new SqlScriptExecutor(() => dbConnection, () => new ConsoleUpgradeLog(), null, () => true, null);
 
-            executor.Execute(new SqlScript("Test", "create $foo$.Table"), new Dictionary<string, string>{{"foo", "bar"}});
+            var executor = new SqlScriptExecutor(() => dbConnection, null);
+
+            UpgradeConfiguration configuration = new UpgradeConfiguration {ConnectionFactory = () => dbConnection, VariablesEnabled = true};
+            configuration.AddVariables(new Dictionary<string, string> { { "foo", "bar" } });
+
+            executor.Execute(new SqlScript("Test", "create $foo$.Table"), configuration);
 
             command.Received().ExecuteNonQuery();
             Assert.AreEqual("create bar.Table", command.CommandText);
@@ -54,9 +61,12 @@ namespace DbUp.Specification
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
             dbConnection.CreateCommand().Returns(command);
-            var executor = new SqlScriptExecutor(() => dbConnection, () => new ConsoleUpgradeLog(), null, () => false, null);
+            var executor = new SqlScriptExecutor(() => dbConnection, null);
 
-            executor.Execute(new SqlScript("Test", "create $foo$.Table"), new Dictionary<string, string> { { "foo", "bar" } });
+            UpgradeConfiguration configuration = new UpgradeConfiguration { ConnectionFactory = () => dbConnection, VariablesEnabled = false };
+            configuration.AddVariables(new Dictionary<string, string> { { "foo", "bar" } });
+
+            executor.Execute(new SqlScript("Test", "create $foo$.Table"), configuration);
 
             command.Received().ExecuteNonQuery();
             Assert.AreEqual("create $foo$.Table", command.CommandText);
@@ -68,9 +78,12 @@ namespace DbUp.Specification
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
             dbConnection.CreateCommand().Returns(command);
-            var executor = new SqlScriptExecutor(() => dbConnection, () => new ConsoleUpgradeLog(), "foo", () => true, null);
 
-            executor.Execute(new SqlScript("Test", "create $schema$.Table"));
+            var executor = new SqlScriptExecutor(() => dbConnection, "foo");
+
+            UpgradeConfiguration configuration = new UpgradeConfiguration { ConnectionFactory = () => dbConnection, VariablesEnabled = true };
+            
+            executor.Execute(new SqlScript("Test", "create $schema$.Table"), configuration);
 
             command.Received().ExecuteNonQuery();
             Assert.AreEqual("create [foo].Table", command.CommandText);

@@ -73,7 +73,7 @@ namespace DbUp.Support.SqlServer
         /// Records a database upgrade for a database specified in a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        public void StoreExecutedScript(SqlScript script)
+        public void StoreExecutedScript(IScript script)
         {
             var exists = DoesTableExist();
             if (!exists)

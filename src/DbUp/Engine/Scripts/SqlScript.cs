@@ -1,10 +1,12 @@
 ﻿
+using DbUp.Builder;
+
 namespace DbUp.Engine
 {
     /// <summary>
     /// Represents a SQL Server script that comes from an embedded resource in an assembly. 
     /// </summary>
-    public class SqlScript
+    public class SqlScript : IScript
     {
         private readonly string contents;
         private readonly string name;
@@ -36,6 +38,11 @@ namespace DbUp.Engine
         public string Name
         {
             get { return name; }
+        }
+
+        public void Execute(UpgradeConfiguration configuration)
+        {
+            configuration.SqlScriptExecutor.Execute(this, configuration);
         }
     }
 }
