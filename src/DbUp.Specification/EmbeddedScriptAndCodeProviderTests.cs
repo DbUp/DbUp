@@ -25,13 +25,13 @@ namespace DbUp.Specification
         [Then]
         public void it_should_return_all_sql_files()
         {
-            Assert.AreEqual(4, scriptsToExecute.Length);
+            Assert.AreEqual(6, scriptsToExecute.Length);
         }
 
         [Then]
         public void should_provide_content_for_code_script()
         {
-            Assert.AreEqual("test4", scriptsToExecute.Last().Contents);
+            Assert.AreEqual("test4", scriptsToExecute.Single(s => s.Name.EndsWith("Script20120723_1_Test4.cs")).Contents);
         }
     }
 }

@@ -67,7 +67,7 @@ namespace DbUp.Specification
             [Then]
             public void it_should_return_all_sql_files()
             {
-                Assert.AreEqual(3, filesToExecute.Count());
+                Assert.AreEqual(5, filesToExecute.Count());
             }
 
             [Then]
@@ -83,7 +83,17 @@ namespace DbUp.Specification
             public void the_files_should_be_correctly_ordered()
             {
                 Assert.That(filesToExecute.First().Name.EndsWith("20110301_1_Test1.sql"));
-                Assert.That(filesToExecute.Last().Name.EndsWith("20110302_1_Test3.sql"));
+                Assert.That(filesToExecute.Last().Name.EndsWith("Script20130525_2_Test5.sql"));
+            }
+
+            [Then]
+            public void encoding_reader_is_correct()
+            {
+                // ANSI encoding
+                Assert.AreEqual("é", filesToExecute.Single(f => f.Name.EndsWith("Script20130525_1_Test5.sql")).Contents);
+
+                // UTF8 encoding
+                Assert.AreEqual("é", filesToExecute.Single(f => f.Name.EndsWith("Script20130525_2_Test5.sql")).Contents);
             }
         }
     }

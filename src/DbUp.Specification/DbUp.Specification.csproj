@@ -100,6 +100,10 @@
     <EmbeddedResource Include="TestScripts\Script20110301_2_Test2.sql" />
     <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestScripts\Script20130525_2_Test5.sql" />
+    <EmbeddedResource Include="TestScripts\Script20130525_1_Test5.sql" />
+  </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
 if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
