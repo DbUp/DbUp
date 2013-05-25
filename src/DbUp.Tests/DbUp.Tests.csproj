@@ -119,6 +119,8 @@
     <Content Include="x86\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <EmbeddedResource Include="TestScripts\Script20130525_2_Test5.sql" />
+    <EmbeddedResource Include="TestScripts\Script20130525_1_Test5.sql" />
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
