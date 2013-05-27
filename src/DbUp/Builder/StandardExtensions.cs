@@ -4,6 +4,7 @@ using System.Reflection;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 
 /// <summary>
@@ -286,6 +287,24 @@ public static class StandardExtensions
         if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException("timeout", timeout, string.Format("The timeout value must be a value between 1 and {0} seconds", int.MaxValue));
 
         builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
+        return builder;
+    }
+
+    /// <summary>
+    /// Tells DbUp to use a single transaction around this upgrade
+    /// </summary>
+    public static UpgradeEngineBuilder WithTransaction(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.TransactionMode = TransactionMode.SingleTransaction);
+        return builder;
+    }
+
+    /// <summary>
+    /// Tells DbUp not to use a transaction (default)
+    /// </summary>
+    public static UpgradeEngineBuilder WithNoTransaction(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.TransactionMode = TransactionMode.NoTransaction);
         return builder;
     }
 }

@@ -62,6 +62,7 @@
     <Compile Include="Engine\IScript.cs" />
     <Compile Include="Engine\LazySqlScript.cs" />
     <Compile Include="Engine\Preprocessors\StripSchemaPreprocessor.cs" />
+    <Compile Include="Engine\Transactions\TransactionMode.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
     <Compile Include="Engine\UpgradeEngine.cs" />

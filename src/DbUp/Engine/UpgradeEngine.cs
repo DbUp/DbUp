@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using DbUp.Builder;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Engine
 {
@@ -64,35 +66,62 @@ namespace DbUp.Engine
             var executed = new List<SqlScript>();
             try
             {
-                configuration.Log.WriteInformation("Beginning database upgrade");
-
-                var scriptsToExecute = GetScriptsToExecute();
-
-                if (scriptsToExecute.Count == 0)
+                if (configuration.TransactionMode == TransactionMode.SingleTransaction)
                 {
-                    configuration.Log.WriteInformation("No new scripts need to be executed - completing.");
-                    return new DatabaseUpgradeResult(executed, true, null);
+                    var originalConnectionFactory = configuration.ConnectionFactory;
+                    using (var connection = originalConnectionFactory())
+                    {
+                        connection.Open();
+                        using (var tran = connection.BeginTransaction())
+                        using (var ownedConection = new OwnedConnection(connection, tran))
+                        {
+                            try
+                            {
+                                configuration.ConnectionFactory = () => ownedConection;
+                                return PerformUpgradeInternal(executed);
+                            }
+                            finally
+                            {
+                                configuration.ConnectionFactory = originalConnectionFactory;                                
+                            }
+                        }
+                    }
                 }
 
-                configuration.ScriptExecutor.VerifySchema();
-
-                foreach (var script in scriptsToExecute)
-                {
-                    configuration.ScriptExecutor.Execute(script, configuration.Variables);
-
-                    configuration.Journal.StoreExecutedScript(script);
-
-                    executed.Add(script);
-                }
-
-                configuration.Log.WriteInformation("Upgrade successful");
-                return new DatabaseUpgradeResult(executed, true, null);
+                return PerformUpgradeInternal(executed);
             }
             catch (Exception ex)
             {
                 configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(executed, false, ex);
             }
+        }
+
+        private DatabaseUpgradeResult PerformUpgradeInternal(List<SqlScript> executed)
+        {
+            configuration.Log.WriteInformation("Beginning database upgrade");
+
+            var scriptsToExecute = GetScriptsToExecute();
+
+            if (scriptsToExecute.Count == 0)
+            {
+                configuration.Log.WriteInformation("No new scripts need to be executed - completing.");
+                return new DatabaseUpgradeResult(executed, true, null);
+            }
+
+            configuration.ScriptExecutor.VerifySchema();
+
+            foreach (var script in scriptsToExecute)
+            {
+                configuration.ScriptExecutor.Execute(script, configuration.Variables);
+
+                configuration.Journal.StoreExecutedScript(script);
+
+                executed.Add(script);
+            }
+
+            configuration.Log.WriteInformation("Upgrade successful");
+            return new DatabaseUpgradeResult(executed, true, null);
         }
 
         /// <summary>
@@ -134,6 +163,60 @@ namespace DbUp.Engine
                 configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(marked, false, ex);
             }
+        }
+    }
+
+    internal class OwnedConnection : IDbConnection
+    {
+        private readonly IDbConnection connection;
+        private readonly IDbTransaction transaction;
+
+        public OwnedConnection(IDbConnection connection, IDbTransaction transaction)
+        {
+            this.connection = connection;
+            this.transaction = transaction;
+        }
+
+        public void Dispose()
+        {
+        }
+
+        public IDbTransaction BeginTransaction()
+        {
+            return transaction;
+        }
+
+        public IDbTransaction BeginTransaction(IsolationLevel il)
+        {
+            return transaction;
+        }
+
+        public void Close()
+        {
+        }
+
+        public void ChangeDatabase(string databaseName)
+        {
+            connection.ChangeDatabase(databaseName);
+        }
+
+        public IDbCommand CreateCommand()
+        {
+            var cmd = connection.CreateCommand();
+            cmd.Transaction = transaction;
+            return cmd;
+        }
+
+        public void Open()
+        {
+        }
+
+        public string ConnectionString { get { return connection.ConnectionString; } set { connection.ConnectionString = value; } }
+        public int ConnectionTimeout { get { return connection.ConnectionTimeout; } }
+        public string Database { get { return connection.Database; } }
+        public ConnectionState State
+        {
+            get { return connection.State; }
         }
     }
 }
