@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Preprocessors;
+using DbUp.Support.SqlServer;
 
 namespace DbUp.Helpers
 {
@@ -153,7 +154,7 @@ namespace DbUp.Helpers
             if (string.IsNullOrEmpty(Schema))
                 query = new StripSchemaPreprocessor().Process(query);
             if (!string.IsNullOrEmpty(Schema) && !variables.ContainsKey("schema"))
-                variables.Add("schema", Schema);
+                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(Schema));
             if (variablesEnabled())
                 query = new VariableSubstitutionPreprocessor(variables).Process(query);
             query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
