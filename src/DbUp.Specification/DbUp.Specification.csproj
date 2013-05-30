@@ -52,6 +52,12 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\..\lib\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\..\lib\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
@@ -69,6 +75,7 @@
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
     <Compile Include="Contexts\GivenScriptsWithVariableSubstitutions.cs" />
     <Compile Include="EmbeddedScriptAndCodeProviderTests.cs" />
+    <Compile Include="SQLite\SQLiteSupportTests.cs" />
     <Compile Include="SqlScriptExecutorTests.cs" />
     <Compile Include="SqlObjectParserTests.cs" />
     <Compile Include="UpgradeEngineTests.cs" />
@@ -82,6 +89,10 @@
     <ProjectReference Include="..\DbUp.SqlCe\DbUp.SqlCe.csproj">
       <Project>{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}</Project>
       <Name>DbUp.SqlCe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUp.Sqlite\DbUp.Sqlite.csproj">
+      <Project>{437cdd05-6df9-46cb-95c0-36774b10aacb}</Project>
+      <Name>DbUp.Sqlite</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
@@ -99,6 +110,14 @@
     <EmbeddedResource Include="TestScripts\Script20110301_1_Test1.sql" />
     <EmbeddedResource Include="TestScripts\Script20110301_2_Test2.sql" />
     <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
