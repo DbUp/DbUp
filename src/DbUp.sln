@@ -30,6 +30,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{05BC06
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Sqlite", "DbUp.Sqlite\DbUp.Sqlite.csproj", "{437CDD05-6DF9-46CB-95C0-36774B10AACB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -117,6 +119,21 @@ Global
 		{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|x86.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
