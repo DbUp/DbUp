@@ -3,7 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using DbUp.Helpers;
 
-namespace DbUp.Sqlite.Helpers
+namespace DbUp.SQLite.Helpers
 {
     /// <summary>
     /// Used to create in-memory SQLite database that is deleted at the end of a test.
