@@ -11,7 +11,7 @@ namespace DbUp.Support.SQLite
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// SQLite database using a table called SchemaVersions.
     /// </summary>
-    public class SQLiteTableJournal : IJournal
+    public sealed class SQLiteTableJournal : IJournal
     {
         private readonly Func<IDbConnection> connectionFactory;
         private readonly string tableName;
