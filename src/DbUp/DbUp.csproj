@@ -68,6 +68,8 @@
     <Compile Include="Engine\DatabaseUpgradeResult.cs" />
     <Compile Include="Engine\IScriptExecutor.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptAndCodeProvider.cs" />
+    <Compile Include="Support\ObjectNameOptions.cs" />
+    <Compile Include="Support\SQLite\SQLiteObjectParser.cs" />
     <Compile Include="Support\SQLite\SQLiteScriptExecutor.cs" />
     <Compile Include="Support\SQLite\SQLiteTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParser.cs" />

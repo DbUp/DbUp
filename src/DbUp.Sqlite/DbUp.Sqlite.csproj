@@ -7,8 +7,8 @@
     <ProjectGuid>{437CDD05-6DF9-46CB-95C0-36774B10AACB}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DbUp.Sqlite</RootNamespace>
-    <AssemblyName>DbUp.Sqlite</AssemblyName>
+    <RootNamespace>DbUp.SQLite</RootNamespace>
+    <AssemblyName>DbUp.SQLite</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />

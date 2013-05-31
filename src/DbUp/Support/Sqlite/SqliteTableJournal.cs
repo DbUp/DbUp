@@ -1,9 +1,11 @@
 ﻿using System;
 using System.Data;
+using System.Data.Common;
+using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 
-namespace DbUp.Support.Sqlite
+namespace DbUp.Support.SQLite
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
@@ -24,7 +26,7 @@ namespace DbUp.Support.Sqlite
         public SQLiteTableJournal(Func<IDbConnection> connectionFactory, string table, IUpgradeLog logger)
         {
             this.connectionFactory = connectionFactory;
-            tableName = table;
+            tableName = SQLiteObjectParser.QuoteSqlObjectName(table); ;
             log = logger;
         }
 
@@ -34,7 +36,29 @@ namespace DbUp.Support.Sqlite
         /// <returns>All executed scripts.</returns>
         public string[] GetExecutedScripts()
         {
-            throw new System.NotImplementedException();
+            log.WriteInformation("Fetching list of already executed scripts.");
+            var exists = DoesTableExist();
+            if (!exists)
+            {
+                log.WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", tableName));
+                return new string[0];
+            }
+
+            var scripts = new List<string>();
+            using (var connection = connectionFactory())
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = string.Format("select [ScriptName] from {0} order by [ScriptName]", tableName);
+                command.CommandType = CommandType.Text;
+                connection.Open();
+
+                using (var reader = command.ExecuteReader())
+                {
+                    while (reader.Read())
+                        scripts.Add((string)reader[0]);
+                }
+            }
+            return scripts.ToArray();
         }
 
         /// <summary>
@@ -43,7 +67,68 @@ namespace DbUp.Support.Sqlite
         /// <param name="script">The script.</param>
         public void StoreExecutedScript(SqlScript script)
         {
-            throw new System.NotImplementedException();
+            var exists = DoesTableExist();
+            if (!exists)
+            {
+                log.WriteInformation(string.Format("Creating the {0} table", tableName));
+
+                using (var connection = connectionFactory())
+                using (var command = connection.CreateCommand())
+                {
+                    command.CommandText = string.Format(
+@"CREATE TABLE {0} (
+	SchemaVersionID INTEGER CONSTRAINT 'PK_SchemaVersions_SchemaVersionID' PRIMARY KEY AUTOINCREMENT NOT NULL,
+	ScriptName TEXT NOT NULL,
+	Applied DATETIME NOT NULL
+)", tableName);
+
+                    command.CommandType = CommandType.Text;
+                    connection.Open();
+
+                    command.ExecuteNonQuery();
+                }
+
+                log.WriteInformation(string.Format("The {0} table has been created", tableName));
+            }
+
+
+            using (var connection = connectionFactory())
+            using (var command = connection.CreateCommand())
+            {
+                command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", tableName, DateTime.UtcNow.ToString("yyyy-MM-dd hh:mm:ss"));
+
+                var param = command.CreateParameter();
+                param.ParameterName = "scriptName";
+                param.Value = script.Name;
+                command.Parameters.Add(param);
+
+                command.CommandType = CommandType.Text;
+                connection.Open();
+
+                command.ExecuteNonQuery();
+            }
+        }
+
+        private bool DoesTableExist()
+        {
+            try
+            {
+                using (var connection = connectionFactory())
+                {
+                    using (var command = connection.CreateCommand())
+                    {
+                        command.CommandText = string.Format("select count(*) from {0}", tableName);
+                        command.CommandType = CommandType.Text;
+                        connection.Open();
+                        command.ExecuteScalar();
+                        return true;
+                    }
+                }
+            }
+            catch (DbException)
+            {
+                return false;
+            }
         }
     }
 }

@@ -1,6 +1,7 @@
-﻿using DbUp.Engine;
+﻿using System.Text.RegularExpressions;
+using DbUp.Engine;
 
-namespace DbUp.Sqlite
+namespace DbUp.SQLite
 {
     /// <summary>
     /// This preprocessor makes adjustments to your sql to make it compatible with Sqlite
@@ -12,7 +13,7 @@ namespace DbUp.Sqlite
         /// </summary>
         public string Process(string contents)
         {
-            throw new System.NotImplementedException();
+            return Regex.Replace(contents, @"nvarchar\s?\(max\)", "text", RegexOptions.IgnoreCase);
         }
     }
 }

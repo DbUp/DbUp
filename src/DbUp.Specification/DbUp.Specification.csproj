@@ -75,7 +75,9 @@
     <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
     <Compile Include="Contexts\GivenScriptsWithVariableSubstitutions.cs" />
     <Compile Include="EmbeddedScriptAndCodeProviderTests.cs" />
+    <Compile Include="SQLite\SQLiteScriptExecutorTests.cs" />
     <Compile Include="SQLite\SQLiteSupportTests.cs" />
+    <Compile Include="SQLite\SQLiteTableJournalTests.cs" />
     <Compile Include="SqlScriptExecutorTests.cs" />
     <Compile Include="SqlObjectParserTests.cs" />
     <Compile Include="UpgradeEngineTests.cs" />
@@ -90,9 +92,9 @@
       <Project>{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}</Project>
       <Name>DbUp.SqlCe</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DbUp.Sqlite\DbUp.Sqlite.csproj">
+    <ProjectReference Include="..\DbUp.Sqlite\DbUp.SQLite.csproj">
       <Project>{437cdd05-6df9-46cb-95c0-36774b10aacb}</Project>
-      <Name>DbUp.Sqlite</Name>
+      <Name>DbUp.SQLite</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>

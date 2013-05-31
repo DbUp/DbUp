@@ -1,14 +1,14 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.Support.SQLite
 {
-    public class SqlObjectParser
+    public class SQLiteObjectParser
     {
         /// <summary>
-        /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
-        /// This function implements System.Data.SqlClient.SqlCommandBuilder.QuoteIdentifier() with an additional
-        /// validation which is missing from the SqlCommandBuilder version.
+        /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.
         /// </summary>
         /// <param name="objectName">Name of the object to quote.</param>
         /// <returns>The quoted object name with trimmed whitespace</returns>
@@ -18,9 +18,7 @@ namespace DbUp.Support.SqlServer
         }
 
         /// <summary>
-        /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
-        /// This function implements System.Data.SqlClient.SqlCommandBuilder.QuoteIdentifier() with an additional
-        /// validation which is missing from the SqlCommandBuilder version.
+        /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.
         /// </summary>
         /// <param name="objectName">Name of the object to quote.</param>
         /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
@@ -32,10 +30,6 @@ namespace DbUp.Support.SqlServer
 
             if (ObjectNameOptions.Trim == objectNameOptions)
                 objectName = objectName.Trim();
-
-            const int SqlSysnameLength = 128;
-            if (objectName.Length > SqlSysnameLength)
-                throw new ArgumentOutOfRangeException(@"objectName", "A SQL server object name is maximum 128 characters long");
 
             // The ] in the string need to be doubled up so it means we always need an un-even number of ]
             if (objectName.StartsWith("[") && objectName.EndsWith("]") && objectName.Count(x => x == ']') % 2 == 1)

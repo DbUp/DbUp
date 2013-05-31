@@ -30,7 +30,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{05BC06
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Sqlite", "DbUp.Sqlite\DbUp.Sqlite.csproj", "{437CDD05-6DF9-46CB-95C0-36774B10AACB}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SQLite", "DbUp.Sqlite\DbUp.SQLite.csproj", "{437CDD05-6DF9-46CB-95C0-36774B10AACB}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

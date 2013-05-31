@@ -2,8 +2,8 @@
 using System.Data;
 using System.Data.SQLite;
 using DbUp.Builder;
-using DbUp.Support.Sqlite;
-using DbUp.Sqlite;
+using DbUp.Support.SQLite;
+using DbUp.SQLite;
 
 /// <summary>
 /// Configuration extension methods for SQLite (see http://www.sqlite.org/)
