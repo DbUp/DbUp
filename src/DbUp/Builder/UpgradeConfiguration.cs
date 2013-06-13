@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Builder
 {
@@ -25,12 +25,9 @@ namespace DbUp.Builder
         }
 
         /// <summary>
-        /// Gets or sets a connection factory that is used to create ADO.NET connections.
+        /// Manages your database connections, allowing you to control the use of transactions and the behaviour of those transactions
         /// </summary>
-        /// <value>
-        /// The connection factory.
-        /// </value>
-        public Func<IDbConnection> ConnectionFactory { get; set; }
+        public IConnectionManager ConnectionManager { get; set; }
 
         /// <summary>
         /// Gets or sets a log which captures details about the upgrade.
@@ -79,7 +76,7 @@ namespace DbUp.Builder
             if (ScriptExecutor == null) throw new ArgumentException("A ScriptExecutor is required");
             if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build()");
             if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build()");
-            if (ConnectionFactory == null) throw new ArgumentException("The ConnectionFactory is null. What do you expect to upgrade?");
+            if (ConnectionManager == null) throw new ArgumentException("The ConnectionManager is null. What do you expect to upgrade?");
         }
 
         /// <summary>

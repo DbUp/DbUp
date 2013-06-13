@@ -4,6 +4,7 @@ using System.Reflection;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 
 /// <summary>
@@ -288,4 +289,41 @@ public static class StandardExtensions
         builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
         return builder;
     }
+
+    /// <summary>
+    /// Run creates a new connection for each script, without a transaction
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithoutTransaction(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.NoTransaction);
+
+        return builder;
+    }
+    
+    /// <summary>
+    /// Run DbUp in a single transaction
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithTransaction(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c=>c.ConnectionManager.TransactionMode = TransactionMode.SingleTransaction);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Run each script in it's own transaction
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithTransactionPerScript(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.TransactionPerScript);
+
+        return builder;
+    }
+
 }

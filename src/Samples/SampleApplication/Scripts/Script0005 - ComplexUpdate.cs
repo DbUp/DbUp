@@ -6,7 +6,7 @@ namespace SampleApplication.Scripts
 {
     public class Script0005ComplexUpdate : IScript
     {
-        public string ProvideScript(IDbConnection sqlConnectionString)
+        public string ProvideScript(Func<IDbCommand> commandFactory)
         {
             // If you have something that requires logic to update, it is sometimes easier doing that in code rather than sql.
             // By creating a code script, you get an open connection and you can build the sql script on the fly at the time of execution
