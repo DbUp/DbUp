@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
 using DbUp.Builder;
+using DbUp.Engine;
+using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
 
 /// <summary>
@@ -38,7 +39,7 @@ public static class SqlServerExtensions
     /// </returns>
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema)
     {
-        return SqlDatabase(supported, () => new SqlConnection(connectionString), schema);
+        return SqlDatabase(new SqlConnectionManager(connectionString), schema);
     }
 
     /// <summary>
@@ -49,6 +50,7 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
+    [Obsolete("Pass connection string instead, then use .WithTransaction() and .WithTransactionPerScript() to manage connection behaviour")]
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<IDbConnection> connectionFactory)
     {
         return SqlDatabase(supported, connectionFactory, null);
@@ -63,12 +65,24 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
+    [Obsolete("Pass connection string instead, then use .WithTransaction() and .WithTransactionPerScript() to manage connection behaviour")]
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<IDbConnection> connectionFactory, string schema)
     {
+        return SqlDatabase(new LegacyConnectionManager(connectionFactory), schema);
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="connectionManager"></param>
+    /// <param name="schema"></param>
+    /// <returns></returns>
+    private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema)
+    {
         var builder = new UpgradeEngineBuilder();
-        builder.Configure(c => c.ConnectionFactory = connectionFactory);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, schema, "SchemaVersions", c.Log));
+        builder.Configure(c => c.ConnectionManager = connectionManager);
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(connectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionManager, schema, "SchemaVersions", c.Log));
         return builder;
     }
 
@@ -81,7 +95,7 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, schema, table, c.Log));
+        builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionManager, schema, table, c.Log));
         return builder;
     }
 }

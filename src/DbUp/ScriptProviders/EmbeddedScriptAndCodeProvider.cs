@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.ScriptProviders
 {
@@ -26,24 +26,24 @@ namespace DbUp.ScriptProviders
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
-        private IEnumerable<SqlScript> ScriptsFromScriptClasses(Func<IDbConnection> connectionFactory)
+        private IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)
         {
             var script = typeof(IScript);
-            return assembly
+            return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory => assembly
                 .GetTypes()
                 .Where(type => script.IsAssignableFrom(type) && type.IsClass)
-                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", () => ((IScript)Activator.CreateInstance(s)).ProvideScript(connectionFactory())))
-                .ToList();
+                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", () => ((IScript)Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
+                .ToList());
         }
 
         /// <summary>
         /// Gets all scripts that should be executed.
         /// </summary>
-        public IEnumerable<SqlScript> GetScripts(Func<IDbConnection> connectionFactory)
+        public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
             var sqlScripts = embeddedScriptProvider
-                .GetScripts(connectionFactory)
-                .Concat(ScriptsFromScriptClasses(connectionFactory))
+                .GetScripts(connectionManager)
+                .Concat(ScriptsFromScriptClasses(connectionManager))
                 .OrderBy(x => x.Name)
                 .ToList();
 

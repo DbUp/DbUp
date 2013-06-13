@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System;
+using System.Data;
 
 namespace DbUp.Engine
 {
@@ -10,8 +11,8 @@ namespace DbUp.Engine
         /// <summary>
         /// Provides the Sql Script to execute
         /// </summary>
-        /// <param name="sqlConnectionString">An open and active database connection</param>
+        /// <param name="dbCommandFactory">A factory to create open and active database commands</param>
         /// <returns>The Sql Script contents</returns>
-        string ProvideScript(IDbConnection sqlConnectionString);
+        string ProvideScript(Func<IDbCommand> dbCommandFactory);
     }
 }
