@@ -74,9 +74,9 @@ namespace DbUp.Helpers
         /// </summary>
         public void Dispose()
         {
+            sqlConnection.Close();
             master.ExecuteNonQuery("drop database [" + databaseName + "]");
             masterSqlConnection.Dispose();
-            sqlConnection.Close();
         }
 
         internal class TraceLog : IUpgradeLog
