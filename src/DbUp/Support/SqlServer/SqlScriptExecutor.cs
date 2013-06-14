@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text.RegularExpressions;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
@@ -18,7 +17,7 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public sealed class SqlScriptExecutor : IScriptExecutor
     {
-        private readonly IConnectionManager connectionManager;
+        private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
@@ -36,7 +35,8 @@ namespace DbUp.Support.SqlServer
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(IConnectionManager connectionManager, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, 
+            IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             Schema = schema;
             this.log = log;
@@ -66,7 +66,7 @@ namespace DbUp.Support.SqlServer
         {
             if (string.IsNullOrEmpty(Schema)) return;
 
-            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
                 var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
 
@@ -97,11 +97,11 @@ namespace DbUp.Support.SqlServer
             contents = (scriptPreprocessors??new IScriptPreprocessor[0])
                 .Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
 
-            var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
+            var scriptStatements = connectionManager().SplitScriptIntoCommands(contents);
             var index = -1;
             try
             {
-                connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     foreach (var statement in scriptStatements)
                     {

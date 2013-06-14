@@ -1,5 +1,4 @@
-﻿using DbUp.Engine;
-using DbUp.Engine.Transactions;
+﻿using DbUp.Engine.Transactions;
 using NUnit.Framework;
 using DbUp.Specification.Contexts;
 using System.Linq;

@@ -16,20 +16,20 @@ namespace DbUp.Support.SqlServer
     public sealed class SqlTableJournal : IJournal
     {
         private readonly string schemaTableName;
-        private readonly IConnectionManager connectionManager;
-        private readonly IUpgradeLog log;
+        private readonly Func<IConnectionManager> connectionManager;
+        private readonly Func<IUpgradeLog> log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
+        /// <param name="logger">The log.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
-        /// <param name="logger">The log.</param>
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
-        public SqlTableJournal(IConnectionManager connectionManager, string schema, string table, IUpgradeLog logger)
+        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
             schemaTableName = SqlObjectParser.QuoteSqlObjectName(table);
             if (string.IsNullOrEmpty(schema))
@@ -46,16 +46,16 @@ namespace DbUp.Support.SqlServer
         /// <returns>All executed scripts.</returns>
         public string[] GetExecutedScripts()
         {
-            log.WriteInformation("Fetching list of already executed scripts.");
+            log().WriteInformation("Fetching list of already executed scripts.");
             var exists = DoesTableExist();
             if (!exists)
             {
-                log.WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", schemaTableName));
+                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", schemaTableName));
                 return new string[0];
             }
 
             var scripts = new List<string>();
-            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
                 using (var command = dbCommandFactory())
                 {
@@ -82,9 +82,9 @@ namespace DbUp.Support.SqlServer
             var exists = DoesTableExist();
             if (!exists)
             {
-                log.WriteInformation(string.Format("Creating the {0} table", schemaTableName));
+                log().WriteInformation(string.Format("Creating the {0} table", schemaTableName));
 
-                connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     using (var command = dbCommandFactory())
                     {
@@ -99,11 +99,11 @@ namespace DbUp.Support.SqlServer
                         command.ExecuteNonQuery();
                     }
 
-                    log.WriteInformation(string.Format("The {0} table has been created", schemaTableName));
+                    log().WriteInformation(string.Format("The {0} table has been created", schemaTableName));
                 });
             }
 
-            connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
                 using (var command = dbCommandFactory())
                 {
@@ -122,7 +122,7 @@ namespace DbUp.Support.SqlServer
 
         private bool DoesTableExist()
         {
-            return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            return connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
                 try
                 {
