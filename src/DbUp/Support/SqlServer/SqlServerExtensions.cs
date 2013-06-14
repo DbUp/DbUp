@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data;
 using DbUp.Builder;
-using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
 
@@ -68,7 +67,7 @@ public static class SqlServerExtensions
     [Obsolete("Pass connection string instead, then use .WithTransaction() and .WithTransactionPerScript() to manage connection behaviour")]
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, Func<IDbConnection> connectionFactory, string schema)
     {
-        return SqlDatabase(new LegacyConnectionManager(connectionFactory), schema);
+        return SqlDatabase(new LegacySqlConnectionManager(connectionFactory), schema);
     }
 
     /// <summary>

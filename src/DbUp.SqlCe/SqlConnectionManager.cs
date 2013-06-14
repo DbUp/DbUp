@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlServerCe;
-using DbUp.Engine;
-using DbUp.Engine.Transactions;
+using DbUp.Support.SqlServer;
 
 namespace DbUp.SqlCe
 {
     /// <summary>
     /// Manages SqlCe Database Connections
     /// </summary>
-    public class SqlCeConnectionManager : DatabaseConnectionManager
+    public class SqlCeConnectionManager : SqlConnectionManager
     {
         /// <summary>
         /// Manages SqlCe Database Connections

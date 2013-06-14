@@ -76,7 +76,10 @@
     <Compile Include="Engine\IScriptExecutor.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptAndCodeProvider.cs" />
     <Compile Include="Engine\Transactions\IConnectionManager.cs" />
-    <Compile Include="Engine\Transactions\LegacyConnectionManager.cs" />
+    <Compile Include="Engine\Transactions\LegacySqlConnectionManager.cs" />
+    <Compile Include="Support\ObjectNameOptions.cs" />
+    <Compile Include="Support\SQLite\SQLiteObjectParser.cs" />
+    <Compile Include="Support\SQLite\SQLiteTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
     <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
     <Compile Include="Engine\IScriptPreprocessor.cs" />

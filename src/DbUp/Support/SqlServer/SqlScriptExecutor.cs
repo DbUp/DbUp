@@ -50,17 +50,6 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         public string Schema { get; set; }
 
-        private static IEnumerable<string> SplitByGoStatements(string script)
-        {
-            var scriptStatements = 
-                Regex.Split(script, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
-                    .Select(x => x.Trim())
-                    .Where(x => x.Length > 0)
-                    .ToArray();
-
-            return scriptStatements;
-        }
-
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
@@ -108,7 +97,7 @@ namespace DbUp.Support.SqlServer
             contents = (scriptPreprocessors??new IScriptPreprocessor[0])
                 .Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
 
-            var scriptStatements = SplitByGoStatements(contents);
+            var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
             var index = -1;
             try
             {

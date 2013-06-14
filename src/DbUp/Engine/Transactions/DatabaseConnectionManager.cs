@@ -27,6 +27,9 @@ namespace DbUp.Engine.Transactions
             };
         }
 
+        /// <summary>
+        /// Creates a database connection for the current database engine
+        /// </summary>
         protected abstract IDbConnection CreateConnection(string connectionString);
 
         public void UpgradeStarting(IUpgradeLog upgradeLog)
@@ -48,6 +51,8 @@ namespace DbUp.Engine.Transactions
         }
 
         public TransactionMode TransactionMode { get; set; }
+
+        public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
 
         public void Dispose()
         {

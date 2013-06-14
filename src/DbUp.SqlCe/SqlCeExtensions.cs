@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Data.SqlServerCe;
 using DbUp.Builder;
-using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
 using DbUp.Support.SqlServer;
@@ -27,7 +26,7 @@ public static class SqlCeExtensions
     [Obsolete("Pass connection string instead, then use .WithTransaction() and .WithTransactionPerScript() to manage connection behaviour")]
     public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, Func<SqlCeConnection> connectionFactory)
     {
-        return SqlCeDatabase(new LegacyConnectionManager(connectionFactory));        
+        return SqlCeDatabase(new LegacySqlConnectionManager(connectionFactory));        
     }
 
     /// <summary>

@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
+using System.Text.RegularExpressions;
 using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
@@ -7,15 +10,15 @@ namespace DbUp.Engine.Transactions
     /// <summary>
     /// Allows backwards compatibility with previous API/behaviour of using connection factories with DbUp
     /// </summary>
-    public class LegacyConnectionManager : IConnectionManager
+    public class LegacySqlConnectionManager : IConnectionManager
     {
         private readonly Func<IDbConnection> connectionFactory;
 
         /// <summary>
-        /// Ctor for LegacyConnectionManager
+        /// Ctor for LegacySqlConnectionManager
         /// </summary>
         /// <param name="connectionFactory">The connectionFactory</param>
-        public LegacyConnectionManager(Func<IDbConnection> connectionFactory)
+        public LegacySqlConnectionManager(Func<IDbConnection> connectionFactory)
         {
             this.connectionFactory = connectionFactory;
         }
@@ -43,6 +46,17 @@ namespace DbUp.Engine.Transactions
         }
 
         public TransactionMode TransactionMode { get; set; }
+
+        public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
+        {
+            var scriptStatements =
+                Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
+                    .Select(x => x.Trim())
+                    .Where(x => x.Length > 0)
+                    .ToArray();
+
+            return scriptStatements;
+        }
 
         public void Dispose()
         {

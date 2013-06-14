@@ -29,10 +29,7 @@ namespace DbUp.Specification
                 dbConnection = Substitute.For<IDbConnection>();
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
-                var connectionManager = Substitute.For<IConnectionManager>();
-                connectionManager
-                    .When(c=>c.ExecuteCommandsWithManagedConnection(Arg.Any<Action<Func<IDbCommand>>>()))
-                    .Do(c => c.Arg<Action<Func<IDbCommand>>>()(dbConnection.CreateCommand));
+                var connectionManager = new TestConnectionManager(dbConnection);
                 scriptExecutor = new SqlScriptExecutor(connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
 
                 var builder = new UpgradeEngineBuilder()
@@ -54,7 +51,7 @@ namespace DbUp.Specification
             [Then]
             public void substitutes_variable()
             {
-                Assert.AreEqual(dbCommand.CommandText, "create table sub (Id int)");
+                Assert.AreEqual("create table sub (Id int)", dbCommand.CommandText);
             }
         }
 
