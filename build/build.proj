@@ -6,6 +6,7 @@
   <PropertyGroup>
     <Root>$(MSBuildStartupDirectory)</Root>
     <nunitconsoleexe>$(Root)\lib\NUnit.Runners.2.6.2\tools\nunit-console.exe</nunitconsoleexe>
+    <build_number Condition="'$(build_number)' == ''">0.0.0</build_number>
   </PropertyGroup>
 
   <Target Name="Build">
@@ -34,6 +35,9 @@
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SqlCe" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SqlCe\Published')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SqlCe\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SqlCe\Published\lib')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SqlCe\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SqlCe\Published\lib\NET35')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published\lib')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published\lib\NET35')" />
 
     <!-- Version Info -->
     <AssemblyInfo
@@ -60,7 +64,7 @@
     <ItemGroup>
       <ProjectToBuild Include="$(Root)\src\DbUp.sln" />
     </ItemGroup>
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Build" Properties="Configuration=Release">
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Build" Properties="Configuration=Release;Platform=Any CPU">
       <Output TaskParameter="TargetOutputs" ItemName="AssembliesBuiltByChildProjects" />
     </MSBuild>
 
@@ -97,16 +101,24 @@
     <ItemGroup>
       <NuSpecFiles Include="$(Root)\build\dbup.nuspec" />
       <SqlCeNuSpecFiles Include="$(Root)\build\dbup.sqlce.nuspec" />
+      <SQLiteNuSpecFiles Include="$(Root)\build\dbup.sqlite.nuspec" />
     </ItemGroup>
     <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp" />
     <Copy SourceFiles="@(SqlCeNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe" />
+    <Copy SourceFiles="@(SQLiteNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SQLite" />
+    
+    <PropertyGroup>
+      <NuGetVersionNumber Condition="'$(NuGetVersionNumber)'==''">$(build_number)</NuGetVersionNumber>
+    </PropertyGroup>
 
-    <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(build_number)" />
-    <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(build_number)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     
     <!-- Pack -->
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -b $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec -b $(Root)\build\Published\DbUp-SqlCe -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec -b $(Root)\build\Published\DbUp-SQLite -o $(Root)\build\Artifacts" />
    
   </Target>
 </Project>
