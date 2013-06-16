@@ -4,21 +4,24 @@ using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 
-namespace DbUp.Specification.Contexts
+namespace DbUp.Tests.Contexts
 {
-    public abstract class GivenScriptsWithVariableSubstitutions : EmptyDatabase
-    {
+	public class GivenANewDatabase : EmptyDatabase
+	{
         public override void BeforeEach()
         {
             base.BeforeEach();
 
             AllScripts = new List<SqlScript>
                              {
-                                 new SqlScript("0001.sql", "CREATE TABLE $sometable$ (Id int)")
+                                 new SqlScript("0001.sql", ""),
+                                 new SqlScript("0004.sql", ""),
+                                 new SqlScript("0002.sql", "")
                              };
 
             ScriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(AllScripts);
-            VersionTracker.GetExecutedScripts().Returns(new string[0]);
+            VersionTracker.GetExecutedScripts().Returns(new string[] {});
         }
-    }
+	}
 }
+

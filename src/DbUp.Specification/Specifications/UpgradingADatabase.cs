@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using NUnit.Framework;
+using DbUp.Tests.Contexts;
 using NSubstitute;
-using DbUp.Specification.Contexts;
+using NUnit.Framework;
 
-namespace DbUp.Specification.Concerning
+namespace DbUp.Tests.Concerning
 {
     [TestFixture]
 	public class UpgradingAnOutOfDateDatabase : GivenAnOutOfDateDatabase

@@ -13,7 +13,7 @@ namespace DbUp.Support.SqlServer
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// SQL Server database using a table called dbo.SchemaVersions.
     /// </summary>
-    public sealed class SqlTableJournal : IJournal
+    public class SqlTableJournal : IJournal
     {
         private readonly string schemaTableName;
         private readonly Func<IConnectionManager> connectionManager;
@@ -59,7 +59,7 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("select [ScriptName] from {0} order by [ScriptName]", schemaTableName);
+                    command.CommandText = GetExecutedScriptsSql(schemaTableName);
                     command.CommandType = CommandType.Text;
 
                     using (var reader = command.ExecuteReader())
@@ -71,6 +71,14 @@ namespace DbUp.Support.SqlServer
             });
 
             return scripts.ToArray();
+        }
+
+        /// <summary>
+        /// The Sql which gets 
+        /// </summary>
+        protected virtual string GetExecutedScriptsSql(string table)
+        {
+            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
         }
 
         /// <summary>
@@ -88,12 +96,7 @@ namespace DbUp.Support.SqlServer
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = string.Format(
-    @"create table {0} (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
-	[ScriptName] nvarchar(255) not null,
-	[Applied] datetime not null
-)", schemaTableName);
+                        command.CommandText = CreateTableSql(schemaTableName);
 
                         command.CommandType = CommandType.Text;
                         command.ExecuteNonQuery();
@@ -118,6 +121,20 @@ namespace DbUp.Support.SqlServer
                     command.ExecuteNonQuery();
                 }
             });
+        }
+
+        /// <summary>
+        /// The sql to exectute to create the schema versions table
+        /// </summary>
+        /// <param name="tableName"></param>
+        /// <returns></returns>
+        protected virtual string CreateTableSql(string tableName)
+        {
+            return string.Format(@"create table {0} (
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)", tableName);
         }
 
         private bool DoesTableExist()

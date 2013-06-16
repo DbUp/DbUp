@@ -8,7 +8,7 @@ using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Specification
+namespace DbUp.Tests
 {
     [TestFixture]
     public class SqlScriptExecutorTests

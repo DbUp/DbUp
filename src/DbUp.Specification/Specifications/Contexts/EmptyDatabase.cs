@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using NUnit.Framework;
 using NSubstitute;
+using NUnit.Framework;
 
-namespace DbUp.Specification.Contexts
+namespace DbUp.Tests.Contexts
 {
     public abstract class EmptyDatabase
     {

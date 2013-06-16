@@ -6,7 +6,7 @@ using DbUp.Engine.Output;
 using DbUp.ScriptProviders;
 using NUnit.Framework;
 
-namespace DbUp.Specification
+namespace DbUp.Tests
 {
     public class EmbeddedScriptAndCodeProviderTests : SpecificationFor<EmbeddedScriptAndCodeProvider>
     {

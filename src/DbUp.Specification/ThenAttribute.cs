@@ -1,6 +1,7 @@
+using System;
 using NUnit.Framework;
 
-namespace DbUp.Specification
+namespace DbUp.Tests
 {
     public class ThenAttribute : TestAttribute
     {

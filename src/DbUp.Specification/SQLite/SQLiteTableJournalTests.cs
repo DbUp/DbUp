@@ -1,14 +1,14 @@
-﻿using DbUp.Engine;
+﻿using System;
+using System.Data;
+using System.Data.SQLite;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SQLite;
 using NSubstitute;
 using NUnit.Framework;
-using System;
-using System.Data;
-using System.Data.SQLite;
 
-namespace DbUp.Specification.SQLite
+namespace DbUp.Tests.SQLite
 {
     [TestFixture]
     public class SQLiteTableJournalTests
@@ -22,7 +22,8 @@ namespace DbUp.Specification.SQLite
             dbConnection.CreateCommand().Returns(command);
             var connectionManager = Substitute.For<IConnectionManager>();
             command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
-            var journal = new SQLiteTableJournal(connectionManager, "SchemaVersions", new ConsoleUpgradeLog());
+            var consoleUpgradeLog = new ConsoleUpgradeLog();
+            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
 
             // When
             var scripts = journal.GetExecutedScripts();
@@ -43,7 +44,8 @@ namespace DbUp.Specification.SQLite
             dbConnection.CreateCommand().Returns(command);
             command.CreateParameter().Returns(param);
             command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
-            var journal = new SQLiteTableJournal(connectionManager, "SchemaVersions", new ConsoleUpgradeLog());
+            var consoleUpgradeLog = new ConsoleUpgradeLog();
+            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
 
             // When
             journal.StoreExecutedScript(new SqlScript("test", "select 1"));

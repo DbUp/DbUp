@@ -5,7 +5,7 @@ using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Specification.Contexts
+namespace DbUp.Tests.Contexts
 {
 	public class GivenAnOutOfDateDatabase : EmptyDatabase
 	{

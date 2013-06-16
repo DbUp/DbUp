@@ -1,11 +1,11 @@
-﻿﻿using System;
-﻿using System.Collections.Generic;
-﻿using DbUp.Engine;
-﻿using DbUp.Specification.Contexts;
+﻿using System;
+using System.Collections.Generic;
+using DbUp.Engine;
+using DbUp.Tests.Contexts;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Specification.Concerning
+namespace DbUp.Tests.Concerning
 {
     [TestFixture]
     public class UpgradingDatabaseWithVariablesSpecifiedSubstitutesVariables : GivenScriptsWithVariableSubstitutions

@@ -1,9 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Data.SQLite;
+using System.IO;
 using NUnit.Framework;
 
-namespace DbUp.Specification.SQLite
+namespace DbUp.Tests.SQLite
 {
     [TestFixture]
     public class SQLiteSupportTests

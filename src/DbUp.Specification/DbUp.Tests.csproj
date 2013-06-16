@@ -7,8 +7,8 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>{80A9E08A-13F3-4721-9849-C55167FE21A5}</ProjectGuid>
     <OutputType>Library</OutputType>
-    <RootNamespace>DbUp.Specification</RootNamespace>
-    <AssemblyName>DbUp.Specification</AssemblyName>
+    <RootNamespace>DbUp.Tests</RootNamespace>
+    <AssemblyName>DbUp.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -57,18 +57,21 @@
       <Private>True</Private>
       <HintPath>..\..\lib\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
+    <Reference Include="TestStack.BDDfy">
+      <HintPath>..\..\lib\TestStack.BDDfy.3.15\lib\NET40\TestStack.BDDfy.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuilderTests.cs" />
-    <Compile Include="Concerning\AttemptingToUpgradeAnUptoDateDatabase.cs" />
-    <Compile Include="Concerning\UpgradingADatabase.cs" />
-    <Compile Include="Concerning\CreatingANewDatabase.cs" />
-    <Compile Include="Concerning\UpgradingDatabaseWithVariablesSpecified.cs" />
-    <Compile Include="Contexts\EmptyDatabase.cs" />
-    <Compile Include="Contexts\GivenAnOutOfDateDatabase.cs" />
-    <Compile Include="Contexts\GivenANewDatabase.cs" />
-    <Compile Include="Contexts\GivenAnUptoDateDatabase.cs" />
-    <Compile Include="Contexts\GivenScriptsWithVariableSubstitutions.cs" />
+    <Compile Include="Specifications\UpgradeDatabase.cs" />
+    <Compile Include="Specifications\Contexts\EmptyDatabase.cs" />
+    <Compile Include="Specifications\Contexts\GivenANewDatabase.cs" />
+    <Compile Include="Specifications\Contexts\GivenAnOutOfDateDatabase.cs" />
+    <Compile Include="Specifications\Contexts\GivenAnUptoDateDatabase.cs" />
+    <Compile Include="Specifications\Contexts\GivenScriptsWithVariableSubstitutions.cs" />
+    <Compile Include="Specifications\UpgradingADatabase.cs" />
+    <Compile Include="Specifications\CreatingANewDatabase.cs" />
+    <Compile Include="Specifications\UpgradingDatabaseWithVariablesSpecified.cs" />
     <Compile Include="EmbeddedScriptAndCodeProviderTests.cs" />
     <Compile Include="SQLite\SQLiteSupportTests.cs" />
     <Compile Include="SQLite\SQLiteTableJournalTests.cs" />
@@ -112,6 +115,7 @@
     <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="BDDfy.readme.txt" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

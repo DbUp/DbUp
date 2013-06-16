@@ -4,7 +4,7 @@ using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Specification.TransactionManagement
+namespace DbUp.Tests.TransactionManagement
 {
     public class TransactionPerScriptStrategyTests
     {

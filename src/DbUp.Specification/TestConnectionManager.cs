@@ -5,7 +5,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 
-namespace DbUp.Specification
+namespace DbUp.Tests
 {
     public class TestConnectionManager : DatabaseConnectionManager
     {

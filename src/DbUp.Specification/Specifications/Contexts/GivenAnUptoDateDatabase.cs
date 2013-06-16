@@ -1,10 +1,10 @@
 using System;
-using DbUp.Engine;
 using System.Collections.Generic;
+using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 
-namespace DbUp.Specification.Contexts
+namespace DbUp.Tests.Contexts
 {
 	public class GivenAnUptoDateDatabase : EmptyDatabase
 	{

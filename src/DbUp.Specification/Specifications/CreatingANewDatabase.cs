@@ -1,11 +1,11 @@
-﻿using DbUp.Engine.Transactions;
-using NUnit.Framework;
-using DbUp.Specification.Contexts;
+﻿using System;
 using System.Linq;
+using DbUp.Engine.Transactions;
+using DbUp.Tests.Contexts;
 using NSubstitute;
-using System;
+using NUnit.Framework;
 
-namespace DbUp.Specification.Concerning
+namespace DbUp.Tests.Concerning
 {
     [TestFixture]
     public class CreatingANewDatabase : GivenANewDatabase
