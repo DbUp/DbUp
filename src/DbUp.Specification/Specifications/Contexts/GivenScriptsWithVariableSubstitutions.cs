@@ -4,7 +4,7 @@ using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 
-namespace DbUp.Tests.Contexts
+namespace DbUp.Tests.Specifications.Contexts
 {
     public abstract class GivenScriptsWithVariableSubstitutions : EmptyDatabase
     {

@@ -66,8 +66,6 @@
     <Compile Include="Specifications\UpgradeDatabase.cs" />
     <Compile Include="Specifications\Contexts\EmptyDatabase.cs" />
     <Compile Include="Specifications\Contexts\GivenANewDatabase.cs" />
-    <Compile Include="Specifications\Contexts\GivenAnOutOfDateDatabase.cs" />
-    <Compile Include="Specifications\Contexts\GivenAnUptoDateDatabase.cs" />
     <Compile Include="Specifications\Contexts\GivenScriptsWithVariableSubstitutions.cs" />
     <Compile Include="Specifications\CreatingANewDatabase.cs" />
     <Compile Include="Specifications\UpgradingDatabaseWithVariablesSpecified.cs" />

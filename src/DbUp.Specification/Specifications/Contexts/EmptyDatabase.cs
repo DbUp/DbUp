@@ -7,7 +7,7 @@ using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests.Contexts
+namespace DbUp.Tests.Specifications.Contexts
 {
     public abstract class EmptyDatabase
     {

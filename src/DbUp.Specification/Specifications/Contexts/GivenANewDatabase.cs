@@ -4,7 +4,7 @@ using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 
-namespace DbUp.Tests.Contexts
+namespace DbUp.Tests.Specifications.Contexts
 {
 	public class GivenANewDatabase : EmptyDatabase
 	{
@@ -24,4 +24,3 @@ namespace DbUp.Tests.Contexts
         }
 	}
 }
-
