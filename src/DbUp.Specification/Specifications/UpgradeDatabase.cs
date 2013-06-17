@@ -61,19 +61,60 @@ namespace DbUp.Tests.Specifications
                 .When(t => t.WhenDatabaseIsUpgraded())
                 .Then(t => t.ThenUpgradeShouldNotBeRequired())
                 .And(t => t.AndShouldNotRunAnyScripts())
+                .And(t => t.AndShouldHaveSuccessfulResult())
                 .BDDfy();
+        }
+
+        [Test]
+        public void UpgradingAnOutOfDateDatabase()
+        {
+            this.Given(t => t.GivenAnOutOfDateDatabase())
+                .When(t => t.WhenDatabaseIsUpgraded())
+                .Then(t => t.ThenUpgradeShouldNotBeRequired())
+                .And(t => t.AndShouldHaveSuccessfulResult())
+                .And(t => t.AndShouldHaveRunAllScripts())
+                .And(t => t.AndShouldLogInformation())
+                .BDDfy();
+        }
+
+        private void AndShouldLogInformation()
+        {
+            log.Received().WriteInformation("Beginning database upgrade");
+            log.Received().WriteInformation("Upgrade successful");
+        }
+
+        private void AndShouldHaveRunAllScripts()
+        {
+            Assert.AreEqual(3, upgradeResult.Scripts.Count());
+            Assert.AreEqual(3, GetJournal().GetExecutedScripts().Count());
+        }
+
+        private void AndShouldHaveSuccessfulResult()
+        {
+            Assert.IsTrue(upgradeResult.Successful);
+        }
+
+        private void GivenAnOutOfDateDatabase()
+        {
+            upgradeEngine = upgradeEngineBuilder.Build();
         }
 
         private void GivenAnUpToDateDatabase()
         {
-            var sqLiteConnectionManager = new SQLiteConnectionManager(database.ConnectionString);
-            sqLiteConnectionManager.UpgradeStarting(log);
-            var journal = new SQLiteTableJournal(()=>sqLiteConnectionManager, ()=>log, "SchemaVersions");
+            var journal = GetJournal();
             journal.StoreExecutedScript(scripts[0]);
             journal.StoreExecutedScript(scripts[1]);
             journal.StoreExecutedScript(scripts[2]);
 
             upgradeEngine = upgradeEngineBuilder.Build();
+        }
+
+        private SQLiteTableJournal GetJournal()
+        {
+            var sqLiteConnectionManager = new SQLiteConnectionManager(database.ConnectionString);
+            sqLiteConnectionManager.UpgradeStarting(log);
+            var journal = new SQLiteTableJournal(() => sqLiteConnectionManager, () => log, "SchemaVersions");
+            return journal;
         }
 
         private void WhenDatabaseIsUpgraded()
