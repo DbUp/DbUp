@@ -110,12 +110,17 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, '{1}')", schemaTableName, DateTime.UtcNow.ToString("s"));
+                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", schemaTableName);
 
-                    var param = command.CreateParameter();
-                    param.ParameterName = "scriptName";
-                    param.Value = script.Name;
-                    command.Parameters.Add(param);
+                    var scriptNameParam = command.CreateParameter();
+                    scriptNameParam.ParameterName = "scriptName";
+                    scriptNameParam.Value = script.Name;
+                    command.Parameters.Add(scriptNameParam);
+                    
+                    var appliedParam = command.CreateParameter();
+                    appliedParam.ParameterName = "applied";
+                    appliedParam.Value = DateTime.Now;
+                    command.Parameters.Add(appliedParam);
 
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQuery();
