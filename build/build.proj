@@ -70,7 +70,7 @@
 
      <!-- Test --> 
     <ItemGroup>
-        <TestAssembly Include="$(Root)\src\DbUp.Specification\bin\Release\DbUp.Specification.dll" />
+        <TestAssembly Include="$(Root)\src\DbUp.Specification\bin\Release\DbUp.Tests.dll" />
     </ItemGroup>
 
     <Exec Condition="$(teamcity_dotnet_nunitlauncher) != ''" Command="&quot;$(teamcity_dotnet_nunitlauncher)&quot; v4.0 x86 NUnit-2.6.2 @(TestAssembly->'&quot;%(FullPath)&quot;', '%20')" />
