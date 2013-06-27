@@ -112,6 +112,8 @@
     <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="TestScripts\Script20130525_2_Test5.sql" />
+    <EmbeddedResource Include="TestScripts\Script20130525_1_Test5.sql" />
     <Content Include="BDDfy.readme.txt" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
