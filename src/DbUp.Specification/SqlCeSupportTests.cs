@@ -3,7 +3,7 @@ using System.Data.SqlServerCe;
 using System.IO;
 using NUnit.Framework;
 
-namespace DbUp.Specification
+namespace DbUp.Tests
 {
     [TestFixture]
     public class SqlCeSupportTests

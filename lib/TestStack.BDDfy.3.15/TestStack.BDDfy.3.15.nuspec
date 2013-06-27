@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>TestStack.BDDfy</id>
+    <version>3.15</version>
+    <title>A simple to use and extend BDD framework for .Net programmers</title>
+    <authors>Mehdi Khalili, Michael Whelan</authors>
+    <owners>Mehdi Khalili, Michael Whelan</owners>
+    <projectUrl>http://teststack.github.com/TestStack.BDDfy/</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <description>BDDfy is the simplest BDD framework to use and extend</description>
+  </metadata>
+</package>

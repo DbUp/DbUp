@@ -13,11 +13,14 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Information", "Information"
 		Information\VersionInfo.cs = Information\VersionInfo.cs
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Specification", "DbUp.Specification\DbUp.Specification.csproj", "{80A9E08A-13F3-4721-9849-C55167FE21A5}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Tests", "DbUp.Specification\DbUp.Tests.csproj", "{80A9E08A-13F3-4721-9849-C55167FE21A5}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C6CF2BB4-BFE4-4531-88D2-85F3EA640563}"
 	ProjectSection(SolutionItems) = preProject
+		..\build\build.proj = ..\build\build.proj
 		..\build\dbup.nuspec = ..\build\dbup.nuspec
+		..\build\dbup.sqlce.nuspec = ..\build\dbup.sqlce.nuspec
+		..\build\dbup.sqlite.nuspec = ..\build\dbup.sqlite.nuspec
 		nuget.config = nuget.config
 	EndProjectSection
 EndProject
@@ -29,6 +32,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{05BC06
 	ProjectSection(SolutionItems) = preProject
 		.nuget\packages.config = .nuget\packages.config
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SQLite", "DbUp.Sqlite\DbUp.SQLite.csproj", "{437CDD05-6DF9-46CB-95C0-36774B10AACB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -117,12 +124,43 @@ Global
 		{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}.Release|x86.ActiveCfg = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Default|x86.ActiveCfg = Debug|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{437CDD05-6DF9-46CB-95C0-36774B10AACB}.Release|x86.ActiveCfg = Release|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Default|x86.ActiveCfg = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{83042F56-9FAD-4827-B542-6873F93D7940} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = DbUp\DbUp.csproj

@@ -1,0 +1,132 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.0</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{80A9E08A-13F3-4721-9849-C55167FE21A5}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DbUp.Tests</RootNamespace>
+    <AssemblyName>DbUp.Tests</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>none</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="NSubstitute">
+      <HintPath>..\..\lib\NSubstitute.1.6.0.0\lib\NET40\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Data.SQLite">
+      <HintPath>..\..\lib\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq">
+      <HintPath>..\..\lib\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
+      <Private>True</Private>
+      <HintPath>..\..\lib\SqlServerCompact.4.0.8482.1\lib\System.Data.SqlServerCe.dll</HintPath>
+    </Reference>
+    <Reference Include="TestStack.BDDfy">
+      <HintPath>..\..\lib\TestStack.BDDfy.3.15\lib\NET40\TestStack.BDDfy.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BuilderTests.cs" />
+    <Compile Include="Specifications\UpgradeDatabase.cs" />
+    <Compile Include="Specifications\Contexts\EmptyDatabase.cs" />
+    <Compile Include="Specifications\Contexts\GivenANewDatabase.cs" />
+    <Compile Include="Specifications\Contexts\GivenScriptsWithVariableSubstitutions.cs" />
+    <Compile Include="Specifications\CreatingANewDatabase.cs" />
+    <Compile Include="Specifications\UpgradingDatabaseWithVariablesSpecified.cs" />
+    <Compile Include="EmbeddedScriptAndCodeProviderTests.cs" />
+    <Compile Include="SQLite\SQLiteSupportTests.cs" />
+    <Compile Include="SQLite\SQLiteTableJournalTests.cs" />
+    <Compile Include="SqlScriptExecutorTests.cs" />
+    <Compile Include="SqlObjectParserTests.cs" />
+    <Compile Include="TestConnectionManager.cs" />
+    <Compile Include="TransactionManagement\SingleTransactionStrategyTests.cs" />
+    <Compile Include="TransactionManagement\NoTransactionStrategyTests.cs" />
+    <Compile Include="TransactionManagement\TransactionPerScriptStrategyTests.cs" />
+    <Compile Include="UpgradeEngineTests.cs" />
+    <Compile Include="FileSystemScriptProviderTests.cs" />
+    <Compile Include="SpecificationFor.cs" />
+    <Compile Include="SqlCeSupportTests.cs" />
+    <Compile Include="ThenAttribute.cs" />
+  </ItemGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <ItemGroup>
+    <ProjectReference Include="..\DbUp.SqlCe\DbUp.SqlCe.csproj">
+      <Project>{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}</Project>
+      <Name>DbUp.SqlCe</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUp.Sqlite\DbUp.SQLite.csproj">
+      <Project>{437cdd05-6df9-46cb-95c0-36774b10aacb}</Project>
+      <Name>DbUp.SQLite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUp\DbUp.csproj">
+      <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
+      <Name>DbUp</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbup.snk" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="TestScripts\Script20120723_1_Test4.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestScripts\Script20110301_1_Test1.sql" />
+    <EmbeddedResource Include="TestScripts\Script20110301_2_Test2.sql" />
+    <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="TestScripts\Script20130525_2_Test5.sql" />
+    <EmbeddedResource Include="TestScripts\Script20130525_1_Test5.sql" />
+    <Content Include="BDDfy.readme.txt" />
+    <Content Include="x64\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="x86\SQLite.Interop.dll">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <PropertyGroup>
+    <PostBuildEvent>
+if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
+xcopy /s /y "$(SolutionDir)..\lib\SqlServerCompact.4.0.8482.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
+if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
+xcopy /s /y "$(SolutionDir)..\lib\SqlServerCompact.4.0.8482.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+  </PropertyGroup>
+</Project>

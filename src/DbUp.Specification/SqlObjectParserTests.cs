@@ -1,8 +1,9 @@
 ﻿using System;
+using DbUp.Support;
 using DbUp.Support.SqlServer;
 using NUnit.Framework;
 
-namespace DbUp.Specification
+namespace DbUp.Tests
 {
     [TestFixture]
     public class SqlObjectParserTests

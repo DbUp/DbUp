@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data.SqlServerCe;
 using DbUp.Builder;
+using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
 using DbUp.Support.SqlServer;
 
@@ -22,14 +23,10 @@ public static class SqlCeExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
+    [Obsolete("Pass connection string instead, then use .WithTransaction() and .WithTransactionPerScript() to manage connection behaviour")]
     public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, Func<SqlCeConnection> connectionFactory)
     {
-        var builder = new UpgradeEngineBuilder();
-        builder.Configure(c => c.ConnectionFactory = connectionFactory);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(c.ConnectionFactory, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new SqlTableJournal(c.ConnectionFactory, null, "SchemaVersions", c.Log));
-        builder.WithPreprocessor(new SqlCePreprocessor());
-        return builder;
+        return SqlCeDatabase(new LegacySqlConnectionManager(connectionFactory));        
     }
 
     /// <summary>
@@ -42,6 +39,16 @@ public static class SqlCeExtensions
     /// </returns>
     public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, string connectionString)
     {
-        return supported.SqlCeDatabase(() => new SqlCeConnection(connectionString));
+        return SqlCeDatabase(new SqlCeConnectionManager(connectionString));
+    }
+
+    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
+    {
+        var builder = new UpgradeEngineBuilder();
+        builder.Configure(c => c.ConnectionManager = connectionManager);
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(()=>c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new SqlTableJournal(()=>connectionManager, ()=>c.Log, null, "SchemaVersions"));
+        builder.WithPreprocessor(new SqlCePreprocessor());
+        return builder;
     }
 }

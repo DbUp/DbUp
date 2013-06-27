@@ -59,15 +59,27 @@
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
     <Compile Include="DeployChanges.cs" />
+    <Compile Include="Engine\Transactions\DatabaseConnectionManager.cs" />
     <Compile Include="Engine\IScript.cs" />
+    <Compile Include="Engine\Transactions\SingleTrasactionStrategy.cs" />
+    <Compile Include="Engine\Transactions\ITransactionStrategy.cs" />
     <Compile Include="Engine\LazySqlScript.cs" />
+    <Compile Include="Engine\Transactions\NoTransactionStrategy.cs" />
     <Compile Include="Engine\Preprocessors\StripSchemaPreprocessor.cs" />
+    <Compile Include="Engine\Transactions\TransactionMode.cs" />
+    <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
+    <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
     <Compile Include="Engine\UpgradeEngine.cs" />
     <Compile Include="Engine\DatabaseUpgradeResult.cs" />
     <Compile Include="Engine\IScriptExecutor.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptAndCodeProvider.cs" />
+    <Compile Include="Engine\Transactions\IConnectionManager.cs" />
+    <Compile Include="Engine\Transactions\LegacySqlConnectionManager.cs" />
+    <Compile Include="Support\ObjectNameOptions.cs" />
+    <Compile Include="Support\SQLite\SQLiteObjectParser.cs" />
+    <Compile Include="Support\SQLite\SQLiteTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
     <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
     <Compile Include="Engine\IScriptPreprocessor.cs" />
@@ -88,9 +100,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />
-    <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
