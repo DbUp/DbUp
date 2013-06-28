@@ -11,7 +11,8 @@ namespace DbUp.Engine.Transactions
     public abstract class DatabaseConnectionManager : IConnectionManager
     {
         private ITransactionStrategy transactionStrategy;
-        private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
+        private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>();
+        private readonly SharedConnection sharedConnection;
 
         /// <summary>
         /// Manages Database Connections
@@ -19,12 +20,24 @@ namespace DbUp.Engine.Transactions
         /// <param name="connectionString"></param>
         protected DatabaseConnectionManager(string connectionString)
         {
-            transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
-            {
-                {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy(()=>CreateConnection(connectionString))},
-                {TransactionMode.SingleTransaction, ()=>new SingleTrasactionStrategy(()=>CreateConnection(connectionString))},
-                {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy(()=>CreateConnection(connectionString))}
-            };
+            Initialize(() => CreateConnection(connectionString));
+        }
+
+        /// <summary>
+        /// Uses and Manages specified connection for performing database upgrade
+        /// </summary>
+        /// <param name="connection">database connection object used by DpUp upgrade engine</param>
+        protected DatabaseConnectionManager(IDbConnection connection)
+        {   
+            sharedConnection = new SharedConnection(connection);
+            Initialize(() => sharedConnection);
+        }
+
+        private void Initialize(Func<IDbConnection> connectionFactory)
+        {
+            transactionStrategyFactory.Add(TransactionMode.NoTransaction, ()=> new NoTransactionStrategy(connectionFactory));
+            transactionStrategyFactory.Add(TransactionMode.SingleTransaction, ()=> new SingleTrasactionStrategy(connectionFactory));
+            transactionStrategyFactory.Add(TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy(connectionFactory));
         }
 
         /// <summary>
@@ -56,7 +69,20 @@ namespace DbUp.Engine.Transactions
 
         public void Dispose()
         {
-            transactionStrategy.Dispose();
+            try
+            {
+                transactionStrategy.Dispose();
+            }
+            finally
+            {
+                if (sharedConnection != null)
+                    sharedConnection.DoClose();
+            }
+        }
+
+        private Func<IDbConnection> GetConnectionFactory(string connectionString)
+        {
+            return () => CreateConnection(connectionString);
         }
     }
 }

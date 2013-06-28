@@ -11,7 +11,7 @@ namespace DbUp.Tests
     {
         private readonly IDbConnection connection;
 
-        public TestConnectionManager(IDbConnection connection = null, bool startUpgrade = false) : base(null)
+        public TestConnectionManager(IDbConnection connection = null, bool startUpgrade = false) : base((string)null)
         {
             this.connection = connection ?? Substitute.For<IDbConnection>();
             if (startUpgrade)

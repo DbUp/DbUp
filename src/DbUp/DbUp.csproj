@@ -61,6 +61,7 @@
     <Compile Include="DeployChanges.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManager.cs" />
     <Compile Include="Engine\IScript.cs" />
+    <Compile Include="Engine\Transactions\SharedConnection.cs" />
     <Compile Include="Engine\Transactions\SingleTrasactionStrategy.cs" />
     <Compile Include="Engine\Transactions\ITransactionStrategy.cs" />
     <Compile Include="Engine\LazySqlScript.cs" />

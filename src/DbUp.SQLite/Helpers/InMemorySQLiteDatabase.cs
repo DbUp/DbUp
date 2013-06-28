@@ -10,7 +10,6 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class InMemorySQLiteDatabase : IDisposable
     {
-        private readonly SQLiteConnectionManager connectionManager;
         private readonly AdHocSqlRunner sqlRunner;
         private readonly SQLiteConnection sharedConnection;
 
@@ -27,22 +26,15 @@ namespace DbUp.SQLite.Helpers
                 JournalMode = SQLiteJournalModeEnum.Memory,  
                 UseUTF16Encoding = true
             };
-            ConnectionString = connectionStringBuilder.ToString();
-
-            connectionManager = new SQLiteConnectionManager(connectionStringBuilder.ConnectionString);
+            
             sharedConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sharedConnection.OpenAndReturn();
             sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), null, () => true);
         }
-
-        public string ConnectionString { get; set; }
-
-        /// <summary>
-        /// Gets the connection factory of in-memory database.
-        /// </summary>
-        public IConnectionManager GetConnectionManager()
-        {
-            return connectionManager;
+        
+        public SQLiteConnection Connection 
+        { 
+            get { return sharedConnection; } 
         }
 
         /// <summary>

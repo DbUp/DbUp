@@ -13,6 +13,10 @@ namespace DbUp.SQLite
         {
         }
 
+        public SQLiteConnectionManager(SQLiteConnection connection) : base(connection)
+        {
+        }
+
         protected override IDbConnection CreateConnection(string connectionString)
         {
             return new SQLiteConnection(connectionString);
