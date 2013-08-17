@@ -32,6 +32,8 @@ namespace SampleApplication
 
                 var upgrader =  upgradeEngineBuilder.Build();
 
+                Console.WriteLine("Is upgrade required: " + upgrader.IsUpgradeRequired());
+
                 var result = upgrader.PerformUpgrade();
 
                 // Display the result

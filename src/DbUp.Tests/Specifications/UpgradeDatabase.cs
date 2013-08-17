@@ -112,7 +112,7 @@ namespace DbUp.Tests.Specifications
         private SQLiteTableJournal GetJournal()
         {
             var sqLiteConnectionManager = new SQLiteConnectionManager(database.SharedConnection);
-            sqLiteConnectionManager.UpgradeStarting(log);
+            sqLiteConnectionManager.OperationStarting(log);
             var journal = new SQLiteTableJournal(() => sqLiteConnectionManager, () => log, "SchemaVersions");
             return journal;
         }
