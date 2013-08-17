@@ -11,9 +11,9 @@ namespace DbUp.SQLite.Helpers
     public class TemporarySQLiteDatabase : IDisposable
     {
         private readonly string dataSourcePath;
-        private readonly string connectionString;
         private readonly AdHocSqlRunner sqlRunner;
         private readonly SQLiteConnection sqLiteConnection;
+        private readonly SharedConnection sharedConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemporarySQLiteDatabase"/> class.
@@ -32,18 +32,9 @@ namespace DbUp.SQLite.Helpers
                 UseUTF16Encoding = true
             };
 
-            connectionString = connectionStringBuilder.ConnectionString;
-            sqLiteConnection = new SQLiteConnection(connectionString);
-            sqLiteConnection.OpenAndReturn();
+            sqLiteConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
+            sharedConnection = new SharedConnection(sqLiteConnection.OpenAndReturn());
             sqlRunner = new AdHocSqlRunner(() => sqLiteConnection.CreateCommand(), null, () => true);
-        }
-
-        /// <summary>
-        /// Gets the connection string of temporary database.
-        /// </summary>
-        public string ConnectionString
-        {
-            get { return connectionString; }
         }
 
         /// <summary>
@@ -52,6 +43,11 @@ namespace DbUp.SQLite.Helpers
         public AdHocSqlRunner SqlRunner
         {
             get { return sqlRunner; }
+        }
+
+        public SharedConnection SharedConnection
+        {
+            get { return sharedConnection; }
         }
 
         /// <summary>
@@ -72,18 +68,17 @@ namespace DbUp.SQLite.Helpers
         public void Dispose()
         {
             var filePath = new FileInfo(dataSourcePath);
-            if (filePath.Exists)
-            {
-                sqLiteConnection.Dispose();
-                SQLiteConnection.ClearAllPools();
+            if (!filePath.Exists) return;
+            sharedConnection.Dispose();
+            sqLiteConnection.Dispose();
+            SQLiteConnection.ClearAllPools();
 
-                // SQLite requires all created sql connection/command objects to be disposed
-                // in order to delete the database file
-                GC.Collect(2, GCCollectionMode.Forced);
-                System.Threading.Thread.Sleep(100);
+            // SQLite requires all created sql connection/command objects to be disposed
+            // in order to delete the database file
+            GC.Collect(2, GCCollectionMode.Forced);
+            System.Threading.Thread.Sleep(100);
 
-                File.Delete(dataSourcePath);
-            }
+            File.Delete(dataSourcePath);
         }
     }
 }

@@ -26,6 +26,6 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Initialises the transaction strategy with the upgrade log
         /// </summary>
-        void Initialise(IUpgradeLog upgradeLog);
+        void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog);
     }
 }

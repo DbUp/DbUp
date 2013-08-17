@@ -17,7 +17,7 @@ namespace SQLiteSampleApplication
 
                 var upgrader =
                     DeployChanges.To
-                    .SQLiteDatabase(database.ConnectionString)
+                    .SQLiteDatabase(database.SharedConnection)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly())
                     .LogToConsole()
                     .Build();

@@ -1,5 +1,6 @@
 ﻿using System;
 using DbUp.Builder;
+using DbUp.SQLite.Helpers;
 using DbUp.Support.SQLite;
 using DbUp.SQLite;
 using DbUp.Support.SqlServer;
@@ -26,6 +27,25 @@ public static class SQLiteExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(connectionString));
+        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+            () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.WithPreprocessor(new SQLitePreprocessor());
+        return builder;
+    }
+
+    /// <summary>
+    /// Creates an upgrader for SQLite databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="sharedConnection">SQLite database connection which you control when it is closed</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for SQLite databases.
+    /// </returns>
+    public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, SharedConnection sharedConnection)
+    {
+        var builder = new UpgradeEngineBuilder();
+        builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(sharedConnection));
         builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
             () => c.VariablesEnabled, c.ScriptPreprocessors));
