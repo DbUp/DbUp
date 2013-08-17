@@ -20,9 +20,7 @@ namespace DbUp.Tests
         [Test]
         public void should_dispose_connection_on_dispose()
         {
-            sut.UpgradeStarting(new ConsoleUpgradeLog());
-
-            sut.Dispose();
+            using (sut.OperationStarting(new ConsoleUpgradeLog())){}
 
             connection.Received(1).Dispose();
         }

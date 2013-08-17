@@ -23,8 +23,9 @@ namespace DbUp.Engine.Transactions
             this.connectionFactory = connectionFactory;
         }
 
-        public void UpgradeStarting(IUpgradeLog upgradeLog)
+        public IDisposable OperationStarting(IUpgradeLog upgradeLog)
         {
+            return new DoNothingDisposible();
         }
 
         public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
@@ -58,9 +59,12 @@ namespace DbUp.Engine.Transactions
             return scriptStatements;
         }
 
-        public void Dispose()
+        class DoNothingDisposible : IDisposable
         {
-            
+            public void Dispose()
+            {
+
+            }
         }
     }
 }

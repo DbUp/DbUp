@@ -15,7 +15,7 @@ namespace DbUp.Tests
         {
             this.connection = connection ?? Substitute.For<IDbConnection>();
             if (startUpgrade)
-                UpgradeStarting(new ConsoleUpgradeLog());
+                OperationStarting(new ConsoleUpgradeLog());
         }
 
         protected override IDbConnection CreateConnection()

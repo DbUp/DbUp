@@ -69,6 +69,7 @@ namespace DbUp.Tests
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
                 var config = new UpgradeConfiguration();
+                config.ConnectionManager = new TestConnectionManager();
                 config.ScriptProviders.Add(scriptProvider);
                 config.ScriptExecutor = scriptExecutor;
                 config.Journal = versionTracker;
