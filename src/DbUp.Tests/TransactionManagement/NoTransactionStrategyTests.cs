@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
@@ -15,31 +16,24 @@ namespace DbUp.Tests.TransactionManagement
         public void Setup()
         {
             connection = Substitute.For<IDbConnection>();
-            strategy = new NoTransactionStrategy(() => connection);
+            strategy = new NoTransactionStrategy();
+            strategy.Initialise(connection, new ConsoleUpgradeLog());
         }
 
         [Test]
-        public void should_open_a_connection_per_request()
+        public void should_not_open_a_connection_per_request()
         {
             strategy.Execute(c => { });
             strategy.Execute(c => true);
-            connection.Received(2).Open();
-
-            strategy.Execute(c => { });
-            strategy.Execute(c => true);
-            connection.Received(4).Open();
+            connection.DidNotReceive().Open();
         }
 
         [Test]
-        public void should_dispose_a_connection_per_request()
+        public void should_dispose_connection()
         {
             strategy.Execute(c => { });
             strategy.Execute(c => true);
-            connection.Received(2).Dispose();
-
-            strategy.Execute(c => { });
-            strategy.Execute(c => true);
-            connection.Received(4).Dispose();
+            connection.DidNotReceive().Dispose();
         }
     }
 }

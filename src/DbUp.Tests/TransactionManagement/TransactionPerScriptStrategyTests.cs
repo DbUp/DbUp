@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data;
+using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
@@ -18,19 +19,16 @@ namespace DbUp.Tests.TransactionManagement
             connection = Substitute.For<IDbConnection>();
             transaction = Substitute.For<IDbTransaction>();
             connection.BeginTransaction().Returns(transaction);
-            strategy = new TransactionPerScriptStrategy(() => connection);
+            strategy = new TransactionPerScriptStrategy();
+            strategy.Initialise(connection, new ConsoleUpgradeLog());
         }
 
         [Test]
-        public void should_open_connection_on_execute()
+        public void should_not_open_connection_on_execute()
         {
             strategy.Execute(c => { });
             strategy.Execute(c => true);
-            connection.Received(2).Open();
-
-            strategy.Execute(c => { });
-            strategy.Execute(c => true);
-            connection.Received(4).Open();
+            connection.DidNotReceive().Open();
         }
 
         [Test]
@@ -67,15 +65,11 @@ namespace DbUp.Tests.TransactionManagement
         }
 
         [Test]
-        public void disposes_connection_on_execute()
+        public void does_not_dispose_connection_on_execute()
         {
             strategy.Execute(c => { });
             strategy.Execute(c => true);
-            connection.Received(2).Dispose();
-
-            strategy.Execute(c => { });
-            strategy.Execute(c => true);
-            connection.Received(4).Dispose();
+            connection.DidNotReceive().Dispose();
         }
 
         [Test]

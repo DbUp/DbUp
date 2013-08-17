@@ -11,14 +11,14 @@ namespace DbUp.Tests
     {
         private readonly IDbConnection connection;
 
-        public TestConnectionManager(IDbConnection connection = null, bool startUpgrade = false) : base(null)
+        public TestConnectionManager(IDbConnection connection = null, bool startUpgrade = false)
         {
             this.connection = connection ?? Substitute.For<IDbConnection>();
             if (startUpgrade)
                 UpgradeStarting(new ConsoleUpgradeLog());
         }
 
-        protected override IDbConnection CreateConnection(string connectionString)
+        protected override IDbConnection CreateConnection()
         {
             return connection;
         }

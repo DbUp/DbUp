@@ -3,6 +3,9 @@ using System.Linq;
 
 namespace DbUp.Support.SqlServer
 {
+    /// <summary>
+    /// Parses Sql Objects and performs quoting functions
+    /// </summary>
     public class SqlObjectParser
     {
         /// <summary>
