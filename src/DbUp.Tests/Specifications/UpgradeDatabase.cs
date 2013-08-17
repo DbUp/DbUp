@@ -43,7 +43,7 @@ namespace DbUp.Tests.Specifications
             };
             database = new TemporarySQLiteDatabase("IntegrationScenarios");
             upgradeEngineBuilder = DeployChanges.To
-                .SQLiteDatabase(database.ConnectionString)
+                .SQLiteDatabase(database.SharedConnection)
                 .WithScripts(new TestScriptProvider(scripts))
                 .LogTo(log);
         }
@@ -111,7 +111,7 @@ namespace DbUp.Tests.Specifications
 
         private SQLiteTableJournal GetJournal()
         {
-            var sqLiteConnectionManager = new SQLiteConnectionManager(database.ConnectionString);
+            var sqLiteConnectionManager = new SQLiteConnectionManager(database.SharedConnection);
             sqLiteConnectionManager.UpgradeStarting(log);
             var journal = new SQLiteTableJournal(() => sqLiteConnectionManager, () => log, "SchemaVersions");
             return journal;

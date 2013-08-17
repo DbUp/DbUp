@@ -13,13 +13,18 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public class SqlConnectionManager : DatabaseConnectionManager
     {
+        private readonly string connectionString;
+
         /// <summary>
         /// Manages Sql Database Connections
         /// </summary>
         /// <param name="connectionString"></param>
-        public SqlConnectionManager(string connectionString) : base(connectionString) { }
+        public SqlConnectionManager(string connectionString)
+        {
+            this.connectionString = connectionString;
+        }
 
-        protected override IDbConnection CreateConnection(string connectionString)
+        protected override IDbConnection CreateConnection()
         {
             return new SqlConnection(connectionString);
         }

@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="BuilderTests.cs" />
+    <Compile Include="DatabaseConnectionManagerTests.cs" />
     <Compile Include="Specifications\UpgradeDatabase.cs" />
     <Compile Include="Specifications\Contexts\EmptyDatabase.cs" />
     <Compile Include="Specifications\Contexts\GivenANewDatabase.cs" />

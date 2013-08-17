@@ -12,51 +12,76 @@ namespace DbUp.Engine.Transactions
     {
         private ITransactionStrategy transactionStrategy;
         private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
+        private IDbConnection upgradeConnection;
 
         /// <summary>
         /// Manages Database Connections
         /// </summary>
-        /// <param name="connectionString"></param>
-        protected DatabaseConnectionManager(string connectionString)
+        protected DatabaseConnectionManager()
         {
             transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
             {
-                {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy(()=>CreateConnection(connectionString))},
-                {TransactionMode.SingleTransaction, ()=>new SingleTrasactionStrategy(()=>CreateConnection(connectionString))},
-                {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy(()=>CreateConnection(connectionString))}
+                {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},
+                {TransactionMode.SingleTransaction, ()=>new SingleTrasactionStrategy()},
+                {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy()}
             };
         }
 
         /// <summary>
         /// Creates a database connection for the current database engine
         /// </summary>
-        protected abstract IDbConnection CreateConnection(string connectionString);
+        protected abstract IDbConnection CreateConnection();
 
+        /// <summary>
+        /// Tells the connection manager is starting
+        /// </summary>
         public void UpgradeStarting(IUpgradeLog upgradeLog)
         {
+            upgradeConnection = CreateConnection();
+            if (upgradeConnection.State == ConnectionState.Closed)
+                upgradeConnection.Open();
             if (transactionStrategy != null)
                 throw new InvalidOperationException("UpgradeStarting is meant to be called by DbUp and can only be called once");
             transactionStrategy = transactionStrategyFactory[TransactionMode]();
-            transactionStrategy.Initialise(upgradeLog);
+            transactionStrategy.Initialise(upgradeConnection, upgradeLog);
         }
 
+        /// <summary>
+        /// Executes an action using the specfied transaction mode 
+        /// </summary>
+        /// <param name="action">The action to execute</param>
         public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
         {
             transactionStrategy.Execute(action);
         }
 
+        /// <summary>
+        /// Executes an action which has a result using the specfied transaction mode 
+        /// </summary>
+        /// <param name="actionWithResult">The action to execute</param>
+        /// <typeparam name="T">The result type</typeparam>
+        /// <returns>The result of the command</returns>
         public T ExecuteCommandsWithManagedConnection<T>(Func<Func<IDbCommand>, T> actionWithResult)
         {
             return transactionStrategy.Execute(actionWithResult);
         }
 
+        /// <summary>
+        /// The transaction strategy that DbUp should use
+        /// </summary>
         public TransactionMode TransactionMode { get; set; }
 
+        /// <summary>
+        /// Splits a script into commands, for example SQL Server separates command by the GO statement
+        /// </summary>
+        /// <param name="scriptContents">The script</param>
+        /// <returns>A list of SQL Commands</returns>
         public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
 
         public void Dispose()
         {
             transactionStrategy.Dispose();
+            upgradeConnection.Dispose();
         }
     }
 }

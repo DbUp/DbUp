@@ -6,16 +6,10 @@ namespace DbUp.Engine.Transactions
 {
     class SingleTrasactionStrategy : ITransactionStrategy
     {
-        private readonly Func<IDbConnection> connectionFactory;
         private IDbConnection connection;
         private IDbTransaction transaction;
         private bool errorOccured;
         private IUpgradeLog log;
-
-        public SingleTrasactionStrategy(Func<IDbConnection> connectionFactory)
-        {
-            this.connectionFactory = connectionFactory;
-        }
 
         public void Execute(Action<Func<IDbCommand>> action)
         {
@@ -59,12 +53,11 @@ namespace DbUp.Engine.Transactions
             }
         }
 
-        public void Initialise(IUpgradeLog upgradeLog)
+        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog)
         {
+            connection = dbConnection;
             log = upgradeLog;
             upgradeLog.WriteInformation("Beginning transaction");
-            connection = connectionFactory();
-            connection.Open();
             transaction = connection.BeginTransaction();
         }
 
@@ -76,7 +69,6 @@ namespace DbUp.Engine.Transactions
                 log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
 
             transaction.Dispose();
-            connection.Dispose();
         }
     }
 }

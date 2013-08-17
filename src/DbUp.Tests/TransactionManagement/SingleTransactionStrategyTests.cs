@@ -19,14 +19,13 @@ namespace DbUp.Tests.TransactionManagement
             connection = Substitute.For<IDbConnection>();
             transaction = Substitute.For<IDbTransaction>();
             connection.BeginTransaction().Returns(transaction);
-            strategy = new SingleTrasactionStrategy(() => connection);
-            strategy.Initialise(new ConsoleUpgradeLog());
+            strategy = new SingleTrasactionStrategy();
+            strategy.Initialise(connection, new ConsoleUpgradeLog());
         }
 
         [Test]
         public void should_start_a_transaction_once_initialised()
         {
-            connection.Received(1).Open();
             connection.Received(1).BeginTransaction();
         }
 
@@ -35,7 +34,7 @@ namespace DbUp.Tests.TransactionManagement
         {
             strategy.Execute(c => { });
             strategy.Execute(c => true);
-            connection.Received(1).Open();
+            connection.DidNotReceive().Open();
         }
 
         [Test]
@@ -82,14 +81,14 @@ namespace DbUp.Tests.TransactionManagement
         }
 
         [Test]
-        public void disposes_transaction_and_connection_on_dispose()
+        public void disposes_transaction_on_dispose()
         {
             strategy.Execute(c => { });
             strategy.Execute(c => true);
             strategy.Dispose();
 
             transaction.Received().Dispose();
-            connection.Received().Dispose();
+            connection.DidNotReceive().Dispose();
         }
     }
 }
