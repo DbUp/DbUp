@@ -22,7 +22,7 @@ namespace DbUp.Tests
         public override void When()
         {
             var testConnectionManager = new TestConnectionManager();
-            testConnectionManager.UpgradeStarting(new ConsoleUpgradeLog());
+            testConnectionManager.OperationStarting(new ConsoleUpgradeLog());
             scriptsToExecute = Subject.GetScripts(testConnectionManager).ToArray();
         }
 

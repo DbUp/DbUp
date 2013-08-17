@@ -8,12 +8,12 @@ namespace DbUp.Engine.Transactions
     /// <summary>
     /// Allows you to run an operation with a managed connection
     /// </summary>
-    public interface IConnectionManager : IDisposable
+    public interface IConnectionManager
     {
         /// <summary>
-        /// Tells the connection manager is starting
+        /// Tells the connection manager it is starting an operation
         /// </summary>
-        void UpgradeStarting(IUpgradeLog upgradeLog);
+        IDisposable OperationStarting(IUpgradeLog upgradeLog);
 
         /// <summary>
         /// Execute a lambda with the connection managed by the connection manager (i.e transactions, reusing connections etc)

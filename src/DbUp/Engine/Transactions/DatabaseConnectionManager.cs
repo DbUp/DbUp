@@ -35,15 +35,23 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tells the connection manager is starting
         /// </summary>
-        public void UpgradeStarting(IUpgradeLog upgradeLog)
+        public IDisposable OperationStarting(IUpgradeLog upgradeLog)
         {
             upgradeConnection = CreateConnection();
             if (upgradeConnection.State == ConnectionState.Closed)
                 upgradeConnection.Open();
             if (transactionStrategy != null)
-                throw new InvalidOperationException("UpgradeStarting is meant to be called by DbUp and can only be called once");
+                throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
             transactionStrategy = transactionStrategyFactory[TransactionMode]();
             transactionStrategy.Initialise(upgradeConnection, upgradeLog);
+
+            return new DelegateDisposable(() =>
+            {
+                transactionStrategy.Dispose();
+                upgradeConnection.Dispose();
+                transactionStrategy = null;
+                upgradeConnection = null;
+            });
         }
 
         /// <summary>
@@ -77,11 +85,5 @@ namespace DbUp.Engine.Transactions
         /// <param name="scriptContents">The script</param>
         /// <returns>A list of SQL Commands</returns>
         public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
-
-        public void Dispose()
-        {
-            transactionStrategy.Dispose();
-            upgradeConnection.Dispose();
-        }
     }
 }
