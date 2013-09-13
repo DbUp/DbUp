@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.Common;
 using System.Data.SqlClient;
 using System.Linq;
@@ -111,7 +112,10 @@ namespace DbUp.Support.SqlServer
                             command.CommandText = statement;
                             if (ExecutionTimeoutSeconds != null)
                                 command.CommandTimeout = ExecutionTimeoutSeconds.Value;
-                            command.ExecuteNonQuery();
+	                        using (var reader = command.ExecuteReader())
+	                        {
+		                        Log(reader);
+	                        }
                         }
                     }
                 });
@@ -137,5 +141,49 @@ namespace DbUp.Support.SqlServer
                 throw;
             }
         }
+
+	    private void Log(IDataReader reader)
+	    {
+		    do
+		    {
+			    var names = new List<string>();
+			    for (int i = 0; i < reader.FieldCount; i++)
+			    {
+				    names.Add(reader.GetName(i));
+			    }
+			    var lines = new List<List<string>>();
+			    while (reader.Read())
+			    {
+				    var line = new List<string>();
+				    for (int i = 0; i < reader.FieldCount; i++)
+				    {
+					    var value = reader.GetValue(i);
+					    value = value == DBNull.Value ? null : value.ToString();
+					    line.Add((string) value);
+				    }
+				    lines.Add(line);
+			    }
+			    string format = "";
+			    int totalLength = 0;
+			    for (int i = 0; i < reader.FieldCount; i++)
+			    {
+				    int maxLength = lines.Max(l => l[i].Length) + 2;
+				    format += " {" + i + ", " + maxLength + "} |";
+				    totalLength += (maxLength + 3);
+			    }
+			    format = "|" + format;
+			    totalLength += 1;
+
+			    log().WriteInformation(new string('-', totalLength));
+			    log().WriteInformation(format, names.ToArray());
+			    log().WriteInformation(new string('-', totalLength));
+			    foreach (var line in lines)
+			    {
+				    log().WriteInformation(format, line.ToArray());
+			    }
+			    log().WriteInformation(new string('-', totalLength));
+			    log().WriteInformation("\r\n");
+		    } while (reader.NextResult());
+	    }
     }
 }

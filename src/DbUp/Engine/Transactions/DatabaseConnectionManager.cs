@@ -13,6 +13,7 @@ namespace DbUp.Engine.Transactions
         private ITransactionStrategy transactionStrategy;
         private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
         private IDbConnection upgradeConnection;
+	    protected Func<IUpgradeLog> log;
 
         /// <summary>
         /// Manages Database Connections
@@ -79,7 +80,16 @@ namespace DbUp.Engine.Transactions
         /// </summary>
         public TransactionMode TransactionMode { get; set; }
 
-        /// <summary>
+		/// <summary>
+		/// The logging function that will be used to log the print statements etc to
+		/// </summary>
+		/// <param name="log"></param>
+		public void InjectLog(Func<IUpgradeLog> log)
+		{
+			this.log = log;
+		}
+
+	    /// <summary>
         /// Splits a script into commands, for example SQL Server separates command by the GO statement
         /// </summary>
         /// <param name="scriptContents">The script</param>

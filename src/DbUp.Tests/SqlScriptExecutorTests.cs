@@ -31,7 +31,7 @@ namespace DbUp.Tests
 
             executor.Execute(new SqlScript("Test", "create $schema$.Table"));
 
-            command.Received().ExecuteNonQuery();
+			command.Received().ExecuteReader();
             Assert.AreEqual("create Table", command.CommandText);
         }
 
@@ -45,7 +45,7 @@ namespace DbUp.Tests
 
             executor.Execute(new SqlScript("Test", "create $foo$.Table"), new Dictionary<string, string>{{"foo", "bar"}});
 
-            command.Received().ExecuteNonQuery();
+            command.Received().ExecuteReader();
             Assert.AreEqual("create bar.Table", command.CommandText);
         }
         
@@ -59,7 +59,7 @@ namespace DbUp.Tests
 
             executor.Execute(new SqlScript("Test", "create $foo$.Table"), new Dictionary<string, string> { { "foo", "bar" } });
 
-            command.Received().ExecuteNonQuery();
+            command.Received().ExecuteReader();
             Assert.AreEqual("create $foo$.Table", command.CommandText);
         }
 
@@ -73,7 +73,7 @@ namespace DbUp.Tests
 
             executor.Execute(new SqlScript("Test", "create $schema$.Table"));
 
-            command.Received().ExecuteNonQuery();
+			command.Received().ExecuteReader();
             Assert.AreEqual("create [foo].Table", command.CommandText);
         }
     }

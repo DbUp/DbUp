@@ -26,10 +26,13 @@ namespace DbUp.Support.SqlServer
 
         protected override IDbConnection CreateConnection()
         {
-            return new SqlConnection(connectionString);
+	        var conn = new SqlConnection(connectionString);
+			conn.InfoMessage += (sender, e) => log().WriteInformation(e.Message + "\r\n");
+
+	        return conn;
         }
 
-        public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
+	    public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var scriptStatements =
                 Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)

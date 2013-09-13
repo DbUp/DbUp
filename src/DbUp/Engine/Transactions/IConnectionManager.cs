@@ -32,7 +32,13 @@ namespace DbUp.Engine.Transactions
         /// </summary>
         TransactionMode TransactionMode { get; set; }
 
-        /// <summary>
+	    /// <summary>
+	    /// The logging function that will be used to log the print statements etc to
+	    /// </summary>
+	    /// <param name="log"></param>
+	    void InjectLog(Func<IUpgradeLog> log);
+
+	    /// <summary>
         /// Scripts often have multiple statements which have to be executed in their own commands.
         /// 
         /// For example, MSSQL splits on GO, SQLite splits on ; etc.

@@ -48,7 +48,11 @@ namespace DbUp.Engine.Transactions
 
         public TransactionMode TransactionMode { get; set; }
 
-        public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
+		public void InjectLog(Func<IUpgradeLog> log)
+		{
+		}
+
+	    public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var scriptStatements =
                 Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
