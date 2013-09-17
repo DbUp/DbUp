@@ -13,7 +13,6 @@ namespace DbUp.Engine.Transactions
         private ITransactionStrategy transactionStrategy;
         private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
         private IDbConnection upgradeConnection;
-	    protected Func<IUpgradeLog> log;
 
         /// <summary>
         /// Manages Database Connections
@@ -31,14 +30,14 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Creates a database connection for the current database engine
         /// </summary>
-        protected abstract IDbConnection CreateConnection();
+        protected abstract IDbConnection CreateConnection(IUpgradeLog log);
 
         /// <summary>
         /// Tells the connection manager is starting
         /// </summary>
         public IDisposable OperationStarting(IUpgradeLog upgradeLog)
         {
-            upgradeConnection = CreateConnection();
+            upgradeConnection = CreateConnection(upgradeLog);
             if (upgradeConnection.State == ConnectionState.Closed)
                 upgradeConnection.Open();
             if (transactionStrategy != null)
@@ -80,16 +79,12 @@ namespace DbUp.Engine.Transactions
         /// </summary>
         public TransactionMode TransactionMode { get; set; }
 
-		/// <summary>
-		/// The logging function that will be used to log the print statements etc to
-		/// </summary>
-		/// <param name="log"></param>
-		public void InjectLog(Func<IUpgradeLog> log)
-		{
-			this.log = log;
-		}
+        /// <summary>
+        /// Specifies whether the db script output should be logged
+        /// </summary>
+        public bool IsScriptOutputLogged { get; set; }
 
-	    /// <summary>
+        /// <summary>
         /// Splits a script into commands, for example SQL Server separates command by the GO statement
         /// </summary>
         /// <param name="scriptContents">The script</param>

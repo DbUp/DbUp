@@ -22,6 +22,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
+        private readonly Func<bool> scriptOutputLogged;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -35,13 +36,15 @@ namespace DbUp.Support.SqlServer
         /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
+        /// <param name="scriptOutputLogged">Function that returns <c>true</c> if the db script output should be logged, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, 
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, Func<bool> scriptOutputLogged, 
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             Schema = schema;
             this.log = log;
             this.variablesEnabled = variablesEnabled;
+            this.scriptOutputLogged = scriptOutputLogged;
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManager = connectionManager;
         }
@@ -112,10 +115,17 @@ namespace DbUp.Support.SqlServer
                             command.CommandText = statement;
                             if (ExecutionTimeoutSeconds != null)
                                 command.CommandTimeout = ExecutionTimeoutSeconds.Value;
-	                        using (var reader = command.ExecuteReader())
-	                        {
-		                        Log(reader);
-	                        }
+                            if (scriptOutputLogged())
+                            {
+                                using (var reader = command.ExecuteReader())
+                                {
+                                    Log(reader);
+                                }
+                            }
+                            else
+                            {
+                                command.ExecuteNonQuery();
+                            }
                         }
                     }
                 });
@@ -142,48 +152,48 @@ namespace DbUp.Support.SqlServer
             }
         }
 
-	    private void Log(IDataReader reader)
-	    {
-		    do
-		    {
-			    var names = new List<string>();
-			    for (int i = 0; i < reader.FieldCount; i++)
-			    {
-				    names.Add(reader.GetName(i));
-			    }
-			    var lines = new List<List<string>>();
-			    while (reader.Read())
-			    {
-				    var line = new List<string>();
-				    for (int i = 0; i < reader.FieldCount; i++)
-				    {
-					    var value = reader.GetValue(i);
-					    value = value == DBNull.Value ? null : value.ToString();
-					    line.Add((string) value);
-				    }
-				    lines.Add(line);
-			    }
-			    string format = "";
-			    int totalLength = 0;
-			    for (int i = 0; i < reader.FieldCount; i++)
-			    {
-				    int maxLength = lines.Max(l => l[i].Length) + 2;
-				    format += " {" + i + ", " + maxLength + "} |";
-				    totalLength += (maxLength + 3);
-			    }
-			    format = "|" + format;
-			    totalLength += 1;
+        private void Log(IDataReader reader)
+        {
+            do
+            {
+                var names = new List<string>();
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    names.Add(reader.GetName(i));
+                }
+                var lines = new List<List<string>>();
+                while (reader.Read())
+                {
+                    var line = new List<string>();
+                    for (int i = 0; i < reader.FieldCount; i++)
+                    {
+                        var value = reader.GetValue(i);
+                        value = value == DBNull.Value ? null : value.ToString();
+                        line.Add((string) value);
+                    }
+                    lines.Add(line);
+                }
+                string format = "";
+                int totalLength = 0;
+                for (int i = 0; i < reader.FieldCount; i++)
+                {
+                    int maxLength = lines.Max(l => l[i].Length) + 2;
+                    format += " {" + i + ", " + maxLength + "} |";
+                    totalLength += (maxLength + 3);
+                }
+                format = "|" + format;
+                totalLength += 1;
 
-			    log().WriteInformation(new string('-', totalLength));
-			    log().WriteInformation(format, names.ToArray());
-			    log().WriteInformation(new string('-', totalLength));
-			    foreach (var line in lines)
-			    {
-				    log().WriteInformation(format, line.ToArray());
-			    }
-			    log().WriteInformation(new string('-', totalLength));
-			    log().WriteInformation("\r\n");
-		    } while (reader.NextResult());
-	    }
+                log().WriteInformation(new string('-', totalLength));
+                log().WriteInformation(format, names.ToArray());
+                log().WriteInformation(new string('-', totalLength));
+                foreach (var line in lines)
+                {
+                    log().WriteInformation(format, line.ToArray());
+                }
+                log().WriteInformation(new string('-', totalLength));
+                log().WriteInformation("\r\n");
+            } while (reader.NextResult());
+        }
     }
 }
