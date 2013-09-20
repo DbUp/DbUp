@@ -44,6 +44,19 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Logs to the console using pretty colours.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogScriptOutput(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.IsScriptOutputLogged = true);
+        return builder;
+    }
+
+    /// <summary>
     /// Logs to System.Diagnostics.Trace.
     /// </summary>
     /// <param name="builder">The builder.</param>

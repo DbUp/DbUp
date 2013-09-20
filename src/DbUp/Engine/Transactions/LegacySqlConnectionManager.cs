@@ -48,6 +48,8 @@ namespace DbUp.Engine.Transactions
 
         public TransactionMode TransactionMode { get; set; }
 
+        public bool IsScriptOutputLogged { get; set; }
+
         public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var scriptStatements =

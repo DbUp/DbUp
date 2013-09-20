@@ -33,6 +33,11 @@ namespace DbUp.Engine.Transactions
         TransactionMode TransactionMode { get; set; }
 
         /// <summary>
+        /// Specifies whether the db script output should be logged
+        /// </summary>
+        bool IsScriptOutputLogged { get; set; }
+
+        /// <summary>
         /// Scripts often have multiple statements which have to be executed in their own commands.
         /// 
         /// For example, MSSQL splits on GO, SQLite splits on ; etc.

@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
 
@@ -23,7 +24,7 @@ namespace DbUp.SQLite
             this.sharedConnection = sharedConnection;
         }
 
-        protected override IDbConnection CreateConnection()
+        protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             // if we have a shared connection, return it, otherwise create a connection
             return (IDbConnection)sharedConnection ?? new SQLiteConnection(connectionString);

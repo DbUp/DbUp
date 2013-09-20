@@ -19,6 +19,7 @@ namespace DbUp.Engine
         public UpgradeEngine(UpgradeConfiguration configuration)
         {
             this.configuration = configuration;
+            this.configuration.ConnectionManager.IsScriptOutputLogged = this.configuration.IsScriptOutputLogged;
         }
 
         /// <summary>
