@@ -4,13 +4,12 @@ using DbUp.Engine;
 namespace DbUp.Helpers
 {
     /// <summary>
-    /// Enables multiple executions of a set of scripts.
+    /// Enables multiple executions of a omnipotent scripts.
     /// </summary>
     public class NullJournal : IJournal
     {
         /// <summary>
-        /// Returns an empy array of length 0 to ensure all 
-        /// scripts are run
+        /// Returns an empty array of length 0
         /// </summary>
         /// <returns></returns>
         public string[] GetExecutedScripts()
