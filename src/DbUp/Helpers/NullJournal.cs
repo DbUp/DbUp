@@ -4,7 +4,7 @@ using DbUp.Engine;
 namespace DbUp.Helpers
 {
     /// <summary>
-    /// Enables multiple executions of a omnipotent scripts.
+    /// Enables multiple executions of omnipotent scripts.
     /// </summary>
     public class NullJournal : IJournal
     {
