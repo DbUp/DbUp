@@ -18,7 +18,7 @@ namespace DbUp.Tests
                 OperationStarting(new ConsoleUpgradeLog());
         }
 
-        protected override IDbConnection CreateConnection()
+        protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             return connection;
         }

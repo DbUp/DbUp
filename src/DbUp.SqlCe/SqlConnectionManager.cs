@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using System.Data.SqlServerCe;
+using DbUp.Engine.Output;
 using DbUp.Support.SqlServer;
 
 namespace DbUp.SqlCe
@@ -21,7 +22,7 @@ namespace DbUp.SqlCe
             this.connectionString = connectionString;
         }
 
-        protected override IDbConnection CreateConnection()
+        protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             return new SqlCeConnection(connectionString);
         }
