@@ -62,28 +62,23 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BuilderTests.cs" />
-    <Compile Include="DatabaseConnectionManagerTests.cs" />
-    <Compile Include="NullJournalTests.cs" />
-    <Compile Include="Specifications\UpgradeDatabase.cs" />
-    <Compile Include="Specifications\Contexts\EmptyDatabase.cs" />
-    <Compile Include="Specifications\Contexts\GivenANewDatabase.cs" />
-    <Compile Include="Specifications\Contexts\GivenScriptsWithVariableSubstitutions.cs" />
-    <Compile Include="Specifications\CreatingANewDatabase.cs" />
-    <Compile Include="Specifications\UpgradingDatabaseWithVariablesSpecified.cs" />
-    <Compile Include="EmbeddedScriptAndCodeProviderTests.cs" />
-    <Compile Include="SQLite\SQLiteSupportTests.cs" />
-    <Compile Include="SQLite\SQLiteTableJournalTests.cs" />
-    <Compile Include="SqlScriptExecutorTests.cs" />
-    <Compile Include="SqlObjectParserTests.cs" />
+    <Compile Include="DeployChangesBuilderTests.cs" />
+    <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
+    <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="UpgradeDatabaseScenarios.cs" />
+    <Compile Include="ScriptProvider\EmbeddedScriptAndCodeProviderTests.cs" />
+    <Compile Include="Support\SQLite\SQLiteSupportTests.cs" />
+    <Compile Include="Support\SQLite\SQLiteTableJournalTests.cs" />
+    <Compile Include="Support\SqlServer\SqlScriptExecutorTests.cs" />
+    <Compile Include="Support\SqlServer\SqlObjectParserTests.cs" />
     <Compile Include="TestConnectionManager.cs" />
-    <Compile Include="TransactionManagement\SingleTransactionStrategyTests.cs" />
-    <Compile Include="TransactionManagement\NoTransactionStrategyTests.cs" />
-    <Compile Include="TransactionManagement\TransactionPerScriptStrategyTests.cs" />
-    <Compile Include="UpgradeEngineTests.cs" />
-    <Compile Include="FileSystemScriptProviderTests.cs" />
+    <Compile Include="Engine\Transactions\SingleTransactionStrategyTests.cs" />
+    <Compile Include="Engine\Transactions\NoTransactionStrategyTests.cs" />
+    <Compile Include="Engine\Transactions\TransactionPerScriptStrategyTests.cs" />
+    <Compile Include="Engine\UpgradeEngineTests.cs" />
+    <Compile Include="ScriptProvider\FileSystemScriptProviderTests.cs" />
     <Compile Include="SpecificationFor.cs" />
-    <Compile Include="SqlCeSupportTests.cs" />
+    <Compile Include="Support\SqlCe\SqlCeSupportTests.cs" />
     <Compile Include="ThenAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
@@ -124,6 +119,7 @@
     <EmbeddedResource Include="TestScripts\Script20130525_2_Test5.sql" />
     <EmbeddedResource Include="TestScripts\Script20130525_1_Test5.sql" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent>
 if not exist "$(TargetDir)x86" md "$(TargetDir)x86"

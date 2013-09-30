@@ -9,7 +9,7 @@ using DbUp.ScriptProviders;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.ScriptProvider
 {
     public class FileSystemScriptProviderTests
     {

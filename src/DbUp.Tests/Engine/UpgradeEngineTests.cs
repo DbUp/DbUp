@@ -9,7 +9,7 @@ using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.Engine
 {
     public class UpgradeEngineTests
     {

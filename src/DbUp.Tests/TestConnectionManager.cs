@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using NSubstitute;
@@ -15,7 +16,7 @@ namespace DbUp.Tests
         {
             this.connection = connection ?? Substitute.For<IDbConnection>();
             if (startUpgrade)
-                OperationStarting(new ConsoleUpgradeLog());
+                OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
         }
 
         protected override IDbConnection CreateConnection(IUpgradeLog log)

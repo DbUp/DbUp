@@ -3,7 +3,7 @@ using DbUp.Support;
 using DbUp.Support.SqlServer;
 using NUnit.Framework;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.Support.SqlServer
 {
     [TestFixture]
     public class SqlObjectParserTests
