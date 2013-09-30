@@ -8,7 +8,7 @@ using DbUp.Support.SQLite;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests.SQLite
+namespace DbUp.Tests.Support.SQLite
 {
     [TestFixture]
     public class SQLiteTableJournalTests

@@ -3,7 +3,7 @@ using System.Data.SQLite;
 using System.IO;
 using NUnit.Framework;
 
-namespace DbUp.Tests.SQLite
+namespace DbUp.Tests.Support.SQLite
 {
     [TestFixture]
     public class SQLiteSupportTests

@@ -1,11 +1,13 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests.TransactionManagement
+namespace DbUp.Tests.Engine.Transactions
 {
     public class NoTransactionStrategyTests
     {
@@ -17,7 +19,7 @@ namespace DbUp.Tests.TransactionManagement
         {
             connection = Substitute.For<IDbConnection>();
             strategy = new NoTransactionStrategy();
-            strategy.Initialise(connection, new ConsoleUpgradeLog());
+            strategy.Initialise(connection, new ConsoleUpgradeLog(), new List<SqlScript>());
         }
 
         [Test]

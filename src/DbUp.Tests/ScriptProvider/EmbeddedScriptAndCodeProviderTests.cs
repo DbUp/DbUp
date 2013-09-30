@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
@@ -6,7 +7,7 @@ using DbUp.Engine.Output;
 using DbUp.ScriptProviders;
 using NUnit.Framework;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.ScriptProvider
 {
     public class EmbeddedScriptAndCodeProviderTests : SpecificationFor<EmbeddedScriptAndCodeProvider>
     {
@@ -22,7 +23,7 @@ namespace DbUp.Tests
         public override void When()
         {
             var testConnectionManager = new TestConnectionManager();
-            testConnectionManager.OperationStarting(new ConsoleUpgradeLog());
+            testConnectionManager.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
             scriptsToExecute = Subject.GetScripts(testConnectionManager).ToArray();
         }
 

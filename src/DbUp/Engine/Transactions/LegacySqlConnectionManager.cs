@@ -23,7 +23,7 @@ namespace DbUp.Engine.Transactions
             this.connectionFactory = connectionFactory;
         }
 
-        public IDisposable OperationStarting(IUpgradeLog upgradeLog)
+        public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
         {
             return new DoNothingDisposible();
         }

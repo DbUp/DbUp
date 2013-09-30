@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
 using DbUp.Helpers;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.Helpers
 {
     [TestFixture]
     public class NullJournalTests
