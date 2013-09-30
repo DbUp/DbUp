@@ -1,9 +1,12 @@
-﻿using System.Data;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.Engine.Transactions
 {
     [TestFixture]
     public class DatabaseConnectionManagerTests
@@ -20,7 +23,7 @@ namespace DbUp.Tests
         [Test]
         public void should_dispose_connection_on_dispose()
         {
-            using (sut.OperationStarting(new ConsoleUpgradeLog())){}
+            using (sut.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>())){}
 
             connection.Received(1).Dispose();
         }

@@ -7,7 +7,7 @@ using NUnit.Framework;
 namespace DbUp.Tests
 {
     [TestFixture]
-    public class BuilderTests
+    public class DeployChangesBuilderTests
     {
         [Test]
         public void can_use_variables_with_builder()

@@ -1,26 +1,30 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests.TransactionManagement
+namespace DbUp.Tests.Engine.Transactions
 {
     public class SingleTransactionStrategyTests
     {
         private IDbConnection connection;
         private SingleTrasactionStrategy strategy;
         private IDbTransaction transaction;
+        private List<SqlScript> scripts;
 
         [SetUp]
         public void Setup()
         {
+            scripts = new List<SqlScript>();
             connection = Substitute.For<IDbConnection>();
             transaction = Substitute.For<IDbTransaction>();
             connection.BeginTransaction().Returns(transaction);
             strategy = new SingleTrasactionStrategy();
-            strategy.Initialise(connection, new ConsoleUpgradeLog());
+            strategy.Initialise(connection, new ConsoleUpgradeLog(), scripts);
         }
 
         [Test]
@@ -73,6 +77,15 @@ namespace DbUp.Tests.TransactionManagement
 
         [Test]
         public void does_not_commit_transaction_when_error_occured()
+        {
+            Assert.Throws<ArgumentException>(() => strategy.Execute(c => { throw new ArgumentException(); }));
+            strategy.Dispose();
+
+            transaction.DidNotReceive().Commit();
+        }
+
+        [Test]
+        public void scripts_which_were_rolled_back_are_not_in_executed_scripts()
         {
             Assert.Throws<ArgumentException>(() => strategy.Execute(c => { throw new ArgumentException(); }));
             strategy.Dispose();
