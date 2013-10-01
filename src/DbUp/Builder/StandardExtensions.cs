@@ -52,7 +52,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogScriptOutput(this UpgradeEngineBuilder builder)
     {
-        builder.Configure(c => c.IsScriptOutputLogged = true);
+        builder.Configure(c => c.ConnectionManager.IsScriptOutputLogged = true);
         return builder;
     }
 
