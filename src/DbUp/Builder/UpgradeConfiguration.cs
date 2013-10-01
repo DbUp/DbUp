@@ -35,11 +35,6 @@ namespace DbUp.Builder
         public IUpgradeLog Log { get; set; }
 
         /// <summary>
-        /// Gets or sets a log which captures details about the upgrade.
-        /// </summary>
-        public bool IsScriptOutputLogged { get; set; }
-
-        /// <summary>
         /// Gets a mutable list of script providers.
         /// </summary>
         public List<IScriptProvider> ScriptProviders { get { return scriptProviders; } }
