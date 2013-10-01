@@ -8,6 +8,7 @@
     <description>DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts.</description> 
     <language>en-US</language>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <releaseNotes>https://github.com/DbUp/DbUp/releases</releaseNotes>
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
   </metadata>
