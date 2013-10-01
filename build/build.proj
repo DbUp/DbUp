@@ -116,9 +116,9 @@
     <FileUpdate Files="$(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     
     <!-- Pack -->
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -b $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec -b $(Root)\build\Published\DbUp-SqlCe -o $(Root)\build\Artifacts" />
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec -b $(Root)\build\Published\DbUp-SQLite -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -BasePath $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec -BasePath $(Root)\build\Published\DbUp-SqlCe -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec -BasePath $(Root)\build\Published\DbUp-SQLite -o $(Root)\build\Artifacts" />
    
   </Target>
 </Project>
