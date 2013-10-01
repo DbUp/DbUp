@@ -18,11 +18,10 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public sealed class SqlScriptExecutor : IScriptExecutor
     {
-        private readonly Func<IConnectionManager> connectionManager;
+        private readonly Func<IConnectionManager> connectionManagerFactory;
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
-        private readonly Func<bool> scriptOutputLogged;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -32,21 +31,19 @@ namespace DbUp.Support.SqlServer
         /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
-        /// <param name="connectionManager"></param>
+        /// <param name="connectionManagerFactory"></param>
         /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
-        /// <param name="scriptOutputLogged">Function that returns <c>true</c> if the db script output should be logged, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, Func<bool> scriptOutputLogged, 
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, 
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             Schema = schema;
             this.log = log;
             this.variablesEnabled = variablesEnabled;
-            this.scriptOutputLogged = scriptOutputLogged;
             this.scriptPreprocessors = scriptPreprocessors;
-            this.connectionManager = connectionManager;
+            this.connectionManagerFactory = connectionManagerFactory;
         }
 
         /// <summary>
@@ -70,7 +67,7 @@ namespace DbUp.Support.SqlServer
         {
             if (string.IsNullOrEmpty(Schema)) return;
 
-            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            connectionManagerFactory().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
                 var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
 
@@ -101,11 +98,12 @@ namespace DbUp.Support.SqlServer
             contents = (scriptPreprocessors??new IScriptPreprocessor[0])
                 .Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
 
-            var scriptStatements = connectionManager().SplitScriptIntoCommands(contents);
+            var connectionManager = connectionManagerFactory();
+            var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
             var index = -1;
             try
             {
-                connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     foreach (var statement in scriptStatements)
                     {
@@ -115,7 +113,7 @@ namespace DbUp.Support.SqlServer
                             command.CommandText = statement;
                             if (ExecutionTimeoutSeconds != null)
                                 command.CommandTimeout = ExecutionTimeoutSeconds.Value;
-                            if (scriptOutputLogged())
+                            if (connectionManager.IsScriptOutputLogged)
                             {
                                 using (var reader = command.ExecuteReader())
                                 {
