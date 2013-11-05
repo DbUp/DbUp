@@ -10,7 +10,11 @@ namespace SampleApplication
     {
         public static void Main(string[] args)
         {
-            using (var database = new TemporarySqlDatabase("SampleApplication"))
+            string instanceName = @"(local)";
+            // Uncomment the following line to run against sql local db instance.
+            // string instanceName = @"(localdb)\Projects";
+
+            using (var database = new TemporarySqlDatabase("SampleApplication", instanceName))
             {
                 database.Create();
 
