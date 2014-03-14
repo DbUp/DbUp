@@ -52,11 +52,9 @@ namespace DbUp.Engine.Transactions
 
         public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            var scriptStatements =
-                Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
-                    .Select(x => x.Trim())
-                    .Where(x => x.Length > 0)
-                    .ToArray();
+            var parser = new SqlBatchParser();
+
+            var scriptStatements = parser.SplitScriptBatches(scriptContents, "GO");
 
             return scriptStatements;
         }

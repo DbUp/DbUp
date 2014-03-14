@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeployChangesBuilderTests.cs" />
+    <Compile Include="Engine\ScriptParsingTests.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
     <Compile Include="UpgradeDatabaseScenarios.cs" />
@@ -109,7 +110,6 @@
     <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="BDDfy.readme.txt" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

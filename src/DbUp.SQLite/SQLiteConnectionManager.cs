@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SQLite;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
@@ -35,11 +36,9 @@ namespace DbUp.SQLite
         /// </summary>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            var scriptStatements =
-                Regex.Split(scriptContents, "^\\s*;\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
-                    .Select(x => x.Trim())
-                    .Where(x => x.Length > 0)
-                    .ToArray();
+            var parser = new SqlBatchParser();
+
+            var scriptStatements = parser.SplitScriptBatches(scriptContents, ";");
 
             return scriptStatements;
         }
