@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="DeployChangesBuilderTests.cs" />
+    <Compile Include="Engine\ScriptParsingTests.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
     <Compile Include="UpgradeDatabaseScenarios.cs" />
