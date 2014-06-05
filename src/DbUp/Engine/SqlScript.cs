@@ -48,7 +48,7 @@ namespace DbUp.Engine
         /// <returns></returns>
         public static SqlScript FromFile(string path)
         {
-            using (FileStream fileStream = new FileStream(path, FileMode.Open))
+            using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 var fileName = new FileInfo(path).Name;
                 return FromStream(fileName, fileStream);
