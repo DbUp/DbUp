@@ -159,6 +159,10 @@ namespace DbUp.Support.SqlServer
                 {
                     names.Add(reader.GetName(i));
                 }
+
+                if (names.Count == 0)
+                    return;
+
                 var lines = new List<List<string>>();
                 while (reader.Read())
                 {
@@ -171,11 +175,13 @@ namespace DbUp.Support.SqlServer
                     }
                     lines.Add(line);
                 }
+
                 string format = "";
                 int totalLength = 0;
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    int maxLength = lines.Max(l => l[i].Length) + 2;
+                    // need to handle no rows, short names with long data, and long names with short data
+                    int maxLength = (lines.Any() ? lines.Max(l => Math.Max(names[i].Length, l[i].Length)) : names[i].Length) + 2;
                     format += " {" + i + ", " + maxLength + "} |";
                     totalLength += (maxLength + 3);
                 }
