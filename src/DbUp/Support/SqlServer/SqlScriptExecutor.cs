@@ -181,7 +181,7 @@ namespace DbUp.Support.SqlServer
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     // need to handle no rows, short names with long data, and long names with short data
-                    int maxLength = (lines.Any() ? lines.Max(l => Math.Max(names[i].Length, l[i].Length)) : names[i].Length) + 2;
+                    int maxLength = (lines.Any() ? lines.Max(l => Math.Max(names[i].Length, l[i] == null ? 0 : l[i].Length)) : names[i].Length) + 2;
                     format += " {" + i + ", " + maxLength + "} |";
                     totalLength += (maxLength + 3);
                 }
