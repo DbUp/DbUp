@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DbUp</RootNamespace>
     <AssemblyName>DbUp</AssemblyName>
-    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
@@ -55,6 +55,7 @@
     <Compile Include="..\Information\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="ScriptProviders\FileSystemScriptProviderParallel.cs" />
     <Compile Include="Builder\StandardExtensions.cs" />
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
