@@ -166,6 +166,7 @@ namespace DbUp.Support.SqlServer
         /// Returns whether the curren char is equal to the char specified.
         /// </summary>
         /// <param name="comparisonChar"></param>
+        /// <param name="compareTo"></param>
         /// <returns></returns>
         protected bool IsCharEqualTo(char comparisonChar, char compareTo)
         {
@@ -287,8 +288,7 @@ namespace DbUp.Support.SqlServer
 
         /// <summary>
         /// Writes the current character to the output script.
-        /// </summary>
-        /// <param name="c"></param>
+        /// </summary>     
         private void WriteCurrent()
         {
             this._CommandScriptBuilder.Append(this.CurrentChar);
@@ -307,10 +307,8 @@ namespace DbUp.Support.SqlServer
                 this.WriteCurrent();
             }
             while (!this.IsEndOfLine);
-            // further reading will need to be sensitive to seperators..
-            this._IsCheckingForSeperator = true;
-
-            // this.splitter.SetParser(new SeparatorLineReader(this.splitter));  
+            // further reading will need to be sensitive to seperators again...
+            this._IsCheckingForSeperator = true;          
             return this._FoundGo;
         }
 
@@ -323,6 +321,7 @@ namespace DbUp.Support.SqlServer
 
             if (this.ReadSlashStarCommentWithResult())
             {
+                // need to check for seperators again.
                 this._IsCheckingForSeperator = true;
             }
         }
@@ -365,6 +364,7 @@ namespace DbUp.Support.SqlServer
 
         private bool ReadNext()
         {
+            // If not currently checking for seperator, just capture the current characters until we reach the next line.
             if (!_IsCheckingForSeperator)
             {
                 if (!IsEndOfLine)
@@ -372,6 +372,7 @@ namespace DbUp.Support.SqlServer
                     WriteCurrent();
                     return false;
                 }
+                // Once we are at the end of the line, we need to resume checking for seperator again on the next line.
                 WriteCurrent();
                 _IsCheckingForSeperator = true;
                 return false;
@@ -384,28 +385,29 @@ namespace DbUp.Support.SqlServer
                     this.Reset();
                     return true;
                 }
-                // We reached the end of the line with no GO statement..                
-                _TempBuilder.Append(CurrentChar);
-
-                // Write the buffered string to the command builder.
-                this.Write(_TempBuilder.ToString());
-                this._IsCheckingForSeperator = true;
-                // this.splitter.SetParser(new SeparatorLineReader(this.splitter));
+                // We reached the end of the line with no GO statement..    
+                // Write the buffered string for this line to the current command builder.
+                WriteCurrentCharToCommand();           
+                // We need to check for seperator again on the next line - but no need to split yet.
+                this._IsCheckingForSeperator = true;               
                 return false;
             }
             if (IsWhiteSpace)
             {
-                // Preserve whitespace within sql text.
+                // Preserve whitespace within sql command text.
                 _TempBuilder.Append(CurrentChar);
+                // no need to split yet.
                 return false;
             }
 
-            // We will detect go..
+            // Can we detect a split?
             bool isG = IsCurrentCharEqualTo('g');
             bool isO = IsCurrentCharEqualTo('o');
             if (!isG && !isO)
             {
-                this.FoundNonEmptyCharacter(CurrentChar);
+                // No need to split yet.. so write char to current command.
+                this.WriteCurrentCharToCommand();
+                this._IsCheckingForSeperator = false;   
                 return false;
             }
             if (isO)
@@ -413,7 +415,8 @@ namespace DbUp.Support.SqlServer
                 if (!IsLastCharEqualTo('g') || this._FoundGo)
                 {
                     // Write this character as we have not detected a go.
-                    this.FoundNonEmptyCharacter(CurrentChar);
+                    this.WriteCurrentCharToCommand();
+                    this._IsCheckingForSeperator = false;   
                 }
                 else
                 {
@@ -426,7 +429,8 @@ namespace DbUp.Support.SqlServer
                 // Found a letter g, We note this in case the next letter is an o then we have found a go!
                 if (this._FoundLetterG || !char.IsWhiteSpace(LastChar) && LastChar != NullChar)
                 {
-                    this.FoundNonEmptyCharacter(CurrentChar);
+                    this.WriteCurrentCharToCommand();
+                    this._IsCheckingForSeperator = false;   
                     return false;
                 }
                 this._FoundLetterG = true;
@@ -441,11 +445,10 @@ namespace DbUp.Support.SqlServer
             return false;
         }
 
-        private void FoundNonEmptyCharacter(char c)
+        private void WriteCurrentCharToCommand()
         {
-            _TempBuilder.Append(c);
-            this.Write(_TempBuilder.ToString());
-            this._IsCheckingForSeperator = false;           
+            _TempBuilder.Append(CurrentChar);
+            this.Write(_TempBuilder.ToString());                   
         }
 
         private void Reset()

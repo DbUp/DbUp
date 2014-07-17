@@ -25,6 +25,11 @@ namespace DbUp.Support.SqlServer
             this.connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Creates the connection.
+        /// </summary>
+        /// <param name="log"></param>
+        /// <returns></returns>
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             var conn = new SqlConnection(connectionString);
@@ -37,12 +42,8 @@ namespace DbUp.Support.SqlServer
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            var scriptStatements =
-            Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
-                .Select(x => x.Trim())
-                .Where(x => x.Length > 0)
-                .ToArray();
-
+            var commandSplitter = new SqlCommandSplitter();
+            var scriptStatements = commandSplitter.SplitScriptIntoCommands(scriptContents);
             return scriptStatements;
         }
     }

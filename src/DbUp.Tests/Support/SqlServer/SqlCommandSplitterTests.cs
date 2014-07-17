@@ -27,7 +27,7 @@ namespace DbUp.Tests.Support.SqlServer
         public void should_split_statements_on_go_and_handle_comments()
         {
             var sqlGo = "GO";
-            var sqlGoWithTerminator = "GO;";
+           // var sqlGoWithTerminator = "GO;";
 
             var sqlCommandWithMultiLineComment = @"/*
                                                     This is a multi line comment 1.

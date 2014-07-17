@@ -9,8 +9,16 @@ using System.Text.RegularExpressions;
 
 namespace DbUp.Support.SqlServer
 {
+    /// <summary>
+    /// Responsible for splitting SQL text into a list of commands.
+    /// </summary>
     public class SqlCommandSplitter
     {
+        /// <summary>
+        /// Returns the seperate executable SQL commands within the SQL script.
+        /// </summary>
+        /// <param name="scriptContents"></param>
+        /// <returns></returns>
         public virtual IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             using (var reader = new SqlCommandReader(scriptContents))
@@ -19,26 +27,8 @@ namespace DbUp.Support.SqlServer
                 reader.ReadAllCommands(c => commands.Add(c));
                 return commands;
             }
-        }
-
-        public IEnumerable<string> GetCommandsOld(string scriptContents)
-        {
-
-            var scriptStatements =
-         Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
-             .Select(x => x.Trim())
-             .Where(x => x.Length > 0)
-             .ToArray();
-
-            return scriptStatements;
-        }                  
+        }         
 
     }
-
-
-
-  
-
-
 }
 
