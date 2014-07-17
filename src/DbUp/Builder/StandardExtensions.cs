@@ -163,20 +163,7 @@ public static class StandardExtensions
         return WithScripts(builder, new FileSystemScriptProvider(path));
     }
 
-	/// <summary>
-	/// Adds all scripts from a folder on the file system in a ThreadSafe way.
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <param name="path">The directory path.</param>
-	/// <returns>
-	/// The same builder
-	/// </returns>
-	public static UpgradeEngineBuilder WithScriptsFromFileSystemParallel(this UpgradeEngineBuilder builder, string path)
-	{
-		return WithScripts(builder, new FileSystemScriptProviderParallel(path));
-	}
-
-	/// <summary>
+    /// <summary>
     /// Adds all scripts found as embedded resources in the given assembly.
     /// </summary>
     /// <param name="builder">The builder.</param>
