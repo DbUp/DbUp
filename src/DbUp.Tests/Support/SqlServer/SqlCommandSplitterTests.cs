@@ -19,7 +19,6 @@ namespace DbUp.Tests.Support.SqlServer
 
         public SqlCommandSplitterTests()
         {
-
             sut = new SqlCommandSplitter();
         }
 
@@ -27,8 +26,6 @@ namespace DbUp.Tests.Support.SqlServer
         public void should_split_statements_on_go_and_handle_comments()
         {
             var sqlGo = "GO";
-           // var sqlGoWithTerminator = "GO;";
-
             var sqlCommandWithMultiLineComment = @"/*
                                                     This is a multi line comment 1.
                                                     GO
@@ -57,7 +54,6 @@ namespace DbUp.Tests.Support.SqlServer
             Console.WriteLine("===============================================");
             var sqlCommands = sut.SplitScriptIntoCommands(sqlText).ToArray();
 
-
             foreach (var item in sqlCommands)
             {
                 Console.WriteLine("=========== Parsed Command ============");
@@ -70,13 +66,7 @@ namespace DbUp.Tests.Support.SqlServer
             // I compare the original sql text with the commands but remove whitespace characters as the parser is trimming some whitespace in some instances.
             Assert.That(ExceptBlanks(sqlCommands[0]), Is.EqualTo(ExceptBlanks(sqlCommandWithMultiLineComment)));
             Assert.That(ExceptBlanks(sqlCommands[1]), Is.EqualTo(ExceptBlanks(sqlCommandWithSingleLineComment)));
-            Assert.That(ExceptBlanks(sqlCommands[2]), Is.EqualTo(ExceptBlanks(sqlCommandWithSingleLineCommentWithEndDashes)));
-
-            //Assert.That(sqlCommands[0].Trim(), Is.EqualTo(sqlCommandWithMultiLineComment.Trim()));
-            //Assert.That(sqlCommands[1].Trim(), Is.EqualTo(sqlCommandWithSingleLineComment.Trim()));
-            //Assert.That(sqlCommands[2].Trim(), Is.EqualTo(sqlCommandWithSingleLineCommentWithEndDashes.Trim()));
-
-
+            Assert.That(ExceptBlanks(sqlCommands[2]), Is.EqualTo(ExceptBlanks(sqlCommandWithSingleLineCommentWithEndDashes)));      
         }
 
         public static string ExceptBlanks(string str)

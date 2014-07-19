@@ -24,12 +24,7 @@ namespace DbUp.Support.SqlServer
         {
             this.connectionString = connectionString;
         }
-
-        /// <summary>
-        /// Creates the connection.
-        /// </summary>
-        /// <param name="log"></param>
-        /// <returns></returns>
+        
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             var conn = new SqlConnection(connectionString);
