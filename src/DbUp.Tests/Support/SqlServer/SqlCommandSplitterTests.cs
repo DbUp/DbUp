@@ -20,40 +20,57 @@ namespace DbUp.Tests.Support.SqlServer
         public SqlCommandSplitterTests()
         {
             sut = new SqlCommandSplitter();
-        }
+        }     
 
         [Test]
         public void should_split_statements_on_go_and_handle_comments()
         {
+
             var sqlGo = "GO";
-            var sqlCommandWithMultiLineComment = @"/*
-                                                    This is a multi line comment 1.
-                                                    GO
-                                                    --
-                                                    Other comment text
-                                                    Go
-                                                   */
-                                                   INSERT INTO A (GO) VALUES (1);";
-
-            var sqlCommandWithSingleLineComment = @"--Single line Comment no end comment dashes GO
-                                                     INSERT INTO A (X) VALUES ('GO');";
-
-            var sqlCommandWithSingleLineCommentWithEndDashes = @"--Single line Comment WITH END comment dashes GO --
-                                                                  INSERT INTO A (go) VALUES ('Go');";
-
+            var sqlGoWithTerminator = "GO;";
             var sqlBuilder = new StringBuilder();
+
+            // Sql command with a multiline comment containing a GO.
+            sqlBuilder.AppendLine(@"/*"); // Start of sql comment block.
+            sqlBuilder.AppendLine(@"multi line comment 1.");
+            sqlBuilder.AppendLine(@"GO");
+            sqlBuilder.AppendLine(@"--");
+            sqlBuilder.AppendLine(@"Other comment text");
+            sqlBuilder.AppendLine(@"Go");
+            sqlBuilder.AppendLine(@"*/");  // End of sql comment block.
+            sqlBuilder.AppendLine(@"INSERT INTO A (GO) VALUES (1);");
+
+            var sqlCommandWithMultiLineComment = sqlBuilder.ToString();
+            sqlBuilder.Clear();
+
+            // Sql command with a single line comment (no end dashes) containing a GO.
+            sqlBuilder.AppendLine("--Single line Comment no end comment dashes GO");
+            sqlBuilder.AppendLine("INSERT INTO A (X) VALUES ('GO');");
+            var sqlCommandWithSingleLineComment = sqlBuilder.ToString();
+            sqlBuilder.Clear();
+
+            // Sql command with a single line comment (with end dashes) containing a GO.
+            sqlBuilder.AppendLine("--Single line Comment WITH END comment dashes GO --");
+            sqlBuilder.AppendLine("INSERT INTO A (go) VALUES ('Go');");
+
+            var sqlCommandWithSingleLineCommentWithEndDashes = sqlBuilder.ToString();
+            sqlBuilder.Clear();
+
+            // Combine into one SQL statement seperated with GO.          
             sqlBuilder.AppendLine(sqlCommandWithMultiLineComment);
             sqlBuilder.AppendLine(sqlGo);
             sqlBuilder.AppendLine(sqlCommandWithSingleLineComment);
-            sqlBuilder.AppendLine(sqlGo);
+            sqlBuilder.AppendLine(sqlGoWithTerminator);
             sqlBuilder.AppendLine(sqlCommandWithSingleLineCommentWithEndDashes);
 
             var sqlText = sqlBuilder.ToString();
             Console.WriteLine("===== Splitting the following SQL =============");
             Console.WriteLine(sqlText);
             Console.WriteLine("===============================================");
-            var sqlCommands = sut.SplitScriptIntoCommands(sqlText).ToArray();
+           
+            var commands = sut.SplitScriptIntoCommands(sqlText).ToArray();      
 
+            var sqlCommands = commands;
             foreach (var item in sqlCommands)
             {
                 Console.WriteLine("=========== Parsed Command ============");
@@ -64,22 +81,10 @@ namespace DbUp.Tests.Support.SqlServer
             Assert.That(sqlCommands.Count(), Is.EqualTo(3));
 
             // I compare the original sql text with the commands but remove whitespace characters as the parser is trimming some whitespace in some instances.
-            Assert.That(ExceptBlanks(sqlCommands[0]), Is.EqualTo(ExceptBlanks(sqlCommandWithMultiLineComment)));
-            Assert.That(ExceptBlanks(sqlCommands[1]), Is.EqualTo(ExceptBlanks(sqlCommandWithSingleLineComment)));
-            Assert.That(ExceptBlanks(sqlCommands[2]), Is.EqualTo(ExceptBlanks(sqlCommandWithSingleLineCommentWithEndDashes)));      
-        }
-
-        public static string ExceptBlanks(string str)
-        {
-            StringBuilder sb = new StringBuilder(str.Length);
-            for (int i = 0; i < str.Length; i++)
-            {
-                char c = str[i];
-                if (!char.IsWhiteSpace(c))
-                    sb.Append(c);
-            }
-            return sb.ToString();
-        }
+            Assert.That(sqlCommands[0].Trim(), Is.EqualTo(sqlCommandWithMultiLineComment.Trim()));
+            Assert.That(sqlCommands[1].Trim(), Is.EqualTo(sqlCommandWithSingleLineComment.Trim()));
+            Assert.That(sqlCommands[2].Trim(), Is.EqualTo(sqlCommandWithSingleLineCommentWithEndDashes.Trim()));
+        }       
 
     }
 }
