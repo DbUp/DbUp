@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 
 namespace DbUp.Support.SqlServer
-{   
+{
 
     /// <summary>
     /// Reads SQL commands from an underlying text stream.
@@ -20,40 +20,34 @@ namespace DbUp.Support.SqlServer
         private const char starChar = '*';
 
         private const int failedRead = -1;
-        private StringBuilder commandScriptBuilder;     
+        private StringBuilder commandScriptBuilder;
         private char lastChar;
-        private char currentChar;             
+        private char currentChar;
 
         public SqlCommandReader(string sqlText)
             : base(sqlText)
         {
-            commandScriptBuilder = new StringBuilder();          
+            commandScriptBuilder = new StringBuilder();
         }
 
         public void ReadAllCommands(Action<string> handleCommand)
         {
-            // While we have successful reads,
             string commandText = string.Empty;
             while (!HasReachedEnd)
             {
-                // Read the command.
-                ReadToEndOfCommand();
-                // Remove unnecessary whitespace from command text before passing it back.
-                commandText = commandScriptBuilder.ToString().Trim();
+                commandText = ReadCommand();
                 if (commandText.Length > 0)
                 {
                     handleCommand(commandText);
-                    ClearForNextCommand();
                 }
-            }          
-
+            }
         }
 
-        public void ReadToEndOfCommand()
+        public string ReadCommand()
         {
-            //- Are we at the start of a single line comment - then read to end of line.
-            //- Are we at the start of a multi line comment - then read to end of multiline comment.
-            //- If not either of the above then we need to detect GO
+            // Command text in buffer start empty. 
+            ResetCommandBuffer();
+
             while (Read() != failedRead)
             {
                 if (IsQuote)
@@ -74,13 +68,15 @@ namespace DbUp.Support.SqlServer
                 if (IsBeginningOfGo)
                 {
                     ReadGo();
-                    return;
+                    // This is the end of the command - return the command text in the buffer.
+                    return GetCurrentCommandTextFromBuffer().Trim();
                 }
                 else
                 {
-                    WriteCharToCommand();
+                    WriteCurrentCharToCommandTextBuffer();
                 }
             }
+            return GetCurrentCommandTextFromBuffer().Trim();
         }
 
         public override int Read()
@@ -169,7 +165,7 @@ namespace DbUp.Support.SqlServer
                 return nullChar;
             }
             return (char)Peek();
-        }   
+        }
 
         private bool IsBeginningOfDashDashComment
         {
@@ -208,19 +204,14 @@ namespace DbUp.Support.SqlServer
             {
                 return LastChar == starChar && CurrentChar == slashChar;
             }
-        }       
-
-        private void WriteCharToCommand()
-        {
-            commandScriptBuilder.Append(CurrentChar);
-        }
+        }     
 
         private void ReadQuotedString()
         {
-            WriteCharToCommand();
+            WriteCurrentCharToCommandTextBuffer();
             while (Read() != failedRead)
             {
-                WriteCharToCommand();
+                WriteCurrentCharToCommandTextBuffer();
                 if (IsQuote)
                 {
                     return;
@@ -231,7 +222,7 @@ namespace DbUp.Support.SqlServer
         private void ReadDashDashComment()
         {
             // Writes the current dash.
-            WriteCharToCommand();
+            WriteCurrentCharToCommandTextBuffer();
             // Read until we hit the end of line.
             do
             {
@@ -239,7 +230,7 @@ namespace DbUp.Support.SqlServer
                 {
                     break;
                 }
-                WriteCharToCommand();
+                WriteCurrentCharToCommandTextBuffer();
             }
             while (!IsEndOfLine);
         }
@@ -247,7 +238,7 @@ namespace DbUp.Support.SqlServer
         private void ReadSlashStarComment()
         {
             // Write the current slash.
-            WriteCharToCommand();
+            WriteCurrentCharToCommandTextBuffer();
             // Read until we find a the ending of the slash star comment,
             // Or a nested slash star comment.
             while (Read() != failedRead)
@@ -259,7 +250,7 @@ namespace DbUp.Support.SqlServer
                 }
                 else
                 {
-                    WriteCharToCommand();
+                    WriteCurrentCharToCommandTextBuffer();
                     if (IsEndOfSlashStarComment)
                     {
                         return;
@@ -281,13 +272,23 @@ namespace DbUp.Support.SqlServer
             {
                 Read();
             }
-        }        
+        }
 
-        private void ClearForNextCommand()
+        private void ResetCommandBuffer()
         {
             lastChar = nullChar;
             currentChar = nullChar;
-            commandScriptBuilder.Length = 0;          
+            commandScriptBuilder.Length = 0;
+        }
+
+        private void WriteCurrentCharToCommandTextBuffer()
+        {
+            commandScriptBuilder.Append(CurrentChar);
+        }
+
+        private string GetCurrentCommandTextFromBuffer()
+        {
+            return commandScriptBuilder.ToString();
         }
 
     }
