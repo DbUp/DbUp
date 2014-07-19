@@ -37,26 +37,15 @@ namespace DbUp.Support.SqlServer
             while (!HasReachedEnd)
             {
                 // Read the command.
-                this.ReadToEndOfCommand();
+                ReadToEndOfCommand();
                 // Remove unnecessary whitespace from command text before passing it back.
                 commandText = commandScriptBuilder.ToString().Trim();
                 if (commandText.Length > 0)
                 {
                     handleCommand(commandText);
-                    this.ClearForNextCommand();
+                    ClearForNextCommand();
                 }
-            }
-            // We cannot read any more text. If we have content then this is the last (or only) command in the script, return it.
-            if (commandScriptBuilder.Length > 0)
-            {
-                // NOTE: We are trimming whitespace from the commands.
-                commandText = commandScriptBuilder.ToString().Trim();
-                if (commandText.Length > 0)
-                {
-                    handleCommand(commandText);
-                    this.ClearForNextCommand();
-                }
-            }
+            }          
 
         }
 
@@ -89,7 +78,7 @@ namespace DbUp.Support.SqlServer
                 }
                 else
                 {
-                    this.WriteCharToCommand();
+                    WriteCharToCommand();
                 }
             }
         }
@@ -99,8 +88,8 @@ namespace DbUp.Support.SqlServer
             var result = base.Read();
             if (result != failedRead)
             {
-                this.lastChar = this.currentChar;
-                this.currentChar = (char)result;
+                lastChar = this.currentChar;
+                currentChar = (char)result;
                 return result;
             }
             else
@@ -114,7 +103,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return this.lastChar;
+                return lastChar;
             }
         }
 
@@ -122,7 +111,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return this.currentChar;
+                return currentChar;
             }
         }
 
@@ -130,7 +119,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return this.Peek() == -1;
+                return Peek() == -1;
             }
         }
 
@@ -138,18 +127,18 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return this.CurrentChar == endOfLineChar;
+                return CurrentChar == endOfLineChar;
             }
         }
 
         protected bool IsCurrentCharEqualTo(char comparisonChar)
         {
-            return IsCharEqualTo(this.CurrentChar, comparisonChar);
+            return IsCharEqualTo(CurrentChar, comparisonChar);
         }
 
         protected bool IsLastCharEqualTo(char comparisonChar)
         {
-            return IsCharEqualTo(this.LastChar, comparisonChar);
+            return IsCharEqualTo(LastChar, comparisonChar);
         }
 
         protected bool IsCharEqualTo(char comparisonChar, char compareTo)
@@ -161,7 +150,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return this.CurrentChar == singleQuoteChar;
+                return CurrentChar == singleQuoteChar;
             }
         }
 
@@ -169,28 +158,28 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return char.IsWhiteSpace(this.CurrentChar);
+                return char.IsWhiteSpace(CurrentChar);
             }
         }
 
         protected char PeekChar()
         {
-            if (this.HasReachedEnd)
+            if (HasReachedEnd)
             {
                 return nullChar;
             }
-            return (char)this.Peek();
+            return (char)Peek();
         }   
 
         private bool IsBeginningOfDashDashComment
         {
             get
             {
-                if (this.CurrentChar != dashChar)
+                if (CurrentChar != dashChar)
                 {
                     return false;
                 }
-                return this.Peek() == dashChar;
+                return Peek() == dashChar;
             }
         }
 
@@ -198,7 +187,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return this.CurrentChar == slashChar && this.Peek() == starChar;
+                return CurrentChar == slashChar && Peek() == starChar;
             }
         }
 
@@ -208,7 +197,7 @@ namespace DbUp.Support.SqlServer
             {
                 bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar);
                 bool currentCharIsG = IsCurrentCharEqualTo('g');
-                bool nextCharIsO = IsCharEqualTo('o', this.PeekChar());
+                bool nextCharIsO = IsCharEqualTo('o', PeekChar());
                 return lastCharIsNullOrEmpty && currentCharIsG && nextCharIsO;
             }
         }
@@ -217,22 +206,22 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return this.LastChar == starChar && this.CurrentChar == slashChar;
+                return LastChar == starChar && CurrentChar == slashChar;
             }
         }       
 
         private void WriteCharToCommand()
         {
-            this.commandScriptBuilder.Append(this.CurrentChar);
+            commandScriptBuilder.Append(CurrentChar);
         }
 
         private void ReadQuotedString()
         {
             WriteCharToCommand();
-            while (this.Read() != failedRead)
+            while (Read() != failedRead)
             {
                 WriteCharToCommand();
-                if (this.IsQuote)
+                if (IsQuote)
                 {
                     return;
                 }
@@ -242,7 +231,7 @@ namespace DbUp.Support.SqlServer
         private void ReadDashDashComment()
         {
             // Writes the current dash.
-            this.WriteCharToCommand();
+            WriteCharToCommand();
             // Read until we hit the end of line.
             do
             {
@@ -250,28 +239,28 @@ namespace DbUp.Support.SqlServer
                 {
                     break;
                 }
-                this.WriteCharToCommand();
+                WriteCharToCommand();
             }
-            while (!this.IsEndOfLine);
+            while (!IsEndOfLine);
         }
 
         private void ReadSlashStarComment()
         {
             // Write the current slash.
-            this.WriteCharToCommand();
+            WriteCharToCommand();
             // Read until we find a the ending of the slash star comment,
             // Or a nested slash star comment.
-            while (this.Read() != failedRead)
+            while (Read() != failedRead)
             {
-                if (this.IsBeginningOfSlashStarComment)
+                if (IsBeginningOfSlashStarComment)
                 {
                     // Nested comment found - using recursive call to read it.
-                    this.ReadSlashStarComment();
+                    ReadSlashStarComment();
                 }
                 else
                 {
-                    this.WriteCharToCommand();
-                    if (this.IsEndOfSlashStarComment)
+                    WriteCharToCommand();
+                    if (IsEndOfSlashStarComment)
                     {
                         return;
                     }
@@ -288,7 +277,7 @@ namespace DbUp.Support.SqlServer
                 return;
             }
             // Support terminator.
-            if (this.PeekChar() == ';')
+            if (PeekChar() == ';')
             {
                 Read();
             }
