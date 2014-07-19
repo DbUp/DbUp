@@ -20,20 +20,14 @@ namespace DbUp.Support.SqlServer
         private const char starChar = '*';
 
         private const int failedRead = -1;
-
-        private StringBuilder commandScriptBuilder;
-        private StringBuilder tempBuilder;
+        private StringBuilder commandScriptBuilder;     
         private char lastChar;
-        private char currentChar;
-        private bool isCheckingForSeperator = true;
-        private bool foundGo;
-        private bool foundLetterG;
+        private char currentChar;             
 
         public SqlCommandReader(string sqlText)
             : base(sqlText)
         {
-            commandScriptBuilder = new StringBuilder();
-            tempBuilder = new StringBuilder();
+            commandScriptBuilder = new StringBuilder();          
         }
 
         public void ReadAllCommands(Action<string> handleCommand)
