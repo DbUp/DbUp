@@ -10,20 +10,7 @@ namespace DbUp.Builder
     /// </summary>
     public class UpgradeEngineBuilder
     {
-		/// <summary>
-		/// Is database name to update, used in log message
-		/// </summary>
-		[ThreadStatic]
-	    public static String DbName;
-
-		/// <summary>
-		/// Is the sql server, used in log message
-		/// </summary>
-		[ThreadStatic]
-		public static String SqlServer;
-
-
-	    private readonly List<Action<UpgradeConfiguration>> callbacks = new List<Action<UpgradeConfiguration>>();
+        private readonly List<Action<UpgradeConfiguration>> callbacks = new List<Action<UpgradeConfiguration>>();
 
         /// <summary>
         /// Adds a callback that will be run to configure the upgrader when Build is called.
