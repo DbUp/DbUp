@@ -27,8 +27,10 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            return Directory.GetFiles(directoryPath, "*.sql").Select(SqlScript.FromFile).ToList();
-        }
+            IEnumerable<SqlScript> sqlScripts = Directory.GetFiles(directoryPath, "*.sql").Select(SqlScript.FromFile);
+            IOrderedEnumerable<SqlScript> orderedSqlScripts = sqlScripts.OrderBy(s => s.Name);
 
+            return orderedSqlScripts.ToList();
+        }
     }
 }
