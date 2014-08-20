@@ -9,6 +9,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
+using DbUp.QueryProviders;
 
 namespace DbUp.Support.SqlServer
 {
@@ -22,6 +23,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
+        private readonly IQueryProvider queryProvider = new SqliteQueryProvider();
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -71,8 +73,7 @@ namespace DbUp.Support.SqlServer
             {
                 var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
 
-                sqlRunner.ExecuteNonQuery(string.Format(
-                    @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA [{0}]')", Schema));
+                sqlRunner.ExecuteNonQuery(string.Format(queryProvider.CreateSchemeIfNotExists(), Schema));
             });
         }
 
@@ -131,8 +132,7 @@ namespace DbUp.Support.SqlServer
             catch (SqlException sqlException)
             {
                 log().WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
-                log().WriteError("Script block number: {0}; Block line {1}; Message: {2}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
-                log().WriteError(sqlException.ToString());
+                log().WriteError("Script block number: {0};    Block line: {1};    Procedure: {2};{5}SQL Exception Number: {3};    Message: {4}{5}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message, Environment.NewLine);
                 throw;
             }
             catch (DbException sqlException)

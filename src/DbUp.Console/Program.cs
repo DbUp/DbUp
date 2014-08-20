@@ -1,85 +1,97 @@
 ﻿using System;
 using System.Data.SqlClient;
+using System.Diagnostics;
+using DbUp.Builder;
+using DbUp.Engine;
+using DbUp.Engine.Transactions;
 using NDesk.Options;
 
 namespace DbUp.Console
 {
     class Program
     {
-        static void Main(string[] args)
+        static int Main(string[] args)
         {
-            var server = "";
-            var database = "";
             var directory = "";
-            var username = "";
-            var password = "";
             bool mark = false;
             var connectionString = "";
+            SupportedDatabases.Type selectedDbMs = SupportedDatabases.Type.MsSql;
+            TransactionMode transactionMode = TransactionMode.SingleTransaction;
 
-            bool show_help = false;
+            bool showHelp = false;
 
             var optionSet = new OptionSet() {
-                { "s|server=", "the SQL Server host", s => server = s },
-                { "db|database=", "database to upgrade", d => database = d},
-                { "d|directory=", "directory containing SQL Update files", dir => directory = dir },
-                { "u|user=", "Database username", u => username = u},
-                { "p|password=", "Database password", p => password = p},
-                { "cs|connectionString=", "Full connection string", cs => connectionString = cs},
-                { "h|help",  "show this message and exit", v => show_help = v != null },
+                { "dbms|databaseMs=", "Database managment system to use (0 = MSSQL, 1=SQLite, 2=Oracle). Default Database managment system is MSSQL.", dbMs => selectedDbMs = SupportedDatabases.Type.Parse(Convert.ToInt32(dbMs))},
+                { "cs|connectionString=", "Full connection string to database", cs => connectionString = cs},
+                { "d|directory=", "Directory containing SQL Update files", dir => directory = dir },
+                { "tran|transactionMode=", "Use per script transaction mode", tMode => transactionMode = tMode.Equals("true", StringComparison.InvariantCultureIgnoreCase)? TransactionMode.TransactionPerScript : TransactionMode.SingleTransaction},
+                { "h|help", "Show this message and exit", v => showHelp = v != null },
                 {"mark", "Mark scripts as executed but take no action", m => mark = true},
             };
 
             optionSet.Parse(args);
 
             if (args.Length == 0)
-                show_help = true;
+                showHelp = true;
 
 
-            if (show_help)
+            if (showHelp)
             {
                 optionSet.WriteOptionDescriptions(System.Console.Out);
-                return;
+                return 2;
 
             }
-
             if (String.IsNullOrEmpty(connectionString))
             {
-                connectionString = BuildConnectionString(server, database, username, password);
+                System.Console.WriteLine("No connection string was passed!");
+                optionSet.WriteOptionDescriptions(System.Console.Out);
+                return 2;
             }
 
-            var dbup = DeployChanges.To
-                .SqlDatabase(connectionString)
+            UpgradeEngineBuilder engineFactoryBuilder = null;
+
+            switch (selectedDbMs)
+            {
+                case SupportedDatabases.Type.TypeValue.MsSql:
+                    engineFactoryBuilder = DeployChanges.To.SqlDatabase(connectionString);
+                    break;
+                case SupportedDatabases.Type.TypeValue.Sqlite:
+                    engineFactoryBuilder = DeployChanges.To.SQLiteDatabase(connectionString);
+                    break;
+                case SupportedDatabases.Type.TypeValue.Oracle:
+                    // TODO: Naredi še za Oracle database
+                    break;
+            }
+
+            engineFactoryBuilder = engineFactoryBuilder
                 .LogToConsole()
-                .WithScriptsFromFileSystem(directory)
-                .Build();
+                .WithScriptsFromFileSystemAbsolute(directory);
 
-            if (!mark)
+            if (transactionMode ==TransactionMode.SingleTransaction)
+                engineFactoryBuilder.WithTransaction();
+            
+            else if (transactionMode == TransactionMode.TransactionPerScript)
+                engineFactoryBuilder.WithTransactionPerScript();
+            
+            else
+                engineFactoryBuilder.WithoutTransaction();
+
+            UpgradeEngine dbup = engineFactoryBuilder.Build();
+
+            DatabaseUpgradeResult results = !mark ? dbup.PerformUpgrade() : dbup.MarkAsExecuted();
+            // Display the result
+            if (results.Successful)
             {
-                dbup.PerformUpgrade();
+                System.Console.ForegroundColor = ConsoleColor.Green;
+                System.Console.WriteLine("Success!");
             }
             else
             {
-                dbup.MarkAsExecuted();
+                System.Console.ForegroundColor = ConsoleColor.Red;
+                System.Console.WriteLine("Failed!");
+                return 1;
             }
-        }
-
-        private static string BuildConnectionString(string server, string database, string username, string password)
-        {
-            var conn = new SqlConnectionStringBuilder();
-            conn.DataSource = server;
-            conn.InitialCatalog = database;
-            if (!String.IsNullOrEmpty(username))
-            {
-                conn.UserID = username;
-                conn.Password = password;
-                conn.IntegratedSecurity = false;
-            }
-            else
-            {
-                conn.IntegratedSecurity = true;
-            }
-
-            return conn.ToString();
+            return 0;
         }
     }
 }

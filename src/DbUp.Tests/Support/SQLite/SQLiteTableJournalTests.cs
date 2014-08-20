@@ -23,7 +23,7 @@ namespace DbUp.Tests.Support.SQLite
             var connectionManager = Substitute.For<IConnectionManager>();
             command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
             var consoleUpgradeLog = new ConsoleUpgradeLog();
-            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
+            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog);
 
             // When
             var scripts = journal.GetExecutedScripts();
@@ -46,7 +46,7 @@ namespace DbUp.Tests.Support.SQLite
             command.CreateParameter().Returns(param1, param2);
             command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
             var consoleUpgradeLog = new ConsoleUpgradeLog();
-            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
+            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog);
 
             // When
             journal.StoreExecutedScript(new SqlScript("test", "select 1"));

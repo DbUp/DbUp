@@ -1,24 +1,27 @@
 ﻿using System;
-using DbUp.Engine;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.QueryProviders;
 using DbUp.Support.SqlServer;
 
-namespace DbUp.Support.SQLite
+namespace DbUp.SqlCe
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a SQLite database
     /// </summary>
-    public sealed class SQLiteTableJournal : SqlTableJournal
+    public sealed class SqlCeTableJournal: SqlTableJournal
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SQLiteTableJournal"/> class.
+        /// Initializes a new instance of the <see cref="SqlCeTableJournal"/> class.
         /// </summary>
-        public SQLiteTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger) :
+        public SqlCeTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger) :
             base(connectionManager, logger)
         {
-            QueryProvider = new SqliteQueryProvider();
+            QueryProvider = new SqlCeQueryProvider();
         }
     }
 }
+

@@ -54,6 +54,10 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.Sqlite\DbUp.SQLite.csproj">
+      <Project>{437CDD05-6DF9-46CB-95C0-36774B10AACB}</Project>
+      <Name>DbUp.SQLite</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
       <Name>DbUp</Name>

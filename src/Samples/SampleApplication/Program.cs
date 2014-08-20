@@ -10,7 +10,7 @@ namespace SampleApplication
     {
         public static void Main(string[] args)
         {
-            using (var database = new TemporarySqlDatabase("SampleApplication"))
+            using (var database = new TemporarySqlDatabase("PC-SIMONR\\SQLEXPRESS", "SampleApplication"))
             {
                 database.Create();
 
@@ -45,7 +45,6 @@ namespace SampleApplication
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine(result.Error);
                     Console.WriteLine("Failed!");
                 }
 
