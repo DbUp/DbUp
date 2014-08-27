@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;

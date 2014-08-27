@@ -10,7 +10,7 @@ namespace SampleApplication
     {
         public static void Main(string[] args)
         {
-            using (var database = new TemporarySqlDatabase("PC-SIMONR\\SQLEXPRESS", "SampleApplication"))
+            using (var database = new TemporarySqlDatabase("(local)", "SampleApplication"))
             {
                 database.Create();
 

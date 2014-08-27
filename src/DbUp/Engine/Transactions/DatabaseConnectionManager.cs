@@ -13,6 +13,14 @@ namespace DbUp.Engine.Transactions
         private ITransactionStrategy transactionStrategy;
         private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
         private IDbConnection upgradeConnection;
+        /// <summary>
+        /// Connection string
+        /// </summary>
+        public string ConnectionString
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// Manages Database Connections

@@ -22,12 +22,20 @@ namespace DbUp.Engine.Transactions
         {
             this.connectionFactory = connectionFactory;
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="upgradeLog"></param>
+        /// <param name="executedScripts"></param>
+        /// <returns></returns>
         public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
         {
             return new DoNothingDisposible();
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="action"></param>
         public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
         {
             using (var connection = connectionFactory())
@@ -36,7 +44,12 @@ namespace DbUp.Engine.Transactions
                 action(()=>connection.CreateCommand());
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="actionWithResult"></param>
+        /// <returns></returns>
         public T ExecuteCommandsWithManagedConnection<T>(Func<Func<IDbCommand>, T> actionWithResult)
         {
             using (var connection = connectionFactory())
@@ -45,11 +58,19 @@ namespace DbUp.Engine.Transactions
                 return actionWithResult(()=>connection.CreateCommand());
             }
         }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public TransactionMode TransactionMode { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
         public bool IsScriptOutputLogged { get; set; }
-
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="scriptContents"></param>
+        /// <returns></returns>
         public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var scriptStatements =

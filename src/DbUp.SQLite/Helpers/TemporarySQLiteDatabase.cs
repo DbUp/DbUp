@@ -1,7 +1,7 @@
 ﻿using System;
 using System.IO;
-using DbUp.Helpers;
 using System.Data.SQLite;
+using DbUp.SqlServer.Helper;
 
 namespace DbUp.SQLite.Helpers
 {

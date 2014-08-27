@@ -54,9 +54,17 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.Oracle\DbUp.Oracle.Base.csproj">
+      <Project>{4372abeb-8642-4625-ac1d-458357af0b5c}</Project>
+      <Name>DbUp.Oracle.Base</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp.Sqlite\DbUp.SQLite.csproj">
       <Project>{437CDD05-6DF9-46CB-95C0-36774B10AACB}</Project>
       <Name>DbUp.SQLite</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUp.SqlServer\DbUp.SqlServer.csproj">
+      <Project>{7db7191e-a0bb-4850-b71d-caf535f4b6fe}</Project>
+      <Name>DbUp.SqlServer</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>

@@ -1,6 +1,4 @@
 ﻿using System;
-using System.Data.SqlClient;
-using System.Diagnostics;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
@@ -16,11 +14,12 @@ namespace DbUp.Console
             bool mark = false;
             var connectionString = "";
             SupportedDatabases.Type selectedDbMs = SupportedDatabases.Type.MsSql;
-            TransactionMode transactionMode = TransactionMode.SingleTransaction;
+            var transactionMode = TransactionMode.SingleTransaction;
 
             bool showHelp = false;
 
-            var optionSet = new OptionSet() {
+            var optionSet = new OptionSet
+           {
                 { "dbms|databaseMs=", "Database managment system to use (0 = MSSQL, 1=SQLite, 2=Oracle). Default Database managment system is MSSQL.", dbMs => selectedDbMs = SupportedDatabases.Type.Parse(Convert.ToInt32(dbMs))},
                 { "cs|connectionString=", "Full connection string to database", cs => connectionString = cs},
                 { "d|directory=", "Directory containing SQL Update files", dir => directory = dir },
@@ -59,7 +58,7 @@ namespace DbUp.Console
                     engineFactoryBuilder = DeployChanges.To.SQLiteDatabase(connectionString);
                     break;
                 case SupportedDatabases.Type.TypeValue.Oracle:
-                    // TODO: Naredi še za Oracle database
+                    engineFactoryBuilder = DeployChanges.To.OracleDatabase(connectionString);
                     break;
             }
 
@@ -67,14 +66,23 @@ namespace DbUp.Console
                 .LogToConsole()
                 .WithScriptsFromFileSystemAbsolute(directory);
 
-            if (transactionMode ==TransactionMode.SingleTransaction)
-                engineFactoryBuilder.WithTransaction();
-            
-            else if (transactionMode == TransactionMode.TransactionPerScript)
-                engineFactoryBuilder.WithTransactionPerScript();
-            
-            else
-                engineFactoryBuilder.WithoutTransaction();
+            switch (selectedDbMs)
+            {
+                case SupportedDatabases.Type.TypeValue.MsSql:
+                case SupportedDatabases.Type.TypeValue.Sqlite:
+                    if (transactionMode == TransactionMode.SingleTransaction)
+                        engineFactoryBuilder.WithTransaction();
+
+                    else if (transactionMode == TransactionMode.TransactionPerScript)
+                        engineFactoryBuilder.WithTransactionPerScript();
+
+                    else
+                        engineFactoryBuilder.WithoutTransaction();
+                    break;
+                case SupportedDatabases.Type.TypeValue.Oracle:
+                    System.Console.WriteLine("Oracle script executor does not support transactions!");
+                    break;
+            }
 
             UpgradeEngine dbup = engineFactoryBuilder.Build();
 

@@ -4,6 +4,7 @@ using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Oracle.Devart;
 using NSubstitute;
 
 namespace DbUp.Tests
@@ -28,5 +29,23 @@ namespace DbUp.Tests
         {
             return new[] {scriptContents};
         }
+    }
+
+    public class DevartTestConnectionManager : DevartOracleConnectionManager
+    {
+        private readonly IDbConnection connection;
+
+        public DevartTestConnectionManager(IDbConnection connection = null, bool startUpgrade = false)
+        {
+            this.connection = connection ?? Substitute.For<IDbConnection>();
+            if (startUpgrade)
+                OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+        }
+
+        protected override IDbConnection CreateConnection(IUpgradeLog log)
+        {
+            return connection;
+        }
+        
     }
 }
