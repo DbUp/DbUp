@@ -8,9 +8,13 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
 using DbUp.Engine.Transactions;
+using DbUp.Support.SqlServer;
 
-namespace DbUp.Oracle
+namespace DbUp.Oracle.Engine
 {
+    /// <summary>
+    /// Oracle scirpt executor
+    /// </summary>
     internal sealed class ScriptExecutor : IScriptExecutor
     {
         private readonly Func<IConnectionManager> connectionManagerFactory;
@@ -27,17 +31,18 @@ namespace DbUp.Oracle
         /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
-        /// <param name="connectionManagerFactory"></param>
+        /// <param name="connectionManagerFactory">Function that returns connectionManager</param>
         /// <param name="log">The logging mechanism.</param>
+        /// <param name="queryProvider">Container which holds queries and informations about database.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public ScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<bool> variablesEnabled, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
+        public ScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<IQueryProvider> queryProvider, Func<bool> variablesEnabled, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             this.log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
-            journalTable = new TableJournal(connectionManagerFactory, log);
+            journalTable = new TableJournal(connectionManagerFactory, log, queryProvider);
         }
 
         /// <summary>

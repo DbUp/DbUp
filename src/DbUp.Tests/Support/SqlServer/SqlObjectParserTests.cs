@@ -1,5 +1,4 @@
 ﻿using System;
-using DbUp.SqlServer;
 using DbUp.Support;
 using DbUp.Support.SqlServer;
 using NUnit.Framework;

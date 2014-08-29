@@ -10,7 +10,6 @@ namespace OracleSampleApplication
     {
         static void Main(string[] args)
         {
-            //string connectionString = @"Host=localhost;Direct=true;Service Name=pdborcl.si.corp.adacta-group.com;User ID=TESTNA;Password=adinsure;Unicode=true";
             string connectionString = @"<Oracle connectionString>";
             using (var database = new TemporaryOracleDatabase(connectionString))
             {

@@ -8,6 +8,14 @@ namespace DbUp
     public interface IQueryProvider
     {
         /// <summary>
+        /// Name of versioning table
+        /// </summary>
+        string TableName { get; }
+        /// <summary>
+        /// Scheme of versioning table
+        /// </summary>
+        string Scheme { get; }
+        /// <summary>
         /// Sql create string to create versioning table
         /// </summary>
         /// <returns>Sql command for creating of version table</returns>

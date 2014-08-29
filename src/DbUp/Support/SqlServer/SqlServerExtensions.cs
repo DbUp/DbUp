@@ -2,8 +2,6 @@
 using System.Data;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
-using DbUp.SqlServer;
-using DbUp.SqlServer.Engine;
 using DbUp.Support.SqlServer;
 
 /// <summary>
@@ -77,13 +75,15 @@ public static class SqlServerExtensions
     /// </summary>
     /// <param name="connectionManager"></param>
     /// <param name="schema"></param>
+    /// <param name="table"></param>
     /// <returns></returns>
-    private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema)
+    private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema = null, string table = "SchemaVersions")
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log));
+        builder.Configure(c => c.QueryProvider = new SqlServerQueryProvider(table, schema));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
         return builder;
     }
 
@@ -94,9 +94,10 @@ public static class SqlServerExtensions
     /// <param name="schema">The schema.</param>
     /// <param name="table">The table.</param>
     /// <returns></returns>
-    public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
+    public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table = "SchemaVersions")
     {
-        builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log));
+        builder.Configure(c => c.QueryProvider = new SqlServerQueryProvider(table, schema));
+        builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log, () => c.QueryProvider));
         return builder;
     }
 }

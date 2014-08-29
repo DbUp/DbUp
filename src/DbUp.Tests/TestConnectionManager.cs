@@ -5,6 +5,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Oracle;
+using DbUp.Oracle.Engine;
 using NSubstitute;
 
 namespace DbUp.Tests
@@ -31,7 +32,7 @@ namespace DbUp.Tests
         }
     }
 
-    internal class OracleTestConnectionManager : OracleConnectionManager
+    internal class OracleTestConnectionManager : ConnectionManager
     {
         private readonly IDbConnection connection;
 

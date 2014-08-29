@@ -1,7 +1,8 @@
-﻿using System.Text.RegularExpressions;
+﻿using System;
+using System.Text.RegularExpressions;
 using DbUp.Engine;
 
-namespace DbUp.SqlCe
+namespace DbUp.SqlCe.Engine
 {
     /// <summary>
     /// This preprocessor makes minor adjustments to your sql to make it compatible with SqlCe

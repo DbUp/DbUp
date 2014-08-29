@@ -2,9 +2,7 @@
 using System.Data.SqlServerCe;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
-using DbUp.SqlCe;
-using DbUp.SqlServer;
-using DbUp.SqlServer.Engine;
+using DbUp.SqlCe.Engine;
 using DbUp.Support.SqlServer;
 
 /// <summary>
@@ -44,12 +42,13 @@ public static class SqlCeExtensions
         return SqlCeDatabase(new ConnectionManager(connectionString));
     }
 
-    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
+    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager, string table = "SchemaVersions")
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new TableJournal(()=>connectionManager, ()=>c.Log));
+        builder.Configure(c => c.QueryProvider = new QueryProvider(table));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(() => connectionManager, () => c.Log, () => c.QueryProvider));
         builder.WithPreprocessor(new Preprocessor());
         return builder;
     }

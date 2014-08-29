@@ -8,6 +8,9 @@ using Devart.Data.Oracle;
 
 namespace OracleSampleApplication
 {
+    /// <summary>
+    /// Using Devart Oracle Provider for overriding basic Oracle provider ODP.NET
+    /// </summary>
     public class DevartOracleConnectionManager : DatabaseConnectionManager
        {
 

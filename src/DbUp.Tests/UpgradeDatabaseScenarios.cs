@@ -5,9 +5,9 @@ using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.SQLite;
 using DbUp.SQLite.Engine;
 using DbUp.SQLite.Helpers;
+using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
 using TestStack.BDDfy;
@@ -194,7 +194,7 @@ namespace DbUp.Tests
         {
             var sqLiteConnectionManager = new ConnectionManager(database.SharedConnection);
             sqLiteConnectionManager.OperationStarting(log, new List<SqlScript>());
-            var journal = new TableJournal(() => sqLiteConnectionManager, () => log);
+            var journal = new TableJournal(() => sqLiteConnectionManager, () => log, () => new QueryProvider("SchemaVersions"));
             return journal;
         }
 

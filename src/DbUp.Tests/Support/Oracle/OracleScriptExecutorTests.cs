@@ -4,6 +4,7 @@ using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Oracle;
+using DbUp.Oracle.Engine;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -20,7 +21,7 @@ namespace DbUp.Tests.Support.Oracle
 
             connection.CreateCommand().Returns(command);
 
-            var executor = new ScriptExecutor(() => new TestConnectionManager(connection, true), () => new ConsoleUpgradeLog(), () => true, null);
+            var executor = new ScriptExecutor(() => new TestConnectionManager(connection, true), () => new ConsoleUpgradeLog(), () => new QueryProvider(), () => true, null);
             var variables = new Dictionary<string, string> { { "columnDefault", "NULL" } };
 
             // Act
@@ -39,7 +40,7 @@ namespace DbUp.Tests.Support.Oracle
 
             connection.CreateCommand().Returns(command);
 
-            var executor = new ScriptExecutor(() => new TestConnectionManager(connection, true), () => new ConsoleUpgradeLog(), () => true, null);
+            var executor = new ScriptExecutor(() => new TestConnectionManager(connection, true), () => new ConsoleUpgradeLog(), () => new QueryProvider(), () => true, null);
             var variables = new Dictionary<string, string> { { "columnDefault", "NULL" } };
 
             // Act
@@ -58,7 +59,7 @@ namespace DbUp.Tests.Support.Oracle
 
             connection.CreateCommand().Returns(command);
 
-            var executor = new ScriptExecutor(() => new TestConnectionManager(connection, true), () => new ConsoleUpgradeLog(), () => true, null);
+            var executor = new ScriptExecutor(() => new TestConnectionManager(connection, true), () => new ConsoleUpgradeLog(), () => new QueryProvider(), () => true, null);
             var variables = new Dictionary<string, string> { { "variable1", "SCHEMA" } };
 
             // Act

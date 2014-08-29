@@ -7,7 +7,7 @@ using System.Text.RegularExpressions;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 
-namespace DbUp.SqlCe
+namespace DbUp.SqlCe.Engine
 {
     /// <summary>
     /// Manages SqlCe Database Connections

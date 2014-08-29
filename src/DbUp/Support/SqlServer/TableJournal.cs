@@ -6,10 +6,8 @@ using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.QueryProviders;
-using DbUp.Support.SqlServer;
 
-namespace DbUp.SqlServer.Engine
+namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a SQL Server database
@@ -19,7 +17,7 @@ namespace DbUp.SqlServer.Engine
         /// <summary>
         /// Object for getting sql strings
         /// </summary>
-        protected IQueryProvider QueryProvider = new SqlServerQueryProvider();
+        protected IQueryProvider QueryProvider;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
@@ -31,10 +29,11 @@ namespace DbUp.SqlServer.Engine
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
         /// </example>
-        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger)
+        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IQueryProvider> queryFunc )
         {
             this.connectionManager = connectionManager;
             log = logger;
+            QueryProvider = queryFunc();
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace DbUp.SqlServer.Engine
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", QueryProviderBase.VersionTableName));
+                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", QueryProvider.TableName));
                 return new string[0];
             }
 
@@ -88,7 +87,7 @@ namespace DbUp.SqlServer.Engine
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("Creating the {0} table", QueryProviderBase.VersionTableName));
+                log().WriteInformation(string.Format("Creating the {0} table", QueryProvider.TableName));
 
                 connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
@@ -100,7 +99,7 @@ namespace DbUp.SqlServer.Engine
                         command.ExecuteNonQuery();
                     }
 
-                    log().WriteInformation(string.Format("The {0} table has been created", QueryProviderBase.VersionTableName));
+                    log().WriteInformation(string.Format("The {0} table has been created", QueryProvider.TableName));
                 });
             }
 

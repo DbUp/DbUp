@@ -22,7 +22,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
-        private readonly IQueryProvider queryProvider = new SqlServerQueryProvider();
+        private readonly IQueryProvider queryProvider;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -34,24 +34,18 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
         /// <param name="log">The logging mechanism.</param>
-        /// <param name="schema">The schema that contains the table.</param>
+        /// <param name="queryProvider">Query provider.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, 
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<IQueryProvider> queryProvider, Func<bool> variablesEnabled, 
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
-            Schema = schema;
             this.log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
+            this.queryProvider = queryProvider();
         }
-
-        /// <summary>
-        /// Database Schema, should be null if database does not support schemas
-        /// </summary>
-        public string Schema { get; set; }
-
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
@@ -66,13 +60,13 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         public void VerifySchema()
         {
-            if (string.IsNullOrEmpty(Schema)) return;
+            if (string.IsNullOrEmpty(queryProvider.Scheme)) return;
 
             connectionManagerFactory().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
+                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, queryProvider.Scheme, () => true);
 
-                sqlRunner.ExecuteNonQuery(string.Format(queryProvider.CreateSchemeIfNotExists(), Schema));
+                sqlRunner.ExecuteNonQuery(string.Format(queryProvider.CreateSchemeIfNotExists(), queryProvider.Scheme));
             });
         }
 
@@ -85,13 +79,13 @@ namespace DbUp.Support.SqlServer
         {
             if (variables == null)
                 variables = new Dictionary<string, string>();
-            if (Schema != null && !variables.ContainsKey("schema"))
-                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(Schema));
+            if (queryProvider.Scheme != null && !variables.ContainsKey("schema"))
+                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(queryProvider.Scheme));
 
             log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
 
             var contents = script.Contents;
-            if (string.IsNullOrEmpty(Schema))
+            if (string.IsNullOrEmpty(queryProvider.Scheme))
                 contents = new StripSchemaPreprocessor().Process(contents);
             if (variablesEnabled())
                 contents = new VariableSubstitutionPreprocessor(variables).Process(contents);

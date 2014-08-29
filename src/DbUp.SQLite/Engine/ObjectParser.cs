@@ -4,7 +4,7 @@ using DbUp.Support;
 
 namespace DbUp.SQLite.Engine
 {
-    public class SQLiteObjectParser
+    internal class SQLiteObjectParser
     {
         /// <summary>
         /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.

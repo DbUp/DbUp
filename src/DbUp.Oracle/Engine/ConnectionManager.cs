@@ -1,14 +1,18 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Linq;
 using System.Text.RegularExpressions;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using Oracle.ManagedDataAccess.Client;
-using System.Collections.Generic;
-using System.Data;
 
-namespace DbUp.Oracle
+namespace DbUp.Oracle.Engine
 {
-    internal class OracleConnectionManager : DatabaseConnectionManager
+    /// <summary>
+    /// Default oracle connection manager based on Oracle ODP.NET
+    /// </summary>
+    internal class ConnectionManager : DatabaseConnectionManager
     {
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {

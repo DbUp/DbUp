@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace DbUp.QueryProviders
+namespace DbUp.Engine.QueryProviders
 {
     /// <summary>
     /// Class for supporting query string which are same for all providers
@@ -10,7 +10,26 @@ namespace DbUp.QueryProviders
         /// <summary>
         /// Name of Journal table in database.
         /// </summary>
-        public static string VersionTableName = "DB_VERSION";
+        protected string VersionTableName = "SchemaVersions";
+        /// <summary>
+        /// Scheme of Journal table in database.
+        /// </summary>
+        protected string VersionTableScheme = null;
+
+        /// <summary>
+        /// Name of versioning table
+        /// </summary>
+        public string TableName 
+        {
+            get { return VersionTableName; }
+        }
+        /// <summary>
+        /// Scheme of versioning table
+        /// </summary>
+        public string Scheme
+        {
+            get { return VersionTableScheme; }
+        }
         /// <summary>
         /// Abstract method for Sql create string to create versioning table
         /// </summary>

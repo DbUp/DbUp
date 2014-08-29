@@ -52,7 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\TemporaryOracleDatabase.cs" />
-    <Compile Include="OracleConnectionManager.cs" />
+    <Compile Include="Engine\ConnectionManager.cs" />
     <Compile Include="OracleExtensions.cs" />
     <Compile Include="Engine\QueryProvider.cs" />
     <Compile Include="Engine\ScriptExecutor.cs" />

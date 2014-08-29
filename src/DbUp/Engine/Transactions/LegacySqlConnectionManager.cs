@@ -22,6 +22,7 @@ namespace DbUp.Engine.Transactions
         {
             this.connectionFactory = connectionFactory;
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -32,6 +33,7 @@ namespace DbUp.Engine.Transactions
         {
             return new DoNothingDisposible();
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -44,6 +46,7 @@ namespace DbUp.Engine.Transactions
                 action(()=>connection.CreateCommand());
             }
         }
+
         /// <summary>
         /// 
         /// </summary>
@@ -58,14 +61,17 @@ namespace DbUp.Engine.Transactions
                 return actionWithResult(()=>connection.CreateCommand());
             }
         }
+
         /// <summary>
         /// 
         /// </summary>
         public TransactionMode TransactionMode { get; set; }
+
         /// <summary>
         /// 
         /// </summary>
         public bool IsScriptOutputLogged { get; set; }
+
         /// <summary>
         /// 
         /// </summary>

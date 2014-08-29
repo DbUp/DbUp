@@ -3,6 +3,7 @@ using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Oracle;
+using DbUp.Oracle.Engine;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -25,7 +26,7 @@ namespace DbUp.Tests.Support.Oracle
             var logger = Substitute.For<IUpgradeLog>();
 
             connection.CreateCommand().Returns(command);
-            var scriptExecutor = new ScriptExecutor(() => new OracleTestConnectionManager(connection, true), () => logger, () => false, null);
+            var scriptExecutor = new ScriptExecutor(() => new OracleTestConnectionManager(connection, true), () => logger, () => new QueryProvider(), () => false, null);
 
             // Act
             scriptExecutor.Execute(new SqlScript("Test", script));
@@ -51,7 +52,7 @@ namespace DbUp.Tests.Support.Oracle
 
             connection.CreateCommand().Returns(command);
 
-            var scriptExecutor = new ScriptExecutor(() => new OracleTestConnectionManager(connection, true), () => logger, () => false, null);
+            var scriptExecutor = new ScriptExecutor(() => new OracleTestConnectionManager(connection, true), () => logger, () => new QueryProvider(), () => false, null);
 
             // Act
             scriptExecutor.Execute(new SqlScript("Test", script));

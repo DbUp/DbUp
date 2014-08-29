@@ -4,6 +4,7 @@ using System.Data.Common;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Oracle;
+using DbUp.Oracle.Engine;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -11,7 +12,7 @@ namespace DbUp.Tests.Support.Oracle
 {
     public class OracleTableJournalTests
     {
-        private QueryProvider queryProvider = new QueryProvider();
+        private readonly QueryProvider queryProvider = new QueryProvider();
         [Test]
         public void storing_executed_script_checks_if_journal_table_already_exists()
         {
@@ -22,7 +23,7 @@ namespace DbUp.Tests.Support.Oracle
 
             dbConnection.CreateCommand().Returns(doesTableExistCommand, insertCommand);
 
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.StoreExecutedScript(new SqlScript("Test", "irrelevant"));
@@ -44,7 +45,7 @@ namespace DbUp.Tests.Support.Oracle
             doesTableExistCommand.ExecuteScalar().Returns(_ => { throw new MockDbException(); });
             dbConnection.CreateCommand().Returns(doesTableExistCommand, createTableCommand, insertCommand);
 
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.StoreExecutedScript(new SqlScript("Test", "irrelevant"));
@@ -65,7 +66,7 @@ namespace DbUp.Tests.Support.Oracle
             doesTableExistCommand.ExecuteScalar().Returns(true);
             dbConnection.CreateCommand().Returns(doesTableExistCommand, insertCommand);
 
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.StoreExecutedScript(new SqlScript("Test", "irrelevant"));
@@ -91,7 +92,7 @@ namespace DbUp.Tests.Support.Oracle
             command.CreateParameter().Returns(param1, param2, param3, param4, param5);
             command.ExecuteScalar().Returns(x => { throw new MockDbException(); });
             var consoleUpgradeLog = new ConsoleUpgradeLog();
-            var journal = new TableJournal(() => connectionManager, () => consoleUpgradeLog);
+            var journal = new TableJournal(() => connectionManager, () => consoleUpgradeLog, () => new QueryProvider());
 
             // When
             journal.StoreExecutedScript(new SqlScript("test", "select 1"));
@@ -116,7 +117,7 @@ namespace DbUp.Tests.Support.Oracle
 
             dbConnection.CreateCommand().Returns(doesTableExistCommand, insertCommand);
 
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.StoreExecutedScript(new SqlScript("Test", "irrelevant"));
@@ -135,7 +136,7 @@ namespace DbUp.Tests.Support.Oracle
 
             dbConnection.CreateCommand().Returns(command);
 
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.GetExecutedScripts();
@@ -153,13 +154,13 @@ namespace DbUp.Tests.Support.Oracle
 
             doesTableExistCommand.ExecuteScalar().Returns(_ => { throw new MockDbException(); });
             dbConnection.CreateCommand().Returns(doesTableExistCommand);
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.GetExecutedScripts();
 
             // Assert
-            logger.Received(1).WriteInformation(String.Format("The {0} table could not be found. The database is assumed to be at version 0.", QueryProvider.VersionTableName));
+            logger.Received(1).WriteInformation(String.Format("The {0} table could not be found. The database is assumed to be at version 0.", queryProvider.TableName));
         }
 
         [Test]
@@ -172,7 +173,7 @@ namespace DbUp.Tests.Support.Oracle
             doesTableExistCommand.ExecuteScalar().Returns(_ => { throw new MockDbException(); });
             dbConnection.CreateCommand().Returns(doesTableExistCommand);
 
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             var result = tableJournal.GetExecutedScripts();
@@ -191,7 +192,7 @@ namespace DbUp.Tests.Support.Oracle
 
             doesTableExistCommand.ExecuteScalar().Returns(true);
             dbConnection.CreateCommand().Returns(doesTableExistCommand, selectCommand);
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.GetExecutedScripts();
@@ -210,7 +211,7 @@ namespace DbUp.Tests.Support.Oracle
 
             doesTableExistCommand.ExecuteScalar().Returns(true);
             dbConnection.CreateCommand().Returns(doesTableExistCommand, selectCommand);
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.GetExecutedScripts();
@@ -236,7 +237,7 @@ namespace DbUp.Tests.Support.Oracle
 
             doesTableExistCommand.ExecuteScalar().Returns(_ => { throw new MockDbException(); });
             dbConnection.CreateCommand().Returns(doesTableExistCommand, createTableCommand, insertCommand);
-            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger);
+            var tableJournal = new TableJournal(() => new TestConnectionManager(dbConnection, true), () => logger, () => new QueryProvider());
 
             // Act
             tableJournal.StoreExecutedScript(new SqlScript("Test", "irrelevant"));

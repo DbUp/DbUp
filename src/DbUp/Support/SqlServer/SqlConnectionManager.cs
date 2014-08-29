@@ -24,6 +24,7 @@ namespace DbUp.Support.SqlServer
         {
             this.connectionString = connectionString;
         }
+
         /// <summary>
         /// Create connection for Microsoft Sql Server
         /// </summary>
@@ -38,6 +39,7 @@ namespace DbUp.Support.SqlServer
 
             return conn;
         }
+
         /// <summary>
         /// Split Scripts into statements.
         /// </summary>

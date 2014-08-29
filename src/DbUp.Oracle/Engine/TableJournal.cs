@@ -6,17 +6,17 @@ using System.Data.SqlClient;
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.QueryProviders;
 using DbUp.Engine.Transactions;
-using DbUp.QueryProviders;
 
-namespace DbUp.Oracle
+namespace DbUp.Oracle.Engine
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a Oracle database
     /// </summary>
     internal sealed class TableJournal : IJournal
     {
-        private readonly IQueryProvider queryProvider = new QueryProvider();
+        private readonly IQueryProvider queryProvider;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
@@ -25,13 +25,15 @@ namespace DbUp.Oracle
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
         /// <param name="logger">The log.</param>
+        /// <param name="queryProvider">Container which holds queries and informations about database.</param>
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
         /// </example>
-        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger)
+        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger,  Func<IQueryProvider> queryProvider)
         {
             this.connectionManager = connectionManager;
             log = logger;
+            this.queryProvider = queryProvider();
         }
 
         /// <summary>
@@ -44,7 +46,7 @@ namespace DbUp.Oracle
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", QueryProviderBase.VersionTableName));
+                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", queryProvider.TableName));
                 return new string[0];
             }
 
@@ -180,7 +182,7 @@ namespace DbUp.Oracle
             {
                 if (!exists)
                 {
-                    log().WriteInformation(string.Format("Creating the {0} table", QueryProviderBase.VersionTableName));
+                    log().WriteInformation(string.Format("Creating the {0} table", queryProvider.TableName));
 
                     using (var command = dbCommandFactory())
                     {
@@ -190,7 +192,7 @@ namespace DbUp.Oracle
                         command.ExecuteNonQuery();
                     }
 
-                    log().WriteInformation(string.Format("The {0} table has been created", QueryProviderBase.VersionTableName));
+                    log().WriteInformation(string.Format("The {0} table has been created", queryProvider.TableName));
                 }
                 else
                 {
@@ -210,7 +212,7 @@ namespace DbUp.Oracle
                         columnRowDeleted = command.ExecuteNonQuery();
                     }
                     if (columnRowDeleted != 0)
-                        log().WriteInformation(String.Format("{0} entries in {1} table has been removed", columnRowDeleted, QueryProviderBase.VersionTableName));
+                        log().WriteInformation(String.Format("{0} entries in {1} table has been removed", columnRowDeleted, queryProvider.TableName));
                 }
 
 
@@ -248,7 +250,12 @@ namespace DbUp.Oracle
                 }
             });
         }
-
+        /// <summary>
+        /// Check if already executed part of script has changed.
+        /// </summary>
+        /// <param name="script">The script.</param>
+        /// <param name="successfullyExecutedStatements">Collection of already successfull executed statements of scipt</param>
+        /// <returns>Return true if already executed statements of scripts have not changed.</returns>
         internal bool ValidateExecutedScript(SqlScript script, IEnumerable<string> successfullyExecutedStatements)
         {
             if (successfullyExecutedStatements == null)
