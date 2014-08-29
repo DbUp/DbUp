@@ -6,10 +6,21 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using Devart.Data.Oracle;
 
-namespace DbUp.Oracle.Devart
+namespace OracleSampleApplication
 {
     public class DevartOracleConnectionManager : DatabaseConnectionManager
        {
+
+        private static readonly DevartOracleConnectionManager instance = new DevartOracleConnectionManager();
+
+           /// <summary>
+           /// Returns the databases supported by DbUp.
+           /// </summary>
+        public static DevartOracleConnectionManager Instance
+           {
+               get { return instance; }
+           }
+
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             return new OracleConnection(ConnectionString);

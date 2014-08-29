@@ -39,7 +39,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\_shared\dbup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -57,6 +57,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\ObjectParser.cs" />
     <Compile Include="Helpers\InMemorySQLiteDatabase.cs" />
     <Compile Include="Helpers\SharedConnection.cs" />
     <Compile Include="Helpers\TemporarySQLiteDatabase.cs" />
@@ -68,15 +69,13 @@
     <Compile Include="Engine\TableJournal.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\_shared\dbup.snk">
+      <Link>dbup.snk</Link>
+    </None>
     <None Include="App.config" />
-    <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbUp.SqlServer\DbUp.SqlServer.csproj">
-      <Project>{7db7191e-a0bb-4850-b71d-caf535f4b6fe}</Project>
-      <Name>DbUp.SqlServer</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
       <Project>{2d2c117a-7841-4285-a4ce-e7c4fc64ad9b}</Project>
       <Name>DbUp</Name>

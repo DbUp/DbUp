@@ -38,7 +38,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\_shared\dbup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -69,6 +69,7 @@
     <Compile Include="Engine\Preprocessors\StripSchemaPreprocessor.cs" />
     <Compile Include="Engine\Transactions\TransactionMode.cs" />
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
+    <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
     <Compile Include="Engine\QueryProviders\IQueryProvider.cs" />
     <Compile Include="Engine\QueryProviders\QueryProviderBase.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Engine\UpgradeEngine.cs" />
     <Compile Include="Engine\DatabaseUpgradeResult.cs" />
     <Compile Include="Engine\IScriptExecutor.cs" />
+    <Compile Include="Helpers\TemporarySqlDatabase.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptAndCodeProvider.cs" />
     <Compile Include="Engine\Transactions\IConnectionManager.cs" />
     <Compile Include="Engine\Transactions\LegacySqlConnectionManager.cs" />
@@ -92,11 +94,18 @@
     <Compile Include="Engine\IJournal.cs" />
     <Compile Include="Engine\Output\TraceUpgradeLog.cs" />
     <Compile Include="Builder\SupportedDatabases.cs" />
+    <Compile Include="Support\SqlServer\SqlServerExtensions.cs" />
+    <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
+    <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
+    <Compile Include="Support\SqlServer\SqlServerQueryProvider.cs" />
+    <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
+    <Compile Include="Support\SqlServer\TableJournal.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dbup.snk" />
+    <None Include="..\_shared\dbup.snk">
+      <Link>dbup.snk</Link>
+    </None>
   </ItemGroup>
-  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

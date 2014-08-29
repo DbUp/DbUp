@@ -1,12 +1,12 @@
 ﻿using System;
 using DbUp.QueryProviders;
 
-namespace DbUp.SqlServer
+namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// Return queries for Microsoft Sql Server
     /// </summary>
-    internal sealed class QueryProvider : QueryProviderBase
+    internal sealed class SqlServerQueryProvider : QueryProviderBase
     {       
         /// <summary>
         /// Sql create strign to create versioning table
@@ -18,7 +18,7 @@ namespace DbUp.SqlServer
                       [VersionId] int identity(1,1) not null constraint PK_{2}_VersionId primary key,
                       [ScriptName] nvarchar(255) not null,
                       [Applied] datetime not null,
-                      [Remark] [nvarchar](255) NULL ) ", "dbo", ObjectParser.QuoteSqlObjectName(VersionTableName), VersionTableName);
+                      [Remark] [nvarchar](255) NULL ) ", "dbo", SqlObjectParser.QuoteSqlObjectName(VersionTableName), VersionTableName);
         }
 
         /// <summary>
@@ -36,7 +36,7 @@ namespace DbUp.SqlServer
         /// <returns>Sql command for selecting scirpt names from VersionTableName</returns>
         public override string GetVersionTableExecutedScriptsSql()
         {
-            return String.Format("SELECT ScriptName FROM {0} ORDER BY ScriptName", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("SELECT ScriptName FROM {0} ORDER BY ScriptName", SqlObjectParser.QuoteSqlObjectName(VersionTableName));
         }
 
         /// <summary>
@@ -45,7 +45,7 @@ namespace DbUp.SqlServer
         /// <returns>Sql command for inserting new entry in versioning table</returns>
         public override string VersionTableNewEntry()
         {
-            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", SqlObjectParser.QuoteSqlObjectName(VersionTableName));
         }
 
         /// <summary>
@@ -54,7 +54,7 @@ namespace DbUp.SqlServer
         /// <returns>SQL Command which checks if version table has any entries.</returns>
         public override string VersionTableDoesTableExist()
         {
-            return String.Format("SELECT COUNT(*) FROM {0}", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("SELECT COUNT(*) FROM {0}", SqlObjectParser.QuoteSqlObjectName(VersionTableName));
         }
     }
 }

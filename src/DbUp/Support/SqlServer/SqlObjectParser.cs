@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Linq;
-using DbUp.Support;
 
-namespace DbUp.SqlServer
+namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// Parses Sql Objects and performs quoting functions
     /// </summary>
-    public class ObjectParser
+    public class SqlObjectParser
     {
         /// <summary>
         /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.

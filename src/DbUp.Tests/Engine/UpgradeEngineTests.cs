@@ -6,6 +6,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SqlServer;
+using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -30,7 +31,7 @@ namespace DbUp.Tests.Engine
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
                 var connectionManager = new TestConnectionManager(dbConnection);
-                scriptExecutor = new ScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
+                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))

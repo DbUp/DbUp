@@ -10,11 +10,12 @@ namespace OracleSampleApplication
     {
         static void Main(string[] args)
         {
+            //string connectionString = @"Host=localhost;Direct=true;Service Name=pdborcl.si.corp.adacta-group.com;User ID=TESTNA;Password=adinsure;Unicode=true";
             string connectionString = @"<Oracle connectionString>";
             using (var database = new TemporaryOracleDatabase(connectionString))
             {
                 var upgradeEngineBuilder = DeployChanges.To
-                    .OracleDatabase(database.ConnectionString) //null or "" for default schema for user
+                    .OracleDatabase(DevartOracleConnectionManager.Instance, database.ConnectionString) //null or "" for default schema for user
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script =>
                     {
                         if (script.EndsWith("Script0006 - Transactions.sql"))

@@ -7,18 +7,19 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.QueryProviders;
+using DbUp.Support.SqlServer;
 
-namespace DbUp.SqlCe
+namespace DbUp.SqlServer.Engine
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a SQL CE database
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a SQL Server database
     /// </summary>
-    internal class TableJournal : IJournal
+    public class TableJournal : IJournal
     {
         /// <summary>
         /// Object for getting sql strings
         /// </summary>
-        protected IQueryProvider QueryProvider = new QueryProvider();
+        protected IQueryProvider QueryProvider = new SqlServerQueryProvider();
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
@@ -113,7 +114,7 @@ namespace DbUp.SqlCe
                     scriptNameParam.ParameterName = "scriptName";
                     scriptNameParam.Value = script.Name;
                     command.Parameters.Add(scriptNameParam);
-
+                    
                     var appliedParam = command.CreateParameter();
                     appliedParam.ParameterName = "applied";
                     appliedParam.Value = String.Format("{0:yyyy-MM-dd hh:mm:ss}", DateTime.UtcNow);
@@ -151,4 +152,3 @@ namespace DbUp.SqlCe
         }
     }
 }
-

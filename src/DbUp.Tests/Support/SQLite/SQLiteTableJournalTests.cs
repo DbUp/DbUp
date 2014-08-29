@@ -5,6 +5,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite;
+using DbUp.SQLite.Engine;
 using NSubstitute;
 using NUnit.Framework;
 

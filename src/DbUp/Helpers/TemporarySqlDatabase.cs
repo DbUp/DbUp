@@ -2,7 +2,6 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 using DbUp.Engine.Output;
-using DbUp.SqlServer.Helper;
 
 namespace DbUp.Helpers
 {

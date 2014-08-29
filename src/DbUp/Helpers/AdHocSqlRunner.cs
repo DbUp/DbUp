@@ -4,8 +4,9 @@ using System.Data;
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Preprocessors;
+using DbUp.Support.SqlServer;
 
-namespace DbUp.SqlServer.Helper
+namespace DbUp.Helpers
 {
     /// <summary>
     /// A helper for executing SQL queries easily.
@@ -150,7 +151,7 @@ namespace DbUp.SqlServer.Helper
             if (string.IsNullOrEmpty(Schema))
                 query = new StripSchemaPreprocessor().Process(query);
             if (!string.IsNullOrEmpty(Schema) && !variables.ContainsKey("schema"))
-                variables.Add("schema", ObjectParser.QuoteSqlObjectName(Schema));
+                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(Schema));
             if (variablesEnabled())
                 query = new VariableSubstitutionPreprocessor(variables).Process(query);
             query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));

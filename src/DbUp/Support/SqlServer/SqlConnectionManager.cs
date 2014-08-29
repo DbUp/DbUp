@@ -7,12 +7,12 @@ using System.Text.RegularExpressions;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 
-namespace DbUp.SqlServer
+namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// Manages Sql Database Connections
     /// </summary>
-    internal class ConnectionManager : DatabaseConnectionManager
+    internal class SqlConnectionManager : DatabaseConnectionManager
     {
         private readonly string connectionString;
 
@@ -20,7 +20,7 @@ namespace DbUp.SqlServer
         /// Manages Sql Database Connections
         /// </summary>
         /// <param name="connectionString"></param>
-        public ConnectionManager(string connectionString)
+        public SqlConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
         }
@@ -45,7 +45,6 @@ namespace DbUp.SqlServer
         /// <returns></returns>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            // TODO: Bajede obstaja zelo dober parser v OnlineScriptLauncher
             var scriptStatements =
             Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
                 .Select(x => x.Trim())

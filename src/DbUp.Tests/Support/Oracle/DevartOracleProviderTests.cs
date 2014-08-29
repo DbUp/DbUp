@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Oracle;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests.Oracle
+namespace DbUp.Tests.Support.Oracle
 {
     [TestFixture]
     public class DevartOracleProviderTests
@@ -28,7 +25,7 @@ namespace DbUp.Tests.Oracle
             var logger = Substitute.For<IUpgradeLog>();
 
             connection.CreateCommand().Returns(command);
-            var scriptExecutor = new ScriptExecutor(() => new DevartTestConnectionManager(connection, true), () => logger, () => false, null);
+            var scriptExecutor = new ScriptExecutor(() => new OracleTestConnectionManager(connection, true), () => logger, () => false, null);
 
             // Act
             scriptExecutor.Execute(new SqlScript("Test", script));
@@ -54,7 +51,7 @@ namespace DbUp.Tests.Oracle
 
             connection.CreateCommand().Returns(command);
 
-            var scriptExecutor = new ScriptExecutor(() => new DevartTestConnectionManager(connection, true), () => logger, () => false, null);
+            var scriptExecutor = new ScriptExecutor(() => new OracleTestConnectionManager(connection, true), () => logger, () => false, null);
 
             // Act
             scriptExecutor.Execute(new SqlScript("Test", script));

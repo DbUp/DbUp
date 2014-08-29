@@ -4,6 +4,7 @@ using DbUp.Builder;
 using DbUp.Engine.Transactions;
 using DbUp.SqlServer;
 using DbUp.SqlServer.Engine;
+using DbUp.Support.SqlServer;
 
 /// <summary>
 /// Configuration extension methods for SQL Server.
@@ -39,7 +40,7 @@ public static class SqlServerExtensions
     /// </returns>
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema)
     {
-        return SqlDatabase(new ConnectionManager(connectionString), schema);
+        return SqlDatabase(new SqlConnectionManager(connectionString), schema);
     }
 
     /// <summary>
@@ -81,7 +82,7 @@ public static class SqlServerExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log));
         return builder;
     }

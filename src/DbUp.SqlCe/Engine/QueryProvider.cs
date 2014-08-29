@@ -1,6 +1,7 @@
 ﻿using System;
 using DbUp.QueryProviders;
 using DbUp.SqlServer;
+using DbUp.Support.SqlServer;
 
 namespace DbUp.SqlCe
 {
@@ -19,7 +20,7 @@ namespace DbUp.SqlCe
                       [VersionId] int identity(1,1) not null constraint PK_{1}_VersionId primary key,
                       [ScriptName] nvarchar(255) not null,
                       [Applied] datetime not null,
-                      [Remark] [nvarchar](255) NULL )", ObjectParser.QuoteSqlObjectName(VersionTableName), VersionTableName);
+                      [Remark] [nvarchar](255) NULL )", SqlObjectParser.QuoteSqlObjectName(VersionTableName), VersionTableName);
         }
 
         /// <summary>
@@ -36,7 +37,7 @@ namespace DbUp.SqlCe
         /// <returns>Sql command for selecting scirpt names from VersionTableName</returns>
         public override string GetVersionTableExecutedScriptsSql()
         {
-            return String.Format("SELECT [ScriptName] FROM {0} ORDER BY [ScriptName]", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("SELECT [ScriptName] FROM {0} ORDER BY [ScriptName]", SqlObjectParser.QuoteSqlObjectName(VersionTableName));
         }
 
         /// <summary>
@@ -45,7 +46,7 @@ namespace DbUp.SqlCe
         /// <returns>Sql command for inserting new entry in versioning table</returns>
         public override string VersionTableNewEntry()
         {
-            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", SqlObjectParser.QuoteSqlObjectName(VersionTableName));
         }
 
         /// <summary>
@@ -54,7 +55,7 @@ namespace DbUp.SqlCe
         /// <returns>SQL Command which checks if version table has any entries.</returns>
         public override string VersionTableDoesTableExist()
         {
-            return String.Format("SELECT COUNT(*) FROM {0}", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("SELECT COUNT(*) FROM {0}", SqlObjectParser.QuoteSqlObjectName(VersionTableName));
         }
     }
 }

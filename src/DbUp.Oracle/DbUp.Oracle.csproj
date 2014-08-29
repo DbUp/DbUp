@@ -34,9 +34,13 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>..\Assemblies\dbup.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\_shared\dbup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Oracle.ManagedDataAccess, Version=4.121.1.0, Culture=neutral, PublicKeyToken=89b483f429c47342, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\odp.net.managed.121.1.2\lib\net40\Oracle.ManagedDataAccess.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.OracleClient" />
@@ -48,6 +52,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Helpers\TemporaryOracleDatabase.cs" />
+    <Compile Include="OracleConnectionManager.cs" />
     <Compile Include="OracleExtensions.cs" />
     <Compile Include="Engine\QueryProvider.cs" />
     <Compile Include="Engine\ScriptExecutor.cs" />
@@ -55,23 +60,16 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbUp.Oracle.Devart\DbUp.Oracle.Devart.csproj">
-      <Project>{bd064990-78cd-4fe6-a18b-ecf2c16e57da}</Project>
-      <Name>DbUp.Oracle.Devart</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbUp.Oracle.ODPnet\DbUp.Oracle.ODPnet.csproj">
-      <Project>{C72172A9-60C0-4DBA-8F36-85D34EC57898}</Project>
-      <Name>DbUp.Oracle.ODPnet</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
       <Name>DbUp</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\Assemblies\dbup.snk">
+    <None Include="..\_shared\dbup.snk">
       <Link>dbup.snk</Link>
     </None>
+    <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

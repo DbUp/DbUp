@@ -1,13 +1,15 @@
-﻿using DbUp.Engine.Output;
+﻿using System.Linq;
+using System.Text.RegularExpressions;
+using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 using System.Data;
 
-namespace DbUp.Oracle.ODPnet
+namespace DbUp.Oracle
 {
-        public class OracleConnectionManager : DatabaseConnectionManager
-       {
+    internal class OracleConnectionManager : DatabaseConnectionManager
+    {
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             // if we have a shared connection, return it, otherwise create a connection
@@ -15,11 +17,17 @@ namespace DbUp.Oracle.ODPnet
         }
 
         /// <summary>
-        /// Oracle statements seprator is ???
+        /// Oracle statements seprator is /
         /// </summary>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            return new List<string>() { scriptContents };
+             var scriptStatements =
+                Regex.Split(scriptContents, "/\r*$", RegexOptions.Multiline)
+                    .Select(x => x.Trim())
+                    .Where(x => x.Length > 0)
+                    .ToArray();
+
+            return scriptStatements;
         }
     }
 }

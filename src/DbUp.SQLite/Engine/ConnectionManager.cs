@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
@@ -7,7 +8,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
 
-namespace DbUp.SQLite
+namespace DbUp.SQLite.Engine
 {
     /// <summary>
     /// SQLite Connection Manager.

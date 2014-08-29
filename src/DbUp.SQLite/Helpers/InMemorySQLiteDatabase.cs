@@ -1,7 +1,8 @@
 ﻿using System;
 using System.Data.SQLite;
 using DbUp.Engine.Transactions;
-using DbUp.SqlServer.Helper;
+using DbUp.Helpers;
+using DbUp.SQLite.Engine;
 
 namespace DbUp.SQLite.Helpers
 {

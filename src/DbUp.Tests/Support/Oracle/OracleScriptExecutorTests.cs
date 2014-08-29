@@ -7,7 +7,7 @@ using DbUp.Oracle;
 using NSubstitute;
 using NUnit.Framework;
 
-namespace DbUp.Tests.Oracle
+namespace DbUp.Tests.Support.Oracle
 {
     [TestFixture]
     public class OracleScriptExecutorTests

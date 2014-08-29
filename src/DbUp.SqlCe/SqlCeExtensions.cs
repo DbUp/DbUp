@@ -4,6 +4,8 @@ using DbUp.Builder;
 using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
 using DbUp.SqlServer;
+using DbUp.SqlServer.Engine;
+using DbUp.Support.SqlServer;
 
 /// <summary>
 /// Configuration extension methods for SQL CE.
@@ -46,7 +48,7 @@ public static class SqlCeExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new TableJournal(()=>connectionManager, ()=>c.Log));
         builder.WithPreprocessor(new Preprocessor());
         return builder;

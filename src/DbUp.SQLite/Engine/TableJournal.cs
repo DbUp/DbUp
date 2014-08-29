@@ -8,7 +8,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.QueryProviders;
 
-namespace DbUp.SQLite
+namespace DbUp.SQLite.Engine
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a SQLite database

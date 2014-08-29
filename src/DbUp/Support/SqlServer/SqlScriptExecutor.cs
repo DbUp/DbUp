@@ -8,21 +8,21 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
 using DbUp.Engine.Transactions;
-using DbUp.SqlServer.Helper;
+using DbUp.Helpers;
 
-namespace DbUp.SqlServer
+namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// A standard implementation of the IScriptExecutor interface that executes against a SQL Server 
     /// database.
     /// </summary>
-    public sealed class ScriptExecutor : IScriptExecutor
+    public sealed class SqlScriptExecutor : IScriptExecutor
     {
         private readonly Func<IConnectionManager> connectionManagerFactory;
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
-        private readonly IQueryProvider queryProvider = new QueryProvider();
+        private readonly IQueryProvider queryProvider = new SqlServerQueryProvider();
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -30,14 +30,14 @@ namespace DbUp.SqlServer
         public int? ExecutionTimeoutSeconds { get; set; }
 
         /// <summary>
-        /// Initializes an instance of the <see cref="ScriptExecutor"/> class.
+        /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
         /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public ScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, 
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, 
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             Schema = schema;
@@ -86,7 +86,7 @@ namespace DbUp.SqlServer
             if (variables == null)
                 variables = new Dictionary<string, string>();
             if (Schema != null && !variables.ContainsKey("schema"))
-                variables.Add("schema", ObjectParser.QuoteSqlObjectName(Schema));
+                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(Schema));
 
             log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
 

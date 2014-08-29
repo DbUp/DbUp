@@ -1,8 +1,7 @@
 ﻿using System;
 using DbUp.QueryProviders;
-using DbUp.SqlServer;
 
-namespace DbUp.SQLite
+namespace DbUp.SQLite.Engine
 {
     /// <summary>
     /// Return queries for Sqlite
@@ -19,7 +18,7 @@ namespace DbUp.SQLite
                         VersionID INTEGER CONSTRAINT 'PK_{1}_VersionID' PRIMARY KEY AUTOINCREMENT NOT NULL,
                         ScriptName TEXT NOT NULL,
                         Applied DATETIME NOT NULL,
-                        Remark TEXT NULL )", ObjectParser.QuoteSqlObjectName(VersionTableName), VersionTableName);
+                        Remark TEXT NULL )", SQLiteObjectParser.QuoteSqlObjectName(VersionTableName), VersionTableName);
         }
         /// <summary>
         /// Sql string for checking if scheme exists and if not create new scheme.
@@ -36,7 +35,7 @@ namespace DbUp.SQLite
         /// <returns>Sql command for selecting scirpt names from VersionTableName</returns>
         public override string GetVersionTableExecutedScriptsSql()
         {
-            return String.Format("SELECT ScriptName FROM {0} ORDER BY ScriptName", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("SELECT ScriptName FROM {0} ORDER BY ScriptName", SQLiteObjectParser.QuoteSqlObjectName(VersionTableName));
         }
 
         /// <summary>
@@ -45,7 +44,7 @@ namespace DbUp.SQLite
         /// <returns>Sql command for inserting new entry in versioning table</returns>
         public override string VersionTableNewEntry()
         {
-            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", SQLiteObjectParser.QuoteSqlObjectName(VersionTableName));
         }
 
         /// <summary>
@@ -54,7 +53,7 @@ namespace DbUp.SQLite
         /// <returns>SQL Command which checks if version table has any entries.</returns>
         public override string VersionTableDoesTableExist()
         {
-            return String.Format("SELECT COUNT(*) FROM {0}", ObjectParser.QuoteSqlObjectName(VersionTableName));
+            return String.Format("SELECT COUNT(*) FROM {0}", SQLiteObjectParser.QuoteSqlObjectName(VersionTableName));
         }
     }
 }
