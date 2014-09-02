@@ -112,10 +112,19 @@ namespace DbUp.Engine
 
         private List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
-            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
-            var executedScripts = configuration.Journal.GetExecutedScripts();
+            IEnumerable<SqlScript> allScripts = configuration.ScriptProviders.SelectMany(
+                scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
 
-            return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
+            string[] executedScripts = configuration.Journal.GetExecutedScripts();
+
+            string[] excludedScripts = configuration.ScriptProviders.SelectMany(
+                scriptProvider => scriptProvider.GetExcludedScripts()).ToArray();
+
+            var scriptsToExecute = allScripts.Where(s => executedScripts.All(y => y != s.Name));
+
+            scriptsToExecute = scriptsToExecute.Where(s => excludedScripts.All(y => y != s.Name));
+
+            return scriptsToExecute.ToList();
         }
 
         ///<summary>

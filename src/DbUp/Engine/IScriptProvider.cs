@@ -13,5 +13,11 @@ namespace DbUp.Engine
         /// Gets all scripts that should be executed.
         /// </summary>
         IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager);
+
+        /// <summary>
+        /// Gets scripts to be excluded from all deployments
+        /// </summary>
+        /// <returns></returns>
+        string[] GetExcludedScripts();
     }
 }

@@ -40,7 +40,8 @@ namespace DbUp.Tests
             {
                 new SqlScript("Script1.sql", "create table Foo (Id int identity)"),
                 new SqlScript("Script2.sql", "alter table Foo add column Name varchar(255)"),
-                new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')")
+                new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')"),
+                new SqlScript("Script4.sql", "weird oracle commands"),
             };
             database = new TemporarySQLiteDatabase("IntegrationScenarios");
             upgradeEngineBuilder = DeployChanges.To
@@ -243,6 +244,11 @@ namespace DbUp.Tests
             public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
             {
                 return sqlScripts;
+            }
+
+            public string[] GetExcludedScripts()
+            {
+                return new[] {"Script4.sql"};
             }
         }
     }
