@@ -29,7 +29,7 @@ namespace DbUp.Oracle.Engine
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
         /// </example>
-        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger,  Func<IQueryProvider> queryProvider)
+        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IQueryProvider> queryProvider)
         {
             this.connectionManager = connectionManager;
             log = logger;
@@ -196,7 +196,6 @@ namespace DbUp.Oracle.Engine
                 }
                 else
                 {
-                    int columnRowDeleted;
                     using (var command = dbCommandFactory())
                     {
                         var oracleQueryProvider = queryProvider as QueryProvider;
@@ -209,10 +208,8 @@ namespace DbUp.Oracle.Engine
                         command.Parameters.Add(scriptNameParam);
 
                         command.CommandType = CommandType.Text;
-                        columnRowDeleted = command.ExecuteNonQuery();
+                        command.ExecuteNonQuery();
                     }
-                    if (columnRowDeleted != 0)
-                        log().WriteInformation(String.Format("{0} entries in {1} table has been removed", columnRowDeleted, queryProvider.TableName));
                 }
 
 

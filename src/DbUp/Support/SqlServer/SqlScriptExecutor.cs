@@ -37,7 +37,7 @@ namespace DbUp.Support.SqlServer
         /// <param name="queryProvider">Query provider.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<IQueryProvider> queryProvider, Func<bool> variablesEnabled, 
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<IQueryProvider> queryProvider, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             this.log = log;
@@ -89,12 +89,13 @@ namespace DbUp.Support.SqlServer
                 contents = new StripSchemaPreprocessor().Process(contents);
             if (variablesEnabled())
                 contents = new VariableSubstitutionPreprocessor(variables).Process(contents);
-            contents = (scriptPreprocessors??new IScriptPreprocessor[0])
+            contents = (scriptPreprocessors ?? new IScriptPreprocessor[0])
                 .Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
 
             var connectionManager = connectionManagerFactory();
             var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
             var index = -1;
+            string executingStatement = String.Empty;
             try
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
@@ -102,6 +103,7 @@ namespace DbUp.Support.SqlServer
                     foreach (var statement in scriptStatements)
                     {
                         index++;
+                        executingStatement = statement;
                         using (var command = dbCommandFactory())
                         {
                             command.CommandText = statement;
@@ -126,6 +128,7 @@ namespace DbUp.Support.SqlServer
             {
                 log().WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0};    Block line: {1};    Procedure: {2};{5}SQL Exception Number: {3};    Message: {4}{5}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message, Environment.NewLine);
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
             catch (DbException sqlException)
@@ -133,12 +136,14 @@ namespace DbUp.Support.SqlServer
                 log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
                 log().WriteError(sqlException.ToString());
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
             catch (Exception ex)
             {
                 log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
                 log().WriteError(ex.ToString());
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
         }
@@ -160,7 +165,7 @@ namespace DbUp.Support.SqlServer
                     {
                         var value = reader.GetValue(i);
                         value = value == DBNull.Value ? null : value.ToString();
-                        line.Add((string) value);
+                        line.Add((string)value);
                     }
                     lines.Add(line);
                 }

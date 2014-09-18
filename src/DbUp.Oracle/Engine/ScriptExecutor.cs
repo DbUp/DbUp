@@ -92,12 +92,14 @@ namespace DbUp.Oracle.Engine
                 scriptStatements = scriptStatements.Skip(statementIndex);
                 index = statementIndex - 1;
             }
+            var executingStatement = String.Empty;
             try
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     foreach (var statement in scriptStatements)
                     {
+                        executingStatement = statement;
                         index++;
                         using (var command = dbCommandFactory())
                         {
@@ -123,6 +125,7 @@ namespace DbUp.Oracle.Engine
             {
                 log().WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0};    Block line: {1};    Procedure: {2};{5}SQL Exception Number: {3};    Message: {4}{5}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message, Environment.NewLine);
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 journalTable.StoreExecutedScript(script, index, sqlException.Message);
                 throw;
             }
@@ -130,12 +133,14 @@ namespace DbUp.Oracle.Engine
             {
                 log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 journalTable.StoreExecutedScript(script, index, sqlException.Message);
                 throw;
             }
             catch (Exception ex)
             {
                 log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 log().WriteError(ex.ToString());
                 throw;
             }
