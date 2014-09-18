@@ -97,6 +97,7 @@ public static class SqlServerExtensions
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table = "SchemaVersions")
     {
         builder.Configure(c => c.QueryProvider = new SqlServerQueryProvider(table, schema));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log, () => c.QueryProvider));
         return builder;
     }

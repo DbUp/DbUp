@@ -51,6 +51,7 @@ public static class OracleExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
+        builder.Configure(c => c.QueryProvider = new QueryProvider());
         builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
         return builder;
@@ -65,6 +66,7 @@ public static class OracleExtensions
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string table = null)
     {
         builder.Configure(c => c.QueryProvider = new QueryProvider(versioningTableName: table));
+        builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
         return builder;
     }
