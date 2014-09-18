@@ -29,7 +29,7 @@ public static class OracleExtensions
     {
         DatabaseConnectionManager manager = new ConnectionManager();
         manager.ConnectionString = connectionString;
-        return OracleDatabase(manager, null, null);
+        return OracleDatabase(manager);
     }
 
     /// <summary>
@@ -38,23 +38,33 @@ public static class OracleExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">Database connection string</param>
     /// <param name="databaseConnectionProvider">Oracle provider extended from DatabaseConnectionManager</param>
-    /// <param name="journalTableSchema">Journal table schema.</param>
-    /// <param name="journalTableName">Journal table name.</param>
     /// <returns>
     /// A builder for an Oracle database upgrader
     /// </returns>
-    public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, DatabaseConnectionManager databaseConnectionProvider, string connectionString, string journalTableSchema = null, string journalTableName = null)
+    public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, DatabaseConnectionManager databaseConnectionProvider, string connectionString)
     {
         databaseConnectionProvider.ConnectionString = connectionString;
-        return OracleDatabase(databaseConnectionProvider, journalTableSchema, journalTableName);
+        return OracleDatabase(databaseConnectionProvider);
     }
 
-    private static UpgradeEngineBuilder OracleDatabase(IConnectionManager connectionManager, string journalTableSchema, string journalTableName)
+    private static UpgradeEngineBuilder OracleDatabase(IConnectionManager connectionManager)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.QueryProvider = new QueryProvider(versioningTableName:journalTableName, versioningTableScheme:journalTableSchema));
         builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
+        return builder;
+    }
+
+    /// <summary>
+    /// Tracks the list of executed scripts in a Oracle table.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="table">The table.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string table = null)
+    {
+        builder.Configure(c => c.QueryProvider = new QueryProvider(versioningTableName: table));
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
         return builder;
     }

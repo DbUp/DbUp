@@ -14,7 +14,7 @@ namespace OracleSampleApplication
             using (var database = new TemporaryOracleDatabase(connectionString))
             {
                 var upgradeEngineBuilder = DeployChanges.To
-                    .OracleDatabase(DevartOracleConnectionManager.Instance, database.ConnectionString) //null or "" for default schema for user
+                    .OracleDatabase(DevartOracleConnectionManager.Instance, database.ConnectionString)
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script =>
                     {
                         if (script.EndsWith("Script0006 - Transactions.sql"))
