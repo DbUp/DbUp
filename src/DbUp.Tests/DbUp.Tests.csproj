@@ -34,7 +34,7 @@
     <SignAssembly>true</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>..\_shared\dbup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="NSubstitute">
@@ -65,6 +65,9 @@
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="Support\Oracle\DevartOracleProviderTests.cs" />
+    <Compile Include="Support\Oracle\OracleScriptExecutorTests.cs" />
+    <Compile Include="Support\Oracle\OracleTableJournalTests.cs" />
     <Compile Include="UpgradeDatabaseScenarios.cs" />
     <Compile Include="ScriptProvider\EmbeddedScriptAndCodeProviderTests.cs" />
     <Compile Include="Support\SQLite\SQLiteSupportTests.cs" />
@@ -83,6 +86,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.Oracle\DbUp.Oracle.csproj">
+      <Project>{4372abeb-8642-4625-ac1d-458357af0b5c}</Project>
+      <Name>DbUp.Oracle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp.SqlCe\DbUp.SqlCe.csproj">
       <Project>{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}</Project>
       <Name>DbUp.SqlCe</Name>
@@ -97,7 +104,9 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dbup.snk" />
+    <None Include="..\_shared\dbup.snk">
+      <Link>dbup.snk</Link>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

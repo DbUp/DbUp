@@ -4,6 +4,8 @@ using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Oracle;
+using DbUp.Oracle.Engine;
 using NSubstitute;
 
 namespace DbUp.Tests
@@ -28,5 +30,23 @@ namespace DbUp.Tests
         {
             return new[] {scriptContents};
         }
+    }
+
+    internal class OracleTestConnectionManager : ConnectionManager
+    {
+        private readonly IDbConnection connection;
+
+        public OracleTestConnectionManager(IDbConnection connection = null, bool startUpgrade = false)
+        {
+            this.connection = connection ?? Substitute.For<IDbConnection>();
+            if (startUpgrade)
+                OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+        }
+
+        protected override IDbConnection CreateConnection(IUpgradeLog log)
+        {
+            return connection;
+        }
+        
     }
 }

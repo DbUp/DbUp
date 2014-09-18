@@ -20,11 +20,12 @@ namespace DbUp.Helpers
         /// <summary>
         /// Initializes a new instance of the <see cref="TemporarySqlDatabase"/> class.
         /// </summary>
-        /// <param name="name">The name.</param>
-        public TemporarySqlDatabase(string name)
+        /// <param name="server">The name of server.</param>
+        /// <param name="name">The name of database.</param>
+        public TemporarySqlDatabase(string server, string name)
         {
             databaseName = name;
-            connectionString = string.Format("Server=(local);Database={0};Trusted_connection=true;Pooling=false", databaseName);
+            connectionString = string.Format("Server={0};Database={1};Trusted_connection=true;Pooling=false", server, databaseName);
             sqlConnection = new SqlConnection(connectionString);
             database = new AdHocSqlRunner(sqlConnection.CreateCommand, "dbo", () => true);
 

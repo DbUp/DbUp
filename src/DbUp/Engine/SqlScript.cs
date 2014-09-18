@@ -1,5 +1,4 @@
-﻿
-using System.IO;
+﻿using System.IO;
 using System.Text;
 
 namespace DbUp.Engine
@@ -42,10 +41,10 @@ namespace DbUp.Engine
         }
 
         /// <summary>
-        /// 
+        /// Create SqlScript from file on location
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">Full path location of file.</param>
+        /// <returns>New SqlScript instance from file.</returns>
         public static SqlScript FromFile(string path)
         {
             using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
@@ -56,11 +55,11 @@ namespace DbUp.Engine
         }
 
         /// <summary>
-        /// 
+        /// Create SqlScript from Stream
         /// </summary>
-        /// <param name="scriptName"></param>
-        /// <param name="stream"></param>
-        /// <returns></returns>
+        /// <param name="scriptName">Name of script to get from stream</param>
+        /// <param name="stream">SqlScript stream</param>
+        /// <returns>New SqlScript instance from stream.</returns>
         public static SqlScript FromStream(string scriptName, Stream stream)
         {
             using (var resourceStreamReader = new StreamReader(stream, Encoding.Default, true))

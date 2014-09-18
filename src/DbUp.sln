@@ -1,8 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.20623.1 VSUPREVIEW
-MinimumVisualStudioVersion = 10.0.40219.1
+# Visual Studio 2012
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C6A39A77-AEF6-421D-8198-E15821B80F9D}"
@@ -38,6 +36,15 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Tests", "DbUp.Tests\DbUp.Tests.csproj", "{80A9E08A-13F3-4721-9849-C55167FE21A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Oracle", "DbUp.Oracle\DbUp.Oracle.csproj", "{4372ABEB-8642-4625-AC1D-458357AF0B5C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OracleSampleApplication", "Samples\OracleSampleApplication\OracleSampleApplication.csproj", "{EA604DDB-C657-424D-BF7D-3CAC8051FA09}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_shared", "_shared", "{4CFE1CBA-0000-4F43-B81C-6AC3401D52A8}"
+	ProjectSection(SolutionItems) = preProject
+		_shared\dbup.snk = _shared\dbup.snk
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -156,6 +163,36 @@ Global
 		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|x86.ActiveCfg = Release|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Default|x86.ActiveCfg = Debug|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4372ABEB-8642-4625-AC1D-458357AF0B5C}.Release|x86.ActiveCfg = Release|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Default|x86.ActiveCfg = Debug|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -163,6 +200,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{83042F56-9FAD-4827-B542-6873F93D7940} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
+		{EA604DDB-C657-424D-BF7D-3CAC8051FA09} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = DbUp\DbUp.csproj

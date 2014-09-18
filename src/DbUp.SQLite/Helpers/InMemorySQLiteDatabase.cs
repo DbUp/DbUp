@@ -2,6 +2,7 @@
 using System.Data.SQLite;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
+using DbUp.SQLite.Engine;
 
 namespace DbUp.SQLite.Helpers
 {
@@ -10,7 +11,7 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class InMemorySQLiteDatabase : IDisposable
     {
-        private readonly SQLiteConnectionManager connectionManager;
+        private readonly ConnectionManager connectionManager;
         private readonly AdHocSqlRunner sqlRunner;
         private readonly SQLiteConnection sharedConnection;
 
@@ -29,7 +30,7 @@ namespace DbUp.SQLite.Helpers
             };
             ConnectionString = connectionStringBuilder.ToString();
 
-            connectionManager = new SQLiteConnectionManager(connectionStringBuilder.ConnectionString);
+            connectionManager = new ConnectionManager(connectionStringBuilder.ConnectionString);
             sharedConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sharedConnection.OpenAndReturn();
             sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), null, () => true);

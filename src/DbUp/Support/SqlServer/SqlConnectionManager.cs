@@ -12,7 +12,7 @@ namespace DbUp.Support.SqlServer
     /// <summary>
     /// Manages Sql Database Connections
     /// </summary>
-    public class SqlConnectionManager : DatabaseConnectionManager
+    internal class SqlConnectionManager : DatabaseConnectionManager
     {
         private readonly string connectionString;
 
@@ -25,6 +25,11 @@ namespace DbUp.Support.SqlServer
             this.connectionString = connectionString;
         }
 
+        /// <summary>
+        /// Create connection for Microsoft Sql Server
+        /// </summary>
+        /// <param name="log"></param>
+        /// <returns></returns>
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             var conn = new SqlConnection(connectionString);
@@ -35,6 +40,11 @@ namespace DbUp.Support.SqlServer
             return conn;
         }
 
+        /// <summary>
+        /// Split Scripts into statements.
+        /// </summary>
+        /// <param name="scriptContents"></param>
+        /// <returns></returns>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var scriptStatements =
