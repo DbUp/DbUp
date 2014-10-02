@@ -70,6 +70,7 @@
     <Compile Include="Engine\Transactions\TransactionMode.cs" />
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
+    <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />

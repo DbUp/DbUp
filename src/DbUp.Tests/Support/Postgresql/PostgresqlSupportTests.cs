@@ -12,14 +12,14 @@ namespace DbUp.Tests.Support.Postgresql
         [Test]
         public void CanUpgradeAPostgresqlDatabase()
         {
-            //var upgrader = DeployChanges.To
-            //    .PostgresqlDatabase("")
-            //    .WithScript("Script0001", "create table $schema$.Foo (Id int)")
-            //    .Build();
+            var upgrader = DeployChanges.To
+                .PostgresqlDatabase("Server=127.0.0.1;Database=testo;Port=5432;User Id=liam;Password=password;")
+                .WithScript("Script0001", "create table Foo (Id int)")
+                .Build();
 
-            //var result = upgrader.PerformUpgrade();
+            var result = upgrader.PerformUpgrade();
 
-            //Assert.IsTrue(result.Successful);
+            Assert.IsTrue(result.Successful);
         }
     }
 }

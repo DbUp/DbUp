@@ -84,6 +84,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.Postgresql\DbUp.Postgresql.csproj">
+      <Project>{27246d0e-bf23-4315-a946-ea8c93d9bff1}</Project>
+      <Name>DbUp.Postgresql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp.SqlCe\DbUp.SqlCe.csproj">
       <Project>{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}</Project>
       <Name>DbUp.SqlCe</Name>

@@ -1,5 +1,6 @@
 ﻿using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using Npgsql;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -20,8 +21,7 @@ namespace DbUp.Postgresql
 
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
-            throw new NotImplementedException();
-            //return new PostgresqlConnection(connectionString);
+            return new NpgsqlConnection(connectionString);
         }
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
