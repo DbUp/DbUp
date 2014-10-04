@@ -11,7 +11,7 @@ namespace DbUp.Postgresql
     {
         public string Process(string contents)
         {
-            return contents;//Regex.Replace(contents, @"n?varchar\s?\(max\)", "text", RegexOptions.IgnoreCase);
+            return contents;
         }
     }
 }
