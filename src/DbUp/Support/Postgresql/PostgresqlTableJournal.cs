@@ -76,46 +76,45 @@ namespace DbUp.Support.Postgresql
 
         public void StoreExecutedScript(SqlScript script)
         {
-            throw new NotImplementedException();
-            //var exists = DoesTableExist();
-            //if (!exists)
-            //{
-            //    log().WriteInformation(string.Format("Creating the {0} table", schemaTableName));
+            var exists = DoesTableExist();
+            if (!exists)
+            {
+                log().WriteInformation(string.Format("Creating the {0} table", schemaTableName));
 
-            //    connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-            //    {
-            //        using (var command = dbCommandFactory())
-            //        {
-            //            command.CommandText = CreateTableSql(schemaTableName);
+                connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                {
+                    using (var command = dbCommandFactory())
+                    {
+                        command.CommandText = CreateTableSql(schemaTableName);
 
-            //            command.CommandType = CommandType.Text;
-            //            command.ExecuteNonQuery();
-            //        }
+                        command.CommandType = CommandType.Text;
+                        command.ExecuteNonQuery();
+                    }
 
-            //        log().WriteInformation(string.Format("The {0} table has been created", schemaTableName));
-            //    });
-            //}
+                    log().WriteInformation(string.Format("The {0} table has been created", schemaTableName));
+                });
+            }
 
-            //connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-            //{
-            //    using (var command = dbCommandFactory())
-            //    {
-            //        command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", schemaTableName);
+            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                using (var command = dbCommandFactory())
+                {
+                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", schemaTableName);
 
-            //        var scriptNameParam = command.CreateParameter();
-            //        scriptNameParam.ParameterName = "scriptName";
-            //        scriptNameParam.Value = script.Name;
-            //        command.Parameters.Add(scriptNameParam);
+                    var scriptNameParam = command.CreateParameter();
+                    scriptNameParam.ParameterName = "scriptName";
+                    scriptNameParam.Value = script.Name;
+                    command.Parameters.Add(scriptNameParam);
 
-            //        var appliedParam = command.CreateParameter();
-            //        appliedParam.ParameterName = "applied";
-            //        appliedParam.Value = DateTime.Now;
-            //        command.Parameters.Add(appliedParam);
+                    var appliedParam = command.CreateParameter();
+                    appliedParam.ParameterName = "applied";
+                    appliedParam.Value = DateTime.Now;
+                    command.Parameters.Add(appliedParam);
 
-            //        command.CommandType = CommandType.Text;
-            //        command.ExecuteNonQuery();
-            //    }
-            //});
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQuery();
+                }
+            });
         }
 
         protected string GetExecutedScriptsSql(string table)
