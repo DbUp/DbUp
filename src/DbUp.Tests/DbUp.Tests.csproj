@@ -65,7 +65,6 @@
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
-    <Compile Include="Support\Postgresql\PostgresqlSupportTests.cs" />
     <Compile Include="UpgradeDatabaseScenarios.cs" />
     <Compile Include="ScriptProvider\EmbeddedScriptAndCodeProviderTests.cs" />
     <Compile Include="Support\SQLite\SQLiteSupportTests.cs" />
@@ -115,12 +114,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="BDDfy.readme.txt" />
-    <EmbeddedResource Include="Support\Postgresql\Scripts\003_pgsqlds2_create_tbl.sql" />
-    <EmbeddedResource Include="Support\Postgresql\Scripts\004_pgsqlds2_create_sp.sql" />
-    <EmbeddedResource Include="Support\Postgresql\Scripts\011_pgsqlds2_create_ind.sql" />
-    <EmbeddedResource Include="Support\Postgresql\Scripts\012_pgsqlds2_create_trig.sql" />
-    <EmbeddedResource Include="Support\Postgresql\Scripts\013_pgsqlds2_reset_seq.sql" />
-    <EmbeddedResource Include="Support\Postgresql\Scripts\014_pgsqlds2_create_user.sql" />
+    <Content Include="Support\Postgresql\Readme.txt" />
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
