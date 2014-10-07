@@ -175,7 +175,7 @@ namespace DbUp.Support.SqlServer
                 int totalLength = 0;
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
-                    int maxLength = lines.Max(l => l[i].Length) + 2;
+                    int maxLength = lines.Max(l => (l[i] ?? "").Length) + 2;
                     format += " {" + i + ", " + maxLength + "} |";
                     totalLength += (maxLength + 3);
                 }
