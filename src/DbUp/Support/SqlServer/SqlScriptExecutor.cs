@@ -159,6 +159,10 @@ namespace DbUp.Support.SqlServer
                 {
                     names.Add(reader.GetName(i));
                 }
+
+                if (names.Count == 0)
+                    return;
+
                 var lines = new List<List<string>>();
                 while (reader.Read())
                 {
@@ -171,6 +175,7 @@ namespace DbUp.Support.SqlServer
                     }
                     lines.Add(line);
                 }
+
                 string format = "";
                 int totalLength = 0;
                 for (int i = 0; i < reader.FieldCount; i++)
