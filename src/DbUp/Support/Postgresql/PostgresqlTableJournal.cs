@@ -1,47 +1,50 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Support.SqlServer;
+using System.Data;
+using System.Data.Common;
+using System.Collections.Generic;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.Support.Postgresql
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
-    /// SQL Server database using a table called dbo.SchemaVersions.
+    /// Postgresql database using a table called SchemaVersions.
     /// </summary>
-    public class SqlTableJournal : IJournal
+    public sealed class PostgresqlTableJournal : IJournal
     {
         private readonly string schemaTableName;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
-        /// <summary>
-        /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
-        /// </summary>
-        /// <param name="connectionManager">The connection manager.</param>
-        /// <param name="logger">The log.</param>
-        /// <param name="schema">The schema that contains the table.</param>
-        /// <param name="table">The table name.</param>
-        /// <example>
-        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
-        /// </example>
-        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
+        private string QuoteIdentifier(string identifier)
         {
-            schemaTableName = string.IsNullOrEmpty(schema) 
-                ? SqlObjectParser.QuoteSqlObjectName(table)
-                : SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(table);
-            this.connectionManager = connectionManager;
-            log = logger;
+            return "\"" + identifier + "\"";
         }
 
-        /// <summary>
-        /// Recalls the version number of the database.
-        /// </summary>
-        /// <returns>All executed scripts.</returns>
+        public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
+        {
+            schemaTableName = string.IsNullOrEmpty(schema)
+                ? QuoteIdentifier(table)
+                : QuoteIdentifier(schema) + "." + QuoteIdentifier(table);
+            this.connectionManager = connectionManager;
+            log = logger;        
+        }
+
+        protected string CreateTableSql(string tableName)
+        {
+            return string.Format(
+                            @"CREATE TABLE {0}
+(
+  schemaversionsid serial NOT NULL,
+  scriptname character varying(255) NOT NULL,
+  applied timestamp without time zone NOT NULL,
+  CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+)", tableName);
+        }
+
         public string[] GetExecutedScripts()
         {
             log().WriteInformation("Fetching list of already executed scripts.");
@@ -71,18 +74,6 @@ namespace DbUp.Support.SqlServer
             return scripts.ToArray();
         }
 
-        /// <summary>
-        /// The Sql which gets 
-        /// </summary>
-        protected virtual string GetExecutedScriptsSql(string table)
-        {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
-        }
-
-        /// <summary>
-        /// Records a database upgrade for a database specified in a given connection string.
-        /// </summary>
-        /// <param name="script">The script.</param>
         public void StoreExecutedScript(SqlScript script)
         {
             var exists = DoesTableExist();
@@ -114,7 +105,7 @@ namespace DbUp.Support.SqlServer
                     scriptNameParam.ParameterName = "scriptName";
                     scriptNameParam.Value = script.Name;
                     command.Parameters.Add(scriptNameParam);
-                    
+
                     var appliedParam = command.CreateParameter();
                     appliedParam.ParameterName = "applied";
                     appliedParam.Value = DateTime.Now;
@@ -126,18 +117,9 @@ namespace DbUp.Support.SqlServer
             });
         }
 
-        /// <summary>
-        /// The sql to exectute to create the schema versions table
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        protected virtual string CreateTableSql(string tableName)
+        protected string GetExecutedScriptsSql(string table)
         {
-            return string.Format(@"create table {0} (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
-	[ScriptName] nvarchar(255) not null,
-	[Applied] datetime not null
-)", tableName);
+            return string.Format("select ScriptName from {0} order by ScriptName", table);
         }
 
         private bool DoesTableExist()
@@ -154,10 +136,7 @@ namespace DbUp.Support.SqlServer
                         return true;
                     }
                 }
-                catch (SqlException)
-                {
-                    return false;
-                }
+                // can't catch NpgsqlException here because this project does not depend upon npgsql
                 catch (DbException)
                 {
                     return false;

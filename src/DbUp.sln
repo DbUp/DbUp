@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.20623.1 VSUPREVIEW
+VisualStudioVersion = 12.0.30723.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
 EndProject
@@ -38,6 +38,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Tests", "DbUp.Tests\DbUp.Tests.csproj", "{80A9E08A-13F3-4721-9849-C55167FE21A5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Postgresql", "DbUp.Postgresql\DbUp.Postgresql.csproj", "{27246D0E-BF23-4315-A946-EA8C93D9BFF1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -156,6 +158,21 @@ Global
 		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{80A9E08A-13F3-4721-9849-C55167FE21A5}.Release|x86.ActiveCfg = Release|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Default|x86.ActiveCfg = Debug|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
