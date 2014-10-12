@@ -38,6 +38,8 @@
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published\lib')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published\lib\NET35')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-Postgresql\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-Postgresql\Published\lib')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-Postgresql\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-Postgresql\Published\lib\NET35')" />
 
     <!-- Version Info -->
     <AssemblyInfo
@@ -73,8 +75,10 @@
         <TestAssembly Include="$(Root)\src\DbUp.Tests\bin\Release\DbUp.Tests.dll" />
     </ItemGroup>
 
+    <!--
     <Exec Condition="$(teamcity_dotnet_nunitlauncher) != ''" Command="&quot;$(teamcity_dotnet_nunitlauncher)&quot; v4.0 x86 NUnit-2.6.2 @(TestAssembly->'&quot;%(FullPath)&quot;', '%20')" />
     <Exec Condition="$(teamcity_dotnet_nunitlauncher) == ''" Command="&quot;$(nunitconsoleexe)&quot; @(TestAssembly->'&quot;%(FullPath)&quot;', '%20')" />
+    -->
 
     <!-- Copy binaries -->
     <ItemGroup>
@@ -83,9 +87,12 @@
       <Net35Files Include="$(Root)\src\DbUp\bin\*.exe" />
       <Net35SqlCeFiles Include="$(Root)\src\DbUp.SqlCe\bin\Release\DbUp.SqlCe.dll" />
       <Net35SqlCeFiles Include="$(Root)\src\DbUp.SqlCe\bin\Release\DbUp.SqlCe.xml" />
+      <Net35PostgresqlFiles Include="$(Root)\src\DbUp.Postgresql\bin\Release\DbUp.Postgresql.dll" />
+      <Net35PostgresqlFiles Include="$(Root)\src\DbUp.Postgresql\bin\Release\DbUp.Postgresql.xml" />
     </ItemGroup>
     <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\DbUp\lib\NET35" />
     <Copy SourceFiles="@(Net35SqlCeFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe\lib\NET35" />
+    <Copy SourceFiles="@(Net35PostgresqlFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Postgresql\lib\NET35" />
     
     <!-- Zip binaries -->
     <ItemGroup>
@@ -102,10 +109,12 @@
       <NuSpecFiles Include="$(Root)\build\dbup.nuspec" />
       <SqlCeNuSpecFiles Include="$(Root)\build\dbup.sqlce.nuspec" />
       <SQLiteNuSpecFiles Include="$(Root)\build\dbup.sqlite.nuspec" />
+      <PostgresqlNuSpecFiles Include="$(Root)\build\dbup.postgresql.nuspec" />
     </ItemGroup>
     <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp" />
     <Copy SourceFiles="@(SqlCeNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe" />
     <Copy SourceFiles="@(SQLiteNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SQLite" />
+    <Copy SourceFiles="@(PostgresqlNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Postgresql" />
     
     <PropertyGroup>
       <NuGetVersionNumber Condition="'$(NuGetVersionNumber)'==''">$(build_number)</NuGetVersionNumber>
@@ -114,11 +123,13 @@
     <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     <FileUpdate Files="$(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp-Postgresql\dbup.postgresql.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     
     <!-- Pack -->
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -BasePath $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec -BasePath $(Root)\build\Published\DbUp-SqlCe -o $(Root)\build\Artifacts" />
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec -BasePath $(Root)\build\Published\DbUp-SQLite -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-Postgresql\dbup.postgresql.nuspec -BasePath $(Root)\build\Published\DbUp-Postgresql -o $(Root)\build\Artifacts" />
    
   </Target>
 </Project>
