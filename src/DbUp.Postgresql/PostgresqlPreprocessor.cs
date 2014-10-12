@@ -1,14 +1,16 @@
 ﻿using DbUp.Engine;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 
 namespace DbUp.Postgresql
 {
+    /// <summary>
+    /// This preprocessor makes adjustments to your sql to make it compatible with PostgreSQL.
+    /// </summary>
     public class PostgresqlPreprocessor : IScriptPreprocessor
     {
+        /// <summary>
+        /// Performs some proprocessing step on a PostgreSQL script.
+        /// </summary>
         public string Process(string contents)
         {
             return contents;

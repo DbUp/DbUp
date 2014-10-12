@@ -2,7 +2,6 @@
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support.SqlServer;
 using System.Data;
 using System.Data.Common;
 using System.Collections.Generic;
@@ -11,7 +10,7 @@ namespace DbUp.Support.Postgresql
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
-    /// Postgresql database using a table called SchemaVersions.
+    /// PostgreSQL database using a table called SchemaVersions.
     /// </summary>
     public sealed class PostgresqlTableJournal : IJournal
     {
@@ -19,11 +18,18 @@ namespace DbUp.Support.Postgresql
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
-        private string QuoteIdentifier(string identifier)
+        private static string QuoteIdentifier(string identifier)
         {
             return "\"" + identifier + "\"";
         }
 
+        /// <summary>
+        /// Creates a new PostgreSQL table journal.
+        /// </summary>
+        /// <param name="connectionManager">The PostgreSQL connection manager.</param>
+        /// <param name="logger">The upgrade logger.</param>
+        /// <param name="schema">The name of the schema the journal is stored in.</param>
+        /// <param name="table">The name of the journal table.</param>
         public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
             schemaTableName = string.IsNullOrEmpty(schema)
@@ -33,16 +39,16 @@ namespace DbUp.Support.Postgresql
             log = logger;        
         }
 
-        protected string CreateTableSql(string tableName)
+        private static string CreateTableSql(string tableName)
         {
             return string.Format(
                             @"CREATE TABLE {0}
-(
-  schemaversionsid serial NOT NULL,
-  scriptname character varying(255) NOT NULL,
-  applied timestamp without time zone NOT NULL,
-  CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
-)", tableName);
+                              (
+                                schemaversionsid serial NOT NULL,
+                                scriptname character varying(255) NOT NULL,
+                                applied timestamp without time zone NOT NULL,
+                                CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+                              )", tableName);
         }
 
         public string[] GetExecutedScripts()
@@ -74,6 +80,10 @@ namespace DbUp.Support.Postgresql
             return scripts.ToArray();
         }
 
+        /// <summary>
+        /// Records an upgrade script for a database.
+        /// </summary>
+        /// <param name="script">The script.</param>
         public void StoreExecutedScript(SqlScript script)
         {
             var exists = DoesTableExist();
@@ -117,7 +127,7 @@ namespace DbUp.Support.Postgresql
             });
         }
 
-        protected string GetExecutedScriptsSql(string table)
+        private static string GetExecutedScriptsSql(string table)
         {
             return string.Format("select ScriptName from {0} order by ScriptName", table);
         }
