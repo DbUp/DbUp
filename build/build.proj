@@ -7,6 +7,7 @@
     <Root>$(MSBuildStartupDirectory)</Root>
     <nunitconsoleexe>$(Root)\lib\NUnit.Runners.2.6.2\tools\nunit-console.exe</nunitconsoleexe>
     <build_number Condition="'$(build_number)' == ''">0.0.0</build_number>
+    <NuGetVersionNumber Condition="'$(NuGetVersionNumber)'==''">$(build_number)</NuGetVersionNumber>
   </PropertyGroup>
 
   <Target Name="Build">
@@ -38,14 +39,6 @@
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published\lib')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-SQLite\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-SQLite\Published\lib\NET35')" />
-
-    <!-- Version Info -->
-    <AssemblyInfo
-      CodeLanguage="CS"
-      OutputFile="$(Root)\src\Information\VersionInfo.cs"
-      AssemblyVersion="$(build_number).*"
-      AssemblyFileVersion="$(build_number).0"
-      />
 
     <!-- Zip source -->
     <ItemGroup>
@@ -106,10 +99,6 @@
     <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp" />
     <Copy SourceFiles="@(SqlCeNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe" />
     <Copy SourceFiles="@(SQLiteNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SQLite" />
-    
-    <PropertyGroup>
-      <NuGetVersionNumber Condition="'$(NuGetVersionNumber)'==''">$(build_number)</NuGetVersionNumber>
-    </PropertyGroup>
 
     <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
