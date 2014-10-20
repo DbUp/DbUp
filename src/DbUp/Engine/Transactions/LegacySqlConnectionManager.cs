@@ -4,6 +4,7 @@ using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DbUp.Engine.Output;
+using DbUp.Support.SqlServer;
 
 namespace DbUp.Engine.Transactions
 {
@@ -52,13 +53,9 @@ namespace DbUp.Engine.Transactions
 
         public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            var scriptStatements =
-                Regex.Split(scriptContents, "^\\s*GO\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
-                    .Select(x => x.Trim())
-                    .Where(x => x.Length > 0)
-                    .ToArray();
-
-            return scriptStatements;
+            var commandSplitter = new SqlCommandSplitter();
+            var scriptStatements = commandSplitter.SplitScriptIntoCommands(scriptContents);
+            return scriptStatements;           
         }
 
         class DoNothingDisposible : IDisposable
