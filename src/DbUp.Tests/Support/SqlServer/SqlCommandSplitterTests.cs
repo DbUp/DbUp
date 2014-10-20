@@ -55,6 +55,13 @@ namespace DbUp.Tests.Support.SqlServer
 
             var sqlCommandWithSingleLineCommentWithEndDashes = sqlBuilder.ToString();
             sqlBuilder.Clear();
+            
+            // Sql command with a single line comment (with end dashes) containing a GO.
+            sqlBuilder.AppendLine("INSERT INTO TABLE [Foo] ([Text)");
+            sqlBuilder.AppendLine("VALUES (N'Some text. /*Strangely Emphasised Text*/ More text')");
+
+            var strangeInsert = sqlBuilder.ToString();
+            sqlBuilder.Clear();
 
             // Combine into one SQL statement seperated with GO.          
             sqlBuilder.AppendLine(sqlCommandWithMultiLineComment);
@@ -62,6 +69,8 @@ namespace DbUp.Tests.Support.SqlServer
             sqlBuilder.AppendLine(sqlCommandWithSingleLineComment);
             sqlBuilder.AppendLine(sqlGoWithTerminator);
             sqlBuilder.AppendLine(sqlCommandWithSingleLineCommentWithEndDashes);
+            sqlBuilder.AppendLine(sqlGo);
+            sqlBuilder.AppendLine(strangeInsert);
 
             var sqlText = sqlBuilder.ToString();
             Console.WriteLine("===== Splitting the following SQL =============");
@@ -78,12 +87,13 @@ namespace DbUp.Tests.Support.SqlServer
                 Console.WriteLine("=======================================");
             }
             Assert.That(sqlCommands, Is.Not.Null);
-            Assert.That(sqlCommands.Count(), Is.EqualTo(3));
+            Assert.That(sqlCommands.Count(), Is.EqualTo(4));
 
             // I compare the original sql text with the commands but remove whitespace characters as the parser is trimming some whitespace in some instances.
             Assert.That(sqlCommands[0].Trim(), Is.EqualTo(sqlCommandWithMultiLineComment.Trim()));
             Assert.That(sqlCommands[1].Trim(), Is.EqualTo(sqlCommandWithSingleLineComment.Trim()));
             Assert.That(sqlCommands[2].Trim(), Is.EqualTo(sqlCommandWithSingleLineCommentWithEndDashes.Trim()));
+            Assert.That(sqlCommands[3].Trim(), Is.EqualTo(strangeInsert.Trim()));
         }       
 
     }
