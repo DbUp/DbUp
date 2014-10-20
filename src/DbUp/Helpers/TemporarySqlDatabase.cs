@@ -19,11 +19,16 @@ namespace DbUp.Helpers
         private readonly SqlConnection sqlConnection;
         private readonly SqlConnection masterSqlConnection;
 
+		/// <summary>
+        /// Creates new TemporarySqlDatabase against (local)
+        /// </summary>
+        public TemporarySqlDatabase(string name) : this(name, localSqlInstance) { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TemporarySqlDatabase"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
-        public TemporarySqlDatabase(string name, string instanceName = localSqlInstance)
+        public TemporarySqlDatabase(string name, string instanceName)
         {
             databaseName = name;
             connectionString = string.Format("Server={0};Database={1};Trusted_connection=true;Pooling=false", instanceName, databaseName);
