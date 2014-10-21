@@ -1,9 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using DbUp.Engine;
-using DbUp.Engine.Output;
-using NSubstitute;
 using NUnit.Framework;
 using DbUp.Support.SqlServer;
 using System.Text;
@@ -20,7 +15,7 @@ namespace DbUp.Tests.Support.SqlServer
         public SqlCommandSplitterTests()
         {
             sut = new SqlCommandSplitter();
-        }     
+        }
 
         [Test]
         public void should_split_statements_on_go_and_handle_comments()
@@ -55,7 +50,7 @@ namespace DbUp.Tests.Support.SqlServer
 
             var sqlCommandWithSingleLineCommentWithEndDashes = sqlBuilder.ToString();
             sqlBuilder.Clear();
-            
+
             // Sql command with a single line comment (with end dashes) containing a GO.
             sqlBuilder.AppendLine("INSERT INTO TABLE [Foo] ([Text)");
             sqlBuilder.AppendLine("VALUES (N'Some text. /*Strangely Emphasised Text*/ More text')");
@@ -76,8 +71,8 @@ namespace DbUp.Tests.Support.SqlServer
             Console.WriteLine("===== Splitting the following SQL =============");
             Console.WriteLine(sqlText);
             Console.WriteLine("===============================================");
-           
-            var commands = sut.SplitScriptIntoCommands(sqlText).ToArray();      
+
+            var commands = sut.SplitScriptIntoCommands(sqlText).ToArray();
 
             var sqlCommands = commands;
             foreach (var item in sqlCommands)
@@ -95,7 +90,5 @@ namespace DbUp.Tests.Support.SqlServer
             Assert.That(sqlCommands[2].Trim(), Is.EqualTo(sqlCommandWithSingleLineCommentWithEndDashes.Trim()));
             Assert.That(sqlCommands[3].Trim(), Is.EqualTo(strangeInsert.Trim()));
         }       
-
     }
 }
-
