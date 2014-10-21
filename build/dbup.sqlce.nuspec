@@ -11,7 +11,7 @@
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
     <dependencies>
-        <dependency id="SqlServerCompact" version="4.0.8482.1" />
+        <dependency id="Microsoft.SqlServer.Compact" version="4.0.8876.1" />
         <dependency id="DbUp" version="0.0.0" />
     </dependencies>
   </metadata>
