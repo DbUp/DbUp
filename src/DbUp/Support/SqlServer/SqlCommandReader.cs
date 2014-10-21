@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace DbUp.Support.SqlServer
@@ -191,7 +189,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar);
+                bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar) || lastChar == nullChar;
                 bool currentCharIsG = IsCurrentCharEqualTo('g');
                 bool nextCharIsO = IsCharEqualTo('o', PeekChar());
                 return lastCharIsNullOrEmpty && currentCharIsG && nextCharIsO;
