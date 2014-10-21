@@ -17,6 +17,23 @@ namespace DbUp.Tests.Support.SqlServer
             sut = new SqlCommandSplitter();
         }
 
+        [TestCase("GO", 0)]
+        [TestCase(" GO", 0)]
+        [TestCase("GO ", 0)]
+        [TestCase("GO ", 0)]
+        [TestCase("GO\n", 0)]
+        [TestCase("GO\nGO--Dummy comment", 1)]
+        [TestCase("\nGO", 0)]
+        [TestCase("--Dummy comment\nGO", 1)]
+        [TestCase("GO--Dummy comment", 1)]
+        public void should_correctly_recognize_go_statements(string SqlText, int expectedNumberOfCommands)
+        {
+            var commands = sut.SplitScriptIntoCommands(SqlText).ToArray();
+
+            Assert.That(commands, Is.Not.Null);
+            Assert.That(commands.Count(), Is.EqualTo(expectedNumberOfCommands));
+        }
+
         [Test]
         public void should_split_statements_on_go_and_handle_comments()
         {

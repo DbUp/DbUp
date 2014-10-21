@@ -189,7 +189,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar);
+                bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar) || lastChar == nullChar;
                 bool currentCharIsG = IsCurrentCharEqualTo('g');
                 bool nextCharIsO = IsCharEqualTo('o', PeekChar());
                 return lastCharIsNullOrEmpty && currentCharIsG && nextCharIsO;
