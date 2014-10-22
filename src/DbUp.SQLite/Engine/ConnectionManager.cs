@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
@@ -7,19 +8,22 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
 
-namespace DbUp.SQLite
+namespace DbUp.SQLite.Engine
 {
-    public class SQLiteConnectionManager : DatabaseConnectionManager
+    /// <summary>
+    /// SQLite Connection Manager.
+    /// </summary>
+    public class ConnectionManager : DatabaseConnectionManager
     {
         private readonly string connectionString;
         private readonly SharedConnection sharedConnection;
 
-        public SQLiteConnectionManager(string connectionString)
+        public ConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
         }
 
-        public SQLiteConnectionManager(SharedConnection sharedConnection)
+        public ConnectionManager(SharedConnection sharedConnection)
         {
             this.sharedConnection = sharedConnection;
         }

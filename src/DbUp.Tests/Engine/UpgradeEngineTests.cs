@@ -30,12 +30,14 @@ namespace DbUp.Tests.Engine
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
                 var connectionManager = new TestConnectionManager(dbConnection);
-                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
+                var queryProvider = new SqlServerQueryProvider();
+                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), () => queryProvider, () => true, null);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
                     .JournalTo(versionTracker)
                     .WithVariable("var", "sub");
+                builder.Configure(c => c.QueryProvider = queryProvider);
                 builder.Configure(c => c.ScriptExecutor = scriptExecutor);
                 builder.Configure(c => c.ConnectionManager = connectionManager);
 

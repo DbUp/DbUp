@@ -5,9 +5,9 @@ using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.SQLite;
+using DbUp.SQLite.Engine;
 using DbUp.SQLite.Helpers;
-using DbUp.Support.SQLite;
+using DbUp.Support.SqlServer;
 using NSubstitute;
 using NUnit.Framework;
 using TestStack.BDDfy;
@@ -122,7 +122,7 @@ namespace DbUp.Tests
             log.Received().WriteError(Arg.Is<string>(s => s.StartsWith("System.Data.SQLite.SQLiteException (0x80004005): SQL logic error or missing database")));
             log.Received().WriteError(
                 Arg.Is<string>(s => s.StartsWith("Upgrade failed due to an unexpected exception:")),
-                Arg.Is<string>(s => s.Contains("System.Data.SQLite.SQLiteException")));
+                Arg.Is<string>(s => s.Contains("SQL logic error or missing database")));
         }
 
         private void ConfiguredToUseTransaction()
@@ -190,11 +190,11 @@ namespace DbUp.Tests
             journal.StoreExecutedScript(scripts[2]);
         }
 
-        private SQLiteTableJournal GetJournal()
+        private TableJournal GetJournal()
         {
-            var sqLiteConnectionManager = new SQLiteConnectionManager(database.SharedConnection);
+            var sqLiteConnectionManager = new ConnectionManager(database.SharedConnection);
             sqLiteConnectionManager.OperationStarting(log, new List<SqlScript>());
-            var journal = new SQLiteTableJournal(() => sqLiteConnectionManager, () => log, "SchemaVersions");
+            var journal = new TableJournal(() => sqLiteConnectionManager, () => log, () => new QueryProvider("SchemaVersions"));
             return journal;
         }
 

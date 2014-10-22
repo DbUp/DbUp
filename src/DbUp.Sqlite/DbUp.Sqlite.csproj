@@ -31,7 +31,6 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\DbUp.SQLite.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject />
@@ -58,13 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\ObjectParser.cs" />
     <Compile Include="Helpers\InMemorySQLiteDatabase.cs" />
     <Compile Include="Helpers\SharedConnection.cs" />
     <Compile Include="Helpers\TemporarySQLiteDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="SQLiteConnectionManager.cs" />
+    <Compile Include="Engine\ConnectionManager.cs" />
     <Compile Include="SQLiteExtensions.cs" />
-    <Compile Include="SQLitePreprocessor.cs" />
+    <Compile Include="Engine\ScriptPreprocessor.cs" />
+    <Compile Include="Engine\QueryProvider.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

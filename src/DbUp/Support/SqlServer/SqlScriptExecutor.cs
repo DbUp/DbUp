@@ -22,6 +22,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
+        private readonly IQueryProvider queryProvider;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -33,24 +34,18 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
         /// <param name="log">The logging mechanism.</param>
-        /// <param name="schema">The schema that contains the table.</param>
+        /// <param name="queryProvider">Query provider.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled, 
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<IQueryProvider> queryProvider, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
-            Schema = schema;
             this.log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
+            this.queryProvider = queryProvider();
         }
-
-        /// <summary>
-        /// Database Schema, should be null if database does not support schemas
-        /// </summary>
-        public string Schema { get; set; }
-
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
@@ -65,14 +60,13 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         public void VerifySchema()
         {
-            if (string.IsNullOrEmpty(Schema)) return;
+            if (string.IsNullOrEmpty(queryProvider.Scheme)) return;
 
             connectionManagerFactory().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
+                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, queryProvider.Scheme, () => true);
 
-                sqlRunner.ExecuteNonQuery(string.Format(
-                    @"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA [{0}]')", Schema));
+                sqlRunner.ExecuteNonQuery(string.Format(queryProvider.CreateSchemeIfNotExists(), queryProvider.Scheme));
             });
         }
 
@@ -85,22 +79,23 @@ namespace DbUp.Support.SqlServer
         {
             if (variables == null)
                 variables = new Dictionary<string, string>();
-            if (Schema != null && !variables.ContainsKey("schema"))
-                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(Schema));
+            if (queryProvider.Scheme != null && !variables.ContainsKey("schema"))
+                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(queryProvider.Scheme));
 
             log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
 
             var contents = script.Contents;
-            if (string.IsNullOrEmpty(Schema))
+            if (string.IsNullOrEmpty(queryProvider.Scheme))
                 contents = new StripSchemaPreprocessor().Process(contents);
             if (variablesEnabled())
                 contents = new VariableSubstitutionPreprocessor(variables).Process(contents);
-            contents = (scriptPreprocessors??new IScriptPreprocessor[0])
+            contents = (scriptPreprocessors ?? new IScriptPreprocessor[0])
                 .Aggregate(contents, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));
 
             var connectionManager = connectionManagerFactory();
             var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
             var index = -1;
+            string executingStatement = String.Empty;
             try
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
@@ -108,6 +103,7 @@ namespace DbUp.Support.SqlServer
                     foreach (var statement in scriptStatements)
                     {
                         index++;
+                        executingStatement = statement;
                         using (var command = dbCommandFactory())
                         {
                             command.CommandText = statement;
@@ -130,22 +126,24 @@ namespace DbUp.Support.SqlServer
             }
             catch (SqlException sqlException)
             {
-                log().WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
-                log().WriteError("Script block number: {0}; Block line {1}; Message: {2}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
-                log().WriteError(sqlException.ToString());
+                log().WriteError("SQL exception has occured in script: '{0}'", script.Name);
+                log().WriteError("Script block number: {0};    Block line: {1};    Procedure: {2};{5}SQL Exception Number: {3};    Message: {4}{5}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message, Environment.NewLine);
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
             catch (DbException sqlException)
             {
-                log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
+                log().WriteError("DB exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
                 log().WriteError(sqlException.ToString());
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
             catch (Exception ex)
             {
                 log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
                 log().WriteError(ex.ToString());
+                log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
         }

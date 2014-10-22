@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Reflection;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -151,15 +152,29 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Adds all scripts from a folder on the file system.
+    /// Adds all scripts from absolute path to folder on the file system.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
+    /// <param name="path">Absolute path to the directory path.</param>
     /// <returns>
     /// The same builder
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path)
     {
+        return WithScripts(builder, new FileSystemScriptProvider(path));
+    }
+
+    /// <summary>
+    /// Adds all scripts from relative path to folder on the file system.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="relativePath">Relative path to directory.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithScirptsFromFileSystemRelative(this UpgradeEngineBuilder builder, string relativePath)
+    {
+        string executionDirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+        if (String.IsNullOrEmpty(executionDirPath)) return null;
+        string path = Path.GetFullPath(executionDirPath +relativePath);
         return WithScripts(builder, new FileSystemScriptProvider(path));
     }
 

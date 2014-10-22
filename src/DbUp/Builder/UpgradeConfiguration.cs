@@ -55,6 +55,11 @@ namespace DbUp.Builder
         public IScriptExecutor ScriptExecutor { get; set; }
 
         /// <summary>
+        /// Get or sets the query provider, which holds sql queries.
+        /// </summary>
+        public IQueryProvider QueryProvider { get; set; }
+
+        /// <summary>
         /// A collection of variables to be replaced in scripts before they are run
         /// </summary>
         public Dictionary<string, string> Variables
@@ -77,6 +82,7 @@ namespace DbUp.Builder
             if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build()");
             if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build()");
             if (ConnectionManager == null) throw new ArgumentException("The ConnectionManager is null. What do you expect to upgrade?");
+            if( QueryProvider == null) throw new ArgumentException("The QueryProvider is required");
         }
 
         /// <summary>

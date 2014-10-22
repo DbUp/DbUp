@@ -153,5 +153,9 @@ namespace DbUp.Support.Postgresql
                 }
             });
         }
+
+        public bool ValidateExecutedScript(SqlScript script) {
+            return true;
+        }
     }
 }

@@ -78,10 +78,22 @@ public static class SqlServerExtensions
     /// <returns></returns>
     private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema)
     {
+        return SqlDatabase(connectionManager, schema, "SchemaVersions");
+    }
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <param name="connectionManager"></param>
+    /// <param name="schema"></param>
+    /// <param name="table"></param>
+    /// <returns></returns>
+    private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema = null, string table = "SchemaVersions") {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, "SchemaVersions"));
+        builder.Configure(c => c.QueryProvider = new SqlServerQueryProvider(table, schema));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
         return builder;
     }
 
@@ -94,7 +106,9 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, table));
+        builder.Configure(c => c.QueryProvider = new SqlServerQueryProvider(table, schema));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log, () => c.QueryProvider));
         return builder;
     }
 }

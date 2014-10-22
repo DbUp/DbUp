@@ -60,6 +60,7 @@
     <Compile Include="PostgresqlConnectionManager.cs" />
     <Compile Include="PostgresqlExtensions.cs" />
     <Compile Include="PostgresqlPreprocessor.cs" />
+    <Compile Include="PostgresqlTableJournal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

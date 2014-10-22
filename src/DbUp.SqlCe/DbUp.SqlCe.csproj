@@ -21,8 +21,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>
-    </DocumentationFile>
+    <DocumentationFile>bin\Debug\DbUp.SqlCe.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -31,7 +30,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\DbUp.SqlCe.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\DbUp.SqlCe.XML</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -53,10 +52,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="SqlCeConnectionManager.cs" />
+    <Compile Include="Engine\QueryProvider.cs" />
+    <Compile Include="Engine\ConnectionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCeExtensions.cs" />
-    <Compile Include="SqlCePreprocessor.cs" />
+    <Compile Include="Engine\Preprocessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />

@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
+using DbUp.Support;
 
-namespace DbUp.Support.SQLite
+namespace DbUp.SQLite.Engine
 {
-    public class SQLiteObjectParser
+    internal class SQLiteObjectParser
     {
         /// <summary>
         /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.

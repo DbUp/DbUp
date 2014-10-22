@@ -93,7 +93,7 @@ namespace DbUp.Engine
             }
             catch (Exception ex)
             {
-                configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.Message);
                 return new DatabaseUpgradeResult(executed, false, ex);
             }
         }
@@ -113,9 +113,18 @@ namespace DbUp.Engine
         private List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
-            var executedScripts = configuration.Journal.GetExecutedScripts();
+            var executedScriptsNames = configuration.Journal.GetExecutedScripts();
 
-            return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
+            // Validate executed scripts
+            IEnumerable<SqlScript> executedScripts = allScripts.Where(s => executedScriptsNames.Any(y => y == s.Name));
+            foreach (SqlScript executedScript in executedScripts)
+            {
+                bool executedScriptsOk = configuration.Journal.ValidateExecutedScript(executedScript);
+                if (!executedScriptsOk)
+                    throw new Exception(String.Format("Invalid change of script {0}. Successfully executed script has been changed.", executedScript.Name));
+            }
+
+            return allScripts.Where(s => !executedScriptsNames.Any(y => y == s.Name)).ToList();
         }
 
         ///<summary>
@@ -144,7 +153,7 @@ namespace DbUp.Engine
                 }
                 catch (Exception ex)
                 {
-                    configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                    configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.Message);
                     return new DatabaseUpgradeResult(marked, false, ex);
                 }
             }
