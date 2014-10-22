@@ -17,6 +17,28 @@ namespace DbUp.Tests.Support.SqlServer
             sut = new SqlCommandSplitter();
         }
 
+        [Test]
+        public void does_not_split_go_in_column_name()
+        {
+            const string statement = @"CREATE PROCEDURE dbo.GetDetails
+
+    @AccountId uniqueidentifier
+
+AS
+BEGIN
+
+SELECT AccountId,
+        EstimatedInCents,
+        OccupationInCents,
+        GovernmentInCents";
+
+
+            var commands = sut.SplitScriptIntoCommands(statement).ToArray();
+
+            Assert.That(commands.Count(), Is.EqualTo(1));
+            Assert.That(commands[0], Is.EqualTo(statement));
+        }
+
         [TestCase("GO", 0)]
         [TestCase(" GO", 0)]
         [TestCase("GO ", 0)]
