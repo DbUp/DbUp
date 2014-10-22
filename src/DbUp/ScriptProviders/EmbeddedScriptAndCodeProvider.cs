@@ -49,5 +49,19 @@ namespace DbUp.ScriptProviders
 
             return sqlScripts;
         }
+
+        /// <summary>
+        /// Gets all scripts that should be excluded.
+        /// </summary>
+        /// <returns></returns>
+        public string[] GetExcludedScripts()
+        {
+            return assembly
+                .GetManifestResourceNames()
+                .Where(s => s.Equals("DbUpExcludedFiles.txt"))
+                .OrderBy(x => x)
+                .Select(s => s)
+                .ToArray();
+        }
     }
 }

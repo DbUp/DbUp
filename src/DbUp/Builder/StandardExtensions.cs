@@ -101,12 +101,13 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="scripts">The scripts.</param>
+    /// <param name="excludedScripts">Scripts to be excluded</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, IEnumerable<SqlScript> scripts)
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, IEnumerable<SqlScript> scripts, IEnumerable<string> excludedScripts)
     {
-        return WithScripts(builder, new StaticScriptProvider(scripts));
+        return WithScripts(builder, new StaticScriptProvider(scripts, excludedScripts));
     }
 
     /// <summary>
@@ -119,7 +120,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params SqlScript[] scripts)
     {
-        return WithScripts(builder, (IEnumerable<SqlScript>)scripts);
+        return WithScripts(builder, scripts, null);
     }
 
     /// <summary>
