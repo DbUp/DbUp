@@ -2,9 +2,9 @@
 using System.Data.SqlServerCe;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
-using DbUp.SqlCe.Engine;
-using DbUp.Support.SqlServer;
 using DbUp.SqlCe;
+using DbUp.Support.SqlServer;
+using DbUp.SqlCe.Engine;
 
 /// <summary>
 /// Configuration extension methods for SQL CE.

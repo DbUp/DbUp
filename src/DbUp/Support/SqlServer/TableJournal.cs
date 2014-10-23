@@ -6,7 +6,6 @@ using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Engine;
 
 namespace DbUp.Support.SqlServer
 {
@@ -18,7 +17,7 @@ namespace DbUp.Support.SqlServer
         /// <summary>
         /// Object for getting sql strings
         /// </summary>
-        protected SqlStatementsContainer QueryProvider;
+        protected SqlStatementsContainer StatementContainer;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
@@ -30,11 +29,11 @@ namespace DbUp.Support.SqlServer
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
         /// </example>
-        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<SqlStatementsContainer> queryFunc)
+        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<SqlStatementsContainer> statementContainer)
         {
             this.connectionManager = connectionManager;
             log = logger;
-            QueryProvider = queryFunc();
+            StatementContainer = statementContainer();
         }
 
         /// <summary>
@@ -47,7 +46,7 @@ namespace DbUp.Support.SqlServer
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", QueryProvider.TableName));
+                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", StatementContainer.TableName));
                 return new string[0];
             }
 
@@ -56,7 +55,7 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = QueryProvider.GetVersionTableExecutedScriptsSql();
+                    command.CommandText = StatementContainer.GetVersionTableExecutedScriptsSql();
                     command.CommandType = CommandType.Text;
 
                     using (var reader = command.ExecuteReader())
@@ -88,19 +87,19 @@ namespace DbUp.Support.SqlServer
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("Creating the {0} table", QueryProvider.TableName));
+                log().WriteInformation(string.Format("Creating the {0} table", StatementContainer.TableName));
 
                 connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = QueryProvider.VersionTableCreationString();
+                        command.CommandText = StatementContainer.VersionTableCreationString();
 
                         command.CommandType = CommandType.Text;
                         command.ExecuteNonQuery();
                     }
 
-                    log().WriteInformation(string.Format("The {0} table has been created", QueryProvider.TableName));
+                    log().WriteInformation(string.Format("The {0} table has been created", StatementContainer.TableName));
                 });
             }
 
@@ -108,7 +107,7 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = QueryProvider.VersionTableNewEntry();
+                    command.CommandText = StatementContainer.VersionTableNewEntry();
 
                     var scriptNameParam = command.CreateParameter();
                     scriptNameParam.ParameterName = "scriptName";
@@ -134,7 +133,7 @@ namespace DbUp.Support.SqlServer
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = QueryProvider.VersionTableDoesTableExist();
+                        command.CommandText = StatementContainer.VersionTableDoesTableExist();
                         command.CommandType = CommandType.Text;
                         command.ExecuteScalar();
                         return true;

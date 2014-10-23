@@ -9,7 +9,6 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
-using DbUp.Engine;
 
 namespace DbUp.Support.SqlServer
 {
@@ -23,7 +22,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
-        private readonly SqlStatementsContainer queryProvider;
+        private readonly SqlStatementsContainer statementContainer;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -35,17 +34,17 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
         /// <param name="log">The logging mechanism.</param>
-        /// <param name="queryProvider">Query provider.</param>
+        /// <param name="statementContainer">Query provider.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<SqlStatementsContainer> queryProvider, Func<bool> variablesEnabled,
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<SqlStatementsContainer> statementContainer, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             this.log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
-            this.queryProvider = queryProvider();
+            this.statementContainer = statementContainer();
         }
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
@@ -61,13 +60,13 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         public void VerifySchema()
         {
-            if (string.IsNullOrEmpty(queryProvider.Scheme)) return;
+            if (string.IsNullOrEmpty(statementContainer.Scheme)) return;
 
             connectionManagerFactory().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, queryProvider.Scheme, () => true);
+                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, statementContainer.Scheme, () => true);
 
-                sqlRunner.ExecuteNonQuery(string.Format(queryProvider.CreateSchemeIfNotExists(), queryProvider.Scheme));
+                sqlRunner.ExecuteNonQuery(string.Format(statementContainer.CreateSchemeIfNotExists(), statementContainer.Scheme));
             });
         }
 
@@ -80,13 +79,13 @@ namespace DbUp.Support.SqlServer
         {
             if (variables == null)
                 variables = new Dictionary<string, string>();
-            if (queryProvider.Scheme != null && !variables.ContainsKey("schema"))
-                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(queryProvider.Scheme));
+            if (statementContainer.Scheme != null && !variables.ContainsKey("schema"))
+                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(statementContainer.Scheme));
 
             log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
 
             var contents = script.Contents;
-            if (string.IsNullOrEmpty(queryProvider.Scheme))
+            if (string.IsNullOrEmpty(statementContainer.Scheme))
                 contents = new StripSchemaPreprocessor().Process(contents);
             if (variablesEnabled())
                 contents = new VariableSubstitutionPreprocessor(variables).Process(contents);

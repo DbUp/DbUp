@@ -4,23 +4,26 @@ using System.Data.SqlServerCe;
 using DbUp.Engine.Output;
 using DbUp.Support.SqlServer;
 
-namespace DbUp.SqlCe {
+namespace DbUp.SqlCe 
+{
     /// <summary>
     /// Manages SqlCe Database Connections
     /// </summary>
-    public class SqlCeConnectionManager : SqlConnectionManager {
+    public class SqlCeConnectionManager : SqlConnectionManager 
+    {
         private readonly string connectionString;
 
         /// <summary>
         /// Manages SqlCe Database Connections
         /// </summary>
         /// <param name="connectionString"></param>
-        public SqlCeConnectionManager(string connectionString) : base(connectionString) 
+        public SqlCeConnectionManager(string connectionString) : base(connectionString)
         {
             this.connectionString = connectionString;
         }
 
-        protected override IDbConnection CreateConnection(IUpgradeLog log) {
+        protected override IDbConnection CreateConnection(IUpgradeLog log) 
+        {
             return new SqlCeConnection(connectionString);
         }
     }

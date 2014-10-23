@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Linq;
-using DbUp.Support;
 
 namespace DbUp.Support.SQLite
 {

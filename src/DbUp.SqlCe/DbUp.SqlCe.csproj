@@ -56,7 +56,7 @@
     <Compile Include="Engine\SqlCeConnectionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCeExtensions.cs" />
-    <Compile Include="Engine\Preprocessor.cs" />
+    <Compile Include="Engine\SqlCePreprocessor.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />
