@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.IO;
 using System.Text;
 
@@ -11,6 +12,7 @@ namespace DbUp.Engine
     {
         private readonly string contents;
         private readonly string name;
+        static readonly Object locker = new object();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlScript"/> class.
@@ -48,10 +50,13 @@ namespace DbUp.Engine
         /// <returns></returns>
         public static SqlScript FromFile(string path)
         {
-            using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            lock (locker)
             {
-                var fileName = new FileInfo(path).Name;
-                return FromStream(fileName, fileStream);
+                using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+                {
+                    var fileName = new FileInfo(path).Name;
+                    return FromStream(fileName, fileStream);
+                }
             }
         }
 
