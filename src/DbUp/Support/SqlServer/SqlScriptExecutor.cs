@@ -9,6 +9,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
+using DbUp.Engine;
 
 namespace DbUp.Support.SqlServer
 {
@@ -22,7 +23,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
-        private readonly IQueryProvider queryProvider;
+        private readonly SqlStatementsContainer queryProvider;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -37,7 +38,7 @@ namespace DbUp.Support.SqlServer
         /// <param name="queryProvider">Query provider.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<IQueryProvider> queryProvider, Func<bool> variablesEnabled,
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<SqlStatementsContainer> queryProvider, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             this.log = log;
@@ -141,7 +142,7 @@ namespace DbUp.Support.SqlServer
             }
             catch (Exception ex)
             {
-                log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
+                log().WriteError("Exception has occured in script: '{0}'", script.Name);
                 log().WriteError(ex.ToString());
                 log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;

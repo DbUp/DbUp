@@ -6,6 +6,7 @@ using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Engine;
 
 namespace DbUp.Support.SqlServer
 {
@@ -17,7 +18,7 @@ namespace DbUp.Support.SqlServer
         /// <summary>
         /// Object for getting sql strings
         /// </summary>
-        protected IQueryProvider QueryProvider;
+        protected SqlStatementsContainer QueryProvider;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
@@ -29,7 +30,7 @@ namespace DbUp.Support.SqlServer
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
         /// </example>
-        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IQueryProvider> queryFunc )
+        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<SqlStatementsContainer> queryFunc)
         {
             this.connectionManager = connectionManager;
             log = logger;
@@ -73,7 +74,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="script"></param>
         /// <returns></returns>
-        public bool ValidateExecutedScript(SqlScript script)
+        public bool ValidateScript(SqlScript script)
         {
             return true;
         }

@@ -71,8 +71,7 @@
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
-    <Compile Include="Engine\QueryProviders\IQueryProvider.cs" />
-    <Compile Include="Engine\QueryProviders\QueryProviderBase.cs" />
+    <Compile Include="Engine\SqlStatementsContainer.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
     <Compile Include="Engine\UpgradeEngine.cs" />
     <Compile Include="Engine\DatabaseUpgradeResult.cs" />
@@ -99,7 +98,7 @@
     <Compile Include="Support\SqlServer\SqlServerExtensions.cs" />
     <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
-    <Compile Include="Support\SqlServer\SqlServerQueryProvider.cs" />
+    <Compile Include="Support\SqlServer\SqlServerStatementsContainer.cs" />
     <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
     <Compile Include="Support\SqlServer\TableJournal.cs" />
   </ItemGroup>

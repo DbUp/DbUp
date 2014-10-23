@@ -29,7 +29,7 @@ namespace DbUp.Helpers
         /// </summary>
         /// <param name="script"></param>
         /// <returns></returns>
-        public bool ValidateExecutedScript(SqlScript script)
+        public bool ValidateScript(SqlScript script)
         {
             return true;
         }

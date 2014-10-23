@@ -170,7 +170,7 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="relativePath">Relative path to directory.</param>
     /// <returns></returns>
-    public static UpgradeEngineBuilder WithScirptsFromFileSystemRelative(this UpgradeEngineBuilder builder, string relativePath)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystemRelative(this UpgradeEngineBuilder builder, string relativePath)
     {
         string executionDirPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         if (String.IsNullOrEmpty(executionDirPath)) return null;

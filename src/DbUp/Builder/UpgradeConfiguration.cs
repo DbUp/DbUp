@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Engine;
 
 namespace DbUp.Builder
 {
@@ -57,7 +58,7 @@ namespace DbUp.Builder
         /// <summary>
         /// Get or sets the query provider, which holds sql queries.
         /// </summary>
-        public IQueryProvider QueryProvider { get; set; }
+        public SqlStatementsContainer SqlStatementsContainer { get; set; }
 
         /// <summary>
         /// A collection of variables to be replaced in scripts before they are run
@@ -82,7 +83,7 @@ namespace DbUp.Builder
             if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build()");
             if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build()");
             if (ConnectionManager == null) throw new ArgumentException("The ConnectionManager is null. What do you expect to upgrade?");
-            if( QueryProvider == null) throw new ArgumentException("The QueryProvider is required");
+            if( SqlStatementsContainer == null) throw new ArgumentException("The QueryProvider is required");
         }
 
         /// <summary>

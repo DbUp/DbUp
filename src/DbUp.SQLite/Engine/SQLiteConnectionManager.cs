@@ -8,22 +8,22 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
 
-namespace DbUp.SQLite.Engine
+namespace DbUp.SQLite
 {
     /// <summary>
     /// SQLite Connection Manager.
     /// </summary>
-    public class ConnectionManager : DatabaseConnectionManager
+    public class SQLiteConnectionManager : DatabaseConnectionManager
     {
         private readonly string connectionString;
         private readonly SharedConnection sharedConnection;
 
-        public ConnectionManager(string connectionString)
+        public SQLiteConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
         }
 
-        public ConnectionManager(SharedConnection sharedConnection)
+        public SQLiteConnectionManager(SharedConnection sharedConnection)
         {
             this.sharedConnection = sharedConnection;
         }

@@ -8,15 +8,15 @@ namespace DbUp.SqlCe {
     /// <summary>
     /// Manages SqlCe Database Connections
     /// </summary>
-    public class ConnectionManager : SqlConnectionManager {
+    public class SqlCeConnectionManager : SqlConnectionManager {
         private readonly string connectionString;
 
         /// <summary>
         /// Manages SqlCe Database Connections
         /// </summary>
         /// <param name="connectionString"></param>
-        public ConnectionManager(string connectionString)
-            : base(connectionString) {
+        public SqlCeConnectionManager(string connectionString) : base(connectionString) 
+        {
             this.connectionString = connectionString;
         }
 

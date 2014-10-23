@@ -57,15 +57,15 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Engine\ObjectParser.cs" />
+    <Compile Include="Engine\SQLiteObjectParser.cs" />
     <Compile Include="Helpers\InMemorySQLiteDatabase.cs" />
     <Compile Include="Helpers\SharedConnection.cs" />
     <Compile Include="Helpers\TemporarySQLiteDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Engine\ConnectionManager.cs" />
+    <Compile Include="Engine\SQLiteConnectionManager.cs" />
     <Compile Include="SQLiteExtensions.cs" />
-    <Compile Include="Engine\ScriptPreprocessor.cs" />
-    <Compile Include="Engine\QueryProvider.cs" />
+    <Compile Include="Engine\SQLitePreprocessor.cs" />
+    <Compile Include="Engine\SQLiteStatements.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />

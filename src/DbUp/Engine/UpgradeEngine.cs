@@ -119,7 +119,7 @@ namespace DbUp.Engine
             IEnumerable<SqlScript> executedScripts = allScripts.Where(s => executedScriptsNames.Any(y => y == s.Name));
             foreach (SqlScript executedScript in executedScripts)
             {
-                bool executedScriptsOk = configuration.Journal.ValidateExecutedScript(executedScript);
+                bool executedScriptsOk = configuration.Journal.ValidateScript(executedScript);
                 if (!executedScriptsOk)
                     throw new Exception(String.Format("Invalid change of script {0}. Successfully executed script has been changed.", executedScript.Name));
             }

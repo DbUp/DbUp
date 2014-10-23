@@ -11,7 +11,7 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class InMemorySQLiteDatabase : IDisposable
     {
-        private readonly ConnectionManager connectionManager;
+        private readonly SQLiteConnectionManager connectionManager;
         private readonly AdHocSqlRunner sqlRunner;
         private readonly SQLiteConnection sharedConnection;
 
@@ -30,7 +30,7 @@ namespace DbUp.SQLite.Helpers
             };
             ConnectionString = connectionStringBuilder.ToString();
 
-            connectionManager = new ConnectionManager(connectionStringBuilder.ConnectionString);
+            connectionManager = new SQLiteConnectionManager(connectionStringBuilder.ConnectionString);
             sharedConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sharedConnection.OpenAndReturn();
             sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), null, () => true);

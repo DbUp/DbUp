@@ -1,18 +1,19 @@
 ﻿using System;
-using DbUp.Engine.QueryProviders;
+using DbUp.Engine;
+using DbUp.Support.SQLite;
 
 namespace DbUp.SQLite.Engine
 {
     /// <summary>
     /// Return queries for SQLite
     /// </summary>
-    public class QueryProvider : QueryProviderBase
+    public class SQLiteStatements : SqlStatementsContainer
     {
         /// <summary>
         /// New queries container for SQLite
         /// </summary>
         /// <param name="versioningTableName">Name of table which contains versions</param>
-        public QueryProvider(string versioningTableName = null)
+        public SQLiteStatements(string versioningTableName = null)
         {
             if (!String.IsNullOrEmpty(versioningTableName))
                 this.VersionTableName = versioningTableName;

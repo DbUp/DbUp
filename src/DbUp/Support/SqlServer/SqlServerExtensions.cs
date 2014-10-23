@@ -91,9 +91,9 @@ public static class SqlServerExtensions
     private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema = null, string table = "SchemaVersions") {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.QueryProvider = new SqlServerQueryProvider(table, schema));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
+        builder.Configure(c => c.SqlStatementsContainer = new SqlServerStatementsContainer(table, schema));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer));
         return builder;
     }
 
@@ -106,9 +106,9 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        builder.Configure(c => c.QueryProvider = new SqlServerQueryProvider(table, schema));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log, () => c.QueryProvider));
+        builder.Configure(c => c.SqlStatementsContainer = new SqlServerStatementsContainer(table, schema));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(()=>c.ConnectionManager, ()=>c.Log, () => c.SqlStatementsContainer));
         return builder;
     }
 }

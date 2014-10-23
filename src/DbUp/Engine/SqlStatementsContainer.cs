@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace DbUp.Engine.QueryProviders
+namespace DbUp.Engine
 {
     /// <summary>
     /// Class for supporting query string which are same for all providers
     /// </summary>
-    public abstract class QueryProviderBase : IQueryProvider
+    public abstract class SqlStatementsContainer
     {
         /// <summary>
         /// Name of Journal table in database.

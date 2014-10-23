@@ -13,6 +13,7 @@ using NUnit.Framework;
 using TestStack.BDDfy;
 using TestStack.BDDfy.Core;
 using TestStack.BDDfy.Scanners.StepScanners.Fluent;
+using DbUp.SQLite;
 
 namespace DbUp.Tests
 {
@@ -192,9 +193,9 @@ namespace DbUp.Tests
 
         private TableJournal GetJournal()
         {
-            var sqLiteConnectionManager = new ConnectionManager(database.SharedConnection);
+            var sqLiteConnectionManager = new SQLiteConnectionManager(database.SharedConnection);
             sqLiteConnectionManager.OperationStarting(log, new List<SqlScript>());
-            var journal = new TableJournal(() => sqLiteConnectionManager, () => log, () => new QueryProvider("SchemaVersions"));
+            var journal = new TableJournal(() => sqLiteConnectionManager, () => log, () => new SQLiteStatements("SchemaVersions"));
             return journal;
         }
 

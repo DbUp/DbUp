@@ -1,8 +1,9 @@
 ﻿using System;
 using DbUp.Builder;
-using DbUp.SQLite.Engine;
+using DbUp.SQLite;
 using DbUp.SQLite.Helpers;
 using DbUp.Support.SqlServer;
+using DbUp.SQLite.Engine;
 
 /// <summary>
 /// Configuration extension methods for SQLite (see http://www.sqlite.org/)
@@ -38,12 +39,12 @@ public static class SQLiteExtensions
     /// </returns>
     public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, string connectionString, string tableName) {
         var builder = new UpgradeEngineBuilder();
-        builder.Configure(c => c.ConnectionManager = new ConnectionManager(connectionString));
-        builder.Configure(c => c.QueryProvider = new QueryProvider(tableName));
-        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider,
+        builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(connectionString));
+        builder.Configure(c => c.SqlStatementsContainer = new SQLiteStatements(tableName));
+        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer,
             () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.WithPreprocessor(new ScriptPreprocessor());
+        builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
     }
 
@@ -70,12 +71,12 @@ public static class SQLiteExtensions
     /// </returns>
     public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, SharedConnection sharedConnection, string tableName) {
         var builder = new UpgradeEngineBuilder();
-        builder.Configure(c => c.ConnectionManager = new ConnectionManager(sharedConnection));
-        builder.Configure(c => c.QueryProvider = new QueryProvider(tableName));
-        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.QueryProvider,
+        builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(sharedConnection));
+        builder.Configure(c => c.SqlStatementsContainer = new SQLiteStatements(tableName));
+        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer,
             () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.WithPreprocessor(new ScriptPreprocessor());
+        builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
     }
 }

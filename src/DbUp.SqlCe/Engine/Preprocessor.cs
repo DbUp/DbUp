@@ -2,12 +2,12 @@
 using System.Text.RegularExpressions;
 using DbUp.Engine;
 
-namespace DbUp.SqlCe.Engine
+namespace DbUp.SqlCe
 {
     /// <summary>
     /// This preprocessor makes minor adjustments to your sql to make it compatible with SqlCe
     /// </summary>
-    public class Preprocessor : IScriptPreprocessor
+    public class SqlCePreprocessor : IScriptPreprocessor
     {
         /// <summary>
         /// Performs some proprocessing step on a script

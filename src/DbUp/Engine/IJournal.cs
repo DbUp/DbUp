@@ -12,11 +12,11 @@
         string[] GetExecutedScripts();
 
         /// <summary>
-        /// Check if already executed script has changed.
+        /// Check validation of script for this database.
         /// </summary>
         /// <param name="script">Executed script.</param>
         /// <returns>True if executed script is valid.</returns>
-        bool ValidateExecutedScript(SqlScript script);
+        bool ValidateScript(SqlScript script);
 
         /// <summary>
         /// Records an upgrade script for a database.

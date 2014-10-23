@@ -1,5 +1,5 @@
 ﻿using System;
-using DbUp.Engine.QueryProviders;
+using DbUp.Engine;
 using DbUp.Support.SqlServer;
 
 namespace DbUp.SqlCe.Engine
@@ -7,9 +7,9 @@ namespace DbUp.SqlCe.Engine
     /// <summary>
     /// Return queries for SqlCe
     /// </summary>
-    public class QueryProvider : QueryProviderBase
+    public class SqlCeStatements : SqlStatementsContainer
     {
-        public QueryProvider(string versioningTableName = null)
+        public SqlCeStatements(string versioningTableName = null)
         {
             if (!String.IsNullOrEmpty(versioningTableName))
                 this.VersionTableName = versioningTableName;

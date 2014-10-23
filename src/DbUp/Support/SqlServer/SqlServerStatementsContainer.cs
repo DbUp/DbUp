@@ -1,12 +1,12 @@
 ﻿using System;
-using DbUp.Engine.QueryProviders;
+using DbUp.Engine;
 
 namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// Return queries for Microsoft Sql Server
     /// </summary>
-    public class SqlServerQueryProvider : QueryProviderBase
+    public class SqlServerStatementsContainer : SqlStatementsContainer
     {
         /// <summary>
         /// Full name for versioning table ([@sheme].[@tableName])
@@ -17,7 +17,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="tableName">Plain name of table which handle versioning. If passed name is null or "", take default name SchemaVersions</param>
         /// <param name="schema">Schema name of table which handle versioning. If null, queries will not include shema in queries. </param>
-        public SqlServerQueryProvider(string tableName = null, string schema = null)
+        public SqlServerStatementsContainer(string tableName = null, string schema = null)
         {
             if (!String.IsNullOrEmpty(tableName))
                 this.VersionTableName = tableName;
