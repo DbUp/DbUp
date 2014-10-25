@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30723.0
+VisualStudioVersion = 12.0.30501.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
 EndProject
@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C6CF2BB4-BFE4-4531-88D2-85F3EA640563}"
 	ProjectSection(SolutionItems) = preProject
 		..\build\build.proj = ..\build\build.proj
+		..\build\dbup.mysql.nuspec = ..\build\dbup.mysql.nuspec
 		..\build\dbup.nuspec = ..\build\dbup.nuspec
 		..\build\dbup.postgresql.nuspec = ..\build\dbup.postgresql.nuspec
 		..\build\dbup.sqlce.nuspec = ..\build\dbup.sqlce.nuspec
@@ -41,6 +42,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Tests", "DbUp.Tests\DbUp.Tests.csproj", "{80A9E08A-13F3-4721-9849-C55167FE21A5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Postgresql", "DbUp.Postgresql\DbUp.Postgresql.csproj", "{27246D0E-BF23-4315-A946-EA8C93D9BFF1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.MySql", "DbUp.MySql\DbUp.MySql.csproj", "{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -174,6 +177,21 @@ Global
 		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{27246D0E-BF23-4315-A946-EA8C93D9BFF1}.Release|x86.ActiveCfg = Release|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Default|x86.ActiveCfg = Debug|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
