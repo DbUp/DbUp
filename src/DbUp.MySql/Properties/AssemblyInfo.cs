@@ -8,9 +8,9 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTitle("DbUp.MySql")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyCompany("Zuehlke Technology Group")]
+[assembly: AssemblyCompany("")]
 [assembly: AssemblyProduct("DbUp.MySql")]
-[assembly: AssemblyCopyright("Copyright © Zuehlke Technology Group 2014")]
+[assembly: AssemblyCopyright("Copyright ©  2014")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 
