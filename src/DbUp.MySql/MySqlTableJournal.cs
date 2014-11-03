@@ -70,7 +70,7 @@ namespace DbUp.Support.MySql
 
         private string GetExecutedScriptsSql(string table)
         {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
+            return string.Format("select ScriptName from {0} order by ScriptName", table);
         }
 
         /// <summary>
