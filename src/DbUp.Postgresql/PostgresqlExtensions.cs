@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using System;
+using DbUp.Engine;
 using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
@@ -36,7 +37,7 @@ public static class PostgresqlExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => false, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => false, c.ScriptPreprocessors, new SqlObjectParser(), new SqlCreateSchema()));
         builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, null, "schemaversions"));
         builder.WithPreprocessor(new PostgresqlPreprocessor());
         return builder;

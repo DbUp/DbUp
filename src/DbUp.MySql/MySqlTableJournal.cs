@@ -2,46 +2,41 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using MySql.Data.MySqlClient;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.Support.MySql
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
-    /// SQL Server database using a table called dbo.SchemaVersions.
+    /// MySql database using a table called dbo.SchemaVersions.
     /// </summary>
-    public class SqlTableJournal : IJournal
+    public class MySqlTableJournal : IJournal
     {
         private readonly string schemaTableName;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
+        /// Initializes a new instance of the <see cref="MySqlTableJournal"/> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
         /// <param name="logger">The log.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
-        /// <example>
-        /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
-        /// </example>
-        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
+        public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
-            var parser = new SqlObjectParser();
-
-            schemaTableName = string.IsNullOrEmpty(schema) 
-                ? parser.QuoteSqlObjectName(table)
-                : parser.QuoteSqlObjectName(schema) + "." + parser.QuoteSqlObjectName(table);
+            schemaTableName = string.IsNullOrEmpty(schema)
+                ? table
+                : schema + "." + table;
             this.connectionManager = connectionManager;
             log = logger;
         }
 
         /// <summary>
-        /// Recalls the version number of the database.
+        /// Recalls teh version number of the database
         /// </summary>
         /// <returns>All executed scripts.</returns>
         public string[] GetExecutedScripts()
@@ -73,18 +68,15 @@ namespace DbUp.Support.SqlServer
             return scripts.ToArray();
         }
 
-        /// <summary>
-        /// The Sql which gets 
-        /// </summary>
-        protected virtual string GetExecutedScriptsSql(string table)
+        private string GetExecutedScriptsSql(string table)
         {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
+            return string.Format("select ScriptName from {0} order by ScriptName", table);
         }
 
         /// <summary>
         /// Records a database upgrade for a database specified in a given connection string.
         /// </summary>
-        /// <param name="script">The script.</param>
+        /// <param name="script"></param>
         public void StoreExecutedScript(SqlScript script)
         {
             var exists = DoesTableExist();
@@ -116,7 +108,7 @@ namespace DbUp.Support.SqlServer
                     scriptNameParam.ParameterName = "scriptName";
                     scriptNameParam.Value = script.Name;
                     command.Parameters.Add(scriptNameParam);
-                    
+
                     var appliedParam = command.CreateParameter();
                     appliedParam.ParameterName = "applied";
                     appliedParam.Value = DateTime.Now;
@@ -128,41 +120,26 @@ namespace DbUp.Support.SqlServer
             });
         }
 
-        /// <summary>
-        /// The sql to exectute to create the schema versions table
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        protected virtual string CreateTableSql(string tableName)
+        private string CreateTableSql(string tableName)
         {
-            return string.Format(@"create table {0} (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
-	[ScriptName] nvarchar(255) not null,
-	[Applied] datetime not null
-)", tableName);
+            return string.Format(@"CREATE TABLE {0} (
+              `Id` INT NOT NULL AUTO_INCREMENT,
+              `ScriptName` VARCHAR(255) NOT NULL,
+              `Applied` DATETIME NOT NULL,
+              PRIMARY KEY (`Id`));", tableName);
         }
 
         private bool DoesTableExist()
         {
             return connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                try
+                using (var command = dbCommandFactory())
                 {
-                    using (var command = dbCommandFactory())
-                    {
-                        command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteScalar();
-                        return true;
-                    }
-                }
-                catch (SqlException)
-                {
-                    return false;
-                }
-                catch (DbException)
-                {
-                    return false;
+                    command.CommandText = string.Format("SHOW TABLES LIKE '{0}'", schemaTableName);
+                    command.CommandType = CommandType.Text;
+                    var result = command.ExecuteScalar();
+
+                    return (null != result);
                 }
             });
         }

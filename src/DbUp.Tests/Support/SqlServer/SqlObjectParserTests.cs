@@ -8,12 +8,20 @@ namespace DbUp.Tests.Support.SqlServer
     [TestFixture]
     public class SqlObjectParserTests
     {
+        private SqlObjectParser parser;
+
+        [SetUp]
+        public void Setup()
+        {
+            parser = new SqlObjectParser();
+        }
+
         [Test]
         public void QuoteSqlObjectName_should_fail_on_large_object_name()
         {
             var objectName = new string('x', 129);
 
-            Assert.That(() => SqlObjectParser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => parser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -21,7 +29,7 @@ namespace DbUp.Tests.Support.SqlServer
         {
             var objectName = string.Empty;
 
-            Assert.That(() => SqlObjectParser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => parser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -29,15 +37,15 @@ namespace DbUp.Tests.Support.SqlServer
         {
             string objectName = null;
 
-            Assert.That(() => SqlObjectParser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => parser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         [Test]
         public void QuoteSqlObjectName_should_not_change_a_quoted_object_name()
         {
-            var objectName = "[MyObject]";
+            const string objectName = "[MyObject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = parser.QuoteSqlObjectName(objectName);
 
             Assert.That(result, Is.EqualTo(objectName));
         }
@@ -45,9 +53,9 @@ namespace DbUp.Tests.Support.SqlServer
         [Test]
         public void QuoteSqlObjectName_should_trim_a_quoted_object_name()
         {
-            var objectName = "   [MyObject]  ";
+            const string objectName = "   [MyObject]  ";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = parser.QuoteSqlObjectName(objectName);
 
             Assert.That(result, Is.EqualTo(objectName.Trim()));
         }
@@ -55,10 +63,10 @@ namespace DbUp.Tests.Support.SqlServer
         [Test]
         public void QuoteSqlObjectName_should_quote_an_unquoted_object_name()
         {
-            var objectName = "MyObject";
-            var quotedObjectName = "[MyObject]";
+            const string objectName = "MyObject";
+            const string quotedObjectName = "[MyObject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = parser.QuoteSqlObjectName(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -66,10 +74,10 @@ namespace DbUp.Tests.Support.SqlServer
         [Test]
         public void QuoteSqlObjectName_should_quote_and_trim_an_unquoted_object_name()
         {
-            var objectName = "    MyObject   ";
-            var quotedObjectName = "[MyObject]";
+            const string objectName = "    MyObject   ";
+            const string quotedObjectName = "[MyObject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = parser.QuoteSqlObjectName(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -77,10 +85,10 @@ namespace DbUp.Tests.Support.SqlServer
         [Test]
         public void QuoteSqlObjectName_should_quote_and_escape_closing_brackets_in_object_name()
         {
-            var objectName = "MyObject]";
-            var quotedObjectName = "[MyObject]]]";
+            const string objectName = "MyObject]";
+            const string quotedObjectName = "[MyObject]]]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = parser.QuoteSqlObjectName(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -88,10 +96,10 @@ namespace DbUp.Tests.Support.SqlServer
         [Test]
         public void QuoteSqlObjectName_should_quote_and_not_escape_opening_brackets_in_object_name()
         {
-            var objectName = "MyO[bject";
-            var quotedObjectName = "[MyO[bject]";
+            const string objectName = "MyO[bject";
+            const string quotedObjectName = "[MyO[bject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = parser.QuoteSqlObjectName(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -99,10 +107,10 @@ namespace DbUp.Tests.Support.SqlServer
         [Test]
         public void QuoteSqlObjectName_without_trim_should_leave_start_and_end_whitespace_intact()
         {
-            var objectName = "    MyObject   ";
-            var quotedObjectName = "[    MyObject   ]";
+            const string objectName = "    MyObject   ";
+            const string quotedObjectName = "[    MyObject   ]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName, ObjectNameOptions.None);
+            var result = parser.QuoteSqlObjectName(objectName, ObjectNameOptions.None);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
