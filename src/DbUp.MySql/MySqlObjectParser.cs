@@ -1,16 +1,17 @@
 ﻿using System;
+using DbUp.Engine;
 using DbUp.Support;
 
 namespace DbUp.MySql
 {
-    class MySqlObjectParser
+    class MySqlObjectParser : IObjectParser
     {
-        public static string QuoteMySqlObjectName(string objectName)
+        public string QuoteSqlObjectName(string objectName)
         {
-            return QuoteMySqlObjectName(objectName, ObjectNameOptions.Trim);
+            return QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
         }
 
-        public static string QuoteMySqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
+        public string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
                 throw new ArgumentNullException();

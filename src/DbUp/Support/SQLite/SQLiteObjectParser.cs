@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DbUp.Engine;
 
 namespace DbUp.Support.SQLite
 {
-    public class SQLiteObjectParser
+    public class SQLiteObjectParser : IObjectParser
     {
         /// <summary>
         /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.
         /// </summary>
         /// <param name="objectName">Name of the object to quote.</param>
         /// <returns>The quoted object name with trimmed whitespace</returns>
-        public static string QuoteSqlObjectName(string objectName)
+        public string QuoteSqlObjectName(string objectName)
         {
             return QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
         }
@@ -23,7 +24,7 @@ namespace DbUp.Support.SQLite
         /// <param name="objectName">Name of the object to quote.</param>
         /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
         /// <returns>The quoted object name</returns>
-        public static string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
+        public string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
                 throw new ArgumentNullException();

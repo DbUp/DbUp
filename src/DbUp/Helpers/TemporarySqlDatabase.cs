@@ -2,6 +2,7 @@
 using System.Data.SqlClient;
 using System.Diagnostics;
 using DbUp.Engine.Output;
+using DbUp.Support.SqlServer;
 
 namespace DbUp.Helpers
 {
@@ -33,12 +34,12 @@ namespace DbUp.Helpers
             databaseName = name;
             connectionString = string.Format("Server={0};Database={1};Trusted_connection=true;Pooling=false", instanceName, databaseName);
             sqlConnection = new SqlConnection(connectionString);
-            database = new AdHocSqlRunner(sqlConnection.CreateCommand, "dbo", () => true);
+            database = new AdHocSqlRunner(sqlConnection.CreateCommand, "dbo", new SqlObjectParser(), () => true);
 
             var builder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
 
             masterSqlConnection = new SqlConnection(builder.ToString());
-            master = new AdHocSqlRunner(() => masterSqlConnection.CreateCommand(), "dbo", () => true);
+            master = new AdHocSqlRunner(() => masterSqlConnection.CreateCommand(), "dbo", new SqlObjectParser(), () => true);
         }
 
         /// <summary>

@@ -2,6 +2,8 @@
 using System.Data.SQLite;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
+using DbUp.Support.SQLite;
+using DbUp.Support.SqlServer;
 
 namespace DbUp.SQLite.Helpers
 {
@@ -32,7 +34,7 @@ namespace DbUp.SQLite.Helpers
             connectionManager = new SQLiteConnectionManager(connectionStringBuilder.ConnectionString);
             sharedConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sharedConnection.OpenAndReturn();
-            sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), null, () => true);
+            sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), null, new SQLiteObjectParser(), () => true);
         }
 
         public string ConnectionString { get; set; }

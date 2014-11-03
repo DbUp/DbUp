@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Data;
 using DbUp.Builder;
+using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
 
@@ -80,7 +81,7 @@ public static class SqlServerExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors, new SqlObjectParser(), new SqlCreateSchema()));
         builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, "SchemaVersions"));
         return builder;
     }

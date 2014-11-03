@@ -10,7 +10,7 @@ namespace DbUp.Tests.Support.MySql
         [Test]
         public void CanUseMySql()
         {
-            const string connectionString = "server=localhost;user id=CCFI_Bus;password=jGUpYqS44SHN2hSw;database=test_ecash";
+            const string connectionString = "server=localhost;user id=username;password=password;database=test";
 
             var upgrader = DeployChanges.To
                 .MySqlDatabase(connectionString)

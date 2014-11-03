@@ -60,6 +60,8 @@
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
     <Compile Include="DeployChanges.cs" />
     <Compile Include="Engine\DelegateDisposable.cs" />
+    <Compile Include="Engine\ICreateSchema.cs" />
+    <Compile Include="Engine\IObjectParser.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManager.cs" />
     <Compile Include="Engine\IScript.cs" />
     <Compile Include="Engine\Transactions\SingleTrasactionStrategy.cs" />
@@ -70,6 +72,7 @@
     <Compile Include="Engine\Transactions\TransactionMode.cs" />
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
+    <Compile Include="Engine\ScriptExecutor.cs" />
     <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitter.cs" />
     <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
@@ -84,8 +87,8 @@
     <Compile Include="Support\ObjectNameOptions.cs" />
     <Compile Include="Support\SQLite\SQLiteObjectParser.cs" />
     <Compile Include="Support\SQLite\SQLiteTableJournal.cs" />
+    <Compile Include="Support\SqlServer\SqlCreateSchema.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
-    <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
     <Compile Include="Engine\IScriptPreprocessor.cs" />
     <Compile Include="Engine\Preprocessors\VariableSubstitutionPreprocessor.cs" />
     <Compile Include="Engine\Output\IUpgradeLog.cs" />

@@ -1,5 +1,6 @@
 ﻿using System;
 using DbUp.Builder;
+using DbUp.Engine;
 using DbUp.SQLite.Helpers;
 using DbUp.Support.SQLite;
 using DbUp.SQLite;
@@ -28,8 +29,8 @@ public static class SQLiteExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(connectionString));
         builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
-            () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+            () => c.VariablesEnabled, c.ScriptPreprocessors, new SqlObjectParser(), new SqlCreateSchema()));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
     }
@@ -47,8 +48,8 @@ public static class SQLiteExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(sharedConnection));
         builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
-            () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new ScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+            () => c.VariablesEnabled, c.ScriptPreprocessors, new SqlObjectParser(), new SqlCreateSchema()));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
     }
