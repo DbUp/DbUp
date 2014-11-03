@@ -136,7 +136,6 @@ namespace DbUp.Support.MySql
                 using (var command = dbCommandFactory())
                 {
                     command.CommandText = string.Format("SHOW TABLES LIKE '{0}'", schemaTableName);
-                    Console.WriteLine(command.CommandText);
                     command.CommandType = CommandType.Text;
                     var result = command.ExecuteScalar();
 
