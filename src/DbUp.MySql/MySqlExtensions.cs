@@ -22,5 +22,18 @@ namespace DbUp.MySql
             
             return builder;
         }
+
+        /// <summary>
+        /// Tracks the list of executed scripts in a SQL Server table.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="schema">The schema.</param>
+        /// <param name="table">The table.</param>
+        /// <returns></returns>
+        public static UpgradeEngineBuilder JournalToMySqlTable(this UpgradeEngineBuilder builder, string schema, string table)
+        {
+            builder.Configure(c => c.Journal = new MySqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
+            return builder;
+        }
     }
 }
