@@ -15,6 +15,7 @@ namespace DbUp.Tests.Support.MySql
             var upgrader = DeployChanges.To
                 .MySqlDatabase(connectionString)
                 .WithScript("Script0001", "create table Foo (Id int(10))")
+                .WithScript("Script0002", "create table Bar (Id int(10))")
                 .Build();
 
             var result = upgrader.PerformUpgrade();
