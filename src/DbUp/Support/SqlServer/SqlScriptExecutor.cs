@@ -45,7 +45,7 @@ namespace DbUp.Support.SqlServer
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
             this.statementContainer = connectionManagerFactory().SqlContainer;
-            this.statementContainer.Scheme = schema;
+            if(this.statementContainer != null) this.statementContainer.Scheme = schema;
         }
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
