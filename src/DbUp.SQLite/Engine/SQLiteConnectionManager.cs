@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
+using DbUp.SQLite.Engine;
 
 namespace DbUp.SQLite
 {
@@ -20,11 +21,13 @@ namespace DbUp.SQLite
         public SQLiteConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
+            _sqlContainer = new SQLiteStatements();
         }
 
         public SQLiteConnectionManager(SharedConnection sharedConnection)
         {
             this.sharedConnection = sharedConnection;
+            _sqlContainer = new SQLiteStatements();
         }
 
         protected override IDbConnection CreateConnection(IUpgradeLog log)

@@ -22,6 +22,7 @@ namespace DbUp.Engine
         public string TableName 
         {
             get { return VersionTableName; }
+            set { VersionTableName = value; }
         }
         /// <summary>
         /// Scheme of versioning table
@@ -29,6 +30,7 @@ namespace DbUp.Engine
         public string Scheme
         {
             get { return VersionTableScheme; }
+            set { VersionTableScheme = value; }
         }
         /// <summary>
         /// Abstract method for Sql create string to create versioning table

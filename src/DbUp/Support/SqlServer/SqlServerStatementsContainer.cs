@@ -11,7 +11,7 @@ namespace DbUp.Support.SqlServer
         /// <summary>
         /// Full name for versioning table ([@sheme].[@tableName])
         /// </summary>
-        public string SchemaTableName = "";
+        public string SchemaTableName = "dbo";
         /// <summary>
         /// Create new SqlServer Query provider.
         /// </summary>

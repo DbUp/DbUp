@@ -3,6 +3,7 @@ using System.Data;
 using System.Data.SqlServerCe;
 using DbUp.Engine.Output;
 using DbUp.Support.SqlServer;
+using DbUp.SqlCe.Engine;
 
 namespace DbUp.SqlCe
 {
@@ -20,6 +21,7 @@ namespace DbUp.SqlCe
         public SqlCeConnectionManager(string connectionString) : base(connectionString)
         {
             this.connectionString = connectionString;
+            this._sqlContainer = new SqlCeStatements();
         }
 
         protected override IDbConnection CreateConnection(IUpgradeLog log)

@@ -55,11 +55,6 @@ namespace DbUp.Builder
         public IScriptExecutor ScriptExecutor { get; set; }
 
         /// <summary>
-        /// Get or sets the sql statement container, which holds sql queries.
-        /// </summary>
-        public SqlStatementsContainer SqlStatementsContainer { get; set; }
-
-        /// <summary>
         /// A collection of variables to be replaced in scripts before they are run
         /// </summary>
         public Dictionary<string, string> Variables
@@ -82,7 +77,6 @@ namespace DbUp.Builder
             if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build()");
             if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build()");
             if (ConnectionManager == null) throw new ArgumentException("The ConnectionManager is null. What do you expect to upgrade?");
-            if (SqlStatementsContainer == null) throw new ArgumentException("The SqlStatementsContainer is required");
         }
 
         /// <summary>

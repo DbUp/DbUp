@@ -29,11 +29,11 @@ namespace DbUp.Support.SqlServer
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True");
         /// </example>
-        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<SqlStatementsContainer> statementContainer)
+        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger)
         {
             this.connectionManager = connectionManager;
             log = logger;
-            StatementContainer = statementContainer();
+            StatementContainer = connectionManager().SqlContainer;
         }
 
         /// <summary>

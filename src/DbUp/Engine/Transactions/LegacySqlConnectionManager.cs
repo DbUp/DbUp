@@ -14,6 +14,12 @@ namespace DbUp.Engine.Transactions
     public class LegacySqlConnectionManager : IConnectionManager
     {
         private readonly Func<IDbConnection> connectionFactory;
+        private SqlStatementsContainer _sqlContainer = new SqlServerStatementsContainer();
+
+        public SqlStatementsContainer SqlContainer {
+            get { return _sqlContainer; }
+            set { _sqlContainer = value; }
+        }
 
         /// <summary>
         /// Ctor for LegacySqlConnectionManager

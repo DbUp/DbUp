@@ -13,6 +13,7 @@ namespace DbUp.Engine.Transactions
         private ITransactionStrategy transactionStrategy;
         private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
         private IDbConnection upgradeConnection;
+        protected SqlStatementsContainer _sqlContainer;
         /// <summary>
         /// Connection string
         /// </summary>
@@ -20,6 +21,15 @@ namespace DbUp.Engine.Transactions
         {
             get;
             set;
+        }
+
+        /// <summary>
+        /// Container of sql statements for each implementation of database type
+        /// </summary>
+        public SqlStatementsContainer SqlContainer 
+        {
+            get {return _sqlContainer;}
+            set { _sqlContainer = value; }
         }
 
         /// <summary>

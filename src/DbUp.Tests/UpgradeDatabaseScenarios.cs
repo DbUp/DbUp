@@ -195,7 +195,7 @@ namespace DbUp.Tests
         {
             var sqLiteConnectionManager = new SQLiteConnectionManager(database.SharedConnection);
             sqLiteConnectionManager.OperationStarting(log, new List<SqlScript>());
-            var journal = new TableJournal(() => sqLiteConnectionManager, () => log, () => new SQLiteStatements("SchemaVersions"));
+            var journal = new TableJournal(() => sqLiteConnectionManager, () => log);
             return journal;
         }
 

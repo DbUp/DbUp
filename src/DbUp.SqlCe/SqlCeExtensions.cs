@@ -46,10 +46,10 @@ public static class SqlCeExtensions
     private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager, string table = "SchemaVersions")
     {
         var builder = new UpgradeEngineBuilder();
+        connectionManager.SqlContainer.TableName = table;
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.SqlStatementsContainer = new SqlCeStatements(table));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.SqlStatementsContainer, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new TableJournal(() => connectionManager, () => c.Log, () => c.SqlStatementsContainer));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.Journal = new TableJournal(() => connectionManager, () => c.Log));
         builder.WithPreprocessor(new SqlCePreprocessor());
         return builder;
     }

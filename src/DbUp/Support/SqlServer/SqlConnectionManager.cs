@@ -15,7 +15,7 @@ namespace DbUp.Support.SqlServer
     public class SqlConnectionManager : DatabaseConnectionManager
     {
         private readonly string connectionString;
-
+        
         /// <summary>
         /// Manages Sql Database Connections
         /// </summary>
@@ -23,6 +23,7 @@ namespace DbUp.Support.SqlServer
         public SqlConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
+            this._sqlContainer = new SqlServerStatementsContainer();
         }
         
         protected override IDbConnection CreateConnection(IUpgradeLog log)
