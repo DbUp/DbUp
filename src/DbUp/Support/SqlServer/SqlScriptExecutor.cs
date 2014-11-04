@@ -34,10 +34,10 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
         /// <param name="log">The logging mechanism.</param>
-        /// <param name="statementContainer">Query provider.</param>
+        /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<bool> variablesEnabled,
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             this.log = log;
@@ -45,6 +45,7 @@ namespace DbUp.Support.SqlServer
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
             this.statementContainer = connectionManagerFactory().SqlContainer;
+            this.statementContainer.Scheme = schema;
         }
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
