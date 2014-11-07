@@ -58,7 +58,9 @@
     <Compile Include="MySqlExtensions.cs" />
     <Compile Include="MySqlObjectParser.cs" />
     <Compile Include="MySqlTableJournal.cs" />
+    <Compile Include="MySqlTokenizer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptStatement.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
