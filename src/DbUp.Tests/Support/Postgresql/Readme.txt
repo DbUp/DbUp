@@ -1,0 +1,1 @@
+﻿I deleted the tests here (see commit Works for Dell DS2 database http://en.community.dell.com/techcenter/extras/w/wiki/dvd-store) because they were integration tests that only work with a handy Postgresql database.  

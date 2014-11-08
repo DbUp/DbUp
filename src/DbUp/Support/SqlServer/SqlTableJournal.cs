@@ -31,11 +31,9 @@ namespace DbUp.Support.SqlServer
         /// </example>
         public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
-            schemaTableName = SqlObjectParser.QuoteSqlObjectName(table);
-            if (string.IsNullOrEmpty(schema))
-                schemaTableName = SqlObjectParser.QuoteSqlObjectName(table);
-            else
-                schemaTableName = SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(table);
+            schemaTableName = string.IsNullOrEmpty(schema) 
+                ? SqlObjectParser.QuoteSqlObjectName(table)
+                : SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(table);
             this.connectionManager = connectionManager;
             log = logger;
         }

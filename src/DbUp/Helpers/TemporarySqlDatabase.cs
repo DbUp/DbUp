@@ -10,6 +10,8 @@ namespace DbUp.Helpers
     /// </summary>
     public class TemporarySqlDatabase : IDisposable
     {
+        private const string localSqlInstance = @"(local)";
+
         private readonly string connectionString;
         private readonly AdHocSqlRunner database;
         private readonly string databaseName;
@@ -17,14 +19,19 @@ namespace DbUp.Helpers
         private readonly SqlConnection sqlConnection;
         private readonly SqlConnection masterSqlConnection;
 
+		/// <summary>
+        /// Creates new TemporarySqlDatabase against (local)
+        /// </summary>
+        public TemporarySqlDatabase(string name) : this(name, localSqlInstance) { }
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TemporarySqlDatabase"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
-        public TemporarySqlDatabase(string name)
+        public TemporarySqlDatabase(string name, string instanceName)
         {
             databaseName = name;
-            connectionString = string.Format("Server=(local);Database={0};Trusted_connection=true;Pooling=false", databaseName);
+            connectionString = string.Format("Server={0};Database={1};Trusted_connection=true;Pooling=false", instanceName, databaseName);
             sqlConnection = new SqlConnection(connectionString);
             database = new AdHocSqlRunner(sqlConnection.CreateCommand, "dbo", () => true);
 

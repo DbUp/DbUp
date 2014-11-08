@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 
 namespace DbUp.Support.SqlServer
@@ -67,7 +65,8 @@ namespace DbUp.Support.SqlServer
                 }
                 if (IsBeginningOfGo)
                 {
-                    ReadGo();
+                    if (!ReadGo())
+                        continue;
                     // This is the end of the command - return the command text in the buffer.
                     return GetCurrentCommandTextFromBuffer().Trim();
                 }
@@ -191,7 +190,7 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar);
+                bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar) || lastChar == nullChar;
                 bool currentCharIsG = IsCurrentCharEqualTo('g');
                 bool nextCharIsO = IsCharEqualTo('o', PeekChar());
                 return lastCharIsNullOrEmpty && currentCharIsG && nextCharIsO;
@@ -260,18 +259,30 @@ namespace DbUp.Support.SqlServer
             }
         }
 
-        private void ReadGo()
+        private bool ReadGo()
         {
+            var g = currentChar;
             // read to the o.
             if (Read() == failedRead)
             {
-                return;
+                return true;
             }
             // Support terminator.
-            if (PeekChar() == ';')
+            var peekChar = PeekChar();
+            if (peekChar == ';' || peekChar == '\0')
             {
                 Read();
             }
+            // Check that the statement is indeed a GO and not text starting with Go
+            // If it is not a go, add text to buffer and continue
+            else if (!char.IsWhiteSpace(peekChar))
+            {
+                commandScriptBuilder.Append(g);
+                commandScriptBuilder.Append(CurrentChar);
+                return false;
+            }
+
+            return true;
         }
 
         private void ResetCommandBuffer()
