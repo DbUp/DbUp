@@ -44,7 +44,7 @@ namespace DbUp.Tests.Helpers
 
             Assert.That(scriptsToRun, Is.Not.Null);
             Assert.That(scriptsToRun.Count(), Is.EqualTo(2));
-            Assert.False(scriptsToRun.Contains("ShouldRemain.txt"));
+            Assert.False(scriptsToRun.Contains("ShouldNotRemain.txt"));
         }
     }
 }
