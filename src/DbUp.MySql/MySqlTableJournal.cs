@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using MySql.Data.MySqlClient;
 
-namespace DbUp.Support.MySql
+namespace DbUp.MySql
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
