@@ -69,6 +69,7 @@
     <Compile Include="Engine\Preprocessors\StripSchemaPreprocessor.cs" />
     <Compile Include="Engine\Transactions\TransactionMode.cs" />
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
+    <Compile Include="Helpers\Filters.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
     <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitter.cs" />
