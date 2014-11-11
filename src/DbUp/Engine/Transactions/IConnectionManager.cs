@@ -32,7 +32,10 @@ namespace DbUp.Engine.Transactions
         /// </summary>
         TransactionMode TransactionMode { get; set; }
 
-        SqlStatementsContainer SqlContainer { get; set; }
+        /// <summary>
+        /// Container which holds sql statments for specific implementation.
+        /// </summary>
+        SqlStatementsContainer SqlContainer { get; }
 
         /// <summary>
         /// Specifies whether the db script output should be logged

@@ -33,13 +33,15 @@ public static class SQLiteExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">SQLite database connection string</param>
-    /// <param name="tableName">Name of journaling table.</param>
+    /// <param name="journalTableName">Name of journaling table.</param>
     /// <returns>
     /// A builder for a database upgrader designed for SQLite databases.
     /// </returns>
-    public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, string connectionString, string tableName) {
+    public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, string connectionString, string journalTableName) {
         var builder = new UpgradeEngineBuilder();
-        builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(connectionString));
+        var connectionManager = new SQLiteConnectionManager(connectionString);
+        connectionManager.SqlContainer.TableName = journalTableName;
+        builder.Configure(c => c.ConnectionManager = connectionManager);
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log));
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
             () => c.VariablesEnabled, c.ScriptPreprocessors));
@@ -65,13 +67,14 @@ public static class SQLiteExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="sharedConnection">SQLite database connection which you control when it is closed</param>
+    /// <param name="journalTableName">Name of journaling table.</param>
     /// <returns>
     /// A builder for a database upgrader designed for SQLite databases.
     /// </returns>
-    public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, SharedConnection sharedConnection, string tableName) {
+    public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, SharedConnection sharedConnection, string journalTableName) {
         var builder = new UpgradeEngineBuilder();
         var connectionManager = new SQLiteConnectionManager(sharedConnection);
-        connectionManager.SqlContainer.TableName = tableName;
+        connectionManager.SqlContainer.TableName = journalTableName;
         builder.Configure(c => c.ConnectionManager = connectionManager);
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log));
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,

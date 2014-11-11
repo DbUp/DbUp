@@ -18,7 +18,7 @@ namespace DbUp.Tests
             this.connection = connection ?? Substitute.For<IDbConnection>();
             if (startUpgrade)
                 OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
-            this._sqlContainer = new SqlServerStatementsContainer();
+            this.SqlContainer = new SqlServerStatementsContainer();
         }
 
         protected override IDbConnection CreateConnection(IUpgradeLog log)

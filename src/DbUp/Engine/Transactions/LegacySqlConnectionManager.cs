@@ -13,13 +13,9 @@ namespace DbUp.Engine.Transactions
     /// </summary>
     public class LegacySqlConnectionManager : IConnectionManager
     {
-        private readonly Func<IDbConnection> connectionFactory;
-        private SqlStatementsContainer _sqlContainer = new SqlServerStatementsContainer();
+        private readonly Func<IDbConnection> connectionFactory;        
 
-        public SqlStatementsContainer SqlContainer {
-            get { return _sqlContainer; }
-            set { _sqlContainer = value; }
-        }
+        public SqlStatementsContainer SqlContainer { get; private set; }
 
         /// <summary>
         /// Ctor for LegacySqlConnectionManager
@@ -28,6 +24,7 @@ namespace DbUp.Engine.Transactions
         public LegacySqlConnectionManager(Func<IDbConnection> connectionFactory)
         {
             this.connectionFactory = connectionFactory;
+            SqlContainer = new SqlServerStatementsContainer();
         }
 
         public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)

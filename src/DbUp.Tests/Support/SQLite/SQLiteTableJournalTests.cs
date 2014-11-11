@@ -22,7 +22,6 @@ namespace DbUp.Tests.Support.SQLite
             var command = Substitute.For<IDbCommand>();
             dbConnection.CreateCommand().Returns(command);
             var connectionManager = Substitute.For<IConnectionManager>();
-            connectionManager.SqlContainer = Substitute.For<SqlStatementsContainer>();
 
             command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
             var consoleUpgradeLog = new ConsoleUpgradeLog();

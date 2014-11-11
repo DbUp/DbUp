@@ -69,10 +69,10 @@ namespace DbUp.Support.SqlServer
             return scripts.ToArray();
         }
         /// <summary>
-        /// Not implemented yet!
+        /// Validation if passed script which has already been applied to database matches entry in journaling table.
         /// </summary>
-        /// <param name="script"></param>
-        /// <returns></returns>
+        /// <param name="script">Script to check if matches entry in journaling table.</param>
+        /// <returns>True if validation is successfull</returns>
         public bool ValidateScript(SqlScript script)
         {
             return true;

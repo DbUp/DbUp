@@ -11,10 +11,6 @@ namespace DbUp.Engine
         /// Name of Journal table in database.
         /// </summary>
         protected string VersionTableName = "SchemaVersions";
-        /// <summary>
-        /// Scheme of Journal table in database.
-        /// </summary>
-        protected string VersionTableScheme = null;
 
         /// <summary>
         /// Name of versioning table
@@ -27,11 +23,7 @@ namespace DbUp.Engine
         /// <summary>
         /// Scheme of versioning table
         /// </summary>
-        public string Scheme
-        {
-            get { return VersionTableScheme; }
-            set { VersionTableScheme = value; }
-        }
+        public string Scheme { get; set; }
         /// <summary>
         /// Abstract method for Sql create string to create versioning table
         /// </summary>

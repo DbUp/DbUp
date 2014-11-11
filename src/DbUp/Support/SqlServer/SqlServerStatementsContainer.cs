@@ -28,7 +28,7 @@ namespace DbUp.Support.SqlServer
             else
             {
                 SchemaTableName = SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(this.VersionTableName);
-                this.VersionTableScheme = schema;
+                this.Scheme = schema;
             }
         }
 

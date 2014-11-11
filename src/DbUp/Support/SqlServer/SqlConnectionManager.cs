@@ -23,7 +23,7 @@ namespace DbUp.Support.SqlServer
         public SqlConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
-            this._sqlContainer = new SqlServerStatementsContainer();
+            this.SqlContainer = new SqlServerStatementsContainer();
         }
         
         protected override IDbConnection CreateConnection(IUpgradeLog log)

@@ -21,13 +21,13 @@ namespace DbUp.SQLite
         public SQLiteConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
-            _sqlContainer = new SQLiteStatements();
+            this.SqlContainer = new SQLiteStatements();
         }
 
         public SQLiteConnectionManager(SharedConnection sharedConnection)
         {
             this.sharedConnection = sharedConnection;
-            _sqlContainer = new SQLiteStatements();
+            this.SqlContainer = new SQLiteStatements();
         }
 
         protected override IDbConnection CreateConnection(IUpgradeLog log)

@@ -21,7 +21,7 @@ namespace DbUp.SqlCe
         public SqlCeConnectionManager(string connectionString) : base(connectionString)
         {
             this.connectionString = connectionString;
-            this._sqlContainer = new SqlCeStatements();
+            this.SqlContainer = new SqlCeStatements();
         }
 
         protected override IDbConnection CreateConnection(IUpgradeLog log)
