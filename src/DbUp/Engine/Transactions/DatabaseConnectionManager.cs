@@ -21,7 +21,7 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Container of sql statements for each implementation of database type
         /// </summary>
-        public SqlStatementsContainer SqlContainer { get; set; } 
+        public SqlStatementsContainer SqlContainer { get; protected set; } 
 
         /// <summary>
         /// Manages Database Connections
