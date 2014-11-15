@@ -6,7 +6,7 @@ using NUnit.Framework;
 namespace DbUp.Tests.Support.SqlServer
 {
     [TestFixture]
-    public class SqlObjectParserTests
+    public class PostgreObjectParserTests
     {
         [Test]
         public void QuoteSqlObjectName_should_fail_on_large_object_name()

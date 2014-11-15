@@ -57,10 +57,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="PostgresqlConnectionManager.cs" />
+    <Compile Include="Engine\PostgreObjectParser.cs" />
+    <Compile Include="Engine\PostgresqlConnectionManager.cs" />
+    <Compile Include="Engine\PostgresqlStatements.cs" />
     <Compile Include="PostgresqlExtensions.cs" />
-    <Compile Include="PostgresqlPreprocessor.cs" />
-    <Compile Include="PostgresqlTableJournal.cs" />
+    <Compile Include="Engine\PostgresqlPreprocessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

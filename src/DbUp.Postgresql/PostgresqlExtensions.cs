@@ -3,7 +3,6 @@ using System;
 using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
-using DbUp.Support.Postgresql;
 
 // ReSharper disable once CheckNamespace
 
@@ -36,9 +35,9 @@ public static class PostgresqlExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ConnectionManager.SqlContainer.TableName = "schemaversions");
+        builder.Configure(c => c.ConnectionManager.SetSqlContainerParameters("schemaversions", null));
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, () => false, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, null, "schemaversions"));
+        builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log));
         builder.WithPreprocessor(new PostgresqlPreprocessor());
         return builder;
     }

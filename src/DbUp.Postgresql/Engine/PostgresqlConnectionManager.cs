@@ -23,6 +23,7 @@ namespace DbUp.Postgresql
         public PostgresqlConnectionManager(string connectionString)
         {
             this.connectionString = connectionString;
+            this.SqlContainer = new PostgresqlStatements();
         }
 
         /// <summary>

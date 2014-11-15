@@ -41,7 +41,7 @@ public static class SQLiteExtensions
         var builder = new UpgradeEngineBuilder();
         var connectionManager = new SQLiteConnectionManager(connectionString);
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ConnectionManager.SqlContainer.TableName = journalTableName);
+        builder.Configure(c => c.ConnectionManager.SetSqlContainerParameters(journalTableName, null));
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log));
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log,
             () => c.VariablesEnabled, c.ScriptPreprocessors));
@@ -75,7 +75,7 @@ public static class SQLiteExtensions
         var builder = new UpgradeEngineBuilder();
         var connectionManager = new SQLiteConnectionManager(sharedConnection);
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ConnectionManager.SqlContainer.TableName = journalTableName);
+        builder.Configure(c => c.ConnectionManager.SetSqlContainerParameters(journalTableName, null));
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log));
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log,
             () => c.VariablesEnabled, c.ScriptPreprocessors));

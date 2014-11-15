@@ -48,5 +48,12 @@ namespace DbUp.Engine.Transactions
         /// For example, MSSQL splits on GO, SQLite splits on ; etc.
         /// </summary>
         IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
+
+        /// <summary>
+        /// Set journalingTableName and scheme for specific sql container containing sql statements. 
+        /// </summary>
+        /// <param name="journalingTable">Name of journaling table</param>
+        /// <param name="scheme">Scheme of Journaling table</param>
+        void SetSqlContainerParameters(string journalingTable, string scheme);
     }
 }
