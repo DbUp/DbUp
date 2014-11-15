@@ -37,16 +37,40 @@ namespace DbUp.Support.SqlServer
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
+        [Obsolete("This constructor is depriciated. User constructor without scheme parameter. Scheme is now setted throu ConnectionManager.")]
         public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
+            : this(connectionManagerFactory, log, variablesEnabled, scriptPreprocessors)
+        {
+            if (this.statementContainer != null) this.statementContainer.Scheme = schema;
+        }
+
+        /// <summary>
+        /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
+        /// </summary>
+        /// <param name="connectionManagerFactory"></param>
+        /// <param name="log">The logging mechanism.</param>
+        /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
+        /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, Func<bool> variablesEnabled, IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             this.log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
             this.statementContainer = connectionManagerFactory().SqlContainer;
-            if(this.statementContainer != null) this.statementContainer.Scheme = schema;
         }
+
+        /// <summary>		
+        /// Database Schema, should be null if database does not support schemas		
+        /// </summary>		
+        [Obsolete("This property is obsolite. Please use StatementContainer in ConnectionManager to get and set properties for schema and table name.")]
+        public string Schema
+        {
+            get { return this.statementContainer.Scheme; }
+            set { this.statementContainer.Scheme = value; }
+        }
+
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
@@ -129,7 +153,7 @@ namespace DbUp.Support.SqlServer
             {
                 log().WriteError("SQL exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0};    Block line: {1};    Procedure: {2};{5}SQL Exception Number: {3};    Message: {4}{5}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message, Environment.NewLine);
-                log().WriteInformation(executingStatement + Environment.NewLine);
+                if (connectionManager.IsScriptOutputLogged) log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
             catch (DbException sqlException)
@@ -137,14 +161,14 @@ namespace DbUp.Support.SqlServer
                 log().WriteError("DB exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
                 log().WriteError(sqlException.ToString());
-                log().WriteInformation(executingStatement + Environment.NewLine);
+                if (connectionManager.IsScriptOutputLogged) log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
             catch (Exception ex)
             {
                 log().WriteError("Exception has occured in script: '{0}'", script.Name);
                 log().WriteError(ex.ToString());
-                log().WriteInformation(executingStatement + Environment.NewLine);
+                if (connectionManager.IsScriptOutputLogged) log().WriteInformation(executingStatement + Environment.NewLine);
                 throw;
             }
         }

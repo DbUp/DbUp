@@ -40,10 +40,10 @@ public static class SQLiteExtensions
     public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, string connectionString, string journalTableName) {
         var builder = new UpgradeEngineBuilder();
         var connectionManager = new SQLiteConnectionManager(connectionString);
-        connectionManager.SqlContainer.TableName = journalTableName;
         builder.Configure(c => c.ConnectionManager = connectionManager);
+        builder.Configure(c => c.ConnectionManager.SqlContainer.TableName = journalTableName);
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log,
             () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
@@ -74,10 +74,10 @@ public static class SQLiteExtensions
     public static UpgradeEngineBuilder SQLiteDatabase(this SupportedDatabases supported, SharedConnection sharedConnection, string journalTableName) {
         var builder = new UpgradeEngineBuilder();
         var connectionManager = new SQLiteConnectionManager(sharedConnection);
-        connectionManager.SqlContainer.TableName = journalTableName;
         builder.Configure(c => c.ConnectionManager = connectionManager);
+        builder.Configure(c => c.ConnectionManager.SqlContainer.TableName = journalTableName);
         builder.Configure(c => c.Journal = new TableJournal(() => c.ConnectionManager, () => c.Log));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log,
             () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
