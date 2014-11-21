@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.31101.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
 EndProject
@@ -43,6 +43,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Postgresql", "DbUp.Postgresql\DbUp.Postgresql.csproj", "{27246D0E-BF23-4315-A946-EA8C93D9BFF1}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Firebird", "DbUp.Firebird\DbUp.Firebird.csproj", "{5D018E40-9BDE-4502-949B-D2E04936D083}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FirebirdSampleApplication", "Samples\FirebirdSampleApplication\FirebirdSampleApplication.csproj", "{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -191,6 +193,21 @@ Global
 		{5D018E40-9BDE-4502-949B-D2E04936D083}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5D018E40-9BDE-4502-949B-D2E04936D083}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{5D018E40-9BDE-4502-949B-D2E04936D083}.Release|x86.ActiveCfg = Release|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Default|Any CPU.ActiveCfg = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Default|Any CPU.Build.0 = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Default|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Default|Mixed Platforms.Build.0 = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Default|x86.ActiveCfg = Debug|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B}.Release|x86.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -198,6 +215,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{83042F56-9FAD-4827-B542-6873F93D7940} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
+		{47A2E44F-B03F-4E59-8FBE-DF64F58B016B} = {C6A39A77-AEF6-421D-8198-E15821B80F9D}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = DbUp\DbUp.csproj
