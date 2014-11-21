@@ -18,6 +18,7 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C6CF2BB4-BFE4-4531-88D2-85F3EA640563}"
 	ProjectSection(SolutionItems) = preProject
 		..\build\build.proj = ..\build\build.proj
+		..\build\dbup.firebird.nuspec = ..\build\dbup.firebird.nuspec
 		..\build\dbup.nuspec = ..\build\dbup.nuspec
 		..\build\dbup.postgresql.nuspec = ..\build\dbup.postgresql.nuspec
 		..\build\dbup.sqlce.nuspec = ..\build\dbup.sqlce.nuspec
