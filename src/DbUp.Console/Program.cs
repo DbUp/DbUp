@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlClient;
+using DbUp.Engine;
 using NDesk.Options;
 
 namespace DbUp.Console
@@ -53,13 +54,19 @@ namespace DbUp.Console
                 .WithScriptsFromFileSystem(directory)
                 .Build();
 
+            DatabaseUpgradeResult result = null;
             if (!mark)
             {
-                dbup.PerformUpgrade();
+                result = dbup.PerformUpgrade();
             }
             else
             {
-                dbup.MarkAsExecuted();
+                result = dbup.MarkAsExecuted();
+            }
+
+            if (!result.Successful)
+            {
+                Environment.ExitCode = 1;
             }
         }
 
