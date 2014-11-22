@@ -71,6 +71,7 @@
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
     <Compile Include="Helpers\Filters.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
+    <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />
     <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitter.cs" />
     <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
