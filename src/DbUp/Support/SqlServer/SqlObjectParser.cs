@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Linq;
+using DbUp.Engine;
 
 namespace DbUp.Support.SqlServer
 {
     /// <summary>
     /// Parses Sql Objects and performs quoting functions
     /// </summary>
-    public class SqlObjectParser
+    public class SqlObjectParser : IObjectParser
     {
         /// <summary>
         /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
@@ -15,7 +16,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="objectName">Name of the object to quote.</param>
         /// <returns>The quoted object name with trimmed whitespace</returns>
-        public static string QuoteSqlObjectName(string objectName)
+        public string QuoteSqlObjectName(string objectName)
         {
             return QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
         }
@@ -28,7 +29,7 @@ namespace DbUp.Support.SqlServer
         /// <param name="objectName">Name of the object to quote.</param>
         /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
         /// <returns>The quoted object name</returns>
-        public static string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
+        public string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
                 throw new ArgumentNullException();
