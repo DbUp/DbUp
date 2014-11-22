@@ -9,10 +9,15 @@ namespace DbUp.SqlCe.Engine
     /// </summary>
     public class SqlCeStatements : SqlStatementsContainer
     {
-        public SqlCeStatements(string versioningTableName = null)
+        /// <summary>
+        /// Set journaling table for SqlCe
+        /// </summary>
+        /// <param name="scheme">Schemem is not used in SqlCe</param>
+        /// <param name="journalingTable">Name of table for journaling</param>    
+        public override void SetParameters(string scheme, string journalingTable)
         {
-            if (!String.IsNullOrEmpty(versioningTableName))
-                this.VersionTableName = versioningTableName;
+            if (!String.IsNullOrEmpty(journalingTable))
+                this.VersionTableName = journalingTable;
         }
         /// <summary>
         /// Sql create strign to create versioning table

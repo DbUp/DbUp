@@ -10,13 +10,12 @@ namespace DbUp.SQLite.Engine
     public class SQLiteStatements : SqlStatementsContainer
     {
         /// <summary>
-        /// New queries container for SQLite
+        /// Set queries container for SQLite
         /// </summary>
-        /// <param name="versioningTableName">Name of table which contains versions</param>
-        public SQLiteStatements(string versioningTableName = null)
+        public override void SetParameters(string scheme, string journalingTable)
         {
-            if (!String.IsNullOrEmpty(versioningTableName))
-                this.VersionTableName = versioningTableName;
+            if (!String.IsNullOrEmpty(journalingTable))
+                this.VersionTableName = journalingTable;
         }
 
         /// <summary>

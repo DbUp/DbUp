@@ -17,14 +17,14 @@ namespace DbUp.Postgresql
         public string SchemaTableName = "";
 
         /// <summary>
-        /// New queries container for Postgre
+        /// Set sql statement container for Postgre
         /// </summary>
         /// <param name="versioningTableName">Name of table which contains versions</param>
         /// <param name="schema">Schema name of table which handle versioning. If null, queries will not include shema in queries. </param>
-        public PostgresqlStatements(string versioningTableName = null, string schema = null)
+        public override void SetParameters(string schema, string journalingTable)
         {
-            if (!String.IsNullOrEmpty(versioningTableName))
-                this.VersionTableName = versioningTableName;
+            if (!String.IsNullOrEmpty(journalingTable))
+                this.VersionTableName = journalingTable;
 
             SchemaTableName = PostgreObjectParser.QuoteSqlObjectName(this.VersionTableName);
             if (string.IsNullOrEmpty(schema))
