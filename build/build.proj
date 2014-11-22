@@ -43,6 +43,8 @@
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-Postgresql\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-Postgresql\Published\lib\NET35')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-Firebird\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-Firebird\Published\lib')" />
     <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-Firebird\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-Firebird\Published\lib\NET35')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-MySql\lib" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-MySql\Published\lib')" />
+    <MakeDir Directories="$(MSBuildProjectDirectory)\Published\DbUp-MySql\lib\NET35" Condition="!Exists('$(MSBuildProjectDirectory)\DbUp-MySql\Published\lib\NET35')" />
 
     <!-- Zip source -->
     <ItemGroup>
@@ -84,11 +86,14 @@
       <Net35PostgresqlFiles Include="$(Root)\src\DbUp.Postgresql\bin\Release\DbUp.Postgresql.xml" />
       <Net35FirebirdFiles Include="$(Root)\src\DbUp.Firebird\bin\Release\DbUp.Firebird.dll" />
       <Net35FirebirdFiles Include="$(Root)\src\DbUp.Firebird\bin\Release\DbUp.Firebird.xml" />
+      <Net35MySqlFiles Include="$(Root)\src\DbUp.MySql\bin\Release\DbUp.MySql.xml" />
+      <Net35MySqlFiles Include="$(Root)\src\DbUp.MySql\bin\Release\DbUp.MySql.dll" />
     </ItemGroup>
     <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\DbUp\lib\NET35" />
     <Copy SourceFiles="@(Net35SqlCeFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe\lib\NET35" />
     <Copy SourceFiles="@(Net35PostgresqlFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Postgresql\lib\NET35" />
     <Copy SourceFiles="@(Net35FirebirdFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Firebird\lib\NET35" />
+    <Copy SourceFiles="@(Net35MySqlFiles)" DestinationFolder="$(Root)\build\Published\DbUp-MySql\lib\NET35" />
 
     <!-- Zip binaries -->
     <ItemGroup>
@@ -107,18 +112,21 @@
       <SQLiteNuSpecFiles Include="$(Root)\build\dbup.sqlite.nuspec" />
       <PostgresqlNuSpecFiles Include="$(Root)\build\dbup.postgresql.nuspec" />
       <FirebirdNuSpecFiles Include="$(Root)\build\dbup.firebird.nuspec" />
+      <MySqlNuSpecFiles Include="$(Root)\build\dbup.mysql.nuspec" />
     </ItemGroup>
     <Copy SourceFiles="@(NuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp" />
     <Copy SourceFiles="@(SqlCeNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe" />
     <Copy SourceFiles="@(SQLiteNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SQLite" />
     <Copy SourceFiles="@(PostgresqlNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Postgresql" />
     <Copy SourceFiles="@(FirebirdNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Firebird" />
+    <Copy SourceFiles="@(MySqlNuSpecFiles)" DestinationFolder="$(Root)\build\Published\DbUp-MySql" />
 
     <FileUpdate Files="$(Root)\build\Published\DbUp\dbup.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     <FileUpdate Files="$(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     <FileUpdate Files="$(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     <FileUpdate Files="$(Root)\build\Published\DbUp-Postgresql\dbup.postgresql.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
     <FileUpdate Files="$(Root)\build\Published\DbUp-Firebird\dbup.firebird.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
+    <FileUpdate Files="$(Root)\build\Published\DbUp-MySql\dbup.mysql.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
 
     <!-- Pack -->
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -BasePath $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
@@ -126,6 +134,7 @@
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec -BasePath $(Root)\build\Published\DbUp-SQLite -o $(Root)\build\Artifacts" />
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-Postgresql\dbup.postgresql.nuspec -BasePath $(Root)\build\Published\DbUp-Postgresql -o $(Root)\build\Artifacts" />
     <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-Firebird\dbup.firebird.nuspec -BasePath $(Root)\build\Published\DbUp-Firebird -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-MySql\dbup.mysql.nuspec -BasePath $(Root)\build\Published\DbUp-MySql -o $(Root)\build\Artifacts" />
 
   </Target>
 </Project>

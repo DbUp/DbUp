@@ -1,10 +1,10 @@
-﻿using DbUp.Engine.Output;
-using DbUp.Engine.Transactions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 using MySql.Data.MySqlClient;
 
 namespace DbUp.MySql
