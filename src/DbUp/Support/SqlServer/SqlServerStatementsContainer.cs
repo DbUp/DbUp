@@ -8,27 +8,27 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public class SqlServerStatementsContainer : SqlStatementsContainer
     {
-        /// <summary>
         /// Full name for versioning table ([@sheme].[@tableName])
+        /// Set journaling table name and scheme
         /// </summary>
-        public string SchemaTableName = "dbo";
+        public string FullSchemaTableName;
         /// <summary>
-        /// Create new SqlServer Query provider.
+        /// Set journaling table name and scheme
         /// </summary>
-        /// <param name="tableName">Plain name of table which handle versioning. If passed name is null or "", take default name SchemaVersions</param>
-        /// <param name="schema">Schema name of table which handle versioning. If null, queries will not include shema in queries. </param>
-        public SqlServerStatementsContainer(string tableName = null, string schema = null)
+        /// <param name="journalingTable">Plain name of table which handle versioning. If passed name is null or "", take default name SchemaVersions</param>
+        /// <param name="scheme">Schema name of table which handle versioning. If null, queries will not include shema in queries. </param>
+        public override void SetParameters(string scheme, string journalingTable)
         {
-            if (!String.IsNullOrEmpty(tableName))
-                this.VersionTableName = tableName;
+            if (!String.IsNullOrEmpty(journalingTable))
+                this.VersionTableName = journalingTable;
 
-            SchemaTableName = SqlObjectParser.QuoteSqlObjectName(this.VersionTableName);
-            if (string.IsNullOrEmpty(schema))
-                SchemaTableName = SqlObjectParser.QuoteSqlObjectName(this.VersionTableName);
+            FullSchemaTableName = SqlObjectParser.QuoteSqlObjectName(this.VersionTableName);
+            if (string.IsNullOrEmpty(scheme))
+                FullSchemaTableName = SqlObjectParser.QuoteSqlObjectName(this.VersionTableName);
             else
             {
-                SchemaTableName = SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(this.VersionTableName);
-                this.Scheme = schema;
+                FullSchemaTableName = SqlObjectParser.QuoteSqlObjectName(scheme) + "." + SqlObjectParser.QuoteSqlObjectName(this.VersionTableName);
+                this.Scheme = scheme;
             }
         }
 
@@ -42,7 +42,7 @@ namespace DbUp.Support.SqlServer
                       [VersionId] int identity(1,1) not null constraint PK_{1}_VersionId primary key,
                       [ScriptName] nvarchar(255) not null,
                       [Applied] datetime not null,
-                      [Remark] [nvarchar](255) NULL ) ", SchemaTableName, VersionTableName);
+                      [Remark] [nvarchar](255) NULL ) ", FullSchemaTableName, VersionTableName);
         }
 
         /// <summary>
@@ -60,7 +60,7 @@ namespace DbUp.Support.SqlServer
         /// <returns>Sql command for selecting scirpt names from VersionTableName</returns>
         public override string GetVersionTableExecutedScriptsSql()
         {
-            return String.Format("SELECT ScriptName FROM {0} ORDER BY ScriptName", SchemaTableName);
+            return String.Format("SELECT ScriptName FROM {0} ORDER BY ScriptName", FullSchemaTableName);
         }
 
         /// <summary>
@@ -69,7 +69,7 @@ namespace DbUp.Support.SqlServer
         /// <returns>Sql command for inserting new entry in versioning table</returns>
         public override string VersionTableNewEntry()
         {
-            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", SchemaTableName);
+            return String.Format("INSERT INTO {0} (ScriptName, Applied) VALUES (@scriptName, @applied)", FullSchemaTableName);
         }
 
         /// <summary>
@@ -78,7 +78,7 @@ namespace DbUp.Support.SqlServer
         /// <returns>SQL Command which checks if version table has any entries.</returns>
         public override string VersionTableDoesTableExist()
         {
-            return String.Format("SELECT COUNT(*) FROM {0}", SchemaTableName);
+            return String.Format("SELECT COUNT(*) FROM {0}", FullSchemaTableName);
         }
     }
 }

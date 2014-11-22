@@ -100,14 +100,14 @@ namespace DbUp.Engine.Transactions
         /// <returns>A list of SQL Commands</returns>
         public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
 
+        /// <summary>
         /// Set journalingTableName and scheme for specific connection. 
         /// </summary>
         /// <param name="journalingTable">Name of journaling table</param>
         /// <param name="scheme">Scheme of Journaling table</param>
         public void SetSqlContainerParameters(string journalingTable, string scheme)
         {
-            this.SqlContainer.Scheme = scheme;
-            this.SqlContainer.TableName = journalingTable;
+            this.SqlContainer.SetParameters(scheme, journalingTable);
         }
     }
 }

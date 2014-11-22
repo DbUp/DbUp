@@ -45,12 +45,16 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Logs to the console using pretty colours.
+    /// Specifies whether the db script output should be logged. 
+    /// NOTE: Also failed sql statement will be shown in log. 
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <returns>
     /// The same builder
     /// </returns>
+    /// <remarks>
+    /// This is also intended for diagnostic error logging.
+    /// </remarks>
     public static UpgradeEngineBuilder LogScriptOutput(this UpgradeEngineBuilder builder)
     {
         builder.Configure(c => c.ConnectionManager.IsScriptOutputLogged = true);

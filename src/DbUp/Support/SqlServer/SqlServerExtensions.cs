@@ -71,10 +71,10 @@ public static class SqlServerExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates an upgrader for SQL Server databases.
     /// </summary>
-    /// <param name="connectionManager"></param>
-    /// <param name="schema"></param>
+    /// <param name="connectionManager">ConnectionManager</param>
+    /// <param name="schema">The SQL schema name to use. Defaults to 'dbo'.</param>
     /// <returns></returns>
     private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema)
     {
@@ -82,11 +82,11 @@ public static class SqlServerExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates an upgrader for SQL Server databases.
     /// </summary>
-    /// <param name="connectionManager"></param>
-    /// <param name="schema"></param>
-    /// <param name="journalTableName"></param>
+    /// <param name="connectionManager">ConnectionManager</param>
+    /// <param name="schema">The SQL schema name to use. Defaults to 'dbo'.</param>
+    /// <param name="journalTableName">Name of table for journaling changes.</param>
     /// <returns></returns>
     private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema = null, string journalTableName = "SchemaVersions")
     {

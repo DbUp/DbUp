@@ -49,5 +49,15 @@ namespace DbUp.Engine
         /// </summary>
         /// <returns></returns>
         public abstract string CreateSchemeIfNotExists();
+
+        /// <summary>
+        /// Set journaling table name and scheme
+        /// </summary>
+        /// <returns></returns>
+        public virtual void SetParameters(string scheme, string journalingTable)
+        {
+            this.Scheme = scheme;
+            this.TableName = journalingTable;
+        }
     }
 }
