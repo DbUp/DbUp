@@ -1,38 +1,38 @@
-﻿using System;
+﻿using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DbUp.Engine.Output;
-using DbUp.Engine.Transactions;
-using MySql.Data.MySqlClient;
+using FirebirdSql.Data.FirebirdClient;
 
-namespace DbUp.MySql
+namespace DbUp.Firebird
 {
     /// <summary>
-    /// Manages MySql database connections.
+    /// Manages Firebird database connections.
     /// </summary>
-    public class MySqlConnectionManager : DatabaseConnectionManager
+    public class FirebirdConnectionManager : DatabaseConnectionManager
     {
-        private readonly string connectionString;
+        private readonly string _connectionString;
 
         /// <summary>
-        /// Creates a new MySql database connection.
+        /// Creates a new Firebird database connection.
         /// </summary>
-        /// <param name="connectionString">The MySql connection string.</param>
-        public MySqlConnectionManager(string connectionString)
+        /// <param name="connectionString">The Firebird connection string.</param>
+        public FirebirdConnectionManager(string connectionString)
         {
-            this.connectionString = connectionString;
+            _connectionString = connectionString;
         }
 
         /// <summary>
-        /// Creates a new MySql database connection.
+        /// Creates a new Firebird database connection.
         /// </summary>
         /// <param name="log">The upgrade log.</param>
         /// <returns>The database connection.</returns>
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
-            return new MySqlConnection(connectionString);
+            return new FbConnection(_connectionString);
         }
 
         /// <summary>
@@ -41,6 +41,7 @@ namespace DbUp.MySql
         /// <param name="scriptContents">The contents of the script to split.</param>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
+            //TODO: Possible Change - this is the PostGres version
             var scriptStatements =
                 Regex.Split(scriptContents, "^\\s*;\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
                     .Select(x => x.Trim())
