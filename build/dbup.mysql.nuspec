@@ -11,7 +11,7 @@
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
     <dependencies>
-      <dependency id="MySql.Data" version="6.9.3" />
+      <dependency id="MySql.Data" version="6.9.5" />
       <dependency id="DbUp" version="0.0.0" />
     </dependencies>
   </metadata>
