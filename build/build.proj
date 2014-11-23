@@ -63,7 +63,7 @@
     <ItemGroup>
       <ProjectToBuild Include="$(Root)\src\DbUp.sln" />
     </ItemGroup>
-    <MSBuild Projects="@(ProjectToBuild)" Targets="Build" Properties="Configuration=Release;Platform=Any CPU">
+    <MSBuild Projects="@(ProjectToBuild)" Targets="Build" Properties="Configuration=Release;Platform=Mixed Platforms">
       <Output TaskParameter="TargetOutputs" ItemName="AssembliesBuiltByChildProjects" />
     </MSBuild>
 
