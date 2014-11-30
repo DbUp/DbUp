@@ -65,6 +65,9 @@
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="Support\Oracle\DevartOracleProviderTests.cs" />
+    <Compile Include="Support\Oracle\OracleScriptExecutorTests.cs" />
+    <Compile Include="Support\Oracle\OracleTableJournalTests.cs" />
     <Compile Include="Support\Postgresql\PostgreObjectParserTests.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitterTests.cs" />
     <Compile Include="UpgradeDatabaseScenarios.cs" />
@@ -85,6 +88,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.Oracle\DbUp.Oracle.csproj">
+      <Project>{4372abeb-8642-4625-ac1d-458357af0b5c}</Project>
+      <Name>DbUp.Oracle</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp.Postgresql\DbUp.Postgresql.csproj">
       <Project>{27246d0e-bf23-4315-a946-ea8c93d9bff1}</Project>
       <Name>DbUp.Postgresql</Name>

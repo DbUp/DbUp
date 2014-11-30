@@ -8,6 +8,7 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public class SqlServerStatementsContainer : SqlStatementsContainer
     {
+        ///<summary>
         /// Full name for versioning table ([@sheme].[@tableName])
         /// Set journaling table name and scheme
         /// </summary>

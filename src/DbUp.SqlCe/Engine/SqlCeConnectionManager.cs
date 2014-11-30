@@ -24,6 +24,9 @@ namespace DbUp.SqlCe
             this.SqlContainer = new SqlCeStatements();
         }
 
+        /// <summary>
+        /// Creates a database connection for SqlCe
+        /// </summary>
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             return new SqlCeConnection(connectionString);

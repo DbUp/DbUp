@@ -31,4 +31,22 @@ namespace DbUp.Tests
             return new[] {scriptContents};
         }
     }
+
+    internal class OracleTestConnectionManager : DbUp.Oracle.Engine.ConnectionManager
+    {
+        private readonly IDbConnection _connection;
+
+        public OracleTestConnectionManager(IDbConnection connection = null, bool startUpgrade = false)
+        {
+            this._connection = connection ?? Substitute.For<IDbConnection>();
+            if (startUpgrade)
+                OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+        }
+
+        protected override IDbConnection CreateConnection(IUpgradeLog log)
+        {
+            return _connection;
+        }
+
+    }
 }

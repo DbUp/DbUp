@@ -25,7 +25,10 @@ namespace DbUp.Support.SqlServer
             this.connectionString = connectionString;
             this.SqlContainer = new SqlServerStatementsContainer();
         }
-        
+
+        /// <summary>
+        /// Creates a database connection for the Microsoft SQL Server
+        /// </summary>
         protected override IDbConnection CreateConnection(IUpgradeLog log)
         {
             var conn = new SqlConnection(connectionString);
@@ -36,6 +39,11 @@ namespace DbUp.Support.SqlServer
             return conn;
         }
 
+        /// <summary>
+        /// Split sql statements from mssql script
+        /// </summary>
+        /// <param name="scriptContents"></param>
+        /// <returns></returns>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var commandSplitter = new SqlCommandSplitter();
