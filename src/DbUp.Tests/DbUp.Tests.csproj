@@ -37,6 +37,10 @@
     <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MySql.Data, Version=6.9.3.0, Culture=neutral, PublicKeyToken=c5687fc88969c44d, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\lib\MySql.Data.6.9.3\lib\net40\MySql.Data.dll</HintPath>
+    </Reference>
     <Reference Include="NSubstitute">
       <HintPath>..\..\lib\NSubstitute.1.6.0.0\lib\NET40\NSubstitute.dll</HintPath>
     </Reference>
@@ -66,6 +70,8 @@
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="Support\MySql\MySqlConnectionManagerTests.cs" />
+    <Compile Include="Support\MySql\MySqlSupportTests.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitterTests.cs" />
     <Compile Include="UpgradeDatabaseScenarios.cs" />
     <Compile Include="ScriptProvider\EmbeddedScriptAndCodeProviderTests.cs" />
@@ -85,6 +91,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.MySql\DbUp.MySql.csproj">
+      <Project>{4e0f1564-ed5f-49a6-8fb0-e8eb7ea2d63f}</Project>
+      <Name>DbUp.MySql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp.Postgresql\DbUp.Postgresql.csproj">
       <Project>{27246d0e-bf23-4315-a946-ea8c93d9bff1}</Project>
       <Name>DbUp.Postgresql</Name>
@@ -103,6 +113,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>
