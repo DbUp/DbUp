@@ -75,6 +75,7 @@ build/Artifacts/
 build/Published/
 build/TestResult.xml
 [pP]ublish
+lib
 
 .DS_Store
 *.pidb
