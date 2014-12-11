@@ -5,7 +5,7 @@
   
   <PropertyGroup>
     <Root>$(MSBuildStartupDirectory)</Root>
-    <nunitconsoleexe>$(Root)\lib\NUnit.Runners.2.6.2\tools\nunit-console.exe</nunitconsoleexe>
+    <nunitconsoleexe>$(Root)\packages\NUnit.Runners.2.6.2\tools\nunit-console.exe</nunitconsoleexe>
     <build_number Condition="'$(build_number)' == ''">0.0.0</build_number>
     <NuGetVersionNumber Condition="'$(NuGetVersionNumber)'==''">$(build_number)</NuGetVersionNumber>
   </PropertyGroup>
@@ -49,8 +49,8 @@
     <!-- Zip source -->
     <ItemGroup>
       <SourceFilesToZip Include="$(Root)\src\**\*.*" />
-      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\NUnit.*\**\*.*" />
-      <SourceFilesToZip Include="$(Root)\lib\**\*.dll" Exclude="$(Root)\lib\NSubstitute.*\**\*.*" />
+      <SourceFilesToZip Include="$(Root)\packages\**\*.dll" Exclude="$(Root)\packages\NUnit.*\**\*.*" />
+      <SourceFilesToZip Include="$(Root)\packages\**\*.dll" Exclude="$(Root)\packages\NSubstitute.*\**\*.*" />
     </ItemGroup>
 
     <Zip Files="@(SourceFilesToZip)"
@@ -129,12 +129,12 @@
     <FileUpdate Files="$(Root)\build\Published\DbUp-MySql\dbup.mysql.nuspec" Regex="0.0.0" ReplacementText="$(NuGetVersionNumber)" />
 
     <!-- Pack -->
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -BasePath $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec -BasePath $(Root)\build\Published\DbUp-SqlCe -o $(Root)\build\Artifacts" />
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec -BasePath $(Root)\build\Published\DbUp-SQLite -o $(Root)\build\Artifacts" />
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-Postgresql\dbup.postgresql.nuspec -BasePath $(Root)\build\Published\DbUp-Postgresql -o $(Root)\build\Artifacts" />
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-Firebird\dbup.firebird.nuspec -BasePath $(Root)\build\Published\DbUp-Firebird -o $(Root)\build\Artifacts" />
-    <Exec Command="$(Root)\lib\nuget\nuget.exe pack $(Root)\build\Published\DbUp-MySql\dbup.mysql.nuspec -BasePath $(Root)\build\Published\DbUp-MySql -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\packages\NuGet.CommandLine.2.8.3\tools\nuget.exe pack $(Root)\build\Published\DbUp\dbup.nuspec -BasePath $(Root)\build\Published\DbUp -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\packages\NuGet.CommandLine.2.8.3\tools\nuget.exe pack $(Root)\build\Published\DbUp-SqlCe\dbup.sqlce.nuspec -BasePath $(Root)\build\Published\DbUp-SqlCe -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\packages\NuGet.CommandLine.2.8.3\tools\nuget.exe pack $(Root)\build\Published\DbUp-SQLite\dbup.sqlite.nuspec -BasePath $(Root)\build\Published\DbUp-SQLite -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\packages\NuGet.CommandLine.2.8.3\tools\nuget.exe pack $(Root)\build\Published\DbUp-Postgresql\dbup.postgresql.nuspec -BasePath $(Root)\build\Published\DbUp-Postgresql -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\packages\NuGet.CommandLine.2.8.3\tools\nuget.exe pack $(Root)\build\Published\DbUp-Firebird\dbup.firebird.nuspec -BasePath $(Root)\build\Published\DbUp-Firebird -o $(Root)\build\Artifacts" />
+    <Exec Command="$(Root)\packages\NuGet.CommandLine.2.8.3\tools\nuget.exe pack $(Root)\build\Published\DbUp-MySql\dbup.mysql.nuspec -BasePath $(Root)\build\Published\DbUp-MySql -o $(Root)\build\Artifacts" />
 
   </Target>
 </Project>
