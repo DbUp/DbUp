@@ -10,10 +10,16 @@ create table SETTINGS(
 )
 /
 
-INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('ui-title', 'Title', 'My FunnelWeb Site', 'Text: The title shown at the top in the browser.');
-INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('ui-introduction', 'Introduction', 'Welcome to your FunnelWeb blog. You can <a href="/login">login</a> and edit this message in the administration section. The default username and password is <code>test/test</code>.', 'Markdown: The introductory text that is shown on the home page.');
-INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('ui-links', 'Main Links', '<li><a href="/projects">Projects</a></li>', 'HTML: A list of links shown at the top of each page.');
+INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('ui-title', 'Title', 'My FunnelWeb Site', 'Text: The title shown at the top in the browser.')
+/
+INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('ui-introduction', 'Introduction', 'Welcome to your FunnelWeb blog. You can <a href="/login">login</a> and edit this message in the administration section. The default username and password is <code>test/test</code>.', 'Markdown: The introductory text that is shown on the home page.')
+/
+INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('ui-links', 'Main Links', '<li><a href="/projects">Projects</a></li>', 'HTML: A list of links shown at the top of each page.')
+/
 
-INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('search-author', 'Author', 'Daffy Duck', 'Text: Your name.');
-INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('search-keywords', 'Keywords', '.net, c#, test', 'Comma-separated text: Keywords shown to search engines.');
-INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('search-description', 'Description', 'My website.', 'Text: The description shown to search engines in the meta description tag.');
+INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('search-author', 'Author', 'Daffy Duck', 'Text: Your name.')
+/
+INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('search-keywords', 'Keywords', '.net, c#, test', 'Comma-separated text: Keywords shown to search engines.')
+/
+INSERT INTO SETTINGS(NAME, DISPLAY_NAME, VALUE, DESCRIPTION) VALUES ('search-description', 'Description', 'My website.', 'Text: The description shown to search engines in the meta description tag.')
+/

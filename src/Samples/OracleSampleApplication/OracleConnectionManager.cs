@@ -11,7 +11,7 @@ namespace OracleSampleApplication
     /// <summary>
     /// Using Devart Oracle Provider for overriding basic Oracle provider ODP.NET
     /// </summary>
-    public class DevartOracleConnectionManager : DatabaseConnectionManager
+    public class DevartOracleConnectionManager : DbUp.Oracle.Engine.ConnectionManager
     {
 
         private static readonly DevartOracleConnectionManager instance = new DevartOracleConnectionManager();

@@ -15,6 +15,8 @@ namespace OracleSampleApplication
             {
                 var upgradeEngineBuilder = DeployChanges.To
                     .OracleDatabase(DevartOracleConnectionManager.Instance, database.ConnectionString)
+                    .LogScriptOutput()
+                    .JournalToSqlTable("db_version")
                     .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script =>
                     {
                         if (script.EndsWith("Script0006 - Transactions.sql"))
