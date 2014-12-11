@@ -76,6 +76,7 @@ build/Published/
 build/TestResult.xml
 [pP]ublish
 lib
+packages
 
 .DS_Store
 *.pidb
