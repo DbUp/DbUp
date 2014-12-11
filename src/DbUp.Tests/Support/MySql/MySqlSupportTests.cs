@@ -140,11 +140,11 @@ END$$").Build();
             {
                 StartInfo =
                 {
-                    FileName = "..\\..\\..\\..\\lib\\DbUp.MySqlTestDatabase.1.0.0\\MySql\\bin\\mysqld.exe",
+                    FileName = "..\\..\\..\\..\\packages\\DbUp.MySqlTestDatabase.1.0.0\\MySql\\bin\\mysqld.exe",
                     Arguments = "--console",
                     UseShellExecute = false,
                     RedirectStandardOutput = false,
-                    WorkingDirectory = path.Substring(0, path.LastIndexOf("\\")) + "\\..\\..\\..\\..\\lib\\DbUp.MySqlTestDatabase.1.0.0\\MySql",
+                    WorkingDirectory = path.Substring(0, path.LastIndexOf("\\")) + "\\..\\..\\..\\..\\packages\\DbUp.MySqlTestDatabase.1.0.0\\MySql",
                     CreateNoWindow = false
                 }
             };
@@ -180,7 +180,7 @@ END$$").Build();
 
         private void CleanUpMySql()
         {
-            var path = "..\\..\\..\\..\\lib\\DbUp.MySqlTestDatabase.1.0.0\\MySql\\data";
+            var path = "..\\..\\..\\..\\packages\\DbUp.MySqlTestDatabase.1.0.0\\MySql\\data";
 
             var filesToDelete = Directory.EnumerateFiles(path, "ib_logfile*").ToList();
             filesToDelete.AddRange(Directory.EnumerateFiles(path, "ibdata*"));

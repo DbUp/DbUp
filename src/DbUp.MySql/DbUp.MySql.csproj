@@ -47,6 +47,7 @@
   <ItemGroup>
     <Reference Include="MySql.Data">
       <HintPath>..\packages\MySql.Data.6.9.3\lib\net20\MySql.Data.dll</HintPath>
+      <HintPath>..\..\packages\MySql.Data.6.9.3\lib\net20\MySql.Data.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -68,7 +69,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="dbup.mysql.nuspec" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />
