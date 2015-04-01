@@ -16,7 +16,7 @@ namespace DbUp.Support.SqlServer
     /// A standard implementation of the IScriptExecutor interface that executes against a SQL Server 
     /// database.
     /// </summary>
-    public sealed class SqlScriptExecutor : IScriptExecutor
+    public class SqlScriptExecutor : IScriptExecutor
     {
         private readonly Func<IConnectionManager> connectionManagerFactory;
         private readonly Func<IUpgradeLog> log;
@@ -55,7 +55,7 @@ namespace DbUp.Support.SqlServer
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        public void Execute(SqlScript script)
+        public virtual void Execute(SqlScript script)
         {
             Execute(script, null);
         }
@@ -81,7 +81,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         /// <param name="script">The script.</param>
         /// <param name="variables">Variables to replace in the script</param>
-        public void Execute(SqlScript script, IDictionary<string, string> variables)
+        public virtual void Execute(SqlScript script, IDictionary<string, string> variables)
         {
             if (variables == null)
                 variables = new Dictionary<string, string>();
@@ -150,7 +150,7 @@ namespace DbUp.Support.SqlServer
             }
         }
 
-        private void Log(IDataReader reader)
+        private virtual void Log(IDataReader reader)
         {
             do
             {
