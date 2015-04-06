@@ -45,13 +45,14 @@ namespace DbUp.Engine
         /// 
         /// </summary>
         /// <param name="path"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static SqlScript FromFile(string path)
+        public static SqlScript FromFile(string path, Encoding encoding)
         {
             using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
                 var fileName = new FileInfo(path).Name;
-                return FromStream(fileName, fileStream);
+                return FromStream(fileName, fileStream, encoding);
             }
         }
 
@@ -60,10 +61,11 @@ namespace DbUp.Engine
         /// </summary>
         /// <param name="scriptName"></param>
         /// <param name="stream"></param>
+        /// <param name="encoding"></param>
         /// <returns></returns>
-        public static SqlScript FromStream(string scriptName, Stream stream)
+        public static SqlScript FromStream(string scriptName, Stream stream, Encoding encoding)
         {
-            using (var resourceStreamReader = new StreamReader(stream, Encoding.Default, true))
+            using (var resourceStreamReader = new StreamReader(stream, encoding, true))
             {
                 string c = resourceStreamReader.ReadToEnd();
                 return new SqlScript(scriptName, c);

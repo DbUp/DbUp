@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 
@@ -14,6 +15,7 @@ namespace DbUp.ScriptProviders
     {
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
+        private Encoding encoding;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
@@ -24,6 +26,20 @@ namespace DbUp.ScriptProviders
         {
             this.assembly = assembly;
             this.filter = filter;
+            this.encoding = Encoding.Default;
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="encoding">The encoding.</param>
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding)
+        {
+            this.assembly = assembly;
+            this.filter = filter;
+            this.encoding = encoding;
         }
 
         /// <summary>
@@ -36,7 +52,7 @@ namespace DbUp.ScriptProviders
                 .GetManifestResourceNames()
                 .Where(filter)
                 .OrderBy(x => x)
-                .Select(s => SqlScript.FromStream(s, assembly.GetManifestResourceStream(s)))
+                .Select(s => SqlScript.FromStream(s, assembly.GetManifestResourceStream(s), encoding))
                 .ToList();
         }
 
