@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data;
 using DbUp.Engine.Output;
 
@@ -53,6 +54,31 @@ namespace DbUp.Engine.Transactions
                 upgradeConnection = null;
             });
         }
+
+		  /// <summary>
+		  /// Tries to connect to the database.
+		  /// </summary>
+		 public bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage)
+	    {
+			 try {
+				 errorMessage = "";
+				 upgradeConnection = CreateConnection (upgradeLog);
+				 if (upgradeConnection.State == ConnectionState.Closed)
+					 upgradeConnection.Open ();
+				 var strategy = transactionStrategyFactory [TransactionMode.NoTransaction] ();
+				 strategy.Initialise (upgradeConnection, upgradeLog, new List<SqlScript> ());
+				 strategy.Execute(dbCommandFactory => {
+					 using (var command = dbCommandFactory ()) {
+						 command.CommandText = "select 1";
+						 command.ExecuteScalar ();
+					 }
+				 });
+				 return true;
+			 } catch (Exception ex) {
+				 errorMessage = ex.Message;
+				 return false;
+			 }   
+	    }
 
         /// <summary>
         /// Executes an action using the specfied transaction mode 

@@ -43,5 +43,10 @@ namespace DbUp.Engine.Transactions
         /// For example, MSSQL splits on GO, SQLite splits on ; etc.
         /// </summary>
         IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
+
+	    /// <summary>
+	    /// Tries to connect to the database.
+	    /// </summary> 
+	    bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage);
     }
 }
