@@ -70,6 +70,18 @@ public static class StandardExtensions
         return LogTo(builder, new TraceUpgradeLog());
     }
 
+	/// <summary>
+	/// Logs to SqlContext.Pipe, for use with "context connection=true".
+	/// </summary>
+	/// <param name="builder">The builder.</param>
+	/// <returns>
+	/// The same builder
+	/// </returns>
+	public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
+	{
+		return LogTo(builder, new SqlContextUpgradeLog());
+	}
+
     /// <summary>
     /// Uses a custom journal for recording which scripts were executed.
     /// </summary>
