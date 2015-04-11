@@ -60,6 +60,7 @@
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
     <Compile Include="DeployChanges.cs" />
     <Compile Include="Engine\DelegateDisposable.cs" />
+    <Compile Include="Engine\Output\SqlContextUpgradeLog.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManager.cs" />
     <Compile Include="Engine\IScript.cs" />
     <Compile Include="Engine\Transactions\SingleTrasactionStrategy.cs" />
