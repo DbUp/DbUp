@@ -150,7 +150,7 @@ namespace DbUp.Support.SqlServer
             }
         }
 
-        private virtual void Log(IDataReader reader)
+        public virtual void Log(IDataReader reader)
         {
             do
             {
