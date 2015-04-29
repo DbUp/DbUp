@@ -64,6 +64,7 @@
   <ItemGroup>
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
+    <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitterTests.cs" />
     <Compile Include="UpgradeDatabaseScenarios.cs" />
@@ -116,6 +117,9 @@
   <ItemGroup>
     <Content Include="BDDfy.readme.txt" />
     <Content Include="Support\Postgresql\Readme.txt" />
+    <Content Include="TestFilterFiles\ScriptNames.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="x64\SQLite.Interop.dll">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
