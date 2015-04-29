@@ -2,7 +2,7 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="lib\MSBuild.Community.Tasks.Targets" />
   <Import Project="lib\MSBuild.Deployment.Tasks.Targets" />
-  
+
   <PropertyGroup>
     <Root>$(MSBuildStartupDirectory)</Root>
     <nunitconsoleexe>$(Root)\lib\NUnit.Runners.2.6.2\tools\nunit-console.exe</nunitconsoleexe>
@@ -58,7 +58,7 @@
       ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(build_number)-source.zip"
       ZipLevel="9"
       />
-    
+
     <!-- Compile -->
     <ItemGroup>
       <ProjectToBuild Include="$(Root)\src\DbUp.sln" />
@@ -67,9 +67,9 @@
       <Output TaskParameter="TargetOutputs" ItemName="AssembliesBuiltByChildProjects" />
     </MSBuild>
 
-     <!-- Test --> 
+    <!-- Test -->
     <ItemGroup>
-        <TestAssembly Include="$(Root)\src\DbUp.Tests\bin\Release\DbUp.Tests.dll" />
+      <TestAssembly Include="$(Root)\src\DbUp.Tests\bin\Release\DbUp.Tests.dll" />
     </ItemGroup>
 
     <Exec Condition="$(teamcity_dotnet_nunitlauncher) != ''" Command="&quot;$(teamcity_dotnet_nunitlauncher)&quot; v4.0 x86 NUnit-2.6.2 @(TestAssembly->'&quot;%(FullPath)&quot;', '%20')" />
@@ -88,12 +88,15 @@
       <Net35FirebirdFiles Include="$(Root)\src\DbUp.Firebird\bin\Release\DbUp.Firebird.xml" />
       <Net35MySqlFiles Include="$(Root)\src\DbUp.MySql\bin\Release\DbUp.MySql.xml" />
       <Net35MySqlFiles Include="$(Root)\src\DbUp.MySql\bin\Release\DbUp.MySql.dll" />
+      <Net35SQLiteFiles Include="$(Root)\src\DbUp.SqlLite\bin\Release\DbUp.SQLite.dll" />
+      <Net35SQLiteFiles Include="$(Root)\src\DbUp.SqlLite\bin\Release\DbUp.SQLite.xml" />
     </ItemGroup>
     <Copy SourceFiles="@(Net35Files)" DestinationFolder="$(Root)\build\Published\DbUp\lib\NET35" />
     <Copy SourceFiles="@(Net35SqlCeFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SqlCe\lib\NET35" />
     <Copy SourceFiles="@(Net35PostgresqlFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Postgresql\lib\NET35" />
     <Copy SourceFiles="@(Net35FirebirdFiles)" DestinationFolder="$(Root)\build\Published\DbUp-Firebird\lib\NET35" />
     <Copy SourceFiles="@(Net35MySqlFiles)" DestinationFolder="$(Root)\build\Published\DbUp-MySql\lib\NET35" />
+    <Copy SourceFiles="@(Net35SQLiteFiles)" DestinationFolder="$(Root)\build\Published\DbUp-SQLite\lib\NET35" />
 
     <!-- Zip binaries -->
     <ItemGroup>
@@ -104,8 +107,8 @@
       ZipFileName="$(MSBuildProjectDirectory)\Artifacts\DbUp-$(build_number).zip"
       ZipLevel="9"
       />
-    
-    <!-- Add NuGet files-->    
+
+    <!-- Add NuGet files-->
     <ItemGroup>
       <NuSpecFiles Include="$(Root)\build\dbup.nuspec" />
       <SqlCeNuSpecFiles Include="$(Root)\build\dbup.sqlce.nuspec" />
