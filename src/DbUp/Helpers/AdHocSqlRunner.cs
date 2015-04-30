@@ -107,18 +107,20 @@ namespace DbUp.Helpers
             Execute(query, parameters,
                     command =>
                     {
-                        var reader = command.ExecuteReader();
-                        while (reader.Read())
+                        using (var reader = command.ExecuteReader())
                         {
-                            var line = new Dictionary<string, string>();
-                            for (int i = 0; i < reader.FieldCount; i++)
+                            while (reader.Read())
                             {
-                                var name = reader.GetName(i);
-                                var value = reader.GetValue(i);
-                                value = value == DBNull.Value ? null : value.ToString();
-                                line.Add(name, (string)value);
+                                var line = new Dictionary<string, string>();
+                                for (int i = 0; i < reader.FieldCount; i++)
+                                {
+                                    var name = reader.GetName(i);
+                                    var value = reader.GetValue(i);
+                                    value = value == DBNull.Value ? null : value.ToString();
+                                    line.Add(name, (string)value);
+                                }
+                                results.Add(line);
                             }
-                            results.Add(line);
                         }
                     });
 
