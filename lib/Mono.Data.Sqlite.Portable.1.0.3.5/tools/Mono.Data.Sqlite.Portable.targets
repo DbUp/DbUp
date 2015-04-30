@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+
+  <PropertyGroup>
+    <MonoDataSqlitePortableImported>true</MonoDataSqlitePortableImported>
+  </PropertyGroup>
+
+  <!-- 
+    Currently, if 'MonoDataSqlitePortableHardware' == '', then skip the hardware specific assemblies.
+    This may be required at a later stage for other types of devices or platforms.
+  -->
+
+  <!-- reference paths -->
+  <PropertyGroup Condition="'$(MonoDataSqlitePortableHardware)' != ''">
+    <MonoDataSqlitePortablePath Condition="'$(Platform)' == 'x86'">$(MonoDataSqlitePortableHardware)-x86</MonoDataSqlitePortablePath>
+    <MonoDataSqlitePortablePath Condition="'$(Platform)' == 'ARM'">$(MonoDataSqlitePortableHardware)-arm</MonoDataSqlitePortablePath>
+  </PropertyGroup>
+
+  <!-- references -->
+  <ItemGroup Condition="'$(MonoDataSqlitePortablePath)' != ''">
+    <Reference Include="Mono.Data.Sqlite">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>$(MSBuildThisFileDirectory)lib\$(MonoDataSqlitePortablePath)\Mono.Data.Sqlite.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
