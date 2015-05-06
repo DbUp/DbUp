@@ -425,4 +425,59 @@ public static class StandardExtensions
         return builder;
     }
 
+    /// <summary>
+    /// Adds all scripts ending in '.sql' found as embedded resources in the given assemblies, using the default <see cref="Encoding" />.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies)
+    {
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase));
+    }
+
+    /// <summary>
+    /// Adds all scripts matching the specified filter found as embedded resources in the given assemblies, using the default <see cref="Encoding" />.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter)
+    {
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, filter, Encoding.Default);
+    }
+
+    /// <summary>
+    /// Adds all scripts ending in '.sql' found as embedded resources in the given assemblies, using the specified <see cref="Encoding" />.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Encoding encoding)
+    {
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase), encoding);
+    }
+
+    /// <summary>
+    /// Adds all scripts found as embedded resources in the given assemblies, with a custom filter (you'll need to exclude non- .SQL files yourself).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding)
+    {
+        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding));
+    }
 }
