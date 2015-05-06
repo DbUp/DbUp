@@ -7,6 +7,7 @@ namespace DbUp.Engine
     /// <summary>
     /// Represents a SQL Server script that comes from an embedded resource in an assembly. 
     /// </summary>
+    [System.Diagnostics.DebuggerDisplay("{Name}")]
     public class SqlScript
     {
         private readonly string contents;
