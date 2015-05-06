@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 
@@ -14,6 +15,7 @@ namespace DbUp.ScriptProviders
     {
         private readonly string directoryPath;
         private readonly Func<string, bool> filter;
+        private readonly Encoding encoding;
 
         ///<summary>
         ///</summary>
@@ -22,6 +24,7 @@ namespace DbUp.ScriptProviders
         {
             this.directoryPath = directoryPath;
             this.filter = null;
+            this.encoding = Encoding.Default;
         }
 
         ///<summary>
@@ -32,6 +35,30 @@ namespace DbUp.ScriptProviders
         {
             this.directoryPath = directoryPath;
             this.filter = filter;
+            this.encoding = Encoding.Default;
+        }
+
+        ///<summary>
+        ///</summary>
+        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
+        ///<param name="encoding">The encoding.</param>
+        public FileSystemScriptProvider(string directoryPath, Encoding encoding)
+        {
+            this.directoryPath = directoryPath;
+            this.filter = null;
+            this.encoding = encoding;
+        }
+
+        ///<summary>
+        ///</summary>
+        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
+        ///<param name="filter">The filter.</param>
+        ///<param name="encoding">The encoding.</param>
+        public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter, Encoding encoding)
+        {
+            this.directoryPath = directoryPath;
+            this.filter = filter;
+            this.encoding = encoding;
         }
 
         /// <summary>
@@ -44,7 +71,7 @@ namespace DbUp.ScriptProviders
             {
                 files = files.Where(filter);
             }
-            return files.Select(SqlScript.FromFile).ToList();
+            return files.Select(x => SqlScript.FromFile(x, encoding)).ToList();
         }
 
 
