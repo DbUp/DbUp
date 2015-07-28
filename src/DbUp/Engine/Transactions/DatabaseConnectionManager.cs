@@ -33,6 +33,21 @@ namespace DbUp.Engine.Transactions
         protected abstract IDbConnection CreateConnection(IUpgradeLog log);
 
         /// <summary>
+        /// Creates a database connection for the system database of the current database engine; The name and structure of this database 
+        /// will vary by database engine.
+        /// </summary>
+        /// <returns></returns>
+        protected abstract IDbConnection CreateSystemConnection();
+
+        /// <summary>
+        /// Check that the named database exists or tries to created it.  If the database does not exist and the method is unable to create
+        /// it, it returns false.
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
+        public abstract bool EnsureDatabase(string name);
+
+        /// <summary>
         /// Tells the connection manager is starting
         /// </summary>
         public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
