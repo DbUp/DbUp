@@ -35,6 +35,16 @@ namespace DbUp.Support.SqlServer
             return conn;
         }
 
+        protected override IDbConnection CreateSystemConnection()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool EnsureDatabase(string name)
+        {
+            throw new NotImplementedException();
+        }
+
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var commandSplitter = new SqlCommandSplitter();

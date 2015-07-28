@@ -49,5 +49,15 @@ namespace DbUp.MySql
 
             return scriptStatements;
         }
+
+        protected override IDbConnection CreateSystemConnection()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool EnsureDatabase(string name)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

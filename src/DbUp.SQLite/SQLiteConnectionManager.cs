@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using System.Linq;
@@ -42,6 +43,16 @@ namespace DbUp.SQLite
                     .ToArray();
 
             return scriptStatements;
+        }
+
+        protected override IDbConnection CreateSystemConnection()
+        {
+            throw new NotImplementedException();
+        }
+
+        public override bool EnsureDatabase(string name)
+        {
+            throw new NotImplementedException();
         }
     }
 }
