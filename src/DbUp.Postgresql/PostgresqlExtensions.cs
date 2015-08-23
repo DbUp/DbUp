@@ -1,5 +1,4 @@
 ﻿using DbUp.Builder;
-using System;
 using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
