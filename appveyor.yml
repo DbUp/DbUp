@@ -5,7 +5,7 @@ assembly_info:
   patch: false
 
 before_build:
-  - nuget restore
+  - nuget restore src\
   - ps: gitversion /l console /output buildserver /updateAssemblyInfo src\Information\VersionInfo.cs
 
 build:
