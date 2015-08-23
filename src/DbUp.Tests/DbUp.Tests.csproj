@@ -39,6 +39,29 @@
   <ItemGroup>
     <Reference Include="Mono.Data.Sqlite">
       <HintPath>..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\lib\net4\Mono.Data.Sqlite.dll</HintPath>
+    <Reference Include="ApprovalTests, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\ApprovalTests.3.0.9\lib\net40\ApprovalTests.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ApprovalUtilities, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\ApprovalUtilities.3.0.9\lib\net35\ApprovalUtilities.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="NSubstitute">
       <HintPath>..\..\lib\NSubstitute.1.6.0.0\lib\NET40\NSubstitute.dll</HintPath>
@@ -72,6 +95,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="App_Packages\ApiApprover.3.0.1\PublicApiApprover.cs" />
+    <Compile Include="App_Packages\ApiApprover.3.0.1\PublicApiGenerator.cs" />
+    <Compile Include="ApiTests.cs" />
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Engine\Transactions\DatabaseConnectionManagerTests.cs" />
     <Compile Include="Helpers\FilterFactoryTests.cs" />
@@ -97,6 +123,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.Firebird\DbUp.Firebird.csproj">
+      <Project>{5D018E40-9BDE-4502-949B-D2E04936D083}</Project>
+      <Name>DbUp.Firebird</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUp.MySql\DbUp.MySql.csproj">
+      <Project>{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}</Project>
+      <Name>DbUp.MySql</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp.Postgresql\DbUp.Postgresql.csproj">
       <Project>{27246d0e-bf23-4315-a946-ea8c93d9bff1}</Project>
       <Name>DbUp.Postgresql</Name>
