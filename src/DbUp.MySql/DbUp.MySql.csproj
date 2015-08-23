@@ -63,6 +63,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="dbup.mysql.nuspec" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>

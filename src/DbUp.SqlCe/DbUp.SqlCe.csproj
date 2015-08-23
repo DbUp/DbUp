@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />
+    <None Include="dbup.sqlce.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

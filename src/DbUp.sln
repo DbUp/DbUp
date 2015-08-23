@@ -31,11 +31,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Console", "DbUp.Consol
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SqlCe", "DbUp.SqlCe\DbUp.SqlCe.csproj", "{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{05BC06EA-80D8-4746-8C76-62251BAD4192}"
-	ProjectSection(SolutionItems) = preProject
-		.nuget\packages.config = .nuget\packages.config
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SQLite", "DbUp.Sqlite\DbUp.SQLite.csproj", "{437CDD05-6DF9-46CB-95C0-36774B10AACB}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"

@@ -69,6 +69,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="dbup.postgresql.nuspec" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>

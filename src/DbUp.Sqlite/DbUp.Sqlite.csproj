@@ -69,6 +69,7 @@
   <ItemGroup>
     <None Include="App.config" />
     <None Include="dbup.snk" />
+    <None Include="dbup.sqlite.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

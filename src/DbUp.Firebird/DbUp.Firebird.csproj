@@ -58,6 +58,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
+    <None Include="dbup.firebird.nuspec" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>
