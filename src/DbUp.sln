@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
 EndProject
@@ -25,7 +25,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C6CF2BB4
 		..\build\dbup.sqlce.nuspec = ..\build\dbup.sqlce.nuspec
 		..\build\dbup.sqlite.mono.nuspec = ..\build\dbup.sqlite.mono.nuspec
 		..\build\dbup.sqlite.nuspec = ..\build\dbup.sqlite.nuspec
-		nuget.config = nuget.config
 	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Console", "DbUp.Console\DbUp.Console.csproj", "{C4499BDA-7ED5-4CB6-9B44-E835854D9246}"
