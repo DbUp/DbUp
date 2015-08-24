@@ -18,12 +18,12 @@ build:
   project: src\DbUp.sln
 
 after_build:
-  - cmd: nuget pack src\DbUp\DbUp.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.Firebird\DbUp.Firebird.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.MySql\DbUp.MySql.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.Postgresql\DbUp.Postgresql.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SqlCe\DbUp.SqlCe.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SQLite\DbUp.SQLite.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp\DbUp.nuspec -BasePath src\DbUp\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.Firebird\DbUp.Firebird.nuspec -BasePath src\DbUp.Firebird\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.MySql\DbUp.MySql.nuspec -BasePath src\DbUp.MySql\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.Postgresql\DbUp.Postgresql.nuspec -BasePath src\DbUp.Postgresql\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.SqlCe\DbUp.SqlCe.nuspec -BasePath src\DbUp.SqlCe\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.SQLite\DbUp.SQLite.nuspec -BasePath src\DbUp.SQLite\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
   - cmd: appveyor PushArtifact "DbUp.%GitVersion_NuGetVersion%.nupkg"
   - cmd: appveyor PushArtifact "DbUp-Firebird.%GitVersion_NuGetVersion%.nupkg"
   - cmd: appveyor PushArtifact "DbUp-MySql.%GitVersion_NuGetVersion%.nupkg"
