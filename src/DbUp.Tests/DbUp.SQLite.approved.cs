@@ -45,7 +45,6 @@ namespace DbUp.SQLite
     {
         public SQLiteConnectionManager(string connectionString) { }
         public SQLiteConnectionManager(DbUp.SQLite.Helpers.SharedConnection sharedConnection) { }
-        protected override System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog log) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SQLitePreprocessor : DbUp.Engine.IScriptPreprocessor

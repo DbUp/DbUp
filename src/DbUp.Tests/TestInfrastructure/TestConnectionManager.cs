@@ -4,9 +4,8 @@ using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using NSubstitute;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.TestInfrastructure
 {
     public class TestConnectionManager : DatabaseConnectionManager
     {

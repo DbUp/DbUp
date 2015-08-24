@@ -148,14 +148,24 @@ namespace DbUp.Engine.Transactions
     
     public abstract class DatabaseConnectionManager : DbUp.Engine.Transactions.IConnectionManager
     {
-        protected DatabaseConnectionManager() { }
+        protected DatabaseConnectionManager(System.Func<DbUp.Engine.Output.IUpgradeLog, System.Data.IDbConnection> connectionFactory) { }
+        protected DatabaseConnectionManager(DbUp.Engine.Transactions.IConnectionFactory connectionFactory) { }
         public bool IsScriptOutputLogged { get; set; }
         public DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
-        protected abstract System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog log);
         public void ExecuteCommandsWithManagedConnection(System.Action<System.Func<System.Data.IDbCommand>> action) { }
         public T ExecuteCommandsWithManagedConnection<T>(System.Func<System.Func<System.Data.IDbCommand>, T> actionWithResult) { }
         public System.IDisposable OperationStarting(DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts) { }
         public abstract System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
+    }
+    public class DelegateConnectionFactory : DbUp.Engine.Transactions.IConnectionFactory
+    {
+        public DelegateConnectionFactory(System.Func<DbUp.Engine.Output.IUpgradeLog, System.Data.IDbConnection> createConnection) { }
+        public DelegateConnectionFactory(System.Func<DbUp.Engine.Output.IUpgradeLog, DbUp.Engine.Transactions.DatabaseConnectionManager, System.Data.IDbConnection> createConnection) { }
+        public System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog upgradeLog, DbUp.Engine.Transactions.DatabaseConnectionManager databaseConnectionManager) { }
+    }
+    public interface IConnectionFactory
+    {
+        System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog upgradeLog, DbUp.Engine.Transactions.DatabaseConnectionManager databaseConnectionManager);
     }
     public interface IConnectionManager
     {
@@ -328,7 +338,6 @@ namespace DbUp.Support.SqlServer
     public class SqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager
     {
         public SqlConnectionManager(string connectionString) { }
-        protected override System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog log) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlObjectParser

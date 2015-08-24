@@ -8,7 +8,6 @@ namespace DbUp.Firebird
     public class FirebirdConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager
     {
         public FirebirdConnectionManager(string connectionString) { }
-        protected override System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog log) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class FirebirdPreprocessor : DbUp.Engine.IScriptPreprocessor

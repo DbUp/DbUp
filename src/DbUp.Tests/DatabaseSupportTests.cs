@@ -1,0 +1,96 @@
+﻿using System;
+using System.Collections.Generic;
+using ApprovalTests;
+using ApprovalTests.Namers;
+using DbUp.Builder;
+using DbUp.Engine;
+using DbUp.Engine.Transactions;
+using DbUp.Tests.TestInfrastructure;
+using NUnit.Framework;
+using Shouldly;
+using TestStack.BDDfy;
+
+namespace DbUp.Tests
+{
+    public class DatabaseSupportTests
+    {
+        private IConnectionFactory testConnectionFactory;
+        private UpgradeEngineBuilder upgradeEngineBuilder;
+        private List<SqlScript> scripts;
+        private RecordingDbConnection recordingConnection;
+        private DatabaseUpgradeResult result;
+
+        [Test]
+        public void VerifyBasicSupport()
+        {
+            ExampleAction deployTo = null;
+            this
+                .Given(() => deployTo)
+                .And(_ => TargetDatabaseIsEmpty())
+                .And(_ => SingleCreateTableScriptExists())
+                .When(_ => UpgradeIsPerformed())
+                .Then(_ => UpgradeIsSuccessful())
+                .And(_ => CommandLogReflectsScript(deployTo.ToString()))
+                .WithExamples(new ExampleTable("Deploy to")
+                {
+                    { new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty))) },
+                    { new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty))) },
+                    { new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty))) },
+                    { new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty))) },
+                    { new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty))) },
+                    { new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty))) }
+                })
+                .BDDfy();
+        }
+
+        private void CommandLogReflectsScript(string target)
+        {
+            Approvals.Verify(new ApprovalTextWriter(Scrubbers.ScrubDates(recordingConnection.GetCommandLog())), new CustomUnitTestFrameworkNamer(target.Replace(" ", string.Empty)), Approvals.GetReporter());
+        }
+
+        private void UpgradeIsSuccessful()
+        {
+            result.Successful.ShouldBe(true);
+        }
+
+        private void UpgradeIsPerformed()
+        {
+            result = upgradeEngineBuilder.Build().PerformUpgrade();
+        }
+
+        private void SingleCreateTableScriptExists()
+        {
+            scripts.Add(new SqlScript("Script0001.sql", "create Table Foo(id)"));
+        }
+
+        private void TargetDatabaseIsEmpty()
+        {
+        }
+
+        private Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo)
+        {
+            return () =>
+            {
+                scripts = new List<SqlScript>();
+                recordingConnection = new RecordingDbConnection();
+                testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
+                upgradeEngineBuilder = deployTo(DeployChanges.To)
+                    .WithScripts(scripts);
+                upgradeEngineBuilder
+                    .Configure(c => ((DatabaseConnectionManager) c.ConnectionManager).OverrideFactoryForTest(testConnectionFactory));
+            };
+        }
+    }
+
+    internal class CustomUnitTestFrameworkNamer : UnitTestFrameworkNamer
+    {
+        private readonly string additional;
+
+        public CustomUnitTestFrameworkNamer(string additional)
+        {
+            this.additional = additional;
+        }
+
+        public override string Name { get { return base.Name + (string.IsNullOrEmpty(additional) ? null : ".") + additional; } }
+    }
+}

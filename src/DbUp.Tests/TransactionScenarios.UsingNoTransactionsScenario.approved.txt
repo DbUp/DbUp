@@ -1,0 +1,26 @@
+﻿Open connection
+Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Execute reader command: select [ScriptName] from [SchemaVersions] order by [ScriptName]
+Dispose command
+Execute non query command: print 'script1'
+Dispose command
+Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Create parameter
+Add parameter to command: scriptName=Script0001.sql
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into [SchemaVersions] (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Execute non query command: print 'script2'
+Dispose command
+Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Create parameter
+Add parameter to command: scriptName=Script0002.sql
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into [SchemaVersions] (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Dispose connection

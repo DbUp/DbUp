@@ -14,6 +14,7 @@ namespace DbUp.Engine.Transactions
         private ITransactionStrategy transactionStrategy;
         private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
         private IDbConnection upgradeConnection;
+        private IConnectionFactory connectionFactoryOverride;
 
         /// <summary>
         /// Manages Database Connections
@@ -41,7 +42,7 @@ namespace DbUp.Engine.Transactions
         /// </summary>
         public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
         {
-            upgradeConnection = connectionFactory.CreateConnection(upgradeLog, this);
+            upgradeConnection = (connectionFactoryOverride ?? connectionFactory).CreateConnection(upgradeLog, this);
             if (upgradeConnection.State == ConnectionState.Closed)
                 upgradeConnection.Open();
             if (transactionStrategy != null)
@@ -94,5 +95,11 @@ namespace DbUp.Engine.Transactions
         /// <param name="scriptContents">The script</param>
         /// <returns>A list of SQL Commands</returns>
         public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
+
+        public IDisposable OverrideFactoryForTest(IConnectionFactory connectionFactory)
+        {
+            connectionFactoryOverride = connectionFactory;
+            return new DelegateDisposable(() => this.connectionFactoryOverride = null);
+        }
     }
 }

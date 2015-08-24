@@ -21,7 +21,7 @@ namespace DbUp.Engine.Transactions
 
         public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
         {
-            connection = dbConnection;            
+            connection = dbConnection;
         }
 
         public void Dispose() { }
