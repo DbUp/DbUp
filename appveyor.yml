@@ -5,7 +5,7 @@ platform:
   - Mixed Platforms
 
 configuration:
-  - Release
+  - Debug
 
 assembly_info:
   patch: false
