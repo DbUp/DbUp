@@ -1,9 +1,7 @@
-﻿using DbUp.Engine.Output;
-using DbUp.Engine.Transactions;
+﻿using DbUp.Engine.Transactions;
 using Npgsql;
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -14,25 +12,12 @@ namespace DbUp.Postgresql
     /// </summary>
     public class PostgresqlConnectionManager : DatabaseConnectionManager
     {
-        private readonly string connectionString;
-
         /// <summary>
         /// Creates a new PostgreSQL database connection.
         /// </summary>
         /// <param name="connectionString">The PostgreSQL connection string.</param>
-        public PostgresqlConnectionManager(string connectionString)
+        public PostgresqlConnectionManager(string connectionString) : base(new DelegateConnectionFactory(l => new NpgsqlConnection(connectionString)))
         {
-            this.connectionString = connectionString;
-        }
-
-        /// <summary>
-        /// Creates a new PostgreSQL database connection.
-        /// </summary>
-        /// <param name="log">The upgrade log.</param>
-        /// <returns>The database connection.</returns>
-        protected override IDbConnection CreateConnection(IUpgradeLog log)
-        {
-            return new NpgsqlConnection(connectionString);
         }
 
         /// <summary>

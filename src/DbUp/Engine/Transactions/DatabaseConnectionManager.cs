@@ -10,6 +10,7 @@ namespace DbUp.Engine.Transactions
     /// </summary>
     public abstract class DatabaseConnectionManager : IConnectionManager
     {
+        private readonly IConnectionFactory connectionFactory;
         private ITransactionStrategy transactionStrategy;
         private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
         private IDbConnection upgradeConnection;
@@ -17,8 +18,16 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Manages Database Connections
         /// </summary>
-        protected DatabaseConnectionManager()
+        protected DatabaseConnectionManager(Func<IUpgradeLog, IDbConnection> connectionFactory) : this(new DelegateConnectionFactory(connectionFactory))
         {
+        }
+
+        /// <summary>
+        /// Manages Database Connections
+        /// </summary>
+        protected DatabaseConnectionManager(IConnectionFactory connectionFactory)
+        {
+            this.connectionFactory = connectionFactory;
             transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
             {
                 {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},
@@ -28,16 +37,11 @@ namespace DbUp.Engine.Transactions
         }
 
         /// <summary>
-        /// Creates a database connection for the current database engine
-        /// </summary>
-        protected abstract IDbConnection CreateConnection(IUpgradeLog log);
-
-        /// <summary>
         /// Tells the connection manager is starting
         /// </summary>
         public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
         {
-            upgradeConnection = CreateConnection(upgradeLog);
+            upgradeConnection = connectionFactory.CreateConnection(upgradeLog, this);
             if (upgradeConnection.State == ConnectionState.Closed)
                 upgradeConnection.Open();
             if (transactionStrategy != null)
