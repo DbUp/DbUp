@@ -1,0 +1,35 @@
+install:
+  - choco install gitversion.portable -pre -y
+  
+platform:
+  - Mixed Platforms
+
+configuration:
+  - Debug
+
+assembly_info:
+  patch: false
+
+before_build:
+  - nuget restore src\
+  - ps: gitversion /l console /output buildserver /updateAssemblyInfo src\Information\VersionInfo.cs
+
+build:
+  project: src\DbUp.sln
+
+after_build:
+  - cmd: nuget pack src\DbUp\DbUp.nuspec -BasePath src\DbUp\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.Firebird\DbUp.Firebird.nuspec -BasePath src\DbUp.Firebird\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.MySql\DbUp.MySql.nuspec -BasePath src\DbUp.MySql\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.Postgresql\DbUp.Postgresql.nuspec -BasePath src\DbUp.Postgresql\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.SqlCe\DbUp.SqlCe.nuspec -BasePath src\DbUp.SqlCe\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.SQLite\DbUp.SQLite.nuspec -BasePath src\DbUp.SQLite\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: appveyor PushArtifact "DbUp.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-Firebird.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-MySql.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-Postgresql.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-SqlCe.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-SQLite.%GitVersion_NuGetVersion%.nupkg"
+
+cache:
+  - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified

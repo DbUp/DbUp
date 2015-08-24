@@ -3,7 +3,7 @@
   <metadata> 
     <id>dbup-postgresql</id> 
     <title>DbUp PostgreSQL Support</title>
-    <version>0.0.0</version> 
+    <version>$version$</version> 
     <authors>Paul Stovell, Jim Burger, Jake Ginnivan, Damian Maclennan</authors>
     <description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds PostgreSQL support.</description> 
     <language>en-US</language>
@@ -11,8 +11,13 @@
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
     <dependencies>
-        <dependency id="Npgsql" version="2.2.1" />
-        <dependency id="DbUp" version="0.0.0" />
+      <dependency id="Npgsql" version="2.2.1" />
+      <dependency id="DbUp" version="$version$" />
     </dependencies>
   </metadata>
+  <files>
+    <file src="bin\$configuration$\DbUp.Postgresql.dll" target="lib\net40\" />
+    <file src="bin\$configuration$\DbUp.Postgresql.pdb" target="lib\net40\" />
+    <file src="bin\$configuration$\DbUp.Postgresql.xml" target="lib\net40\" />
+  </files>
 </package>

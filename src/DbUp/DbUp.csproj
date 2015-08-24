@@ -18,21 +18,21 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Debug\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\DbUp.XML</DocumentationFile>
+    <DocumentationFile>bin\Debug\DbUp.xml</DocumentationFile>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>bin\</OutputPath>
+    <OutputPath>bin\Release\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\DbUp.XML</DocumentationFile>
+    <DocumentationFile>bin\Release\DbUp.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -51,9 +51,6 @@
   <ItemGroup>
     <Compile Include="..\Information\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
-    </Compile>
-    <Compile Include="..\Information\VersionInfo.cs">
-      <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Builder\StandardExtensions.cs" />
     <Compile Include="Builder\UpgradeConfiguration.cs" />
@@ -108,6 +105,7 @@
     <Compile Include="Support\SqlServer\SqlCommandReader.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="dbup.nuspec" />
     <None Include="dbup.snk" />
   </ItemGroup>
   <ItemGroup />

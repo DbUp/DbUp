@@ -3,7 +3,7 @@
   <metadata> 
     <id>dbup</id> 
     <title>DbUp</title>
-    <version>0.0.0</version> 
+    <version>$version$</version> 
     <authors>Paul Stovell, Jim Burger, Jake Ginnivan, Damian Maclennan</authors>
     <description>DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts.</description> 
     <language>en-US</language>
@@ -12,4 +12,9 @@
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
   </metadata>
+  <files>
+    <file src="bin\$configuration$\DbUp.dll" target="lib\net35\" />
+    <file src="bin\$configuration$\DbUp.pdb" target="lib\net35\" />
+    <file src="bin\$configuration$\DbUp.xml" target="lib\net35\" />
+  </files>
 </package>
