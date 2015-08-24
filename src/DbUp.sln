@@ -15,18 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Information", "Information"
 		Information\VersionInfo.cs = Information\VersionInfo.cs
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{C6CF2BB4-BFE4-4531-88D2-85F3EA640563}"
-	ProjectSection(SolutionItems) = preProject
-		..\build\build.proj = ..\build\build.proj
-		..\build\dbup.firebird.nuspec = ..\build\dbup.firebird.nuspec
-		..\build\dbup.mysql.nuspec = ..\build\dbup.mysql.nuspec
-		..\build\dbup.nuspec = ..\build\dbup.nuspec
-		..\build\dbup.postgresql.nuspec = ..\build\dbup.postgresql.nuspec
-		..\build\dbup.sqlce.nuspec = ..\build\dbup.sqlce.nuspec
-		..\build\dbup.sqlite.mono.nuspec = ..\build\dbup.sqlite.mono.nuspec
-		..\build\dbup.sqlite.nuspec = ..\build\dbup.sqlite.nuspec
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Console", "DbUp.Console\DbUp.Console.csproj", "{C4499BDA-7ED5-4CB6-9B44-E835854D9246}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SqlCe", "DbUp.SqlCe\DbUp.SqlCe.csproj", "{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}"

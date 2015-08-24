@@ -65,6 +65,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />
+    <None Include="dbup.sqlite.mono.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>

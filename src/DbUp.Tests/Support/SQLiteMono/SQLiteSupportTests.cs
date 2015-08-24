@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Data.SQLite;
 using System.IO;
-using System.Reflection;
 using DbUp.SQLite.Mono.Helpers;
 using Mono.Data.Sqlite;
 using NUnit.Framework;
@@ -22,7 +20,7 @@ namespace DbUp.Tests.Support.SQLiteMono
             string destination = Path.Combine(currentDir, "sqlite3.dll");
             if (!File.Exists(destination))
             {
-                var packageDir = Path.Combine(currentDir, @"..\..\..\..\lib\sqlite3");
+                var packageDir = Path.Combine(currentDir, @"..\..\..\packages\sqlite3");
                 string sourceFileName = Path.Combine(packageDir, "sqlite3.dll");
                 File.Copy(sourceFileName, destination);
             }

@@ -1,5 +1,11 @@
 install:
   - choco install gitversion.portable -pre -y
+  
+platform:
+  - Mixed Platforms
+
+configuration:
+  - Release
 
 assembly_info:
   patch: false
@@ -12,18 +18,18 @@ build:
   project: src\DbUp.sln
 
 after_build:
-  - cmd: nuget pack src\DbUp\DbUp.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.Firebird\DbUp.Firebird.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.MySql\DbUp.MySql.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.Postgresql\DbUp.Postgresql.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SqlCe\DbUp.SqlCe.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SQLite\DbUp.SQLite.nuspec -version "%GitVersion_NuGetVersion%" -prop "target=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp\DbUp.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.Firebird\DbUp.Firebird.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.MySql\DbUp.MySql.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.Postgresql\DbUp.Postgresql.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.SqlCe\DbUp.SqlCe.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.SQLite\DbUp.SQLite.nuspec -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
   - cmd: appveyor PushArtifact "DbUp.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp.Firebird.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp.MySql.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp.Postgresql.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp.SqlCe.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp.SQLite.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-Firebird.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-MySql.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-Postgresql.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-SqlCe.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-SQLite.%GitVersion_NuGetVersion%.nupkg"
 
 cache:
   - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
