@@ -27,10 +27,10 @@ namespace DbUp.Tests
             this
                 .Given(() => deployTo)
                 .And(_ => TargetDatabaseIsEmpty())
-                .And(_ => SingleCreateTableScriptExists())
+                .And(_ => SingleScriptExists())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(deployTo.ToString()))
+                .And(_ => CommandLogReflectsScript(deployTo))
                 .WithExamples(new ExampleTable("Deploy to")
                 {
                     { new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty))) },
@@ -43,9 +43,12 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void CommandLogReflectsScript(string target)
+        private void CommandLogReflectsScript(ExampleAction target)
         {
-            Approvals.Verify(new ApprovalTextWriter(Scrubbers.ScrubDates(recordingConnection.GetCommandLog())), new CustomUnitTestFrameworkNamer(target.Replace(" ", string.Empty)), Approvals.GetReporter());
+            Approvals.Verify(
+                new ApprovalTextWriter(Scrubbers.ScrubDates(recordingConnection.GetCommandLog())),
+                new CustomUnitTestFrameworkNamer(target.ToString().Replace(" ", string.Empty)),
+                Approvals.GetReporter());
         }
 
         private void UpgradeIsSuccessful()
@@ -58,9 +61,9 @@ namespace DbUp.Tests
             result = upgradeEngineBuilder.Build().PerformUpgrade();
         }
 
-        private void SingleCreateTableScriptExists()
+        private void SingleScriptExists()
         {
-            scripts.Add(new SqlScript("Script0001.sql", "create Table Foo(id)"));
+            scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
         }
 
         private void TargetDatabaseIsEmpty()
@@ -72,7 +75,7 @@ namespace DbUp.Tests
             return () =>
             {
                 scripts = new List<SqlScript>();
-                recordingConnection = new RecordingDbConnection();
+                recordingConnection = new RecordingDbConnection(false);
                 testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
                 upgradeEngineBuilder = deployTo(DeployChanges.To)
                     .WithScripts(scripts);

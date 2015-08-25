@@ -114,7 +114,7 @@ namespace DbUp.Tests
 
         private void DbUpSetupToUseSingleTransaction()
         {
-            testConnection = new RecordingDbConnection();
+            testConnection = new RecordingDbConnection(false);
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
                 .WithTransaction();
@@ -122,7 +122,7 @@ namespace DbUp.Tests
 
         private void DbUpSetupToNotUseTransactions()
         {
-            testConnection = new RecordingDbConnection();
+            testConnection = new RecordingDbConnection(false);
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
                 .WithoutTransaction();
@@ -130,7 +130,7 @@ namespace DbUp.Tests
 
         private void DbUpSetupToUseTransactionPerScript()
         {
-            testConnection = new RecordingDbConnection();
+            testConnection = new RecordingDbConnection(false);
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
                 .WithTransactionPerScript();

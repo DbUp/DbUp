@@ -5,17 +5,21 @@ Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
-Execute reader command: select [ScriptName] from [SchemaVersions] order by [ScriptName]
-Dispose command
-Commit transaction
-Dispose transaction
-Begin transaction
 Execute non query command: print 'script1'
 Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
 Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Commit transaction
+Dispose transaction
+Begin transaction
+Execute non query command: create table [SchemaVersions] (
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)
 Dispose command
 Commit transaction
 Dispose transaction
@@ -35,6 +39,15 @@ Commit transaction
 Dispose transaction
 Begin transaction
 Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Commit transaction
+Dispose transaction
+Begin transaction
+Execute non query command: create table [SchemaVersions] (
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)
 Dispose command
 Commit transaction
 Dispose transaction

@@ -5,11 +5,6 @@ Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
-Execute reader command: select [ScriptName] from [SchemaVersions] order by [ScriptName]
-Dispose command
-Commit transaction
-Dispose transaction
-Begin transaction
 Execute non query command: error
 Dispose command
 Dispose transaction

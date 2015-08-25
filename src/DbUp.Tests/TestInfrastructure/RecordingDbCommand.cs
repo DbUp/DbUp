@@ -1,15 +1,18 @@
 using System;
 using System.Data;
+using System.Data.Common;
 
 namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbCommand : IDbCommand
     {
         private readonly Action<DatabaseAction> add;
+        private readonly bool schemaTableExists;
 
-        public RecordingDbCommand(Action<DatabaseAction> add)
+        public RecordingDbCommand(Action<DatabaseAction> add, bool schemaTableExists)
         {
             this.add = add;
+            this.schemaTableExists = schemaTableExists;
             Parameters = new RecordingDataParameterCollection(add);
         }
 
@@ -45,7 +48,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         private void ThrowError()
         {
-            throw new Exception();
+            throw new TestDbException();
         }
 
         public IDataReader ExecuteReader()
@@ -67,21 +70,30 @@ namespace DbUp.Tests.TestInfrastructure
         {
             add(DatabaseAction.ExecuteScalarCommand(CommandText));
 
-            if (CommandText == "error")
+            if (CommandText == "error" || (CommandText.ToLower().Contains("count") && CommandText.ToLower().Contains("schemaversion")))
                 ThrowError();
             return null;
         }
 
         public IDbConnection Connection { get; set; }
+
         public IDbTransaction Transaction { get; set; }
 
         /// <summary>
         /// Set to 'error' to throw when executed
         /// </summary>
         public string CommandText { get; set; }
+
         public int CommandTimeout { get; set; }
+
         public CommandType CommandType { get; set; }
+
         public IDataParameterCollection Parameters { get; private set; }
+
         public UpdateRowSource UpdatedRowSource { get; set; }
+
+        private class TestDbException : DbException
+        {
+        }
     }
 }

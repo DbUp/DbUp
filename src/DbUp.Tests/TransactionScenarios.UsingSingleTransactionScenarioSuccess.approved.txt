@@ -2,11 +2,15 @@
 Begin transaction
 Execute scalar command: select count(*) from [SchemaVersions]
 Dispose command
-Execute reader command: select [ScriptName] from [SchemaVersions] order by [ScriptName]
-Dispose command
 Execute non query command: print 'script1'
 Dispose command
 Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Execute non query command: create table [SchemaVersions] (
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)
 Dispose command
 Create parameter
 Add parameter to command: scriptName=Script0001.sql
@@ -17,6 +21,12 @@ Dispose command
 Execute non query command: print 'script2'
 Dispose command
 Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Execute non query command: create table [SchemaVersions] (
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)
 Dispose command
 Create parameter
 Add parameter to command: scriptName=Script0002.sql

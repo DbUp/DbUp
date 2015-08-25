@@ -1,18 +1,19 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using Shouldly;
 
 namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbConnection : IDbConnection
     {
-        private readonly List<DatabaseAction> dbActions = new List<DatabaseAction>();
+        private readonly bool schemaTableExists;
 
-        public void Verify(params DatabaseAction[] steps)
+        public RecordingDbConnection(bool schemaTableExists)
         {
-            dbActions.ShouldBe(steps);
+            this.schemaTableExists = schemaTableExists;
         }
+
+        private readonly List<DatabaseAction> dbActions = new List<DatabaseAction>();
 
         public IDbTransaction BeginTransaction()
         {
@@ -38,7 +39,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public IDbCommand CreateCommand()
         {
-            return new RecordingDbCommand(dbActions.Add);
+            return new RecordingDbCommand(dbActions.Add, schemaTableExists);
         }
 
         public void Open()
