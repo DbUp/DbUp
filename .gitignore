@@ -79,3 +79,4 @@ build/TestResult.xml
 .DS_Store
 *.pidb
 *.orig
+src/packages/
