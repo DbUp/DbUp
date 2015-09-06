@@ -131,9 +131,9 @@
     <Compile Include="TestInfrastructure\TestConnectionManager.cs" />
     <Compile Include="Engine\UpgradeEngineTests.cs" />
     <Compile Include="ScriptProvider\FileSystemScriptProviderTests.cs" />
-    <Compile Include="SpecificationFor.cs" />
+    <Compile Include="TestInfrastructure\SpecificationFor.cs" />
     <Compile Include="Support\SqlCe\SqlCeSupportTests.cs" />
-    <Compile Include="ThenAttribute.cs" />
+    <Compile Include="TestInfrastructure\ThenAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>

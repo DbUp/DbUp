@@ -1,7 +1,7 @@
 using System;
 using NUnit.Framework;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.TestInfrastructure
 {
     [TestFixture]
     public abstract class SpecificationFor<T>

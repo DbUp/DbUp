@@ -6,6 +6,7 @@ using System.Reflection;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
+using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;
 
