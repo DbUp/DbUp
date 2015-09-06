@@ -112,9 +112,8 @@ namespace DbUp.Tests
                 recordingConnection = new RecordingDbConnection(false);
                 testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
                 upgradeEngineBuilder = deployTo(DeployChanges.To)
-                    .WithScripts(scripts);
-                upgradeEngineBuilder
-                    .Configure(c => ((DatabaseConnectionManager) c.ConnectionManager).OverrideFactoryForTest(testConnectionFactory));
+                    .WithScripts(scripts)
+                    .OverrideConnectionFactory(testConnectionFactory);
             };
         }
     }

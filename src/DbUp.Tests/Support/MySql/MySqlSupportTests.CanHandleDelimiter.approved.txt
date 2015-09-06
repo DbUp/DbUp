@@ -1,0 +1,31 @@
+﻿Open connection
+Execute scalar command: select count(*) from `schemaversions`
+Dispose command
+Execute reader command: select scriptname from `schemaversions` order by scriptname
+Dispose command
+Execute non query command: USE `test`
+Dispose command
+Execute non query command: DROP procedure IF EXISTS `testSproc`
+Dispose command
+Execute non query command: USE `test`
+Dispose command
+Execute non query command: CREATE PROCEDURE `testSproc`(
+        IN   ssn                    VARCHAR(32)
+     )
+BEGIN 
+
+    SELECT id      
+    FROM   customer as c
+    WHERE  c.ssn = ssn ; 
+
+END
+Dispose command
+Execute scalar command: select count(*) from `schemaversions`
+Dispose command
+Create parameter
+Add parameter to command: scriptName=Script0003
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into `schemaversions` (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Dispose connection
