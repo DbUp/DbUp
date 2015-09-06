@@ -1,1 +1,22 @@
-﻿ 
+﻿Open connection
+Execute scalar command: select count(*) from "schemaversions"
+Dispose command
+Execute non query command: print SubstitutedValue
+Dispose command
+Execute scalar command: select count(*) from "schemaversions"
+Dispose command
+Execute non query command: CREATE TABLE "schemaversions"
+                              (
+                                schemaversionsid serial NOT NULL,
+                                scriptname character varying(255) NOT NULL,
+                                applied timestamp without time zone NOT NULL,
+                                CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+                              )
+Dispose command
+Create parameter
+Add parameter to command: scriptName=Script0001.sql
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into "schemaversions" (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Dispose connection
