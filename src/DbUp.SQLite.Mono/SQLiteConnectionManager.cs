@@ -1,34 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Mono.Helpers;
 using Mono.Data.Sqlite;
 
 namespace DbUp.SQLite.Mono
 {
+    /// <summary>
+    /// Connection manager for Sql Lite
+    /// </summary>
     public class SQLiteConnectionManager : DatabaseConnectionManager
     {
-        private readonly string connectionString;
-        private readonly SharedConnection sharedConnection;
-
-        public SQLiteConnectionManager(string connectionString)
+        /// <summary>
+        /// Creates new SQLite Connection Manager
+        /// </summary>
+        public SQLiteConnectionManager(string connectionString) : base(l => new SqliteConnection(connectionString))
         {
-            this.connectionString = connectionString;
         }
 
-        public SQLiteConnectionManager(SharedConnection sharedConnection)
+        /// <summary>
+        /// Creates new SQLite Connection Manager
+        /// </summary>
+        public SQLiteConnectionManager(SharedConnection sharedConnection) : base(l => sharedConnection)
         {
-            this.sharedConnection = sharedConnection;
-        }
-
-        protected override IDbConnection CreateConnection(IUpgradeLog log)
-        {
-            // if we have a shared connection, return it, otherwise create a connection
-            return (IDbConnection)sharedConnection ?? new SqliteConnection(connectionString);
         }
 
         /// <summary>

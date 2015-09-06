@@ -7,7 +7,6 @@ namespace DbUp.MySql
     public class MySqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager
     {
         public MySqlConnectionManager(string connectionString) { }
-        protected override System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog log) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class MySqlPreprocessor : DbUp.Engine.IScriptPreprocessor

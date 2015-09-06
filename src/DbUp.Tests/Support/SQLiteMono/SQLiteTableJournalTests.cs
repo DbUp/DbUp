@@ -5,6 +5,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SQLite;
+using DbUp.Tests.TestInfrastructure;
 using Mono.Data.Sqlite;
 using NSubstitute;
 using NUnit.Framework;

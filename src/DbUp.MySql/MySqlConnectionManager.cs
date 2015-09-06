@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using MySql.Data.MySqlClient;
 
@@ -14,25 +11,12 @@ namespace DbUp.MySql
     /// </summary>
     public class MySqlConnectionManager : DatabaseConnectionManager
     {
-        private readonly string connectionString;
-
         /// <summary>
         /// Creates a new MySql database connection.
         /// </summary>
         /// <param name="connectionString">The MySql connection string.</param>
-        public MySqlConnectionManager(string connectionString)
+        public MySqlConnectionManager(string connectionString) : base(new DelegateConnectionFactory(l => new MySqlConnection(connectionString)))
         {
-            this.connectionString = connectionString;
-        }
-
-        /// <summary>
-        /// Creates a new MySql database connection.
-        /// </summary>
-        /// <param name="log">The upgrade log.</param>
-        /// <returns>The database connection.</returns>
-        protected override IDbConnection CreateConnection(IUpgradeLog log)
-        {
-            return new MySqlConnection(connectionString);
         }
 
         /// <summary>

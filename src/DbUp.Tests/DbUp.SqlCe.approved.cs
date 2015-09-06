@@ -5,10 +5,10 @@
 namespace DbUp.SqlCe
 {
     
-    public class SqlCeConnectionManager : DbUp.Support.SqlServer.SqlConnectionManager
+    public class SqlCeConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager
     {
         public SqlCeConnectionManager(string connectionString) { }
-        protected override System.Data.IDbConnection CreateConnection(DbUp.Engine.Output.IUpgradeLog log) { }
+        public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlCePreprocessor : DbUp.Engine.IScriptPreprocessor
     {

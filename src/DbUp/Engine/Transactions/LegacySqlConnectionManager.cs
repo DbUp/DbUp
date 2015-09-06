@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text.RegularExpressions;
 using DbUp.Engine.Output;
 using DbUp.Support.SqlServer;
 
@@ -29,12 +27,37 @@ namespace DbUp.Engine.Transactions
             return new DoNothingDisposible();
         }
 
+        /// <summary>
+        /// Tries to connect to the database.
+        /// </summary>
+        public bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage)
+        {
+            try
+            {
+                errorMessage = "";
+                ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                {
+                    using (var command = dbCommandFactory())
+                    {
+                        command.CommandText = "select 1";
+                        command.ExecuteScalar();
+                    }
+                });
+                return true;
+            }
+            catch (Exception ex)
+            {
+                errorMessage = ex.Message;
+                return false;
+            }
+        }
+
         public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
         {
             using (var connection = connectionFactory())
             {
                 connection.Open();
-                action(()=>connection.CreateCommand());
+                action(() => connection.CreateCommand());
             }
         }
 
@@ -43,7 +66,7 @@ namespace DbUp.Engine.Transactions
             using (var connection = connectionFactory())
             {
                 connection.Open();
-                return actionWithResult(()=>connection.CreateCommand());
+                return actionWithResult(() => connection.CreateCommand());
             }
         }
 
@@ -55,7 +78,7 @@ namespace DbUp.Engine.Transactions
         {
             var commandSplitter = new SqlCommandSplitter();
             var scriptStatements = commandSplitter.SplitScriptIntoCommands(scriptContents);
-            return scriptStatements;           
+            return scriptStatements;
         }
 
         class DoNothingDisposible : IDisposable
