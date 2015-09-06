@@ -97,9 +97,11 @@ namespace DbUp.Engine
     public class UpgradeEngine
     {
         public UpgradeEngine(DbUp.Builder.UpgradeConfiguration configuration) { }
+        public System.Collections.Generic.List<string> GetExecutedScripts() { }
         public System.Collections.Generic.List<DbUp.Engine.SqlScript> GetScriptsToExecute() { }
         public bool IsUpgradeRequired() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted() { }
+        public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(string latestScript) { }
         public DbUp.Engine.DatabaseUpgradeResult PerformUpgrade() { }
         public bool TryConnect(out string errorMessage) { }
     }
@@ -156,6 +158,7 @@ namespace DbUp.Engine.Transactions
         public System.IDisposable OperationStarting(DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts) { }
         public System.IDisposable OverrideFactoryForTest(DbUp.Engine.Transactions.IConnectionFactory connectionFactory) { }
         public abstract System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
+        public bool TryConnect(DbUp.Engine.Output.IUpgradeLog upgradeLog, out string errorMessage) { }
     }
     public class DelegateConnectionFactory : DbUp.Engine.Transactions.IConnectionFactory
     {
@@ -175,6 +178,7 @@ namespace DbUp.Engine.Transactions
         T ExecuteCommandsWithManagedConnection<T>(System.Func<System.Func<System.Data.IDbCommand>, T> actionWithResult);
         System.IDisposable OperationStarting(DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts);
         System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
+        bool TryConnect(DbUp.Engine.Output.IUpgradeLog upgradeLog, out string errorMessage);
     }
     public interface ITransactionStrategy : System.IDisposable
     {
@@ -191,6 +195,7 @@ namespace DbUp.Engine.Transactions
         public T ExecuteCommandsWithManagedConnection<T>(System.Func<System.Func<System.Data.IDbCommand>, T> actionWithResult) { }
         public System.IDisposable OperationStarting(DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts) { }
         public System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
+        public bool TryConnect(DbUp.Engine.Output.IUpgradeLog upgradeLog, out string errorMessage) { }
     }
     public enum TransactionMode
     {
