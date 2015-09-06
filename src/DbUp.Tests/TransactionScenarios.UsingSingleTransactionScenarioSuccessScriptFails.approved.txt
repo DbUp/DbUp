@@ -1,0 +1,8 @@
+﻿Open connection
+Begin transaction
+Execute scalar command: select count(*) from [SchemaVersions]
+Dispose command
+Execute non query command: error
+Dispose command
+Dispose transaction
+Dispose connection

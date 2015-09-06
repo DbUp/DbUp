@@ -6,6 +6,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
+using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -69,7 +70,7 @@ namespace DbUp.Tests.Engine
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
                 var config = new UpgradeConfiguration();
-                config.ConnectionManager = new TestConnectionManager();
+                config.ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
                 config.ScriptProviders.Add(scriptProvider);
                 config.ScriptExecutor = scriptExecutor;
                 config.Journal = versionTracker;

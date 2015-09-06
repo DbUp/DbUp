@@ -1,8 +1,5 @@
-﻿using DbUp.Engine.Output;
-using DbUp.Engine.Transactions;
-using System;
+﻿using DbUp.Engine.Transactions;
 using System.Collections.Generic;
-using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FirebirdSql.Data.FirebirdClient;
@@ -14,25 +11,12 @@ namespace DbUp.Firebird
     /// </summary>
     public class FirebirdConnectionManager : DatabaseConnectionManager
     {
-        private readonly string _connectionString;
-
         /// <summary>
         /// Creates a new Firebird database connection.
         /// </summary>
         /// <param name="connectionString">The Firebird connection string.</param>
-        public FirebirdConnectionManager(string connectionString)
+        public FirebirdConnectionManager(string connectionString) : base(new DelegateConnectionFactory(l => new FbConnection(connectionString)))
         {
-            _connectionString = connectionString;
-        }
-
-        /// <summary>
-        /// Creates a new Firebird database connection.
-        /// </summary>
-        /// <param name="log">The upgrade log.</param>
-        /// <returns>The database connection.</returns>
-        protected override IDbConnection CreateConnection(IUpgradeLog log)
-        {
-            return new FbConnection(_connectionString);
         }
 
         /// <summary>

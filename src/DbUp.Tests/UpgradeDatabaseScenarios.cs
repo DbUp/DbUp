@@ -11,8 +11,6 @@ using DbUp.Support.SQLite;
 using NSubstitute;
 using NUnit.Framework;
 using TestStack.BDDfy;
-using TestStack.BDDfy.Core;
-using TestStack.BDDfy.Scanners.StepScanners.Fluent;
 
 namespace DbUp.Tests
 {

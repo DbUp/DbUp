@@ -114,7 +114,7 @@ namespace DbUp.Support.SqlServer
                     scriptNameParam.ParameterName = "scriptName";
                     scriptNameParam.Value = script.Name;
                     command.Parameters.Add(scriptNameParam);
-                    
+
                     var appliedParam = command.CreateParameter();
                     appliedParam.ParameterName = "applied";
                     appliedParam.Value = DateTime.Now;
