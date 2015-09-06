@@ -82,3 +82,4 @@ build/TestResult.xml
 src/packages/
 *.received.txt
 src/_NCrunch_DbUp
+*.received.cs

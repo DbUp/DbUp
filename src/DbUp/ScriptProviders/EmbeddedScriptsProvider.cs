@@ -11,7 +11,7 @@ namespace DbUp.ScriptProviders
     /// <summary>
     /// An <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts embedded in assemblies.
     /// </summary>
-    public sealed class EmbeddedScriptsProvider : IScriptProvider
+    public class EmbeddedScriptsProvider : IScriptProvider
     {
         private readonly Assembly[] assemblies;
         private readonly Encoding encoding;
