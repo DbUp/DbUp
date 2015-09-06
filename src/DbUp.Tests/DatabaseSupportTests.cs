@@ -30,8 +30,32 @@ namespace DbUp.Tests
                 .And(_ => SingleScriptExists())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(deployTo))
-                .WithExamples(new ExampleTable("Deploy to")
+                .And(_ => CommandLogReflectsScript(deployTo), "Command log matches expected steps")
+                .WithExamples(DatabaseExampleTable)
+                .BDDfy();
+        }
+
+        [Test]
+        public void VerifyVariableSubstitutions()
+        {
+            ExampleAction deployTo = null;
+            this
+                .Given(() => deployTo)
+                .And(_ => TargetDatabaseIsEmpty())
+                .And(_ => SingleScriptWithVariableUsageExists())
+                .And(_ => VariableSubstitutionIsSetup())
+                .When(_ => UpgradeIsPerformed())
+                .Then(_ => UpgradeIsSuccessful())
+                .And(_ => CommandLogReflectsScript(deployTo), "Variables substituted correctly in command log")
+                .WithExamples(DatabaseExampleTable)
+                .BDDfy();
+        }
+
+        private ExampleTable DatabaseExampleTable
+        {
+            get
+            {
+                return new ExampleTable("Deploy to")
                 {
                     { new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty))) },
                     { new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty))) },
@@ -39,8 +63,13 @@ namespace DbUp.Tests
                     { new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty))) },
                     { new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty))) },
                     { new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty))) }
-                })
-                .BDDfy();
+                };
+            }
+        }
+
+        private void VariableSubstitutionIsSetup()
+        {
+            upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
         }
 
         private void CommandLogReflectsScript(ExampleAction target)
@@ -64,6 +93,11 @@ namespace DbUp.Tests
         private void SingleScriptExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
+        }
+
+        private void SingleScriptWithVariableUsageExists()
+        {
+            scripts.Add(new SqlScript("Script0001.sql", "print $TestVariable$"));
         }
 
         private void TargetDatabaseIsEmpty()
