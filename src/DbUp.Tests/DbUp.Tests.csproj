@@ -35,7 +35,8 @@
     <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
-    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+    <AssemblyOriginatorKeyFile>
+    </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Mono.Data.Sqlite">
@@ -167,7 +168,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
