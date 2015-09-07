@@ -24,7 +24,7 @@ namespace DbUp.Console
                 { "s|server=", "the SQL Server host", s => server = s },
                 { "db|database=", "database to upgrade", d => database = d},
                 { "d|directory=", "directory containing SQL Update files", dir => directory = dir },
-                { "e|ensure", "ensure datbase exists", e => ensure_database = e != null }
+                { "e|ensure", "ensure datbase exists", e => ensure_database = e != null },
                 { "u|user=", "Database username", u => username = u},
                 { "p|password=", "Database password", p => password = p},
                 { "cs|connectionString=", "Full connection string", cs => connectionString = cs},
@@ -59,7 +59,7 @@ namespace DbUp.Console
             DatabaseUpgradeResult result = null;
             if (!mark)
             {
-                EnsureDatabase.For.SqlDatabase(connectionString);
+                if (ensure_database) EnsureDatabase.For.SqlDatabase(connectionString);
                 result = dbup.PerformUpgrade();
             }
             else
