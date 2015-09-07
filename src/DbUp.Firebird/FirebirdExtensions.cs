@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using System;
+using DbUp;
 using DbUp.Firebird;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
@@ -40,5 +41,16 @@ public static class FirebirdExtensions
         builder.Configure(c => c.Journal = new FirebirdTableJournal(() => c.ConnectionManager, () => c.Log, "schemaversions"));
         builder.WithPreprocessor(new FirebirdPreprocessor());
         return builder;
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void FirebirdDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
+    {
+        throw new NotImplementedException("EnsureDatabase not supported for Firebird databases.");
     }
 }
