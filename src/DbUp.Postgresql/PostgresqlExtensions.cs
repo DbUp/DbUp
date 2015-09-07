@@ -1,4 +1,6 @@
-﻿using DbUp.Builder;
+﻿using System;
+using DbUp;
+using DbUp.Builder;
 using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
@@ -39,5 +41,16 @@ public static class PostgresqlExtensions
         builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, null, "schemaversions"));
         builder.WithPreprocessor(new PostgresqlPreprocessor());
         return builder;
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
+    {
+        throw new NotImplementedException("EnsureDatabase not supported for Postgresql databases.");
     }
 }

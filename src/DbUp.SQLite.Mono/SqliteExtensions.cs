@@ -1,4 +1,5 @@
 ﻿using System;
+using DbUp;
 using DbUp.Builder;
 using DbUp.SQLite.Mono;
 using DbUp.SQLite.Mono.Helpers;
@@ -52,5 +53,16 @@ public static class SQLiteMonoExtensions
             () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
+    }
+
+    /// <summary>
+    /// Creates a database as specified in a connectino string
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void SQLiteMonoDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
+    {
+        throw new NotImplementedException("EnsureDatabase not supported for SQLite Mono databases.");
     }
 }

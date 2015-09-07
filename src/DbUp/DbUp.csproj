@@ -55,6 +55,7 @@
     <Compile Include="Builder\StandardExtensions.cs" />
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
+    <Compile Include="EnsureDatabase.cs" />
     <Compile Include="DeployChanges.cs" />
     <Compile Include="Engine\DelegateDisposable.cs" />
     <Compile Include="Engine\Output\SqlContextUpgradeLog.cs" />
@@ -72,6 +73,7 @@
     <Compile Include="Helpers\Filters.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptsProvider.cs" />
+    <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
     <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />
     <Compile Include="Support\MySql\MySqlITableJournal.cs" />
     <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
