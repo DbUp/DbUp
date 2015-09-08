@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data.SqlServerCe;
-using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
@@ -51,16 +50,5 @@ public static class SqlCeExtensions
         builder.Configure(c => c.Journal = new SqlTableJournal(()=>connectionManager, ()=>c.Log, null, "SchemaVersions"));
         builder.WithPreprocessor(new SqlCePreprocessor());
         return builder;
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <returns></returns>
-    public static void SqlCeDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
-    {
-        throw new NotImplementedException("EnsureDatabase not supported for SQL CE databases.");
     }
 }
