@@ -1,5 +1,4 @@
 ﻿using System;
-using DbUp;
 using DbUp.Builder;
 using DbUp.SQLite.Helpers;
 using DbUp.Support.SQLite;
@@ -52,16 +51,5 @@ public static class SQLiteExtensions
             () => c.VariablesEnabled, c.ScriptPreprocessors));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <returns></returns>
-    public static void SQLiteDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
-    {
-        throw new NotImplementedException("EnsureDatabase not supported for SQLite databases.");
     }
 }

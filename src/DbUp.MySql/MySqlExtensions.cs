@@ -1,6 +1,5 @@
 ﻿using DbUp.Builder;
 using System;
-using DbUp;
 using DbUp.MySql;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
@@ -40,16 +39,5 @@ public static class MySqlExtensions
         builder.Configure(c => c.Journal = new MySqlITableJournal(() => c.ConnectionManager, () => c.Log, null, "schemaversions"));
         builder.WithPreprocessor(new MySqlPreprocessor());
         return builder;
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <returns></returns>
-    public static void MySqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
-    {
-        throw new NotImplementedException("EnsureDatabase not supported for MySql databases.");
     }
 }
