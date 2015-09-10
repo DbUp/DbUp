@@ -105,7 +105,6 @@
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
     <Compile Include="TestInfrastructure\Scrubbers.cs" />
-    <Compile Include="Support\SQLiteMono\SQLiteTableJournalTests.cs" />
     <Compile Include="Support\MySql\MySqlConnectionManagerTests.cs" />
     <Compile Include="Support\MySql\MySqlSupportTests.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitterTests.cs" />
