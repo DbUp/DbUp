@@ -26,9 +26,9 @@ namespace DbUp.Tests.TestInfrastructure
             throw new NotImplementedException();
         }
 
-        public int Count { get; }
-        public object SyncRoot { get; }
-        public bool IsSynchronized { get; }
+        public int Count { get; private set; }
+        public object SyncRoot { get; private set; }
+        public bool IsSynchronized { get; private set; }
         public int Add(object value)
         {
             recordAction(DatabaseAction.AddParameterToCommand(value));
@@ -72,8 +72,8 @@ namespace DbUp.Tests.TestInfrastructure
             set { throw new NotImplementedException(); }
         }
 
-        public bool IsReadOnly { get; }
-        public bool IsFixedSize { get; }
+        public bool IsReadOnly { get; private set; }
+        public bool IsFixedSize { get; private set; }
         public bool Contains(string parameterName)
         {
             throw new NotImplementedException();
