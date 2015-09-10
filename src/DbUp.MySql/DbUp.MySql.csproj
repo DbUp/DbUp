@@ -56,6 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MySqlCommandReader.cs" />
+    <Compile Include="MySqlCommandSplitter.cs" />
     <Compile Include="MySqlConnectionManager.cs" />
     <Compile Include="MySqlExtensions.cs" />
     <Compile Include="MySqlPreprocessor.cs" />

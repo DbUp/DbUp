@@ -2,6 +2,7 @@
 using System.Linq;
 using DbUp.MySql;
 using NUnit.Framework;
+using Shouldly;
 
 namespace DbUp.Tests.Support.MySql
 {
@@ -16,7 +17,7 @@ namespace DbUp.Tests.Support.MySql
             var connectionManager = new MySqlConnectionManager("connectionstring");
             var result = connectionManager.SplitScriptIntoCommands(singleCommand);
 
-            Assert.That(result.Count(), Is.EqualTo(1));
+            result.Count().ShouldBe(1);
         }
 
         [Test]
@@ -29,7 +30,7 @@ namespace DbUp.Tests.Support.MySql
             var connectionManager = new MySqlConnectionManager("connectionstring");
             var result = connectionManager.SplitScriptIntoCommands(multiCommand);
 
-            Assert.That(result.Count(), Is.EqualTo(2));
+            result.Count().ShouldBe(2);
         }
 
         [Test]
@@ -48,11 +49,11 @@ namespace DbUp.Tests.Support.MySql
             var result = connectionManager.SplitScriptIntoCommands(multiCommand);
 
             var enumerable = result as string[] ?? result.ToArray();
-            Assert.That(enumerable.Count(), Is.EqualTo(4));
-            Assert.That(enumerable[0].IndexOf("DELIMITER", StringComparison.Ordinal), Is.EqualTo(-1));
-            Assert.That(enumerable[1].IndexOf("DELIMITER", StringComparison.Ordinal), Is.EqualTo(-1));
-            Assert.That(enumerable[2].IndexOf("DELIMITER", StringComparison.Ordinal), Is.EqualTo(-1));
-            Assert.That(enumerable[3].IndexOf("DELIMITER", StringComparison.Ordinal), Is.EqualTo(-1));
+            enumerable.Length.ShouldBe(4);
+            enumerable[0].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
+            enumerable[1].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
+            enumerable[2].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
+            enumerable[3].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
         }
     }
 }

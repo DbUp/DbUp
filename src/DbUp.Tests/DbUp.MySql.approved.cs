@@ -4,6 +4,17 @@
 namespace DbUp.MySql
 {
     
+    public class MySqlCommandReader : DbUp.Support.SqlServer.SqlCommandReader
+    {
+        public MySqlCommandReader(string sqlText) { }
+        protected override bool IsCustomStatement { get; }
+        protected override void ReadCustomStatement() { }
+    }
+    public class MySqlCommandSplitter
+    {
+        public MySqlCommandSplitter() { }
+        public System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
+    }
     public class MySqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager
     {
         public MySqlConnectionManager(string connectionString) { }

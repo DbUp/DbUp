@@ -3,6 +3,7 @@ using NUnit.Framework;
 using DbUp.Support.SqlServer;
 using System.Text;
 using System.Linq;
+using Shouldly;
 
 namespace DbUp.Tests.Support.SqlServer
 {
@@ -20,7 +21,7 @@ namespace DbUp.Tests.Support.SqlServer
         [Test]
         public void does_not_split_go_in_column_name()
         {
-            const string statement = @"CREATE PROCEDURE dbo.GetDetails
+            var statement = @"CREATE PROCEDURE dbo.GetDetails
 
     @AccountId uniqueidentifier
 
@@ -30,13 +31,13 @@ BEGIN
 SELECT AccountId,
         EstimatedInCents,
         OccupationInCents,
-        GovernmentInCents";
+        GovernmentInCents".Replace("\r\n", "\n");
 
 
             var commands = sut.SplitScriptIntoCommands(statement).ToArray();
 
-            Assert.That(commands.Count(), Is.EqualTo(1));
-            Assert.That(commands[0], Is.EqualTo(statement));
+            commands.Count().ShouldBe(1);
+            commands[0].ShouldBe(statement);
         }
 
         [TestCase("GO", 0)]
@@ -120,14 +121,13 @@ SELECT AccountId,
                 Console.WriteLine(item);
                 Console.WriteLine("=======================================");
             }
-            Assert.That(sqlCommands, Is.Not.Null);
-            Assert.That(sqlCommands.Count(), Is.EqualTo(4));
+            sqlCommands.ShouldNotBeNull();
+            sqlCommands.Length.ShouldBe(4);
 
-            // I compare the original sql text with the commands but remove whitespace characters as the parser is trimming some whitespace in some instances.
-            Assert.That(sqlCommands[0].Trim(), Is.EqualTo(sqlCommandWithMultiLineComment.Trim()));
-            Assert.That(sqlCommands[1].Trim(), Is.EqualTo(sqlCommandWithSingleLineComment.Trim()));
-            Assert.That(sqlCommands[2].Trim(), Is.EqualTo(sqlCommandWithSingleLineCommentWithEndDashes.Trim()));
-            Assert.That(sqlCommands[3].Trim(), Is.EqualTo(strangeInsert.Trim()));
-        }       
+            sqlCommands[0].ShouldBe(sqlCommandWithMultiLineComment.Replace("\r\n", "\n").Trim());
+            sqlCommands[1].ShouldBe(sqlCommandWithSingleLineComment.Replace("\r\n", "\n").Trim());
+            sqlCommands[2].ShouldBe(sqlCommandWithSingleLineCommentWithEndDashes.Replace("\r\n", "\n").Trim());
+            sqlCommands[3].ShouldBe(strangeInsert.Replace("\r\n", "\n").Trim());
+        }
     }
 }

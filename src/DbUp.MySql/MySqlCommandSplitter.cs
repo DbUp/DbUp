@@ -1,21 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.MySql
 {
     /// <summary>
-    /// Responsible for splitting SQL text into a list of commands.
+    /// 
     /// </summary>
-    public class SqlCommandSplitter
+    public class MySqlCommandSplitter
     {
         /// <summary>
-        /// Returns the seperate executable SQL commands within the SQL script.
+        /// Splits a script with multiple delimited commands into commands
         /// </summary>
         /// <param name="scriptContents"></param>
         /// <returns></returns>
-        public virtual IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
+        public IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            using (var reader = new SqlCommandReader(scriptContents))
+            using (var reader = new MySqlCommandReader(scriptContents))
             {
                 var commands = new List<string>();
                 reader.ReadAllCommands(c => commands.Add(c));
