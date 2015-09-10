@@ -36,7 +36,16 @@ END$$").Build();
             var result = upgrader.PerformUpgrade();
 
             result.Successful.ShouldBe(true);
-            Approvals.Verify(recordingDbConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            var commandLog = recordingDbConnection.GetCommandLog();
+            try
+            {
+                Approvals.Verify(commandLog, Scrubbers.ScrubDates);
+            }
+            catch (Exception)
+            {
+                Console.WriteLine(commandLog);
+                throw;
+            }
         }
     }
 }
