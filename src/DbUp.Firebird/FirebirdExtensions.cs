@@ -42,15 +42,4 @@ public static class FirebirdExtensions
         builder.WithPreprocessor(new FirebirdPreprocessor());
         return builder;
     }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <returns></returns>
-    public static void FirebirdDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
-    {
-        throw new NotImplementedException("EnsureDatabase not supported for Firebird databases.");
-    }
 }

@@ -5,6 +5,7 @@ using System.Diagnostics;
 using System.Text;
 using DbUp;
 using DbUp.Builder;
+using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
 
@@ -110,10 +111,26 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
     {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger)
+    {
+        if (supported == null) throw new ArgumentNullException("supported");
+        
         if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
         {
             throw new ArgumentNullException("connectionString");
         }
+
+        if (logger == null) throw new ArgumentNullException("logger");
 
         var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
 
@@ -126,8 +143,7 @@ public static class SqlServerExtensions
 
         connectionStringBuilder.InitialCatalog = "master";
 
-        // TODO: Where to log output from this method? There is no Log context at this point.
-        Debug.WriteLine("Master ConnectionString => {0}", connectionStringBuilder.ToString());
+        logger.WriteInformation("Master ConnectionString => {0}", connectionStringBuilder.ToString());
 
         using (var connection = new SqlConnection(connectionStringBuilder.ConnectionString))
         {
@@ -168,8 +184,7 @@ public static class SqlServerExtensions
 
             }
 
-            // TODO: Where to log output from this method? There is no Log context at this point.
-            Console.WriteLine(@"Created database {0}", databaseName);
+            logger.WriteInformation(@"Created database {0}", databaseName);
         }
     }
 

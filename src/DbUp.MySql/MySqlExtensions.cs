@@ -41,15 +41,4 @@ public static class MySqlExtensions
         builder.WithPreprocessor(new MySqlPreprocessor());
         return builder;
     }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <returns></returns>
-    public static void MySqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
-    {
-        throw new NotImplementedException("EnsureDatabase not supported for MySql databases.");
-    }
 }
