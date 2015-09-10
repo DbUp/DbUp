@@ -11,7 +11,7 @@
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
     <dependencies>
-      <dependency id="System.Data.SQLite" version="1.0.86.0" />
+      <dependency id="System.Data.SQLite.Core" version="1.0.98.1" />
       <dependency id="DbUp" version="$version$" />
     </dependencies>
   </metadata>
