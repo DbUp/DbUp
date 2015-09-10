@@ -67,17 +67,19 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SQLiteConnectionManager.cs" />
     <Compile Include="SQLiteExtensions.cs" />
+    <Compile Include="SQLiteObjectParser.cs" />
     <Compile Include="SQLitePreprocessor.cs" />
+    <Compile Include="SqliteTableJournal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />
-    <None Include="dbup.sqlite.nuspec" />
+    <None Include="dbup-sqlite.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\DbUp\DbUp.Core.csproj">
       <Project>{2d2c117a-7841-4285-a4ce-e7c4fc64ad9b}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

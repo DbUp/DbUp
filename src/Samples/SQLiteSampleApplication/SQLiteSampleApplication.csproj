@@ -52,9 +52,9 @@
       <Project>{437cdd05-6df9-46cb-95c0-36774b10aacb}</Project>
       <Name>DbUp.SQLite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\..\DbUp\DbUp.Core.csproj">
       <Project>{2d2c117a-7841-4285-a4ce-e7c4fc64ad9b}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
