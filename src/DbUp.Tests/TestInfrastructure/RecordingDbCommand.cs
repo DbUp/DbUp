@@ -70,7 +70,7 @@ namespace DbUp.Tests.TestInfrastructure
         {
             add(DatabaseAction.ExecuteScalarCommand(CommandText));
 
-            if (CommandText == "error" || (CommandText.ToLower().Contains("count") && CommandText.ToLower().Contains("schemaversion")))
+            if (CommandText == "error" || (CommandText.ToLower().Contains("count") && CommandText.ToLower().Contains("schemaversion") && !schemaTableExists))
                 ThrowError();
             return null;
         }

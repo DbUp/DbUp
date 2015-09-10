@@ -38,6 +38,12 @@
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>false</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="MySql.Data">
       <HintPath>..\packages\MySql.Data.6.9.3\lib\net20\MySql.Data.dll</HintPath>
@@ -50,6 +56,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MySqlCommandReader.cs" />
+    <Compile Include="MySqlCommandSplitter.cs" />
     <Compile Include="MySqlConnectionManager.cs" />
     <Compile Include="MySqlExtensions.cs" />
     <Compile Include="MySqlPreprocessor.cs" />
@@ -62,7 +70,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="dbup.mysql.nuspec" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />

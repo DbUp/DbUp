@@ -1,39 +1,74 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+// ReSharper disable MemberCanBePrivate.Global
 
 namespace DbUp.Support.SqlServer
 {
-
     /// <summary>
     /// Reads SQL commands from an underlying text stream.
     /// </summary>
     public class SqlCommandReader : StringReader
     {
-        private const char nullChar = (char)0;
-        private const char endOfLineChar = (char)10;
-        private const char singleQuoteChar = (char)39;
-        private const char dashChar = '-';
-        private const char slashChar = '/';
-        private const char starChar = '*';
+        private readonly string sqlText;
+        private readonly StringBuilder commandScriptBuilder;
+        private int currentIndex;
 
-        private const int failedRead = -1;
-        private StringBuilder commandScriptBuilder;
-        private char lastChar;
-        private char currentChar;
+        private const char NullChar = (char)0;
+        private const char EndOfLineChar = '\n';
+        private const char CarriageReturn = '\r';
+        private const char SingleQuoteChar = (char)39;
+        private const char DashChar = '-';
+        private const char SlashChar = '/';
+        private const char StarChar = '*';
 
-        public SqlCommandReader(string sqlText)
+        protected const int FailedRead = -1;
+
+        /// <summary>
+        /// Creates an instance of SqlCommandReader
+        /// </summary>
+        public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true)
             : base(sqlText)
         {
+            this.sqlText = sqlText;
+            Delimiter = delimiter;
+            DelimiterRequiresWhitespace = delimiterRequiresWhitespace;
+            currentIndex = -1;
             commandScriptBuilder = new StringBuilder();
         }
 
+        /// <summary>
+        /// The current delimiter
+        /// </summary>
+        protected string Delimiter { get; set; }
+
+        /// <summary>
+        /// If true it indicates the delimiter requires whitespace before being used
+        /// </summary>
+        protected bool DelimiterRequiresWhitespace { get; set; }
+
+        /// <summary>
+        /// The index of the current character
+        /// </summary>
+        protected int CurrentIndex
+        {
+            get { return currentIndex; }
+            private set
+            {
+                currentIndex = value;
+                LastChar = sqlText[currentIndex - 1];
+                CurrentChar = sqlText[currentIndex];
+            }
+        }
+
+        /// <summary>
+        /// Calls back for each command
+        /// </summary>
         public void ReadAllCommands(Action<string> handleCommand)
         {
-            string commandText = string.Empty;
             while (!HasReachedEnd)
             {
-                commandText = ReadCommand();
+                var commandText = ReadCommand();
                 if (commandText.Length > 0)
                 {
                     handleCommand(commandText);
@@ -41,13 +76,18 @@ namespace DbUp.Support.SqlServer
             }
         }
 
-        public string ReadCommand()
+        private string ReadCommand()
         {
             // Command text in buffer start empty. 
             ResetCommandBuffer();
 
-            while (Read() != failedRead)
+            while (Read() != FailedRead)
             {
+                if (IsCustomStatement)
+                {
+                    ReadCustomStatement();
+                    continue;
+                }
                 if (IsQuote)
                 {
                     ReadQuotedString();
@@ -63,53 +103,89 @@ namespace DbUp.Support.SqlServer
                     ReadSlashStarComment();
                     continue;
                 }
-                if (IsBeginningOfGo)
+                if (IsBeginningOfDelimiter)
                 {
-                    if (!ReadGo())
+                    if (!ReadDelimiter())
                         continue;
                     // This is the end of the command - return the command text in the buffer.
                     return GetCurrentCommandTextFromBuffer().Trim();
                 }
-                else
-                {
-                    WriteCurrentCharToCommandTextBuffer();
-                }
+                WriteCurrentCharToCommandTextBuffer();
             }
             return GetCurrentCommandTextFromBuffer().Trim();
         }
 
+        /// <summary>
+        /// Read a custom statement
+        /// </summary>
+        protected virtual void ReadCustomStatement()
+        {
+        }
+
+        /// <summary>
+        /// Hook to support custom statements
+        /// </summary>
+        protected virtual bool IsCustomStatement { get { return false; } }
+
         public override int Read()
         {
             var result = base.Read();
-            if (result != failedRead)
+            if (result != FailedRead)
             {
-                lastChar = this.currentChar;
-                currentChar = (char)result;
+                currentIndex++;
+                LastChar = CurrentChar;
+                CurrentChar = (char)result;
+                // We don't care about Carriage returns, just skip them
+                if (CurrentChar == CarriageReturn)
+                    return Read();
                 return result;
             }
-            else
-            {
-                return result;
-            }
 
+            return result;
         }
 
-        protected char LastChar
+        public override int Read(char[] buffer, int index, int count)
         {
-            get
-            {
-                return lastChar;
-            }
+            var read = base.Read(buffer, index, count);
+            CurrentIndex += read;
+            CurrentChar = sqlText[CurrentIndex];
+            return read;
         }
 
-        protected char CurrentChar
+        public override int ReadBlock(char[] buffer, int index, int count)
         {
-            get
-            {
-                return currentChar;
-            }
+            var read = base.ReadBlock(buffer, index, count);
+            CurrentIndex += read;
+            return read;
         }
 
+        public override string ReadLine()
+        {
+            var readLine = base.ReadLine();
+            if (readLine != null)
+                CurrentIndex += readLine.Length;
+            return readLine;
+        }
+
+        public override string ReadToEnd()
+        {
+            CurrentIndex = sqlText.Length - 1;
+            return base.ReadToEnd();
+        }
+
+        /// <summary>
+        /// The previous character
+        /// </summary>
+        protected char LastChar { get; private set; }
+
+        /// <summary>
+        /// The current character
+        /// </summary>
+        protected char CurrentChar { get; private set; }
+
+        /// <summary>
+        /// Has the Command Reader reached the end of the file
+        /// </summary>
         protected bool HasReachedEnd
         {
             get
@@ -118,37 +194,56 @@ namespace DbUp.Support.SqlServer
             }
         }
 
+        /// <summary>
+        /// Is the current character end and of line character
+        /// </summary>
         protected bool IsEndOfLine
         {
             get
             {
-                return CurrentChar == endOfLineChar;
+                return CurrentChar == EndOfLineChar;
             }
         }
 
+        /// <summary>
+        /// Does current character match the character argument
+        /// </summary>
         protected bool IsCurrentCharEqualTo(char comparisonChar)
         {
             return IsCharEqualTo(CurrentChar, comparisonChar);
         }
 
+        /// <summary>
+        /// Is the previous character equal to argument
+        /// </summary>
         protected bool IsLastCharEqualTo(char comparisonChar)
         {
             return IsCharEqualTo(LastChar, comparisonChar);
         }
 
+        /// <summary>
+        /// Are the arguments the same character, ignoring case
+        /// </summary>
         protected bool IsCharEqualTo(char comparisonChar, char compareTo)
         {
             return char.ToLowerInvariant(comparisonChar) == char.ToLowerInvariant(compareTo);
         }
 
+        /// <summary>
+        /// Is character a single quote
+        /// </summary>
         protected bool IsQuote
         {
             get
             {
-                return CurrentChar == singleQuoteChar;
+                // TODO should match double?
+                return CurrentChar == SingleQuoteChar;
             }
         }
 
+        /// <summary>
+        /// Is current character WhiteSpace
+        /// </summary>
         protected bool IsWhiteSpace
         {
             get
@@ -157,24 +252,43 @@ namespace DbUp.Support.SqlServer
             }
         }
 
+        /// <summary>
+        /// Peek at the next character
+        /// </summary>
         protected char PeekChar()
         {
             if (HasReachedEnd)
             {
-                return nullChar;
+                return NullChar;
             }
             return (char)Peek();
+        }
+
+        /// <summary>
+        /// Peek at the next character
+        /// </summary>
+        protected bool TryPeek(int numberOfCharacters, out string result)
+        {
+            var currentIndex = CurrentIndex;
+            if (currentIndex + numberOfCharacters >= sqlText.Length)
+            {
+                result = null;
+                return false;
+            }
+
+            result = sqlText.Substring(CurrentIndex + 1, numberOfCharacters);
+            return true;
         }
 
         private bool IsBeginningOfDashDashComment
         {
             get
             {
-                if (CurrentChar != dashChar)
+                if (CurrentChar != DashChar)
                 {
                     return false;
                 }
-                return Peek() == dashChar;
+                return Peek() == DashChar;
             }
         }
 
@@ -182,18 +296,22 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return CurrentChar == slashChar && Peek() == starChar;
+                return CurrentChar == SlashChar && Peek() == StarChar;
             }
         }
 
-        private bool IsBeginningOfGo
+        private bool IsBeginningOfDelimiter
         {
             get
             {
-                bool lastCharIsNullOrEmpty = Char.IsWhiteSpace(LastChar) || lastChar == nullChar;
-                bool currentCharIsG = IsCurrentCharEqualTo('g');
-                bool nextCharIsO = IsCharEqualTo('o', PeekChar());
-                return lastCharIsNullOrEmpty && currentCharIsG && nextCharIsO;
+                var lastCharIsNullOrEmpty = char.IsWhiteSpace(LastChar) || LastChar == NullChar || !DelimiterRequiresWhitespace;
+                var isCurrentCharacterStartOfDelimiter = IsCurrentCharEqualTo(Delimiter[0]);
+                string result;
+                return
+                    lastCharIsNullOrEmpty &&
+                    isCurrentCharacterStartOfDelimiter && 
+                    TryPeek(Delimiter.Length - 1, out result) &&
+                    string.Equals(result, Delimiter.Substring(1), StringComparison.OrdinalIgnoreCase);
             }
         }
 
@@ -201,14 +319,14 @@ namespace DbUp.Support.SqlServer
         {
             get
             {
-                return LastChar == starChar && CurrentChar == slashChar;
+                return LastChar == StarChar && CurrentChar == SlashChar;
             }
         }     
 
         private void ReadQuotedString()
         {
             WriteCurrentCharToCommandTextBuffer();
-            while (Read() != failedRead)
+            while (Read() != FailedRead)
             {
                 WriteCurrentCharToCommandTextBuffer();
                 if (IsQuote)
@@ -225,7 +343,7 @@ namespace DbUp.Support.SqlServer
             // Read until we hit the end of line.
             do
             {
-                if (Read() == failedRead)
+                if (Read() == FailedRead)
                 {
                     break;
                 }
@@ -240,7 +358,7 @@ namespace DbUp.Support.SqlServer
             WriteCurrentCharToCommandTextBuffer();
             // Read until we find a the ending of the slash star comment,
             // Or a nested slash star comment.
-            while (Read() != failedRead)
+            while (Read() != FailedRead)
             {
                 if (IsBeginningOfSlashStarComment)
                 {
@@ -254,16 +372,16 @@ namespace DbUp.Support.SqlServer
                     {
                         return;
                     }
-                    continue;
                 }
             }
         }
 
-        private bool ReadGo()
+        private bool ReadDelimiter()
         {
-            var g = currentChar;
-            // read to the o.
-            if (Read() == failedRead)
+            var currentChar = CurrentChar;
+            var buffer = new char[Delimiter.Length - 1];
+            // read the rest of the delimiter
+            if (Read(buffer, 0, Delimiter.Length - 1) != Delimiter.Length - 1)
             {
                 return true;
             }
@@ -275,9 +393,9 @@ namespace DbUp.Support.SqlServer
             }
             // Check that the statement is indeed a GO and not text starting with Go
             // If it is not a go, add text to buffer and continue
-            else if (!char.IsWhiteSpace(peekChar))
+            else if (!char.IsWhiteSpace(peekChar) && DelimiterRequiresWhitespace)
             {
-                commandScriptBuilder.Append(g);
+                commandScriptBuilder.Append(currentChar);
                 commandScriptBuilder.Append(CurrentChar);
                 return false;
             }
@@ -287,8 +405,8 @@ namespace DbUp.Support.SqlServer
 
         private void ResetCommandBuffer()
         {
-            lastChar = nullChar;
-            currentChar = nullChar;
+            LastChar = NullChar;
+            CurrentChar = NullChar;
             commandScriptBuilder.Length = 0;
         }
 

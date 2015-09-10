@@ -1,8 +1,0 @@
-Release:
-	1.0.27.0
-BreakingChanges:
-	IJournal and IScriptExecutor have both had connectionString parameters removed.
-	Implementors are now expected to manage datastore access.
-Reason:
-	IJournal and IScriptExecutor should not make assumptions about the environment
-	in which they are required to coexist.

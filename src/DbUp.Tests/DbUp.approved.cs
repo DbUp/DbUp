@@ -325,9 +325,14 @@ namespace DbUp.Support.SqlServer
     
     public class SqlCommandReader : System.IO.StringReader
     {
-        public SqlCommandReader(string sqlText) { }
+        protected const int FailedRead = -1;
+        public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = True) { }
         protected char CurrentChar { get; }
+        protected int CurrentIndex { get; }
+        protected string Delimiter { get; set; }
+        protected bool DelimiterRequiresWhitespace { get; set; }
         protected bool HasReachedEnd { get; }
+        protected virtual bool IsCustomStatement { get; }
         protected bool IsEndOfLine { get; }
         protected bool IsQuote { get; }
         protected bool IsWhiteSpace { get; }
@@ -337,8 +342,13 @@ namespace DbUp.Support.SqlServer
         protected bool IsLastCharEqualTo(char comparisonChar) { }
         protected char PeekChar() { }
         public override int Read() { }
+        public override int Read(char[] buffer, int index, int count) { }
         public void ReadAllCommands(System.Action<string> handleCommand) { }
-        public string ReadCommand() { }
+        public override int ReadBlock(char[] buffer, int index, int count) { }
+        protected virtual void ReadCustomStatement() { }
+        public override string ReadLine() { }
+        public override string ReadToEnd() { }
+        protected bool TryPeek(int numberOfCharacters, out string result) { }
     }
     public class SqlCommandSplitter
     {
