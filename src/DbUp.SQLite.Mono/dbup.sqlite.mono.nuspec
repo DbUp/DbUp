@@ -16,8 +16,8 @@
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\$configuration$\DbUp.SQLite.dll" target="lib\net40\" />
-    <file src="bin\$configuration$\DbUp.SQLite.pdb" target="lib\net40\" />
-    <file src="bin\$configuration$\DbUp.SQLite.xml" target="lib\net40\" />
+    <file src="bin\$configuration$\DbUp.SQLite.Mono.dll" target="lib\net40\" />
+    <file src="bin\$configuration$\DbUp.SQLite.Mono.pdb" target="lib\net40\" />
+    <file src="bin\$configuration$\DbUp.SQLite.Mono.xml" target="lib\net40\" />
   </files>
 </package>
