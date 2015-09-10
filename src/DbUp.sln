@@ -12,7 +12,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
-		BreakingChanges.txt = BreakingChanges.txt
 		..\README.md = ..\README.md
 		Information\SolutionInfo.cs = Information\SolutionInfo.cs
 		Information\VersionInfo.cs = Information\VersionInfo.cs

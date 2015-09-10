@@ -39,7 +39,7 @@
     <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <PropertyGroup>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
   </PropertyGroup>
   <PropertyGroup>
     <AssemblyOriginatorKeyFile>dbup.snk</AssemblyOriginatorKeyFile>
