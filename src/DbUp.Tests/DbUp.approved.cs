@@ -37,12 +37,20 @@ namespace DbUp
     {
         public static DbUp.Builder.SupportedDatabases To { get; }
     }
+    public class static EnsureDatabase
+    {
+        public static DbUp.SupportedDatabasesForEnsureDatabase For { get; }
+    }
     public class static Filters
     {
         public static System.Func<string, bool> ExcludeScriptNamesInFile(string fileName) { }
         public static System.Func<string, bool> ExcludeScripts(params string[] scriptNames) { }
         public static System.Func<string, bool> OnlyIncludeScriptNamesInFile(string fileName) { }
         public static System.Func<string, bool> OnlyIncludeScripts(params string[] scriptNames) { }
+    }
+    public class SupportedDatabasesForEnsureDatabase
+    {
+        public SupportedDatabasesForEnsureDatabase() { }
     }
 }
 namespace DbUp.Engine
@@ -397,6 +405,8 @@ public class static SqlServerExtensions
     [System.ObsoleteAttribute("Pass connection string instead, then use .WithTransaction() and .WithTransactionP" +
         "erScript() to manage connection behaviour")]
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, System.Func<System.Data.IDbConnection> connectionFactory, string schema) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger) { }
 }
 public class static StandardExtensions
 {
