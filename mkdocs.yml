@@ -1,4 +1,4 @@
-site_name: GitVersion
+site_name: DbUp
 theme: readthedocs
 repo_url: https://github.com/DbUp/DbUp
 
