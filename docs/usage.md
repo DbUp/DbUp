@@ -6,12 +6,12 @@ The entrypoint is `DeployChanges.To`. There are then extension methods for all o
 
 Then you can configure:
 
-* [Journaling](./journaling.md)
-* [Script Providers](./script-providers.md)
-* [Logging](./logging.md)
-* [Variable Substitution](./variable-substitution.md)
-* [Transaction Usage](./transactions.md)
-* [Preprocessors](./preprocessors.md)
+* [Journaling](./more-info/journaling.md)
+* [Script Providers](./more-info/script-providers.md)
+* [Logging](./more-info/logging.md)
+* [Variable Substitution](./more-info/variable-substitution.md)
+* [Transaction Usage](./more-info/transactions.md)
+* [Preprocessors](./more-info/preprocessors.md)
 
 ## Deploying
 Once you have configured DbUp
