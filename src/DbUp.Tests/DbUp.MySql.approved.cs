@@ -1,4 +1,5 @@
-﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.CLSCompliantAttribute(true)]
+[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("b6988607-c547-4cbd-8012-f8162a25092f")]
 
 namespace DbUp.MySql

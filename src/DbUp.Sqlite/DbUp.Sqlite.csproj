@@ -55,6 +55,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Information\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Information\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="Helpers\InMemorySQLiteDatabase.cs" />
     <Compile Include="Helpers\SharedConnection.cs" />
     <Compile Include="Helpers\TemporarySQLiteDatabase.cs" />

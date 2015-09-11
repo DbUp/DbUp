@@ -1,4 +1,5 @@
-﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.CLSCompliantAttribute(true)]
+[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("9f949414-f078-49bf-b50e-a3859c18fb6e")]
 
 namespace DbUp.SQLite.Helpers
