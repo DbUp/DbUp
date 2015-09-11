@@ -35,3 +35,7 @@ DbUp can get it's scripts which need to be executed from anywhere. Out of the bo
     // Custom script provider
     builder.WithScripts(new MyCustomScriptProvider());
     ```
+* **EmbeddedScriptAndCodeProvider**  
+  An enhanced script provider implementation which retrieves upgrade scripts or IScript code upgrade scripts embedded in an assembly.
+  - Usage: `builder.WithScriptsAndCodeEmbeddedInAssembly(Assembly)`
+  - **Warning:** DbUp does not protect against Sql Injection attacks, code scripts allow you to generate an upgrade script dynamically based on data in your database if you need to. If this data is put into the resulting script it could well contain a sql injection attack. 

@@ -32,3 +32,59 @@ You can:
   * Useful for bringing development environments into sync with automated environments
 * Try to connect to the database (`TryConnect()`)
 * Perform the database upgrade (`PerformUpgrade()`)
+
+## Hosting options
+A console is not the only way to use DbUp. For instance FunnelWeb detects if it needs an upgrade when it starts, if an upgrade is required it will put the web app into maintainance mode where an administrator needs to login then click the perform migration button.
+
+There are any number of other ways to use DbUp. Feel free to submit a pull request to update this section with more information
+
+## Code-based scripts
+Sometimes migrations may require more logic than is easy or possible to perform in SQL alone. Code-based scripts provide the facility to generate SQL in code, with an open database connection and a `System.Data.IDbCommand` factory provided.
+
+The code-based migration is a class that implements the `IScript` interface. The `ProvideScript()` method is called when it is the migration's turn to be executed, so the scripts before it have already been executed.
+
+This example shows a query being called and the results used to build up an arbitrary set of `INSERT` statements:
+
+``` csharp
+public class Script0005ComplexUpdate : IScript
+{
+    public string ProvideScript(Func<IDbCommand> commandFactory)
+    {
+        var cmd = sqlConnectionString.CreateCommand();
+        cmd.CommandText = "Select * from SomeTable";
+        var scriptBuilder = new StringBuilder();
+
+        using (var reader = cmd.ExecuteReader())
+        {
+            while (reader.Read())
+            {
+                scriptBuilder.AppendLine(string.Format("insert into AnotherTable values ({0})", reader.GetString(0)));
+            }
+        }
+
+        return scriptBuilder;
+    }
+}
+```
+
+Of course, the command factory can be used for more than just queries. The entire migration itself can be performed in code:
+
+``` csharp
+public class Script0006UpdateInCode : IScript
+{
+    public string ProvideScript(Func<IDbCommand> commandFactory)
+    {
+        var command = commandFactory();
+
+        command.CommandText = "CREATE TABLE [dbo].[Foo]( [Name] NVARCHAR(MAX) NOT NULL )";
+        command.ExecuteNonQuery();
+
+        return "";
+    }
+}
+```
+
+**WARNING:** This code is vulnerable to SQL injection attacks, this functionality is provided for flexibility but like any advanced feature use caution and make sure the data you are reading cannot contain SQL injection code.
+
+### Discovering code scripts
+See [script providers](./more-info/script-providers.md)
