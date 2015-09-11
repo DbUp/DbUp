@@ -132,20 +132,25 @@ public static class SqlServerExtensions
 
         if (logger == null) throw new ArgumentNullException("logger");
 
-        var connectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
+        var masterConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
 
-        var databaseName = connectionStringBuilder.InitialCatalog;
+        var databaseName = masterConnectionStringBuilder.InitialCatalog;
 
         if (string.IsNullOrEmpty(databaseName) || databaseName.Trim() == string.Empty)
         {
             throw new InvalidOperationException("The connection string does not specify a database name.");
         }
 
-        connectionStringBuilder.InitialCatalog = "master";
+        masterConnectionStringBuilder.InitialCatalog = "master";
 
-        logger.WriteInformation("Master ConnectionString => {0}", connectionStringBuilder.ToString());
+        var logMasterConnectionStringBuilder = new SqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString)
+        {
+            Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length,'*')
+        };
+        
+        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
 
-        using (var connection = new SqlConnection(connectionStringBuilder.ConnectionString))
+        using (var connection = new SqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
             connection.Open();
             
