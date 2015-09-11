@@ -12,6 +12,8 @@
     <AssemblyName>DbUp.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
     <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,6 +24,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -39,9 +42,6 @@
     </AssemblyOriginatorKeyFile>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Mono.Data.Sqlite">
-      <HintPath>..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\lib\net4\Mono.Data.Sqlite.dll</HintPath>
-    </Reference>
     <Reference Include="ApprovalTests, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
       <HintPath>..\packages\ApprovalTests.3.0.9\lib\net40\ApprovalTests.dll</HintPath>
       <Private>True</Private>
@@ -73,30 +73,22 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
-    <Reference Include="Shouldly, Version=2.5.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
-      <HintPath>..\packages\Shouldly.2.5.0\lib\net40\Shouldly.dll</HintPath>
+    <Reference Include="Shouldly, Version=2.6.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shouldly.2.6.0\lib\net40\Shouldly.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data" />
-    <Reference Include="System.Data.Portable">
-      <HintPath>..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\lib\net4\System.Data.Portable.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite">
-      <HintPath>..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.dll</HintPath>
-    </Reference>
-    <Reference Include="System.Data.SQLite.Linq">
-      <HintPath>..\packages\System.Data.SQLite.1.0.86.0\lib\net40\System.Data.SQLite.Linq.dll</HintPath>
+    <Reference Include="System.Data.SQLite, Version=1.0.98.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Data.SQLite.Core.1.0.98.1\lib\net40\System.Data.SQLite.dll</HintPath>
+      <Private>True</Private>
     </Reference>
     <Reference Include="System.Data.SqlServerCe, Version=4.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.SqlServer.Compact.4.0.8876.1\lib\net40\System.Data.SqlServerCe.dll</HintPath>
     </Reference>
     <Reference Include="System.Transactions" />
-    <Reference Include="System.Transactions.Portable">
-      <HintPath>..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\lib\net4\System.Transactions.Portable.dll</HintPath>
-    </Reference>
     <Reference Include="System.Xml" />
     <Reference Include="TestStack.BDDfy, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\TestStack.BDDfy.4.1.2\lib\NET40\TestStack.BDDfy.dll</HintPath>
@@ -113,7 +105,8 @@
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
     <Compile Include="TestInfrastructure\Scrubbers.cs" />
-    <Compile Include="Support\SQLiteMono\SQLiteTableJournalTests.cs" />
+    <Compile Include="Support\MySql\MySqlConnectionManagerTests.cs" />
+    <Compile Include="Support\MySql\MySqlSupportTests.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitterTests.cs" />
     <Compile Include="TestInfrastructure\RecordingDataParameterCollection.cs" />
     <Compile Include="TestInfrastructure\RecordingDbDataParameter.cs" />
@@ -143,7 +136,7 @@
       <Name>DbUp.Firebird</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbUp.MySql\DbUp.MySql.csproj">
-      <Project>{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}</Project>
+      <Project>{4e0f1564-ed5f-49a6-8fb0-e8eb7ea2d63f}</Project>
       <Name>DbUp.MySql</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbUp.Postgresql\DbUp.Postgresql.csproj">
@@ -153,10 +146,6 @@
     <ProjectReference Include="..\DbUp.SqlCe\DbUp.SqlCe.csproj">
       <Project>{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}</Project>
       <Name>DbUp.SqlCe</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbUp.SQLite.Mono\DbUp.SQLite.Mono.csproj">
-      <Project>{5c474b5c-019c-4c03-9e20-2d0cdeaaea7b}</Project>
-      <Name>DbUp.SQLite.Mono</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbUp.Sqlite\DbUp.SQLite.csproj">
       <Project>{437cdd05-6df9-46cb-95c0-36774b10aacb}</Project>
@@ -183,12 +172,6 @@
     <Content Include="TestFilterFiles\ScriptNames.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
-    <Content Include="x64\SQLite.Interop.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="x86\SQLite.Interop.dll">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <EmbeddedResource Include="TestScripts\Script20130525_2_Test5.sql" />
     <EmbeddedResource Include="TestScripts\Script20130525_1_Test5.sql" />
   </ItemGroup>
@@ -197,14 +180,16 @@
   </ItemGroup>
   <PropertyGroup>
     <PostBuildEvent>
-    if not exist "$(TargetDir)x86" md "$(TargetDir)x86"
     xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
     if not exist "$(TargetDir)amd64" md "$(TargetDir)amd64"
-    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"</PostBuildEvent>
+    xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\amd64\*.*" "$(TargetDir)amd64"
+    </PostBuildEvent>
   </PropertyGroup>
-  <Import Project="..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\tools\Mono.Data.Sqlite.Portable.targets" Condition="Exists('..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\tools\Mono.Data.Sqlite.Portable.targets')" />
-  <Target Name="EnsureMonoDataSqlitePortableImported" BeforeTargets="BeforeBuild" Condition="'$(MonoDataSqlitePortableImported)' == ''">
-    <Error Condition="!Exists('..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\tools\Mono.Data.Sqlite.Portable.targets')" Text="This project references NuGet package(s) that are missing on this computer. Enable NuGet Package Restore to download them." />
-    <Error Condition="Exists('..\..\lib\Mono.Data.Sqlite.Portable.1.0.3.5\tools\Mono.Data.Sqlite.Portable.targets')" Text="The build restored NuGet packages. Build the project again to include these packages in the build." />
+  <Import Project="..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets" Condition="Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\System.Data.SQLite.Core.1.0.98.1\build\net40\System.Data.SQLite.Core.targets'))" />
   </Target>
 </Project>

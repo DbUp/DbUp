@@ -2,21 +2,21 @@
 
 namespace DbUp.Engine.Output
 {
-	internal class SqlContextUpgradeLog : IUpgradeLog
-	{
-		public void WriteInformation(string format, params object[] args)
-		{
-			SqlContext.Pipe.Send("INFO:  " + string.Format(format, args));
-		}
+    internal class SqlContextUpgradeLog : IUpgradeLog
+    {
+        public void WriteInformation(string format, params object[] args)
+        {
+            SqlContext.Pipe.Send("INFO:  " + string.Format(format, args));
+        }
 
-		public void WriteError(string format, params object[] args)
-		{
-			SqlContext.Pipe.Send("ERROR: " + string.Format(format, args));
-		}
+        public void WriteError(string format, params object[] args)
+        {
+            SqlContext.Pipe.Send("ERROR: " + string.Format(format, args));
+        }
 
-		public void WriteWarning(string format, params object[] args)
-		{
-			SqlContext.Pipe.Send("WARN:  " + string.Format(format, args));
-		}
-	}
+        public void WriteWarning(string format, params object[] args)
+        {
+            SqlContext.Pipe.Send("WARN:  " + string.Format(format, args));
+        }
+    }
 }

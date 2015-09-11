@@ -1,6 +1,6 @@
-﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.CLSCompliantAttribute(true)]
+[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("9f949414-f078-49bf-b50e-a3859c18fb6e")]
-[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.0", FrameworkDisplayName=".NET Framework 4")]
 
 namespace DbUp.SQLite.Helpers
 {

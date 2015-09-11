@@ -1,0 +1,20 @@
+site_name: DbUp
+theme: readthedocs
+repo_url: https://github.com/DbUp/DbUp
+
+pages:
+- Home: index.md
+- History: history.md
+- Philosophy Behind DbUp: philosophy-behind-dbup.md
+- Usage: usage.md
+- Supported Databases: supported-databases.md
+- FAQ: faq.md
+- Contributing: contributing.md
+
+- More Info:
+  - Script Providers: more-info/script-providers.md
+  - Trasactions: more-info/transactions.md
+  - Pre-Processors: more-info/preprocessors.md
+  - Logging: more-info/logging.md
+  - Journaling: more-info/journaling.md
+  - Variable Substitution: more-info/variable-substitution.md

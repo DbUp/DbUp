@@ -51,13 +51,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\Information\SolutionInfo.cs">
+      <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Information\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
+    </Compile>
     <Compile Include="FirebirdConnectionManager.cs" />
     <Compile Include="FirebirdExtensions.cs" />
     <Compile Include="FirebirdPreprocessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="app.config" />
     <None Include="dbup.firebird.nuspec" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />

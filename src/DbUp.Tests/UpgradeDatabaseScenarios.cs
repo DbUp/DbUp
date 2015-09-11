@@ -14,6 +14,7 @@ using TestStack.BDDfy;
 
 namespace DbUp.Tests
 {
+    //TODO Use recording connection rather than Sqlite
     [TestFixture]
     [Story(
         AsA = "As a DbUp User",

@@ -1,7 +1,14 @@
 ﻿using System;
 using System.IO;
 using DbUp.Helpers;
+
+#if MONO
+using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
+using SQLiteConnectionStringBuilder = Mono.Data.Sqlite.SqliteConnectionStringBuilder;
+using SQLiteJournalModeEnum = Mono.Data.Sqlite.SQLiteJournalModeEnum;
+#else
 using System.Data.SQLite;
+#endif
 
 namespace DbUp.SQLite.Helpers
 {
@@ -28,12 +35,17 @@ namespace DbUp.SQLite.Helpers
                 DataSource = name,
                 Version = 3,
                 DefaultTimeout = 5,
+#if MONO
+                JournalMode = SQLiteJournalModeEnum.Off,
+#else
                 JournalMode = SQLiteJournalModeEnum.Memory,
+#endif
                 UseUTF16Encoding = true
             };
 
             sqLiteConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
-            sharedConnection = new SharedConnection(sqLiteConnection.OpenAndReturn());
+            sqLiteConnection.Open();
+            sharedConnection = new SharedConnection(sqLiteConnection);
             sqlRunner = new AdHocSqlRunner(() => sqLiteConnection.CreateCommand(), null, () => true);
         }
 

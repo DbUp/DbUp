@@ -1,4 +1,5 @@
-﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.CLSCompliantAttribute(true)]
+[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("2523f9cc-42c7-48da-b873-74851c335931")]
 [assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.0", FrameworkDisplayName=".NET Framework 4")]
 

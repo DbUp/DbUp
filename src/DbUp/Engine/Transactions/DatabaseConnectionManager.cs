@@ -30,6 +30,7 @@ namespace DbUp.Engine.Transactions
         protected DatabaseConnectionManager(IConnectionFactory connectionFactory)
         {
             this.connectionFactory = connectionFactory;
+            TransactionMode = TransactionMode.NoTransaction;
             transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
             {
                 {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},

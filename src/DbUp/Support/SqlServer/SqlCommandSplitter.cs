@@ -21,7 +21,6 @@ namespace DbUp.Support.SqlServer
                 reader.ReadAllCommands(c => commands.Add(c));
                 return commands;
             }
-        }         
-
+        }
     }
 }

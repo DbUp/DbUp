@@ -13,6 +13,7 @@
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
+    <LangVersion>5</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -51,6 +52,9 @@
   <ItemGroup>
     <Compile Include="..\Information\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>
+    </Compile>
+    <Compile Include="..\Information\VersionInfo.cs">
+      <Link>Properties\VersionInfo.cs</Link>
     </Compile>
     <Compile Include="Builder\StandardExtensions.cs" />
     <Compile Include="Builder\UpgradeConfiguration.cs" />

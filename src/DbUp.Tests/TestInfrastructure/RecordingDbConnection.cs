@@ -54,11 +54,11 @@ namespace DbUp.Tests.TestInfrastructure
 
         public string ConnectionString { get; set; }
 
-        public int ConnectionTimeout { get; }
+        public int ConnectionTimeout { get; private set; }
 
-        public string Database { get; }
+        public string Database { get; private set; }
 
-        public ConnectionState State { get; }
+        public ConnectionState State { get; private set; }
 
         public string GetCommandLog()
         {

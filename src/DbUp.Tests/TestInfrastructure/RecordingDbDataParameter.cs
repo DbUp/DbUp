@@ -7,7 +7,7 @@ namespace DbUp.Tests.TestInfrastructure
     {
         public DbType DbType { get; set; }
         public ParameterDirection Direction { get; set; }
-        public bool IsNullable { get; }
+        public bool IsNullable { get; private set; }
         public string ParameterName { get; set; }
         public string SourceColumn { get; set; }
         public DataRowVersion SourceVersion { get; set; }

@@ -27,7 +27,7 @@ namespace DbUp.Tests.TestInfrastructure
             throw new NotImplementedException();
         }
 
-        public IDbConnection Connection { get; }
-        public IsolationLevel IsolationLevel { get; }
+        public IDbConnection Connection { get; private set; }
+        public IsolationLevel IsolationLevel { get; private set; }
     }
 }

@@ -70,17 +70,17 @@ public static class StandardExtensions
         return LogTo(builder, new TraceUpgradeLog());
     }
 
-	/// <summary>
-	/// Logs to SqlContext.Pipe, for use with "context connection=true".
-	/// </summary>
-	/// <param name="builder">The builder.</param>
-	/// <returns>
-	/// The same builder
-	/// </returns>
-	public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
-	{
-		return LogTo(builder, new SqlContextUpgradeLog());
-	}
+    /// <summary>
+    /// Logs to SqlContext.Pipe, for use with "context connection=true".
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
+    {
+        return LogTo(builder, new SqlContextUpgradeLog());
+    }
 
     /// <summary>
     /// Uses a custom journal for recording which scripts were executed.
@@ -400,7 +400,7 @@ public static class StandardExtensions
 
         return builder;
     }
-    
+
     /// <summary>
     /// Run DbUp in a single transaction
     /// </summary>
@@ -408,7 +408,7 @@ public static class StandardExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder WithTransaction(this UpgradeEngineBuilder builder)
     {
-        builder.Configure(c=>c.ConnectionManager.TransactionMode = TransactionMode.SingleTransaction);
+        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.SingleTransaction);
 
         return builder;
     }
