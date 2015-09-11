@@ -1,4 +1,3 @@
-# Variable Substitution
 DbUp supports basic variable substitution, to enable you should register variables when configuring DbUp:
 
 ``` csharp

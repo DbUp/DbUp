@@ -1,4 +1,3 @@
-# Logging
 DbUp has a simple logging abstraction in place using the `IUpgradeLog` interface. Out of the box there are the following loggers:
 
 * `ConsoleUpgradeLog` - Logs to `Console.Write*`

@@ -1,4 +1,3 @@
-# Contributing to DbUp
 If you would like to contribute to DbUp, look for [up-for-grabs](https://github.com/DbUp/DbUp/labels/up-for-grabs) issues, post a comment that you are working on it then submit a pull request.
 
 Contributions to the docs and reporting of issues is also welcome.

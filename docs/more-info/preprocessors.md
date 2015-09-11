@@ -1,4 +1,3 @@
-# Pre-Processors
 Script Pre-Processors are a really handy extensibility hook into DbUp, it allows you to modify a script before it is executed. Some examples of how this can/is used:
 
 * Variable Substitution

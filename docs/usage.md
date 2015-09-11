@@ -1,4 +1,3 @@
-# Using DbUp
 DbUp uses a builder to configure your database deployments, you then build the upgrade engine and run your database migrations.
 
 ## Configuration
@@ -87,5 +86,4 @@ public class Script0006UpdateInCode : IScript
 
 **WARNING:** This code is vulnerable to SQL injection attacks, this functionality is provided for flexibility but like any advanced feature use caution and make sure the data you are reading cannot contain SQL injection code.
 
-### Discovering code scripts
-See [script providers](./more-info/script-providers.md)
+See [script providers](./more-info/script-providers.md) for information on how to discover code scripts
