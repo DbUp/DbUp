@@ -25,6 +25,7 @@ var upgradeEngine = DeployChanges.To
 ```
 
 You can:
+
 * Get scripts which will be executed (`GetScriptsToExecute()`)
 * Get already executed scripts (`GetExecutedScripts()`)
 * Check if an upgrade is required (`IsUpgradeRequired()`)
