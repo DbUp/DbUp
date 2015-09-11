@@ -38,6 +38,24 @@ A console is not the only way to use DbUp. For instance FunnelWeb detects if it 
 
 There are any number of other ways to use DbUp. Feel free to submit a pull request to update this section with more information
 
+### From PowerShell
+Another option is call DbUp directly from PowerShell, which is useful when using DbUp from a deployment tool like Octopus Deploy.
+
+``` PowerShell
+$databaseName = $args[0]
+$databaseServer = $args[1]
+$scriptPath = $args[2]
+
+Add-Type -Path (Join-Path -Path $currentPath -ChildPath 'x:\location\of\DbUp.dll')
+
+$dbUp = [DbUp.DeployChanges]::To
+$dbUp = [SqlServerExtensions]::SqlDatabase($dbUp, "server=$databaseServer;database=$databaseName;Trusted_Connection=Yes;Connection Timeout=120;")
+$dbUp = [StandardExtensions]::WithScriptsFromFileSystem($dbUp, $scriptPath)
+$dbUp = [SqlServerExtensions]::JournalToSqlTable($dbUp, 'MyTable', 'MySchema')
+$dbUp = [StandardExtensions]::LogToConsole($dbUp)
+$upgradeResult = $dbUp.Build().PerformUpgrade()
+```
+
 ## Code-based scripts
 Sometimes migrations may require more logic than is easy or possible to perform in SQL alone. Code-based scripts provide the facility to generate SQL in code, with an open database connection and a `System.Data.IDbCommand` factory provided.
 
