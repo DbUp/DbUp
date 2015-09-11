@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Data.SqlServerCe;
+using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
 using DbUp.SqlCe;

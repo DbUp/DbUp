@@ -1,4 +1,5 @@
 ﻿using System;
+using DbUp;
 using DbUp.Builder;
 using DbUp.SQLite.Helpers;
 using DbUp.Support.SQLite;

@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using System;
+using DbUp;
 using DbUp.Firebird;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
