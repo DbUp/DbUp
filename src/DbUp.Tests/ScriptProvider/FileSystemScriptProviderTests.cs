@@ -15,7 +15,7 @@ namespace DbUp.Tests.ScriptProvider
     public class FileSystemScriptProviderTests
     {
         [TestFixture]
-        public class when_returning_scripts_from_a_directory : SpecificationFor<FileSystemScriptProvider>
+        public class when_returning_scripts_from_a_directory_without_recursion : SpecificationFor<FileSystemScriptProvider>
         {
             private string testPath;
             private IEnumerable<SqlScript> filesToExecute;
@@ -42,8 +42,7 @@ namespace DbUp.Tests.ScriptProvider
                 testPath = Path.Combine(directory, "sqlfiles");
                 Directory.CreateDirectory(testPath);
 
-
-                foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.Contains(".sql")))
+                foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.EndsWith(".sql")))
                 {
                     using (var stream = assembly.GetManifestResourceStream(scriptName))
                     {
@@ -95,6 +94,138 @@ namespace DbUp.Tests.ScriptProvider
 
                 // UTF8 encoding
                 Assert.AreEqual("é", filesToExecute.Single(f => f.Name.EndsWith("Script20130525_2_Test5.sql")).Contents);
+            }
+        }
+
+        [TestFixture]
+        public class when_returning_scripts_from_a_directory_with_recursion : SpecificationFor<FileSystemScriptProvider>
+        {
+            private string testPath;
+            private IEnumerable<SqlScript> filesToExecute;
+            private string expectedFirstFileName;
+            private string expectedLastFileName;
+            private int expectedFileCount;
+
+            public override FileSystemScriptProvider Given()
+            {
+                CreateTestFiles();
+
+
+                return new FileSystemScriptProvider(testPath, recursive: true);
+            }
+
+            [TearDown]
+            public void CleanUp()
+            {
+                Directory.Delete(testPath, true);
+            }
+
+            private void CreateTestFiles()
+            {
+                var assembly = Assembly.GetExecutingAssembly();
+                var directory = new FileInfo(assembly.Location).DirectoryName;
+
+                testPath = Path.Combine(directory, "sqlfiles");
+                Directory.CreateDirectory(testPath);
+
+                foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.EndsWith(".sql")))
+                {
+                    using (var stream = assembly.GetManifestResourceStream(scriptName))
+                    {
+                        var filePath = Path.Combine(testPath, scriptName);
+                        using (var writer = new FileStream(filePath, FileMode.CreateNew))
+                        {
+
+                            stream.CopyTo(writer);
+                            writer.Flush();
+                            writer.Close();
+                        }
+                        stream.Close();
+                    }
+                }
+
+                var testPathSubFolder = Path.Combine(testPath, "zzz");
+                Directory.CreateDirectory(testPathSubFolder);
+
+                foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.EndsWith(".sql")))
+                {
+                    using (var stream = assembly.GetManifestResourceStream(scriptName))
+                    {
+                        var filePath = Path.Combine(testPathSubFolder, scriptName);
+                        using (var writer = new FileStream(filePath, FileMode.CreateNew))
+                        {
+
+                            stream.CopyTo(writer);
+                            writer.Flush();
+                            writer.Close();
+                        }
+                        stream.Close();
+                    }
+                }
+
+                var fileList = 
+                    Directory.GetFiles
+                    (
+                        testPath, 
+                        "*.sql", 
+                        SearchOption.AllDirectories
+                    )
+                    .Select(p => p.Replace(string.Concat(testPath,"\\"),string.Empty))
+                    .Where(p => Path.HasExtension(p) && Path.GetExtension(p) == ".sql")
+                    .OrderBy(p => p);
+
+                expectedFirstFileName = fileList.First();
+                expectedLastFileName = fileList.Last();
+                expectedFileCount = fileList.Count();
+            }
+
+            public override void When()
+            {
+                filesToExecute = Subject.GetScripts(Arg.Any<IConnectionManager>());
+            }
+
+            [Then]
+            public void it_should_return_all_sql_files()
+            {
+                Assert.AreEqual(expectedFileCount, filesToExecute.Count());
+            }
+
+            [Then]
+            public void the_file_should_contain_content()
+            {
+                foreach (var sqlScript in filesToExecute)
+                {
+                    Assert.IsTrue(sqlScript.Contents.Length > 0);
+                }
+            }
+
+            [Then]
+            public void the_files_should_be_correctly_ordered()
+            {
+
+                Assert.That(filesToExecute.First().Name == expectedFirstFileName,
+                    "First file expected name \"{0}\" does not match actual name \"{1}\"", expectedFirstFileName, filesToExecute.First().Name);
+
+                Assert.That(filesToExecute.Last().Name == expectedLastFileName,
+                    "Last file expected name \"{0}\" does not match actual name \"{1}\"", expectedLastFileName, filesToExecute.Last().Name);
+
+            }
+
+            [Then]
+            public void encoding_reader_is_correct()
+            {
+                // ANSI encoding
+                foreach (var script in filesToExecute.Where(f => f.Name.EndsWith("Script20130525_1_Test5.sql")))
+                {
+                    Assert.AreEqual("é", script.Contents);
+                }
+
+                // UTF8 encoding
+                foreach (var script in filesToExecute.Where(f => f.Name.EndsWith("Script20130525_2_Test5.sql")))
+                {
+                    Assert.AreEqual("é", script.Contents);
+
+                }
             }
         }
 
