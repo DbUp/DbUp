@@ -263,9 +263,13 @@ namespace DbUp.ScriptProviders
     public class FileSystemScriptProvider : DbUp.Engine.IScriptProvider
     {
         public FileSystemScriptProvider(string directoryPath) { }
+        public FileSystemScriptProvider(string directoryPath, bool recursive) { }
         public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter) { }
+        public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter, bool recursive) { }
         public FileSystemScriptProvider(string directoryPath, System.Text.Encoding encoding) { }
+        public FileSystemScriptProvider(string directoryPath, System.Text.Encoding encoding, bool recursive) { }
         public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
+        public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter, System.Text.Encoding encoding, bool recursive) { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
     }
     public sealed class StaticScriptProvider : DbUp.Engine.IScriptProvider

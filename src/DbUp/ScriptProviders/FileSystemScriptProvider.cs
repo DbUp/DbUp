@@ -13,18 +13,46 @@ namespace DbUp.ScriptProviders
     ///</summary>
     public class FileSystemScriptProvider : IScriptProvider
     {
-        private readonly string directoryPath;
-        private readonly Func<string, bool> filter;
-        private readonly Encoding encoding;
+        private Encoding encoding;
+        private Func<string, bool> filter;
+
+        private string DirectoryPath { get; set; }
+
+        private Func<string, bool> Filter
+        {
+            get { return filter ?? (s => true); }
+            set { filter = value; }
+            
+        }
+        private Encoding Encoding 
+        { 
+            get { return encoding ?? Encoding.Default; }
+            set { encoding = value; }
+        }
+
+        private bool Recursive { get; set; }
 
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         public FileSystemScriptProvider(string directoryPath)
         {
-            this.directoryPath = directoryPath;
-            this.filter = null;
-            this.encoding = Encoding.Default;
+            DirectoryPath = directoryPath;
+            Filter = null;
+            Encoding = Encoding.Default;
+            Recursive = false;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="recursive">Include sub-folders?</param>
+        public FileSystemScriptProvider(string directoryPath, bool recursive)
+        {
+            DirectoryPath = directoryPath;
+            Filter = null;
+            Encoding = Encoding.Default;
+            Recursive = recursive;
         }
 
         ///<summary>
@@ -33,9 +61,23 @@ namespace DbUp.ScriptProviders
         ///<param name="filter">The filter.</param>
         public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter)
         {
-            this.directoryPath = directoryPath;
-            this.filter = filter;
-            this.encoding = Encoding.Default;
+            DirectoryPath = directoryPath;
+            Filter = filter;
+            Encoding = Encoding.Default;
+            Recursive = false;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="recursive">Include sub-folders?</param>
+        public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter, bool recursive)
+        {
+            DirectoryPath = directoryPath;
+            Filter = filter;
+            Encoding = Encoding.Default;
+            Recursive = recursive;
         }
 
         ///<summary>
@@ -44,9 +86,23 @@ namespace DbUp.ScriptProviders
         ///<param name="encoding">The encoding.</param>
         public FileSystemScriptProvider(string directoryPath, Encoding encoding)
         {
-            this.directoryPath = directoryPath;
-            this.filter = null;
-            this.encoding = encoding;
+            DirectoryPath = directoryPath;
+            Filter = null;
+            Encoding = encoding;
+            Recursive = false;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="recursive">Include sub-folders?</param>
+        public FileSystemScriptProvider(string directoryPath, Encoding encoding, bool recursive)
+        {
+            DirectoryPath = directoryPath;
+            Filter = null;
+            Encoding = encoding;
+            Recursive = recursive;
         }
 
         ///<summary>
@@ -56,9 +112,24 @@ namespace DbUp.ScriptProviders
         ///<param name="encoding">The encoding.</param>
         public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter, Encoding encoding)
         {
-            this.directoryPath = directoryPath;
-            this.filter = filter;
-            this.encoding = encoding;
+            DirectoryPath = directoryPath;
+            Filter = filter;
+            Encoding = encoding;
+            Recursive = false;
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="recursive">Include sub-folders?</param>
+        public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter, Encoding encoding, bool recursive)
+        {
+            DirectoryPath = directoryPath;
+            Filter = filter;
+            Encoding = encoding;
+            Recursive = recursive;
         }
 
         /// <summary>
@@ -66,14 +137,21 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var files = Directory.GetFiles(directoryPath, "*.sql").AsEnumerable();
-            if (this.filter != null)
-            {
-                files = files.Where(filter);
-            }
-            return files.Select(x => SqlScript.FromFile(x, encoding)).ToList();
+            return
+                Directory.GetFiles
+                    (
+                        DirectoryPath,
+                        "*.sql", // According to docs, this is actually "*.sql*". Workaround below
+                        Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly
+                    )
+                    .Where(p => Path.HasExtension(p) && Path.GetExtension(p) == ".sql") // Filter out "a.sql1", "a.sql12", "a.sql123", etc.
+                    .Where(Filter)
+                    .Select(p => SqlScript.FromStream(p.Replace(string.Concat(DirectoryPath, "\\"), string.Empty),
+                        new FileStream(p, FileMode.Open, FileAccess.Read),
+                        Encoding))
+                    .ToList();
+
+
         }
-
-
     }
 }
