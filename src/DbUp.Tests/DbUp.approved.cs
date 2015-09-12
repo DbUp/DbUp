@@ -340,9 +340,11 @@ namespace DbUp.Support.SqlServer
         protected string Delimiter { get; set; }
         protected bool DelimiterRequiresWhitespace { get; set; }
         protected bool HasReachedEnd { get; }
+        protected bool IsBeginningOfLine { get; }
         protected virtual bool IsCustomStatement { get; }
         protected bool IsEndOfLine { get; }
         protected bool IsQuote { get; }
+        protected virtual bool IsSqlCmdCommand { get; }
         protected bool IsWhiteSpace { get; }
         protected char LastChar { get; }
         protected bool IsCharEqualTo(char comparisonChar, char compareTo) { }
@@ -355,6 +357,7 @@ namespace DbUp.Support.SqlServer
         public override int ReadBlock(char[] buffer, int index, int count) { }
         protected virtual void ReadCustomStatement() { }
         public override string ReadLine() { }
+        protected virtual void ReadSqlCmdCommand() { }
         public override string ReadToEnd() { }
         protected bool TryPeek(int numberOfCharacters, out string result) { }
     }
