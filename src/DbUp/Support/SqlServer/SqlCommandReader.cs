@@ -21,6 +21,9 @@ namespace DbUp.Support.SqlServer
         private const char DashChar = '-';
         private const char SlashChar = '/';
         private const char StarChar = '*';
+        private const char ColonChar = ':';
+        private const char SpaceChar = ' ';
+
 
         protected const int FailedRead = -1;
 
@@ -88,6 +91,11 @@ namespace DbUp.Support.SqlServer
                     ReadCustomStatement();
                     continue;
                 }
+                if (IsSqlCmdCommand)
+                {
+                    ReadSqlCmdCommand();
+                    continue;
+                }
                 if (IsQuote)
                 {
                     ReadQuotedString();
@@ -126,6 +134,39 @@ namespace DbUp.Support.SqlServer
         /// Hook to support custom statements
         /// </summary>
         protected virtual bool IsCustomStatement { get { return false; } }
+
+        /// <summary>
+        /// Read a sqlcmd command and convert to a comment
+        /// </summary>
+        protected virtual void ReadSqlCmdCommand()
+        {
+            // Write the beginning of a comment line
+            WriteCharToCommandTextBuffer(DashChar);
+            WriteCharToCommandTextBuffer(DashChar);
+            WriteCharToCommandTextBuffer(SpaceChar);
+            // Writes the current colon
+            WriteCurrentCharToCommandTextBuffer();
+            // Read until we hit the end of line.
+            do
+            {
+                if (Read() == FailedRead)
+                {
+                    break;
+                }
+                WriteCurrentCharToCommandTextBuffer();
+            }
+            while (!IsEndOfLine);
+        }
+
+        /// <summary>
+        /// Hook to Support sqlcmd commands
+        /// </summary>
+        protected virtual bool IsSqlCmdCommand {
+            get
+            {
+                return IsBeginningOfLine && IsCurrentCharEqualTo(ColonChar);
+            } 
+        }
 
         public override int Read()
         {
@@ -191,6 +232,17 @@ namespace DbUp.Support.SqlServer
             get
             {
                 return Peek() == -1;
+            }
+        }
+
+        /// <summary>
+        /// Is the current position at the beginning of a line
+        /// </summary>
+        protected bool IsBeginningOfLine
+        {
+            get
+            {
+                return IsLastCharEqualTo(EndOfLineChar) || IsLastCharEqualTo(NullChar);
             }
         }
 
@@ -413,6 +465,11 @@ namespace DbUp.Support.SqlServer
         private void WriteCurrentCharToCommandTextBuffer()
         {
             commandScriptBuilder.Append(CurrentChar);
+        }
+
+        private void WriteCharToCommandTextBuffer(char c)
+        {
+            commandScriptBuilder.Append(c);
         }
 
         private string GetCurrentCommandTextFromBuffer()
