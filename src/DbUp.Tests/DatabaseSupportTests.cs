@@ -36,13 +36,29 @@ namespace DbUp.Tests
         }
 
         [Test]
-        public void VerifyVariableSubstitutions()
+        public void VerifyDbUpStyleVariableSubstitutions()
         {
             ExampleAction deployTo = null;
             this
                 .Given(() => deployTo)
                 .And(_ => TargetDatabaseIsEmpty())
-                .And(_ => SingleScriptWithVariableUsageExists())
+                .And(_ => SingleScriptWithDbUpStyleVariableUsageExists())
+                .And(_ => VariableSubstitutionIsSetup())
+                .When(_ => UpgradeIsPerformed())
+                .Then(_ => UpgradeIsSuccessful())
+                .And(_ => CommandLogReflectsScript(deployTo), "Variables substituted correctly in command log")
+                .WithExamples(DatabaseExampleTable)
+                .BDDfy();
+        }
+
+        [Test]
+        public void VerifySqlCmdStyleVariableSubstitutions()
+        {
+            ExampleAction deployTo = null;
+            this
+                .Given(() => deployTo)
+                .And(_ => TargetDatabaseIsEmpty())
+                .And(_ => SingleScriptWithSqlCmdStyleVariableUsageExists())
                 .And(_ => VariableSubstitutionIsSetup())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
@@ -95,9 +111,14 @@ namespace DbUp.Tests
             scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
         }
 
-        private void SingleScriptWithVariableUsageExists()
+        private void SingleScriptWithDbUpStyleVariableUsageExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "print $TestVariable$"));
+        }
+
+        private void SingleScriptWithSqlCmdStyleVariableUsageExists()
+        {
+            scripts.Add(new SqlScript("Script0001.sql", "print $(TestVariable)"));
         }
 
         private void TargetDatabaseIsEmpty()

@@ -178,6 +178,20 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Adds all scripts from a folder on the file system.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="recursive">Include sub-folders?</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, bool recursive)
+    {
+        return WithScripts(builder, new FileSystemScriptProvider(path, recursive));
+    }
+
+    /// <summary>
     /// Adds all scripts from a folder on the file system, with a custom filter.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -189,6 +203,21 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter)
     {
         return WithScripts(builder, new FileSystemScriptProvider(path, filter));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder on the file system, with a custom filter.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <param name="recursive">Include sub-folders?</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, bool recursive)
+    {
+        return WithScripts(builder, new FileSystemScriptProvider(path, filter,recursive));
     }
 
     /// <summary>
@@ -206,6 +235,21 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Adds all scripts from a folder on the file system, with custom encoding.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="recursive">Include sub-folders?</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, bool recursive)
+    {
+        return WithScripts(builder, new FileSystemScriptProvider(path, encoding, recursive));
+    }
+
+    /// <summary>
     /// Adds all scripts from a folder on the file system, with a custom filter and custom encoding.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -218,6 +262,22 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding)
     {
         return WithScripts(builder, new FileSystemScriptProvider(path, filter, encoding));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder on the file system, with a custom filter and custom encoding.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="recursive">Include sub-folders?</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, bool recursive)
+    {
+        return WithScripts(builder, new FileSystemScriptProvider(path, filter, encoding, recursive));
     }
 
     /// <summary>
