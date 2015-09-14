@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics.CodeAnalysis;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -15,8 +16,26 @@ namespace DbUp.ScriptProviders
     {
         private Encoding encoding;
         private Func<string, bool> filter;
+        private string directoryPath;
 
-        private string DirectoryPath { get; set; }
+        private string DirectoryPath
+        {
+            get { return directoryPath; }
+            set
+            {
+                directoryPath =
+                    string.IsNullOrEmpty(value)
+                        ? string.Empty
+                        : string.Concat
+                            (
+                                value.Trim(),
+                                value.Substring(value.Length - 1) != "\\"
+                                    ? "\\"
+                                    : string.Empty
+                            );
+            }               
+            
+        }
 
         private Func<string, bool> Filter
         {
@@ -135,23 +154,42 @@ namespace DbUp.ScriptProviders
         /// <summary>
         /// Gets all scripts that should be executed.
         /// </summary>
+        [SuppressMessage("ReSharper", "PossibleNullReferenceException")]
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            return
-                Directory.GetFiles
-                    (
-                        DirectoryPath,
-                        "*.sql", // According to docs, this is actually "*.sql*". Workaround below
-                        Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly
-                    )
-                    .Where(p => Path.HasExtension(p) && Path.GetExtension(p) == ".sql") // Filter out "a.sql1", "a.sql12", "a.sql123", etc.
-                    .Where(Filter)
-                    .Select(p => SqlScript.FromStream(p.Replace(string.Concat(DirectoryPath, "\\"), string.Empty),
-                        new FileStream(p, FileMode.Open, FileAccess.Read),
-                        Encoding))
-                    .ToList();
+            if (string.IsNullOrEmpty(DirectoryPath.Trim()))
+            {
+                DirectoryPath = Environment.CurrentDirectory;
+            }
 
-
+            //  Notes:  
+            //      1.  When Directory.Getfiles() is passed an extension that is EXACTLY 3 characters in length, the 
+            //          resulting file list will contain any file with an extension longer than 4 characters that
+            //          begins with the specified extension. This is a documented FEATURE. 
+            //      2.  In order to limit the returned file list to just those with the extension ".sql" (nothing 
+            //          more and nothing less, it is necessary to add a .Where condition that filters on the 
+            //          extension.
+            //      Why do both? To limit the list returned by Directory.Getfiles() in case there are lots of other
+            //      files in the specified DirectoryPath...
+            return Directory
+                .GetFiles(
+                    DirectoryPath,
+                    "*.sql", // Note(1) above.
+                    Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
+                .Where(
+                    filepath => Path.HasExtension(filepath) && ".sql".Equals(Path.GetExtension(filepath),
+                        StringComparison.InvariantCultureIgnoreCase)) //Note(2) above...
+                .Where(Filter)
+                .Select(
+                    filepath =>
+                        SqlScript.FromStream(
+                            string.Concat(
+                                Path.GetDirectoryName(DirectoryPath).Split('\\').LastOrDefault(),
+                                "\\",
+                                filepath.Replace(DirectoryPath, string.Empty)),
+                            new FileStream(filepath, FileMode.Open, FileAccess.Read),
+                            Encoding))
+                .ToList();
         }
     }
 }

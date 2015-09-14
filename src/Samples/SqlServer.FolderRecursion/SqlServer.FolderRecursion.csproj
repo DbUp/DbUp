@@ -41,27 +41,24 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Scripts\20150913 - V0.1.0\99 - Other\01 - ComplexUpdate.cs">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\20150913 - V0.1.0\01 - Data\01 - Default feed.sql">
+    <Content Include="Scripts\20150913-V0.1.0\01-Data\01-Default feed.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\20150913 - V0.1.0\01 - Data\02 - Settings.sql">
+    <Content Include="Scripts\20150913-V0.1.0\01-Data\02-Settings.sql">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\20150913 - V0.1.0\01 - Data\03 - Redirects.sql">
+    <Content Include="Scripts\20150913-V0.1.0\01-Data\03-Redirects.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\20150913 - V0.1.0\99 - Other\02 - Transactions.sql">
+    <Content Include="Scripts\20150913-V0.1.0\99-Other\00-TransactionError.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -72,22 +69,22 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\00000000 - Prerequisites\00 - DatabaseExists.sql">
+    <Content Include="Scripts\00000000-SqlCmdSupport\00-CommandsAndVariables.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\20150913 - V0.1.0\00 - Schema\04 - FeedItem.sql">
+    <Content Include="Scripts\20150913-V0.1.0\00-Schema\04-FeedItem.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\20150913 - V0.1.0\00 - Schema\03 - Revision.sql">
+    <Content Include="Scripts\20150913-V0.1.0\00-Schema\03-Revision.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\20150913 - V0.1.0\00 - Schema\02 - Feed.sql">
+    <Content Include="Scripts\20150913-V0.1.0\00-Schema\02-Feed.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\20150913 - V0.1.0\00 - Schema\01 - Entry.sql">
+    <Content Include="Scripts\20150913-V0.1.0\00-Schema\01-Entry.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Scripts\20150913 - V0.1.0\00 - Schema\05 - Comment.sql">
+    <Content Include="Scripts\20150913-V0.1.0\00-Schema\05-Comment.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

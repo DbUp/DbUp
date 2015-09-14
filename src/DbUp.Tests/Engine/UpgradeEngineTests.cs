@@ -14,7 +14,7 @@ namespace DbUp.Tests.Engine
 {
     public class UpgradeEngineTests
     {
-        public class when_upgrading_a_database_with_variable_substitution : SpecificationFor<UpgradeEngine>
+        public class when_upgrading_a_database_with_variable_substitution_dbup_style : SpecificationFor<UpgradeEngine>
         {
             private IJournal versionTracker;
             private IScriptProvider scriptProvider;
@@ -35,6 +35,48 @@ namespace DbUp.Tests.Engine
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
+                    .JournalTo(versionTracker)
+                    .WithVariable("var", "sub");
+                builder.Configure(c => c.ScriptExecutor = scriptExecutor);
+                builder.Configure(c => c.ConnectionManager = connectionManager);
+
+                var upgrader = builder.Build();
+                return upgrader;
+            }
+
+            public override void When()
+            {
+                Subject.PerformUpgrade();
+            }
+
+            [Then]
+            public void substitutes_variable()
+            {
+                Assert.AreEqual("create table sub (Id int)", dbCommand.CommandText);
+            }
+        }
+
+        public class when_upgrading_a_database_with_variable_substitution_sqlcmd_style : SpecificationFor<UpgradeEngine>
+        {
+            private IJournal versionTracker;
+            private IScriptProvider scriptProvider;
+            private IScriptExecutor scriptExecutor;
+            private IDbConnection dbConnection;
+            private IDbCommand dbCommand;
+
+            public override UpgradeEngine Given()
+            {
+                scriptProvider = Substitute.For<IScriptProvider>();
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
+                versionTracker = Substitute.For<IJournal>();
+                dbConnection = Substitute.For<IDbConnection>();
+                dbCommand = Substitute.For<IDbCommand>();
+                dbConnection.CreateCommand().Returns(dbCommand);
+                var connectionManager = new TestConnectionManager(dbConnection);
+                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
+
+                var builder = new UpgradeEngineBuilder()
+                    .WithScript(new SqlScript("1234", "create table $(var) (Id int)"))
                     .JournalTo(versionTracker)
                     .WithVariable("var", "sub");
                 builder.Configure(c => c.ScriptExecutor = scriptExecutor);

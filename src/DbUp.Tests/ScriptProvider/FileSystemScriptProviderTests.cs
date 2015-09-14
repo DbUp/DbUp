@@ -203,10 +203,10 @@ namespace DbUp.Tests.ScriptProvider
             public void the_files_should_be_correctly_ordered()
             {
 
-                Assert.That(filesToExecute.First().Name == expectedFirstFileName,
+                Assert.That(filesToExecute.First().Name.EndsWith(expectedFirstFileName),
                     "First file expected name \"{0}\" does not match actual name \"{1}\"", expectedFirstFileName, filesToExecute.First().Name);
 
-                Assert.That(filesToExecute.Last().Name == expectedLastFileName,
+                Assert.That(filesToExecute.Last().Name.EndsWith(expectedLastFileName),
                     "Last file expected name \"{0}\" does not match actual name \"{1}\"", expectedLastFileName, filesToExecute.Last().Name);
 
             }

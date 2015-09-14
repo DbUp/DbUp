@@ -26,13 +26,18 @@ namespace SqlServer.FolderRecursion
                         Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts"),
                         filter: script =>
                         {
-                            if (script.EndsWith("02 - Transactions.sql"))
+                            if (script.Contains("01-Data"))
+                                return !(args.Any(a => "--noData".Equals(a, StringComparison.InvariantCultureIgnoreCase))
+                                         || args.Any(a => "--schemaOnly".Equals(a, StringComparison.InvariantCultureIgnoreCase)));
+
+                            if (script.EndsWith("TransactionError.sql"))
                                 return !args.Any(a => "--noError".Equals(a, StringComparison.InvariantCultureIgnoreCase));
 
                             return true;
                         },
                         recursive: true)
                     .WithVariable("DatabaseName", databaseName)
+                    .LogScriptOutput()
                     .LogToConsole();
 
                 if (args.Any(a => "--withTransaction".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
@@ -64,8 +69,10 @@ namespace SqlServer.FolderRecursion
                 Console.WriteLine("Press any key to delete your database and continue");
                 Console.WriteLine();
                 Console.WriteLine();
-                Console.WriteLine("Try the --withTransaction or --withTransactionPerScript to see transaction support in action");
+                Console.WriteLine("Try the following command-line flags:");
+                Console.WriteLine("--withTransaction or --withTransactionPerScript to see transaction support in action");
                 Console.WriteLine("--noError to exclude the broken script");
+                Console.WriteLine("--noData or --schemaOnly to exclude scripts in the 01-Data folder");
                 Console.ReadKey();
                 // Database will be deleted at this point
             }
