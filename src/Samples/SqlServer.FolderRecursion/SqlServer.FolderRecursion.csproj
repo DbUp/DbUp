@@ -72,7 +72,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Scripts\00000000 - Prerequisites\104731 - DatabaseExists.sql">
+    <Content Include="Scripts\00000000 - Prerequisites\00 - DatabaseExists.sql">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Scripts\20150913 - V0.1.0\00 - Schema\04 - FeedItem.sql">

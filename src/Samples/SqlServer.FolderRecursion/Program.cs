@@ -26,7 +26,7 @@ namespace SqlServer.FolderRecursion
                         Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "Scripts"),
                         filter: script =>
                         {
-                            if (script.EndsWith("Script0006 - Transactions.sql"))
+                            if (script.EndsWith("02 - Transactions.sql"))
                                 return !args.Any(a => "--noError".Equals(a, StringComparison.InvariantCultureIgnoreCase));
 
                             return true;
