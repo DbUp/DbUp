@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Core", "DbUp\DbUp.Core.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C6A39A77-AEF6-421D-8198-E15821B80F9D}"
 EndProject
@@ -36,6 +36,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.MySql", "DbUp.MySql\DbUp.MySql.csproj", "{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SQLite.Mono", "DbUp.SQLite.Mono\DbUp.SQLite.Mono.csproj", "{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.MSSql", "DbUp.MSSql\DbUp.MSSql.csproj", "{171E4483-5155-4A64-B774-76A45AA24927}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -91,6 +93,10 @@ Global
 		{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{171E4483-5155-4A64-B774-76A45AA24927}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{171E4483-5155-4A64-B774-76A45AA24927}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{171E4483-5155-4A64-B774-76A45AA24927}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{171E4483-5155-4A64-B774-76A45AA24927}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

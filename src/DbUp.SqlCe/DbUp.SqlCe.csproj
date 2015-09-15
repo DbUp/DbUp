@@ -65,13 +65,13 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />
-    <None Include="dbup.sqlce.nuspec" />
+    <None Include="dbup-sqlce.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\DbUp\DbUp.Core.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

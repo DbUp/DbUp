@@ -151,9 +151,9 @@
       <Project>{437cdd05-6df9-46cb-95c0-36774b10aacb}</Project>
       <Name>DbUp.SQLite</Name>
     </ProjectReference>
-    <ProjectReference Include="..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\DbUp\DbUp.Core.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

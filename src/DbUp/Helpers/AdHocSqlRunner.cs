@@ -4,7 +4,6 @@ using System.Data;
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Preprocessors;
-using DbUp.Support.SqlServer;
 
 namespace DbUp.Helpers
 {

@@ -7,6 +7,5 @@ namespace DbUp.Builder
     /// </summary>
     public class SupportedDatabases
     {
-        
     }
 }

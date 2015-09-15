@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?> 
 <package>
   <metadata>
-    <id>dbup</id>
-    <title>OBSOLETE: DbUp MSSql Upgrade Shim</title>
+    <id>dbup-mssql</id>
+    <title>DbUp MSSql Support</title>
     <version>$version$</version>
     <authors>Paul Stovell, Jim Burger, Jake Ginnivan, Damian Maclennan</authors>
-    <description>OBSOLETE: Install DbUp.MSSql instead</description> 
+    <description>DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts.</description> 
     <language>en-US</language>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
     <releaseNotes>https://github.com/DbUp/DbUp/releases</releaseNotes>
@@ -13,12 +13,11 @@
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
     <dependencies>
       <dependency id="dbup-core" version="$version$" />
-      <dependency id="dbup-mssql" version="$version$" />
     </dependencies>
   </metadata>
   <files>
-    <file src="bin\$configuration$\DbUp.dll" target="lib\net35\" />
-    <file src="bin\$configuration$\DbUp.pdb" target="lib\net35\" />
-    <file src="bin\$configuration$\DbUp.xml" target="lib\net35\" />
+    <file src="bin\$configuration$\DbUp.MSSql.dll" target="lib\net35\" />
+    <file src="bin\$configuration$\DbUp.MSSql.pdb" target="lib\net35\" />
+    <file src="bin\$configuration$\DbUp.MSSql.xml" target="lib\net35\" />
   </files>
 </package>

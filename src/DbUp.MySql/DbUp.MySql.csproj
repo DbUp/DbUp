@@ -60,17 +60,18 @@
     <Compile Include="MySqlCommandSplitter.cs" />
     <Compile Include="MySqlConnectionManager.cs" />
     <Compile Include="MySqlExtensions.cs" />
+    <Compile Include="MySqlITableJournal.cs" />
     <Compile Include="MySqlPreprocessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\DbUp\DbUp.Core.csproj">
       <Project>{2d2c117a-7841-4285-a4ce-e7c4fc64ad9b}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="dbup.mysql.nuspec" />
+    <None Include="dbup-mysql.nuspec" />
     <None Include="dbup.snk" />
     <None Include="packages.config" />
   </ItemGroup>

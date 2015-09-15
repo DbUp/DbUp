@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?> 
-<package> 
-  <metadata> 
+<package>
+  <metadata>
     <id>dbup-firebird</id> 
     <title>DbUp Firebird Support</title>
     <version>$version$</version> 
@@ -11,8 +11,8 @@
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
     <dependencies>
-        <dependency id="FirebirdSql.Data.FirebirdClient" version="4.5.2.0" />
-        <dependency id="DbUp" version="$version$" />
+      <dependency id="FirebirdSql.Data.FirebirdClient" version="4.5.2.0" />
+      <dependency id="dbup-core" version="$version$" />
     </dependencies>
   </metadata>
   <files>
