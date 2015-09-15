@@ -9,6 +9,7 @@ using DbUp.ScriptProviders;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;
+using Shouldly;
 
 namespace DbUp.Tests.ScriptProvider
 {
@@ -195,7 +196,7 @@ namespace DbUp.Tests.ScriptProvider
             {
                 foreach (var sqlScript in filesToExecute)
                 {
-                    Assert.IsTrue(sqlScript.Contents.Length > 0);
+                    (sqlScript.Contents.Length > 0).ShouldBeTrue(sqlScript.Name);
                 }
             }
 

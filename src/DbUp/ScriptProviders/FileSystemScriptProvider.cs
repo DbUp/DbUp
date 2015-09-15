@@ -171,25 +171,33 @@ namespace DbUp.ScriptProviders
             //          extension.
             //      Why do both? To limit the list returned by Directory.Getfiles() in case there are lots of other
             //      files in the specified DirectoryPath...
+            var searchOptions = Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
+
             return Directory
-                .GetFiles(
-                    DirectoryPath,
-                    "*.sql", // Note(1) above.
-                    Recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
-                .Where(
-                    filepath => Path.HasExtension(filepath) && ".sql".Equals(Path.GetExtension(filepath),
-                        StringComparison.InvariantCultureIgnoreCase)) //Note(2) above...
+                .GetFiles(DirectoryPath,"*.sql" /* see Note(1) above.*/, searchOptions)
+                .Where(FileExtensionIsDotSql) /* see Note(2) above */
                 .Where(Filter)
-                .Select(
-                    filepath =>
-                        SqlScript.FromStream(
-                            string.Concat(
-                                Path.GetDirectoryName(DirectoryPath).Split('\\').LastOrDefault(),
-                                "\\",
-                                filepath.Replace(DirectoryPath, string.Empty)),
-                            new FileStream(filepath, FileMode.Open, FileAccess.Read),
-                            Encoding))
+                .Select(SqlScriptFromFile)
                 .ToList();
+        }
+
+        private bool FileExtensionIsDotSql(string filepath)
+        {
+            return Path.HasExtension(filepath) &&
+                   ".sql".Equals(Path.GetExtension(filepath), StringComparison.InvariantCultureIgnoreCase);
+        }
+
+        private SqlScript SqlScriptFromFile(string filePath)
+        {
+            // Get the base folder name from the DirectoryPath
+            var baseFolderName = DirectoryPath.Split('\\').LastOrDefault(s => !string.IsNullOrEmpty(s));
+            // Get the filename relative to the base folder
+            var filePathRelativeToBaseFolder = filePath.Replace(DirectoryPath, string.Empty);
+
+            // construct the value for the SqlScript.Name property 
+            var filePathIncludingBaseFolder = string.Concat(baseFolderName, "\\", filePathRelativeToBaseFolder);
+
+            return SqlScript.FromStream(filePathIncludingBaseFolder, new FileStream(filePath, FileMode.Open, FileAccess.Read), Encoding);
         }
     }
 }

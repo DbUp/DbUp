@@ -10,17 +10,14 @@ namespace DbUp.Engine.Preprocessors
     public class StripSchemaPreprocessor : IScriptPreprocessor
     {
 
-        private static readonly Regex dbUpStyleSchemaRegex = new Regex(@"\$schema\$\.", RegexOptions.IgnoreCase);
-        private static readonly Regex sqlcmdStyleSchemaRegex = new Regex(@"\$\(schema\)\.", RegexOptions.IgnoreCase);
+        private static readonly Regex schemaRegex = new Regex(@"\$\(?schema[\$\)]\.", RegexOptions.IgnoreCase);
 
         /// <summary>
         /// Performs some proprocessing step on a script
         /// </summary>
         public string Process(string contents)
         {
-            //return Regex.Replace(contents, @"\$schema\$\.", string.Empty, RegexOptions.IgnoreCase);
-
-            return sqlcmdStyleSchemaRegex.Replace(dbUpStyleSchemaRegex.Replace(contents, string.Empty), string.Empty);
+            return schemaRegex.Replace(contents, string.Empty);
         }
     }
 }
