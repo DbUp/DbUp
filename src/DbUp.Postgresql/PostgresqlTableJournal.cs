@@ -6,66 +6,58 @@ using System.Data;
 using System.Data.Common;
 using System.Collections.Generic;
 
-namespace DbUp.Support.Firebird
+namespace DbUp.Postgresql
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
-    /// Firebird database using a table called SchemaVersions.
+    /// PostgreSQL database using a table called SchemaVersions.
     /// </summary>
-    public sealed class FirebirdTableJournal : IJournal
+    public sealed class PostgresqlTableJournal : IJournal
     {
+        private readonly string schemaTableName;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
-        private readonly string tableName;
+
+        private static string QuoteIdentifier(string identifier)
+        {
+            return "\"" + identifier + "\"";
+        }
 
         /// <summary>
-        /// Creates a new Firebird table journal.
+        /// Creates a new PostgreSQL table journal.
         /// </summary>
-        /// <param name="connectionManager">The Firebird connection manager.</param>
+        /// <param name="connectionManager">The PostgreSQL connection manager.</param>
         /// <param name="logger">The upgrade logger.</param>
-        /// <param name="tableName">The name of the journal table.</param>
-        public FirebirdTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string tableName)
+        /// <param name="schema">The name of the schema the journal is stored in.</param>
+        /// <param name="table">The name of the journal table.</param>
+        public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
-            log = logger;
-            this.tableName = tableName;
+            schemaTableName = string.IsNullOrEmpty(schema)
+                ? QuoteIdentifier(table)
+                : QuoteIdentifier(schema) + "." + QuoteIdentifier(table);
             this.connectionManager = connectionManager;
+            log = logger;        
         }
 
         private static string CreateTableSql(string tableName)
         {
-            return string.Format(@"CREATE TABLE {0}
-                                    (
-                                        schemaversionsid INTEGER NOT NULL,
-                                        scriptname VARCHAR(255) NOT NULL,
-                                        applied TIMESTAMP NOT NULL,
-                                        CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
-                                    )", tableName);
-        }
-
-        private static string CreateGeneratorSql(string tableName)
-        {
-            return string.Format(@"CREATE SEQUENCE {0}", GeneratorName(tableName));
-        }
-
-        private static string CreateTriggerSql(string tableName)
-        {
             return string.Format(
-                                @"CREATE TRIGGER {0} FOR {1} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
-                                        if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({2},1);
-                                  END;", TriggerName(tableName), tableName, GeneratorName(tableName));
+                            @"CREATE TABLE {0}
+                              (
+                                schemaversionsid serial NOT NULL,
+                                scriptname character varying(255) NOT NULL,
+                                applied timestamp without time zone NOT NULL,
+                                CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+                              )", tableName);
         }
 
-        /// <summary>
-        /// Fetches the list of already executed scripts.
-        /// </summary>
-        /// <returns></returns>
         public string[] GetExecutedScripts()
         {
             log().WriteInformation("Fetching list of already executed scripts.");
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", tableName));
+                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", schemaTableName));
                 return new string[0];
             }
 
@@ -74,7 +66,7 @@ namespace DbUp.Support.Firebird
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = GetExecutedScriptsSql(tableName);
+                    command.CommandText = GetExecutedScriptsSql(schemaTableName);
                     command.CommandType = CommandType.Text;
 
                     using (var reader = command.ExecuteReader())
@@ -88,26 +80,6 @@ namespace DbUp.Support.Firebird
             return scripts.ToArray();
         }
 
-        private void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
-        {
-            using (var command = dbCommandFactory())
-            {
-                command.CommandText = sql;
-                command.CommandType = CommandType.Text;
-                command.ExecuteNonQuery();
-            }
-        }
-
-        private static string GeneratorName(string tableName)
-        {
-            return string.Format("GEN_{0}ID", tableName);
-        }
-
-        private static string TriggerName(string tableName)
-        {
-            return string.Format("BI_{0}ID", tableName);
-        }
-
         /// <summary>
         /// Records an upgrade script for a database.
         /// </summary>
@@ -117,16 +89,19 @@ namespace DbUp.Support.Firebird
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("Creating the {0} table", tableName));
+                log().WriteInformation(string.Format("Creating the {0} table", schemaTableName));
 
                 connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
-                    ExecuteCommand(dbCommandFactory, CreateTableSql(tableName));
-                    log().WriteInformation(string.Format("The {0} table has been created", tableName));
-                    ExecuteCommand(dbCommandFactory, CreateGeneratorSql(tableName));
-                    log().WriteInformation(string.Format("The {0} generator has been created", GeneratorName(tableName)));
-                    ExecuteCommand(dbCommandFactory, CreateTriggerSql(tableName));
-                    log().WriteInformation(string.Format("The {0} trigger has been created", TriggerName(tableName)));
+                    using (var command = dbCommandFactory())
+                    {
+                        command.CommandText = CreateTableSql(schemaTableName);
+
+                        command.CommandType = CommandType.Text;
+                        command.ExecuteNonQuery();
+                    }
+
+                    log().WriteInformation(string.Format("The {0} table has been created", schemaTableName));
                 });
             }
 
@@ -134,7 +109,7 @@ namespace DbUp.Support.Firebird
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", tableName);
+                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", schemaTableName);
 
                     var scriptNameParam = command.CreateParameter();
                     scriptNameParam.ParameterName = "scriptName";
@@ -165,13 +140,13 @@ namespace DbUp.Support.Firebird
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = string.Format("select count(*) from {0}", tableName);
+                        command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
                         command.CommandType = CommandType.Text;
                         command.ExecuteScalar();
                         return true;
                     }
                 }
-                // can't catch FbException here because this project does not depend upon Firebird
+                // can't catch NpgsqlException here because this project does not depend upon npgsql
                 catch (DbException)
                 {
                     return false;

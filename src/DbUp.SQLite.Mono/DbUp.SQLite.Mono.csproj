@@ -69,11 +69,20 @@
     <Compile Include="..\DbUp.SQLite\SQLiteConnectionManager.cs">
       <Link>SQLiteConnectionManager.cs</Link>
     </Compile>
-    <Compile Include="..\DbUp.SQLite\SqliteExtensions.cs">
-      <Link>SqliteExtensions.cs</Link>
+    <Compile Include="..\DbUp.SQLite\SQLiteExtensions.cs">
+      <Link>SQLiteExtensions.cs</Link>
     </Compile>
-    <Compile Include="..\DbUp.SQLite\SqlitePreprocessor.cs">
-      <Link>SqlitePreprocessor.cs</Link>
+    <Compile Include="..\DbUp.SQLite\SQLiteObjectParser.cs">
+      <Link>SQLiteObjectParser.cs</Link>
+    </Compile>
+    <Compile Include="..\DbUp.SQLite\SQLitePreprocessor.cs">
+      <Link>SQLitePreprocessor.cs</Link>
+    </Compile>
+    <Compile Include="..\DbUp.SQLite\SQLiteScriptExecutor.cs">
+      <Link>SQLiteScriptExecutor.cs</Link>
+    </Compile>
+    <Compile Include="..\DbUp.SQLite\SQLiteTableJournal.cs">
+      <Link>SQLiteTableJournal.cs</Link>
     </Compile>
     <Compile Include="..\Information\SolutionInfo.cs">
       <Link>Properties\SolutionInfo.cs</Link>

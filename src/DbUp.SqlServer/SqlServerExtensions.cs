@@ -8,6 +8,7 @@ using DbUp.Builder;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support.SqlServer;
+using DbUp.SqlServer;
 
 /// <summary>
 /// Configuration extension methods for SQL Server.

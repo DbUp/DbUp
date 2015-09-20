@@ -1,9 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DbUp.Support;
+using System;
 using System.Linq;
-using System.Text;
 
-namespace DbUp.Support.SQLite
+namespace DbUp.SQLite
 {
     public class SQLiteObjectParser
     {

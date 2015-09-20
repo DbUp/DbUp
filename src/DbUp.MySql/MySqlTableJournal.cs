@@ -6,13 +6,13 @@ using System.Data;
 using System.Data.Common;
 using System.Collections.Generic;
 
-namespace DbUp.Support.MySql
+namespace DbUp.MySql
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// PostgreSQL database using a table called SchemaVersions.
     /// </summary>
-    public sealed class MySqlITableJournal : IJournal
+    public sealed class MySqlTableJournal : IJournal
     {
         private readonly string schemaTableName;
         private readonly Func<IConnectionManager> connectionManager;
@@ -30,7 +30,7 @@ namespace DbUp.Support.MySql
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
-        public MySqlITableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
+        public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
             schemaTableName = string.IsNullOrEmpty(schema)
                 ? QuoteIdentifier(table)

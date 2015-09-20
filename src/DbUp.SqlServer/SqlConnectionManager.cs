@@ -2,8 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using DbUp.Engine.Transactions;
+using DbUp.Support.SqlServer;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.SqlServer
 {
     /// <summary>
     /// Manages Sql Database Connections
