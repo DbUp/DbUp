@@ -1,56 +1,53 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using System.Data;
+using System.Data.Common;
+using System.Collections.Generic;
 
-namespace DbUp.Support.Postgresql
+namespace DbUp.MySql
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// PostgreSQL database using a table called SchemaVersions.
     /// </summary>
-    public sealed class PostgresqlTableJournal : IJournal
+    public sealed class MySqlTableJournal : IJournal
     {
-        private readonly string schema;
-        private readonly string table;
+        private readonly string schemaTableName;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
         private static string QuoteIdentifier(string identifier)
         {
-            return "\"" + identifier + "\"";
+            return "`" + identifier + "`";
         }
 
         /// <summary>
-        /// Creates a new PostgreSQL table journal.
+        /// Creates a new MySql table journal.
         /// </summary>
-        /// <param name="connectionManager">The PostgreSQL connection manager.</param>
+        /// <param name="connectionManager">The MySql connection manager.</param>
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
-        public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
+        public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
-            this.schema = schema;
-            this.table = table;
+            schemaTableName = string.IsNullOrEmpty(schema)
+                ? QuoteIdentifier(table)
+                : QuoteIdentifier(schema) + "." + QuoteIdentifier(table);
             this.connectionManager = connectionManager;
-            log = logger;
+            log = logger;        
         }
 
-        private static string CreateTableSql(string schema, string table)
+        private static string CreateTableSql(string tableName)
         {
-            var tableName = CreateTableName(schema, table);
-            var primaryKeyName = CreatePrimaryKeyName(schema, table);
             return string.Format(
-                            @"CREATE TABLE {0}
-                              (
-                                schemaversionsid serial NOT NULL,
-                                scriptname character varying(255) NOT NULL,
-                                applied timestamp without time zone NOT NULL,
-                                CONSTRAINT {1} PRIMARY KEY (schemaversionsid)
-                              )", tableName, primaryKeyName);
+                @"CREATE TABLE {0} 
+                    (
+                        `schemaversionid` INT NOT NULL AUTO_INCREMENT,
+                        `scriptname` VARCHAR(255) NOT NULL,
+                        `applied` TIMESTAMP NOT NULL,
+                        PRIMARY KEY (`schemaversionid`));", tableName);
         }
 
         public string[] GetExecutedScripts()
@@ -59,7 +56,7 @@ namespace DbUp.Support.Postgresql
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", CreateTableName(schema, table)));
+                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", schemaTableName));
                 return new string[0];
             }
 
@@ -68,7 +65,7 @@ namespace DbUp.Support.Postgresql
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = GetExecutedScriptsSql(schema, table);
+                    command.CommandText = GetExecutedScriptsSql(schemaTableName);
                     command.CommandType = CommandType.Text;
 
                     using (var reader = command.ExecuteReader())
@@ -91,19 +88,19 @@ namespace DbUp.Support.Postgresql
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("Creating the {0} table", CreateTableName(schema, table)));
+                log().WriteInformation(string.Format("Creating the {0} table", schemaTableName));
 
                 connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = CreateTableSql(schema, table);
+                        command.CommandText = CreateTableSql(schemaTableName);
 
                         command.CommandType = CommandType.Text;
                         command.ExecuteNonQuery();
                     }
 
-                    log().WriteInformation(string.Format("The {0} table has been created", CreateTableName(schema, table)));
+                    log().WriteInformation(string.Format("The {0} table has been created", schemaTableName));
                 });
             }
 
@@ -111,7 +108,7 @@ namespace DbUp.Support.Postgresql
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", CreateTableName(schema, table));
+                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", schemaTableName);
 
                     var scriptNameParam = command.CreateParameter();
                     scriptNameParam.ParameterName = "scriptName";
@@ -129,22 +126,9 @@ namespace DbUp.Support.Postgresql
             });
         }
 
-        private static string GetExecutedScriptsSql(string schema, string table)
+        private static string GetExecutedScriptsSql(string table)
         {
-            var tableName = CreateTableName(schema, table);
-            return string.Format("select ScriptName from {0} order by ScriptName", tableName);
-        }
-
-        private static string CreateTableName(string schema, string table)
-        {
-            return string.IsNullOrEmpty(schema)
-                ? QuoteIdentifier(table)
-                : QuoteIdentifier(schema) + "." + QuoteIdentifier(table);
-        }
-
-        private static string CreatePrimaryKeyName(string schema, string table)
-        {
-            return QuoteIdentifier("PK_" + table + "_Id");
+            return string.Format("select scriptname from {0} order by scriptname", table);
         }
 
         private bool DoesTableExist()
@@ -155,13 +139,12 @@ namespace DbUp.Support.Postgresql
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = string.Format("select count(*) from {0}", CreateTableName(schema, table));
+                        command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
                         command.CommandType = CommandType.Text;
                         command.ExecuteScalar();
                         return true;
                     }
                 }
-                // can't catch NpgsqlException here because this project does not depend upon npgsql
                 catch (DbException)
                 {
                     return false;
