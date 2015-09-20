@@ -20,8 +20,6 @@ BEGIN
 
 END
 Dispose command
-Execute scalar command: select count(*) from `schemaversions`
-Dispose command
 Create parameter
 Add parameter to command: scriptName=Script0003
 Create parameter
