@@ -58,10 +58,12 @@
     <Compile Include="..\Information\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="SqlCeScriptExecutor.cs" />
     <Compile Include="SqlCeConnectionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SqlCeExtensions.cs" />
     <Compile Include="SqlCePreprocessor.cs" />
+    <Compile Include="SqlCeTableJournal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />

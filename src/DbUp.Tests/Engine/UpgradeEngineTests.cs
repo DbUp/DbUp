@@ -9,6 +9,7 @@ using DbUp.Support.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;
+using DbUp.SqlServer;
 
 namespace DbUp.Tests.Engine
 {
