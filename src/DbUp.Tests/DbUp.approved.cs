@@ -313,6 +313,7 @@ namespace DbUp.Support
         protected abstract System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script);
         protected abstract System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName);
         protected virtual string GetSelectScalarFromTableSql(string tableName) { }
+ protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected virtual string QuoteSqlObjectName(string objectName) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }

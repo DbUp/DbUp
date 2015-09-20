@@ -23,11 +23,13 @@ namespace DbUp.Firebird
         protected override string GetVerifySchemaSql(string schema) { }
         protected override string QuoteSqlObjectName(string objectName) { }
     }
-    public sealed class FirebirdTableJournal : DbUp.Engine.IJournal
+    public sealed class FirebirdTableJournal : DbUp.Support.TableJournal
     {
         public FirebirdTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string tableName) { }
-        public string[] GetExecutedScripts() { }
-        public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
+        protected override System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
+        protected override System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
+        protected override System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
+        protected override void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
     }
 }
 

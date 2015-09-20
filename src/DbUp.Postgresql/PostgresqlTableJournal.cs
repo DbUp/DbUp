@@ -5,6 +5,7 @@ using DbUp.Engine.Transactions;
 using System.Data;
 using System.Data.Common;
 using System.Collections.Generic;
+using DbUp.Support;
 
 namespace DbUp.Postgresql
 {
@@ -12,17 +13,8 @@ namespace DbUp.Postgresql
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// PostgreSQL database using a table called SchemaVersions.
     /// </summary>
-    public sealed class PostgresqlTableJournal : IJournal
+    public sealed class PostgresqlTableJournal : TableJournal
     {
-        private readonly string schemaTableName;
-        private readonly Func<IConnectionManager> connectionManager;
-        private readonly Func<IUpgradeLog> log;
-
-        private static string QuoteIdentifier(string identifier)
-        {
-            return "\"" + identifier + "\"";
-        }
-
         /// <summary>
         /// Creates a new PostgreSQL table journal.
         /// </summary>
@@ -31,15 +23,16 @@ namespace DbUp.Postgresql
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
         public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-        {
-            schemaTableName = string.IsNullOrEmpty(schema)
-                ? QuoteIdentifier(table)
-                : QuoteIdentifier(schema) + "." + QuoteIdentifier(table);
-            this.connectionManager = connectionManager;
-            log = logger;        
+            :base(connectionManager, logger, schema, table)
+        {          
         }
 
-        private static string CreateTableSql(string tableName)
+        protected override string QuoteSqlObjectName(string objectName)
+        {
+            return "\"" + objectName + "\"";
+        }
+
+        private static string GetCreateTableSql(string tableName)
         {
             return string.Format(
                             @"CREATE TABLE {0}
@@ -49,109 +42,46 @@ namespace DbUp.Postgresql
                                 applied timestamp without time zone NOT NULL,
                                 CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
                               )", tableName);
-        }
-
-        public string[] GetExecutedScripts()
-        {
-            log().WriteInformation("Fetching list of already executed scripts.");
-            var exists = DoesTableExist();
-            if (!exists)
-            {
-                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", schemaTableName));
-                return new string[0];
-            }
-
-            var scripts = new List<string>();
-            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-            {
-                using (var command = dbCommandFactory())
-                {
-                    command.CommandText = GetExecutedScriptsSql(schemaTableName);
-                    command.CommandType = CommandType.Text;
-
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            scripts.Add((string)reader[0]);
-                    }
-                }
-            });
-
-            return scripts.ToArray();
-        }
-
-        /// <summary>
-        /// Records an upgrade script for a database.
-        /// </summary>
-        /// <param name="script">The script.</param>
-        public void StoreExecutedScript(SqlScript script)
-        {
-            var exists = DoesTableExist();
-            if (!exists)
-            {
-                log().WriteInformation(string.Format("Creating the {0} table", schemaTableName));
-
-                connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-                {
-                    using (var command = dbCommandFactory())
-                    {
-                        command.CommandText = CreateTableSql(schemaTableName);
-
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteNonQuery();
-                    }
-
-                    log().WriteInformation(string.Format("The {0} table has been created", schemaTableName));
-                });
-            }
-
-            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-            {
-                using (var command = dbCommandFactory())
-                {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", schemaTableName);
-
-                    var scriptNameParam = command.CreateParameter();
-                    scriptNameParam.ParameterName = "scriptName";
-                    scriptNameParam.Value = script.Name;
-                    command.Parameters.Add(scriptNameParam);
-
-                    var appliedParam = command.CreateParameter();
-                    appliedParam.ParameterName = "applied";
-                    appliedParam.Value = DateTime.Now;
-                    command.Parameters.Add(appliedParam);
-
-                    command.CommandType = CommandType.Text;
-                    command.ExecuteNonQuery();
-                }
-            });
-        }
+        }          
 
         private static string GetExecutedScriptsSql(string table)
         {
             return string.Format("select ScriptName from {0} order by ScriptName", table);
         }
 
-        private bool DoesTableExist()
+        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {
-            return connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-            {
-                try
-                {
-                    using (var command = dbCommandFactory())
-                    {
-                        command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteScalar();
-                        return true;
-                    }
-                }
-                // can't catch NpgsqlException here because this project does not depend upon npgsql
-                catch (DbException)
-                {
-                    return false;
-                }
-            });
+            var command = dbCommandFactory();
+            command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", SchemaTableName);
+
+            var scriptNameParam = command.CreateParameter();
+            scriptNameParam.ParameterName = "scriptName";
+            scriptNameParam.Value = script.Name;
+            command.Parameters.Add(scriptNameParam);
+
+            var appliedParam = command.CreateParameter();
+            appliedParam.ParameterName = "applied";
+            appliedParam.Value = DateTime.Now;
+            command.Parameters.Add(appliedParam);
+
+            command.CommandType = CommandType.Text;
+            return command;
+        }
+
+        protected override IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        {
+            var command = dbCommandFactory();
+            command.CommandText = GetExecutedScriptsSql(schemaTableName);
+            command.CommandType = CommandType.Text;
+            return command;
+        }
+
+        protected override IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        {
+            var command = dbCommandFactory();
+            command.CommandText = GetCreateTableSql(SchemaTableName);
+            command.CommandType = CommandType.Text;
+            return command;
         }
     }
 }

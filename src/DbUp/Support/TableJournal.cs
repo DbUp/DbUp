@@ -142,12 +142,20 @@ namespace DbUp.Support
                             command.ExecuteNonQuery();
                         }
                         Log().WriteInformation(string.Format("The {0} table has been created", SchemaTableName));
+
+                        OnTableCreated(dbCommandFactory);
                     });
 
-                    // TODO: Now we could run any migration scripts on it using some mechanism.
+                    
                 }
                 tableIsLatestVersion = true;
             }
+        }
+
+        protected virtual void OnTableCreated(Func<IDbCommand> dbCommandFactory)
+        {
+            // TODO: Now we could run any migration scripts on it using some mechanism to make sure the table is ready for use.
+            
         }
 
         protected bool TableExists
