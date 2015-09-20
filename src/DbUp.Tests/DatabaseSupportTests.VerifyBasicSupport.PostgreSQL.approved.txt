@@ -3,8 +3,6 @@ Execute scalar command: select count(*) from "schemaversions"
 Dispose command
 Execute non query command: script1contents
 Dispose command
-Execute scalar command: select count(*) from "schemaversions"
-Dispose command
 Execute non query command: CREATE TABLE "schemaversions"
                               (
                                 schemaversionsid serial NOT NULL,

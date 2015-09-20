@@ -16,8 +16,8 @@ namespace DbUp.Support
     public abstract class TableJournal : IJournal
     {
         private bool tableExists = false;
-        private bool tableIsLatestVersion = false;     
-        private bool tableRequiresCreation = false;       
+        private bool tableIsLatestVersion = false;
+        private bool tableRequiresCreation = false;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
@@ -30,10 +30,13 @@ namespace DbUp.Support
         {
             ConnectionManager = connectionManager;
             Log = logger;
+            SchemaTableNameWithoutSchema = table;
             SchemaTableName = string.IsNullOrEmpty(schema)
                 ? QuoteSqlObjectName(table)
                 : QuoteSqlObjectName(schema) + "." + QuoteSqlObjectName(table);
         }
+
+        protected string SchemaTableNameWithoutSchema { get; private set; }
 
         protected string SchemaTableName { get; private set; }
 
@@ -142,12 +145,20 @@ namespace DbUp.Support
                             command.ExecuteNonQuery();
                         }
                         Log().WriteInformation(string.Format("The {0} table has been created", SchemaTableName));
+
+                        OnTableCreated(dbCommandFactory);
                     });
 
-                    // TODO: Now we could run any migration scripts on it using some mechanism.
+                    
                 }
                 tableIsLatestVersion = true;
             }
+        }
+
+        protected virtual void OnTableCreated(Func<IDbCommand> dbCommandFactory)
+        {
+            // TODO: Now we could run any migration scripts on it using some mechanism to make sure the table is ready for use.
+            
         }
 
         protected bool TableExists

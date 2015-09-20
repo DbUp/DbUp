@@ -3,8 +3,6 @@ Execute scalar command: select count(*) from `schemaversions`
 Dispose command
 Execute non query command: print SubstitutedValue
 Dispose command
-Execute scalar command: select count(*) from `schemaversions`
-Dispose command
 Execute non query command: CREATE TABLE `schemaversions` 
                     (
                         `schemaversionid` INT NOT NULL AUTO_INCREMENT,
