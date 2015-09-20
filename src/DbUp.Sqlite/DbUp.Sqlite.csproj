@@ -65,9 +65,12 @@
     <Compile Include="Helpers\SharedConnection.cs" />
     <Compile Include="Helpers\TemporarySQLiteDatabase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SQLiteScriptExecutor.cs" />
     <Compile Include="SQLiteConnectionManager.cs" />
     <Compile Include="SQLiteExtensions.cs" />
+    <Compile Include="SQLiteObjectParser.cs" />
     <Compile Include="SQLitePreprocessor.cs" />
+    <Compile Include="SQLiteTableJournal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.snk" />

@@ -47,10 +47,30 @@ namespace DbUp.SQLite
         public SQLiteConnectionManager(DbUp.SQLite.Helpers.SharedConnection sharedConnection) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
+    public class SQLiteObjectParser
+    {
+        public SQLiteObjectParser() { }
+        public static string QuoteSqlObjectName(string objectName) { }
+        public static string QuoteSqlObjectName(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
+    }
     public class SQLitePreprocessor : DbUp.Engine.IScriptPreprocessor
     {
         public SQLitePreprocessor() { }
         public string Process(string contents) { }
+    }
+    public class SQLiteScriptExecutor : DbUp.Support.ScriptExecutor
+    {
+        public SQLiteScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action excuteCommand) { }
+        protected override string GetVerifySchemaSql(string schema) { }
+        protected override string QuoteSqlObjectName(string objectName) { }
+    }
+    public sealed class SQLiteTableJournal : DbUp.Support.TableJournal
+    {
+        public SQLiteTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string table) { }
+        protected override System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
+        protected override System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
+        protected override System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
     }
 }
 

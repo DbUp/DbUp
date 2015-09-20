@@ -6,7 +6,7 @@ using System.Data;
 using System.Data.Common;
 using System.Collections.Generic;
 
-namespace DbUp.Support.Firebird
+namespace DbUp.Firebird
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 

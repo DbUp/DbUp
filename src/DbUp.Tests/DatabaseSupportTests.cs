@@ -5,10 +5,10 @@ using ApprovalTests.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.Support.Firebird;
-using DbUp.Support.MySql;
-using DbUp.Support.Postgresql;
-using DbUp.Support.SQLite;
+using DbUp.Firebird;
+using DbUp.MySql;
+using DbUp.Postgresql;
+using DbUp.SQLite;
 using DbUp.Support.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
@@ -84,7 +84,7 @@ namespace DbUp.Tests
                     { new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
                     { new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SQLiteTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })) },
                     { new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
-                    { new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlITableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) }
+                    { new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) }
                 };
             }
         }

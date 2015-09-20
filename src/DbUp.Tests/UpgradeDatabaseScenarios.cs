@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -7,7 +6,6 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite;
 using DbUp.SQLite.Helpers;
-using DbUp.Support.SQLite;
 using NSubstitute;
 using NUnit.Framework;
 using TestStack.BDDfy;

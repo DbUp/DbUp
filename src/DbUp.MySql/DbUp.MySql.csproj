@@ -56,10 +56,12 @@
     <Compile Include="..\Information\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="MySqlScriptExecutor.cs" />
     <Compile Include="MySqlCommandReader.cs" />
     <Compile Include="MySqlCommandSplitter.cs" />
     <Compile Include="MySqlConnectionManager.cs" />
     <Compile Include="MySqlExtensions.cs" />
+    <Compile Include="MySqlTableJournal.cs" />
     <Compile Include="MySqlPreprocessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

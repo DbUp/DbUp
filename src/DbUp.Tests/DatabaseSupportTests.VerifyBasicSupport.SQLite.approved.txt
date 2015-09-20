@@ -15,6 +15,6 @@ Create parameter
 Add parameter to command: scriptName=Script0001.sql
 Create parameter
 Add parameter to command: applied=<date>
-Execute non query command: insert into [SchemaVersions] (ScriptName, Applied) values (@scriptName, @applied)
+Execute non query command: insert into SchemaVersions (ScriptName, Applied) values (@scriptName, @applied)
 Dispose command
 Dispose connection
