@@ -1,13 +1,23 @@
 function Add-DbUpEmbeddedCheck
 {
-    param($project)
+    param($ProjectName)
 
-    if (-Not $project) 
+    if ($ProjectName) 
     {
-        $project = Get-Project
+        $Project = Get-Project -Name $ProjectName
+
+        if (-Not $Project)
+        {
+            Return
+        }
+
+    }
+    else
+    {
+        $Project = Get-Project
     }
 
-    $ProjectName = $project.Name
+    $ProjectName = $Project.Name
 
     # Need to load MSBuild assembly if it's not loaded yet.
     Add-Type -AssemblyName 'Microsoft.Build, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a'
@@ -20,7 +30,7 @@ function Add-DbUpEmbeddedCheck
     if ($msbuild.Xml.Targets | ? { $_.Name -eq "DbUpCheck" })
     {
         Write "Target with name DbUpCheck already exists in $ProjectName. No action taken."
-        return
+        Return
     }
 
     # Add a target to fail the build when our targets are not imported
@@ -35,7 +45,7 @@ function Add-DbUpEmbeddedCheck
     $errorTask.Condition = "%(Content.Extension) == '.sql'"
     $errorTask.SetParameter("Text", "@(Content) is marked as content. Scripts should be marked as Embedded Resource.")
 
-    $project.Save()
+    $Project.Save()
 
     Write "Added Target with name DbUp check to $ProjectName."
 

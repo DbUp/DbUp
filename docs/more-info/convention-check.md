@@ -7,3 +7,12 @@ action to the post-build event in your `.csproj` file.
       <Error Condition="%(Content.Extension) == '.sql'" 
              Text="Nothing should be marked as Content, check your scripts are marked as Embedded Resource" />
     </Target>
+
+
+You can have DbUp add this script for you via Package Manager Console
+
+    PM> Add-DbUpEmbeddedCheck -ProjectName SomeSolution.DataMigration
+
+or  alternatively, you could pick the project from the Default project dropdown, and then run
+
+    PM> Add-DbUpEmbeddedCheck
