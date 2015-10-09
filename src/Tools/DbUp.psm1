@@ -35,6 +35,7 @@ function Add-DbUpEmbeddedCheck
 
     # Add a target to fail the build when our targets are not imported
     $target = $msbuild.Xml.AddTarget("DbUpCheck")
+    $target.AfterTargets = "AfterBuild"
 
     $messageTask = $target.AddTask("Message")
     $messageTask.SetParameter("Text", "@(Content)")
