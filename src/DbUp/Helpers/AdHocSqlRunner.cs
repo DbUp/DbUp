@@ -17,6 +17,7 @@ namespace DbUp.Helpers
         private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
         private readonly Func<IDbCommand> commandFactory;
         private readonly Func<bool> variablesEnabled;
+        private readonly ISqlObjectParser sqlObjectParser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
@@ -25,9 +26,11 @@ namespace DbUp.Helpers
         /// <param name="schema">The schema.</param>
         /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
         /// <remarks>Sets the <c>variablesEnabled</c> setting to <c>true</c>.</remarks>
-        public AdHocSqlRunner(Func<IDbCommand> commandFactory, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
-            : this(commandFactory, schema, () => true, additionalScriptPreprocessors)
-        { }
+        public AdHocSqlRunner(Func<IDbCommand> commandFactory, ISqlObjectParser sqlObjectParser, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
+            : this(commandFactory, sqlObjectParser, schema, () => true, additionalScriptPreprocessors)
+        {
+
+        }
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
@@ -36,9 +39,10 @@ namespace DbUp.Helpers
         /// <param name="schema">The schema.</param>
         /// <param name="variablesEnabled">Function indicating <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
-        public AdHocSqlRunner(Func<IDbCommand> commandFactory, string schema, Func<bool> variablesEnabled, params IScriptPreprocessor[] additionalScriptPreprocessors)
+        public AdHocSqlRunner(Func<IDbCommand> commandFactory, ISqlObjectParser sqlObjectParser, string schema, Func<bool> variablesEnabled, params IScriptPreprocessor[] additionalScriptPreprocessors)
         {
             this.commandFactory = commandFactory;
+            this.sqlObjectParser = sqlObjectParser;
             this.variablesEnabled = variablesEnabled;
             this.additionalScriptPreprocessors = additionalScriptPreprocessors;
             Schema = schema;
@@ -153,7 +157,7 @@ namespace DbUp.Helpers
             if (string.IsNullOrEmpty(Schema))
                 query = new StripSchemaPreprocessor().Process(query);
             if (!string.IsNullOrEmpty(Schema) && !variables.ContainsKey("schema"))
-                variables.Add("schema", SqlObjectParser.QuoteSqlObjectName(Schema));
+                variables.Add("schema", this.sqlObjectParser.QuoteIdentifier(Schema));
             if (variablesEnabled())
                 query = new VariableSubstitutionPreprocessor(variables).Process(query);
             query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));

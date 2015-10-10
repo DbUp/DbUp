@@ -63,6 +63,7 @@
     <Compile Include="FirebirdTableJournal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="FirebirdScriptExecutor.cs" />
+    <Compile Include="FirebirdObjectParser.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.firebird.nuspec" />

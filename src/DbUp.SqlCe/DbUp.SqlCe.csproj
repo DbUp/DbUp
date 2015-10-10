@@ -58,6 +58,7 @@
     <Compile Include="..\Information\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="SqlCeObjectParser.cs" />
     <Compile Include="SqlCeScriptExecutor.cs" />
     <Compile Include="SqlCeConnectionManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

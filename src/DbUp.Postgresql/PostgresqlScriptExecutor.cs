@@ -25,7 +25,7 @@ namespace DbUp.Postgresql
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         public PostgresqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
-            : base(connectionManagerFactory, log, schema, variablesEnabled, scriptPreprocessors)
+            : base(connectionManagerFactory, new PostgresqlObjectParser(), log, schema, variablesEnabled, scriptPreprocessors)
         {
 
         }
@@ -33,14 +33,7 @@ namespace DbUp.Postgresql
         protected override string GetVerifySchemaSql(string schema)
         {
             throw new NotSupportedException();
-        }
-
-        protected override string QuoteSqlObjectName(string objectName)
-        {
-            // Postgresql appears to have allways used the SQL Server implementation of this..
-            // Need to investiagte to see if it needs its own implementation of object quoting.
-            return SqlObjectParser.QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
-        }    
+        }       
 
         protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
         {

@@ -13,7 +13,7 @@ namespace DbUp.Postgresql
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// PostgreSQL database using a table called SchemaVersions.
     /// </summary>
-    public sealed class PostgresqlTableJournal : TableJournal
+    public class PostgresqlTableJournal : TableJournal
     {
         /// <summary>
         /// Creates a new PostgreSQL table journal.
@@ -23,14 +23,9 @@ namespace DbUp.Postgresql
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
         public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            :base(connectionManager, logger, schema, table)
+            :base(connectionManager, logger, new PostgresqlObjectParser(), schema, table)
         {          
-        }
-
-        protected override string QuoteSqlObjectName(string objectName)
-        {
-            return "\"" + objectName + "\"";
-        }
+        }    
 
         private static string GetCreateTableSql(string tableName)
         {

@@ -87,6 +87,12 @@ namespace DbUp.Engine
     {
         System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager);
     }
+    public interface ISqlObjectParser
+    {
+        string QuoteIdentifier(string objectName);
+        string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions);
+        string UnquoteIdentifier(string objectName);
+    }
     public class LazySqlScript : DbUp.Engine.SqlScript
     {
         public LazySqlScript(string name, System.Func<string> contentProvider) { }
@@ -218,8 +224,8 @@ namespace DbUp.Helpers
     
     public class AdHocSqlRunner
     {
-        public AdHocSqlRunner(System.Func<System.Data.IDbCommand> commandFactory, string schema, params DbUp.Engine.IScriptPreprocessor[] additionalScriptPreprocessors) { }
-        public AdHocSqlRunner(System.Func<System.Data.IDbCommand> commandFactory, string schema, System.Func<bool> variablesEnabled, params DbUp.Engine.IScriptPreprocessor[] additionalScriptPreprocessors) { }
+        public AdHocSqlRunner(System.Func<System.Data.IDbCommand> commandFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, params DbUp.Engine.IScriptPreprocessor[] additionalScriptPreprocessors) { }
+        public AdHocSqlRunner(System.Func<System.Data.IDbCommand> commandFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, System.Func<bool> variablesEnabled, params DbUp.Engine.IScriptPreprocessor[] additionalScriptPreprocessors) { }
         public string Schema { get; set; }
         public int ExecuteNonQuery(string query, params System.Func<, >[] parameters) { }
         public System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>> ExecuteReader(string query, params System.Func<, >[] parameters) { }
@@ -231,16 +237,7 @@ namespace DbUp.Helpers
         public NullJournal() { }
         public string[] GetExecutedScripts() { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
-    }
-    public class TemporarySqlDatabase : System.IDisposable
-    {
-        public TemporarySqlDatabase(string name) { }
-        public TemporarySqlDatabase(string name, string instanceName) { }
-        public DbUp.Helpers.AdHocSqlRunner AdHoc { get; }
-        public string ConnectionString { get; }
-        public void Create() { }
-        public void Dispose() { }
-    }
+    }   
 }
 namespace DbUp.ScriptProviders
 {
@@ -284,7 +281,7 @@ namespace DbUp.Support
     }
     public abstract class ScriptExecutor : DbUp.Engine.IScriptExecutor
     {
-        public ScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
+        public ScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
         public System.Nullable<int> ExecutionTimeoutSeconds { get; set; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         public string Schema { get; set; }
@@ -295,13 +292,20 @@ namespace DbUp.Support
         protected virtual void ExecuteNonQuery(System.Data.IDbCommand command) { }
         protected abstract string GetVerifySchemaSql(string schema);
         protected virtual string PreprocessScriptContents(DbUp.Engine.SqlScript script, System.Collections.Generic.IDictionary<string, string> variables) { }
-        protected abstract string QuoteSqlObjectName(string objectName);
+        protected string QuoteSqlObjectName(string objectName) { }
         public void VerifySchema() { }
         protected virtual void WriteReaderToLog(System.Data.IDataReader reader) { }
     }
+    public abstract class SqlObjectParser : DbUp.Engine.ISqlObjectParser
+    {
+        protected SqlObjectParser(System.Data.Common.DbCommandBuilder commandBuilder) { }
+        public string QuoteIdentifier(string objectName) { }
+        public virtual string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
+        public virtual string UnquoteIdentifier(string objectName) { }
+    }
     public abstract class TableJournal : DbUp.Engine.IJournal
     {
-        public TableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
+        public TableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, string table) { }
         protected System.Func<DbUp.Engine.Transactions.IConnectionManager> ConnectionManager { get; set; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; set; }
         protected string SchemaTableName { get; }
@@ -313,9 +317,10 @@ namespace DbUp.Support
         protected abstract System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script);
         protected abstract System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName);
         protected virtual string GetSelectScalarFromTableSql(string tableName) { }
- protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected virtual string QuoteSqlObjectName(string objectName) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
+        protected virtual string UnquoteSqlObjectName(string quotedIdentifier) { }
     }
 }
 namespace DbUp.Support.SqlServer
@@ -352,13 +357,7 @@ namespace DbUp.Support.SqlServer
     {
         public SqlCommandSplitter() { }
         public virtual System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
-    } 
-    public class SqlObjectParser
-    {
-        public SqlObjectParser() { }
-        public static string QuoteSqlObjectName(string objectName) { }
-        public static string QuoteSqlObjectName(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
-    }       
+    }      
 }
 
 public class static StandardExtensions

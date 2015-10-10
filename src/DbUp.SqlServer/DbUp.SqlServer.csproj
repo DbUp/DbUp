@@ -55,7 +55,9 @@
     <Compile Include="SqlConnectionManager.cs" />
     <Compile Include="SqlScriptExecutor.cs" />
     <Compile Include="SqlServerExtensions.cs" />
+    <Compile Include="SqlServerObjectParser.cs" />
     <Compile Include="SqlTableJournal.cs" />
+    <Compile Include="Helpers\TemporarySqlDatabase.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\DbUp\DbUp.csproj">

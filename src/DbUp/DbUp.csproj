@@ -59,6 +59,7 @@
     <Compile Include="Builder\StandardExtensions.cs" />
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
+    <Compile Include="Engine\ISqlObjectParser.cs" />
     <Compile Include="EnsureDatabase.cs" />
     <Compile Include="DeployChanges.cs" />
     <Compile Include="Engine\DelegateDisposable.cs" />
@@ -86,8 +87,8 @@
     <Compile Include="ScriptProviders\EmbeddedScriptAndCodeProvider.cs" />
     <Compile Include="Engine\Transactions\IConnectionManager.cs" />
     <Compile Include="Engine\Transactions\LegacySqlConnectionManager.cs" />
-    <Compile Include="Support\SqlObjectParser.cs" />
     <Compile Include="Support\ScriptExecutor.cs" />
+    <Compile Include="Support\SqlObjectParser.cs" />
     <Compile Include="Support\TableJournal.cs" />
     <Compile Include="Support\ObjectNameOptions.cs" />
     <Compile Include="Support\SqlCommandReader.cs" />
@@ -102,7 +103,6 @@
     <Compile Include="Engine\SqlScript.cs" />
     <Compile Include="Engine\IScriptProvider.cs" />
     <Compile Include="Engine\IJournal.cs" />
-    <Compile Include="Helpers\TemporarySqlDatabase.cs" />
     <Compile Include="Engine\Output\TraceUpgradeLog.cs" />
     <Compile Include="Builder\SupportedDatabases.cs" />
   </ItemGroup>

@@ -11,6 +11,11 @@ namespace DbUp.SqlCe
         public SqlCeConnectionManager(string connectionString) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
+    public class SqlCeObjectParser : DbUp.Support.SqlObjectParser
+    {
+        public SqlCeObjectParser() { }
+        public override string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
+    }
     public class SqlCePreprocessor : DbUp.Engine.IScriptPreprocessor
     {
         public SqlCePreprocessor() { }
@@ -21,7 +26,6 @@ namespace DbUp.SqlCe
         public SqlCeScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
         protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action excuteCommand) { }
         protected override string GetVerifySchemaSql(string schema) { }
-        protected override string QuoteSqlObjectName(string objectName) { }
     }
     public class SqlCeTableJournal : DbUp.Support.TableJournal
     {
@@ -31,7 +35,6 @@ namespace DbUp.SqlCe
         protected virtual string GetExecutedScriptsSql(string table) { }
         protected override System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
         protected override System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
-        protected override string QuoteSqlObjectName(string objectName) { }
     }
 }
 

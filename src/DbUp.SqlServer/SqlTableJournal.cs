@@ -6,8 +6,9 @@ using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Support;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.SqlServer
 {
     /// <summary>
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
@@ -26,15 +27,10 @@ namespace DbUp.Support.SqlServer
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
         public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, schema, table)
+            : base(connectionManager, logger, new SqlServerObjectParser(), schema, table)
         {
 
-        }
-
-        protected override string QuoteSqlObjectName(string objectName)
-        {
-            return SqlObjectParser.QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
-        }
+        }       
 
         protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {
@@ -88,10 +84,11 @@ namespace DbUp.Support.SqlServer
         protected virtual string GetCreateTableSql(string tableName)
         {
             return string.Format(@"create table {0} (
-        	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
-        	[ScriptName] nvarchar(255) not null,
-        	[Applied] datetime not null
-        )", tableName);
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)", tableName);
+                        
         }
     }
 }
