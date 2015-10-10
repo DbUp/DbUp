@@ -47,11 +47,10 @@ namespace DbUp.SQLite
         public SQLiteConnectionManager(DbUp.SQLite.Helpers.SharedConnection sharedConnection) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
-    public class SQLiteObjectParser
+    public class SQLiteObjectParser : DbUp.Support.SqlObjectParser
     {
         public SQLiteObjectParser() { }
-        public static string QuoteSqlObjectName(string objectName) { }
-        public static string QuoteSqlObjectName(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
+        public override string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
     }
     public class SQLitePreprocessor : DbUp.Engine.IScriptPreprocessor
     {
@@ -63,9 +62,8 @@ namespace DbUp.SQLite
         public SQLiteScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
         protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action excuteCommand) { }
         protected override string GetVerifySchemaSql(string schema) { }
-        protected override string QuoteSqlObjectName(string objectName) { }
     }
-    public sealed class SQLiteTableJournal : DbUp.Support.TableJournal
+    public class SQLiteTableJournal : DbUp.Support.TableJournal
     {
         public SQLiteTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string table) { }
         protected override System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }

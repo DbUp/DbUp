@@ -25,7 +25,7 @@ namespace DbUp.SqlCe
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         public SqlCeScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
-            : base(connectionManagerFactory, log, schema, variablesEnabled, scriptPreprocessors)
+            : base(connectionManagerFactory, new SqlCeObjectParser(), log, schema, variablesEnabled, scriptPreprocessors)
         {
 
         }
@@ -33,13 +33,7 @@ namespace DbUp.SqlCe
         protected override string GetVerifySchemaSql(string schema)
         {
             throw new NotSupportedException();
-        }
-
-        protected override string QuoteSqlObjectName(string objectName)
-        {
-            // SqlCe uses the SQL Server implementation of this..           .
-            return SqlObjectParser.QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
-        }
+        }     
 
         protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
         {

@@ -3,6 +3,7 @@ using System.Linq;
 using System.Reflection;
 using DbUp;
 using DbUp.Helpers;
+using DbUp.SqlServer.Helpers;
 
 namespace SampleApplication
 {
