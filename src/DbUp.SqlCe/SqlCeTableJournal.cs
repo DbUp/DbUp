@@ -28,15 +28,10 @@ namespace DbUp.SqlCe
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
         public SqlCeTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, schema, table)
+            : base(connectionManager, logger, new SqlCeObjectParser(), schema, table)
         {
 
-        }
-
-        protected override string QuoteSqlObjectName(string objectName)
-        {
-            return SqlObjectParser.QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
-        }
+        }     
 
         protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {
@@ -90,10 +85,10 @@ namespace DbUp.SqlCe
         protected virtual string GetCreateTableSql(string tableName)
         {
             return string.Format(@"create table {0} (
-        	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
-        	[ScriptName] nvarchar(255) not null,
-        	[Applied] datetime not null
-        )", tableName);
+	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)", tableName);
         }
     }
 }

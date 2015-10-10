@@ -13,8 +13,8 @@ namespace DbUp.Firebird
     /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
     /// Firebird database using a table called SchemaVersions.
     /// </summary>
-    public sealed class FirebirdTableJournal : TableJournal
-    {       
+    public class FirebirdTableJournal : TableJournal
+    {
 
         /// <summary>
         /// Creates a new Firebird table journal.
@@ -23,9 +23,9 @@ namespace DbUp.Firebird
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="tableName">The name of the journal table.</param>
         public FirebirdTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string tableName)
-            :base(connectionManager, logger, null, tableName)
+            : base(connectionManager, logger, new FirebirdObjectParser(), null, tableName)
         {
-          
+
         }
 
         private static string GetCreateTableSql(string tableName)
@@ -50,7 +50,7 @@ namespace DbUp.Firebird
                                 @"CREATE TRIGGER {0} FOR {1} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
                                         if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({2},1);
                                   END;", TriggerName(tableName), tableName, GeneratorName(tableName));
-        }                     
+        }
 
         private static string GeneratorName(string tableName)
         {
@@ -79,11 +79,12 @@ namespace DbUp.Firebird
 
         protected override void OnTableCreated(Func<IDbCommand> dbCommandFactory)
         {
-            ExecuteCommand(dbCommandFactory, CreateGeneratorSql(SchemaTableName));
-            Log().WriteInformation(string.Format("The {0} generator has been created", GeneratorName(SchemaTableName)));
-            ExecuteCommand(dbCommandFactory, CreateTriggerSql(SchemaTableName));
-            Log().WriteInformation(string.Format("The {0} trigger has been created", TriggerName(SchemaTableName)));
-        }          
+            var unqotedTableName = UnquoteSqlObjectName(SchemaTableName);
+            ExecuteCommand(dbCommandFactory, CreateGeneratorSql(unqotedTableName));
+            Log().WriteInformation(string.Format("The {0} generator has been created", GeneratorName(unqotedTableName)));
+            ExecuteCommand(dbCommandFactory, CreateTriggerSql(unqotedTableName));
+            Log().WriteInformation(string.Format("The {0} trigger has been created", TriggerName(unqotedTableName)));
+        }
 
         protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {

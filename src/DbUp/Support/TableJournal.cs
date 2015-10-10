@@ -19,6 +19,8 @@ namespace DbUp.Support
         private bool tableIsLatestVersion = false;
         private bool tableRequiresCreation = false;
 
+        private ISqlObjectParser sqlObjectParser;
+
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
         /// </summary>
@@ -26,7 +28,8 @@ namespace DbUp.Support
         /// <param name="logger">The log.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>        
-        public TableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
+        public TableJournal(Func<IConnectionManager> connectionManager, 
+                            Func<IUpgradeLog> logger, ISqlObjectParser sqlObjectParser, string schema, string table)
         {
             ConnectionManager = connectionManager;
             Log = logger;
@@ -112,8 +115,17 @@ namespace DbUp.Support
         /// <param name="objectName">Name of the object to quote.</param>
         /// <returns>The quoted object name with trimmed whitespace</returns>
         protected virtual string QuoteSqlObjectName(string objectName)
+        {                   
+            return sqlObjectParser.QuoteIdentifier(objectName);
+        }
+
+        /// <summary>
+        /// Unquotes a quoted identifier.       
+        /// </summary>
+        /// <param name="objectName">identifier to unquote.</param>    
+        protected virtual string UnquoteSqlObjectName(string quotedIdentifier)
         {
-            return objectName;
+            return sqlObjectParser.UnquoteIdentifier(quotedIdentifier);
         }
 
         /// <summary>

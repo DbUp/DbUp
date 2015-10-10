@@ -62,6 +62,7 @@
     <Compile Include="..\Information\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="PostgresqlObjectParser.cs" />
     <Compile Include="PostgresqlScriptExecutor.cs" />
     <Compile Include="PostgresqlConnectionManager.cs" />
     <Compile Include="PostgresqlExtensions.cs" />

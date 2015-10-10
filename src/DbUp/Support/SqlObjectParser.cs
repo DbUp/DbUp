@@ -1,34 +1,38 @@
-﻿using System;
+﻿using DbUp.Engine;
+using System;
+using System.Collections.Generic;
+using System.Data.Common;
 using System.Linq;
+using System.Text;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.Support
 {
-    /// <summary>
-    /// Parses Sql Objects and performs quoting functions
-    /// </summary>
-    public class SqlObjectParser
+    public abstract class SqlObjectParser : ISqlObjectParser
     {
-        /// <summary>
-        /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
-        /// This function implements System.Data.SqlClient.SqlCommandBuilder.QuoteIdentifier() with an additional
-        /// validation which is missing from the SqlCommandBuilder version.
-        /// </summary>
-        /// <param name="objectName">Name of the object to quote.</param>
-        /// <returns>The quoted object name with trimmed whitespace</returns>
-        public static string QuoteSqlObjectName(string objectName)
+        private DbCommandBuilder commandBuilder;
+
+        protected SqlObjectParser(DbCommandBuilder commandBuilder)
         {
-            return QuoteSqlObjectName(objectName, ObjectNameOptions.Trim);
+            this.commandBuilder = commandBuilder;
         }
 
         /// <summary>
-        /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
-        /// This function implements System.Data.SqlClient.SqlCommandBuilder.QuoteIdentifier() with an additional
-        /// validation which is missing from the SqlCommandBuilder version.
+        /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.
+        /// </summary>
+        /// <param name="objectName">Name of the object to quote.</param>
+        /// <returns>The quoted object name with trimmed whitespace</returns>
+        public string QuoteIdentifier(string objectName)
+        {
+            return QuoteIdentifier(objectName, ObjectNameOptions.Trim);
+        }
+
+        /// <summary>
+        /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.
         /// </summary>
         /// <param name="objectName">Name of the object to quote.</param>
         /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
         /// <returns>The quoted object name</returns>
-        public static string QuoteSqlObjectName(string objectName, ObjectNameOptions objectNameOptions)
+        public virtual string QuoteIdentifier(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
                 throw new ArgumentNullException();
@@ -36,15 +40,14 @@ namespace DbUp.Support.SqlServer
             if (ObjectNameOptions.Trim == objectNameOptions)
                 objectName = objectName.Trim();
 
-            const int SqlSysnameLength = 128;
-            if (objectName.Length > SqlSysnameLength)
-                throw new ArgumentOutOfRangeException(@"objectName", "A SQL server object name is maximum 128 characters long");
+            // defer to sqlite command implementation.           
+            return commandBuilder.QuoteIdentifier(objectName);
+        }
 
-            // The ] in the string need to be doubled up so it means we always need an un-even number of ]
-            if (objectName.StartsWith("[") && objectName.EndsWith("]") && objectName.Count(x => x == ']') % 2 == 1)
-                return objectName;
-
-            return string.Concat("[", objectName.Replace("]", "]]"), "]");
+        public virtual string UnquoteIdentifier(string objectName)
+        {
+            return commandBuilder.UnquoteIdentifier(objectName);
         }
     }
+
 }

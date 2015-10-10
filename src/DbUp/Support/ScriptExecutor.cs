@@ -21,6 +21,7 @@ namespace DbUp.Support
         private readonly Func<IUpgradeLog> log;
         private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         private readonly Func<bool> variablesEnabled;
+        private readonly ISqlObjectParser sqlObjectParser;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -35,7 +36,7 @@ namespace DbUp.Support
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public ScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public ScriptExecutor(Func<IConnectionManager> connectionManagerFactory, ISqlObjectParser sqlObjectParser, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors)
         {
             Schema = schema;
@@ -43,6 +44,7 @@ namespace DbUp.Support
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.connectionManagerFactory = connectionManagerFactory;
+            this.sqlObjectParser = sqlObjectParser;
         }
 
         /// <summary>
@@ -68,7 +70,7 @@ namespace DbUp.Support
 
             connectionManagerFactory().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, Schema, () => true);
+                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, sqlObjectParser, Schema, () => true);
                 var sql = GetVerifySchemaSql(Schema);
                 sqlRunner.ExecuteNonQuery(sql);
             });
@@ -102,13 +104,13 @@ namespace DbUp.Support
         public virtual void Execute(SqlScript script, IDictionary<string, string> variables)
         {
             var contents = PreprocessScriptContents(script, variables);
-            log().WriteInformation("Executing SQL Server script '{0}'", script.Name);
+            log().WriteInformation("Executing Database Server script '{0}'", script.Name);
 
             var connectionManager = connectionManagerFactory();
             var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
             var index = -1;
 
-           
+
             try
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
@@ -135,8 +137,8 @@ namespace DbUp.Support
                             ExecuteCommandsWithinExceptionHandler(index, script, () =>
                             {
                                 executeAction(command);
-                            });                           
-                           
+                            });
+
                         }
                     }
                 });
@@ -175,7 +177,10 @@ namespace DbUp.Support
         /// Quotes the sql object.
         /// </summary>
         /// <param name="schema"></param>
-        protected abstract string QuoteSqlObjectName(string objectName);
+        protected string QuoteSqlObjectName(string objectName)
+        {
+            return sqlObjectParser.QuoteIdentifier(objectName);
+        }
 
         protected virtual void WriteReaderToLog(IDataReader reader)
         {
@@ -228,7 +233,7 @@ namespace DbUp.Support
 
         protected Func<IUpgradeLog> Log { get; private set; }
 
-     
-        
+
+
     }
 }

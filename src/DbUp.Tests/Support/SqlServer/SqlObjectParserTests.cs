@@ -2,18 +2,27 @@
 using DbUp.Support;
 using DbUp.Support.SqlServer;
 using NUnit.Framework;
+using DbUp.SqlServer;
 
 namespace DbUp.Tests.Support.SqlServer
 {
     [TestFixture]
     public class SqlObjectParserTests
     {
+
+        private readonly SqlServerObjectParser sut;
+
+        public SqlObjectParserTests()
+        {
+            sut = new SqlServerObjectParser();
+        }
+
         [Test]
         public void QuoteSqlObjectName_should_fail_on_large_object_name()
         {
             var objectName = new string('x', 129);
 
-            Assert.That(() => SqlObjectParser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentOutOfRangeException>());
+            Assert.That(() => sut.QuoteIdentifier(objectName), Throws.Exception.TypeOf<ArgumentOutOfRangeException>());
         }
 
         [Test]
@@ -21,7 +30,7 @@ namespace DbUp.Tests.Support.SqlServer
         {
             var objectName = string.Empty;
 
-            Assert.That(() => SqlObjectParser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => sut.QuoteIdentifier(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -29,7 +38,7 @@ namespace DbUp.Tests.Support.SqlServer
         {
             string objectName = null;
 
-            Assert.That(() => SqlObjectParser.QuoteSqlObjectName(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
+            Assert.That(() => sut.QuoteIdentifier(objectName), Throws.Exception.TypeOf<ArgumentNullException>());
         }
 
         [Test]
@@ -37,7 +46,7 @@ namespace DbUp.Tests.Support.SqlServer
         {
             var objectName = "[MyObject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = sut.QuoteIdentifier(objectName);
 
             Assert.That(result, Is.EqualTo(objectName));
         }
@@ -47,7 +56,7 @@ namespace DbUp.Tests.Support.SqlServer
         {
             var objectName = "   [MyObject]  ";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = sut.QuoteIdentifier(objectName);
 
             Assert.That(result, Is.EqualTo(objectName.Trim()));
         }
@@ -58,7 +67,7 @@ namespace DbUp.Tests.Support.SqlServer
             var objectName = "MyObject";
             var quotedObjectName = "[MyObject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = sut.QuoteIdentifier(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -69,7 +78,7 @@ namespace DbUp.Tests.Support.SqlServer
             var objectName = "    MyObject   ";
             var quotedObjectName = "[MyObject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = sut.QuoteIdentifier(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -80,7 +89,7 @@ namespace DbUp.Tests.Support.SqlServer
             var objectName = "MyObject]";
             var quotedObjectName = "[MyObject]]]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = sut.QuoteIdentifier(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -91,7 +100,7 @@ namespace DbUp.Tests.Support.SqlServer
             var objectName = "MyO[bject";
             var quotedObjectName = "[MyO[bject]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName);
+            var result = sut.QuoteIdentifier(objectName);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }
@@ -102,7 +111,7 @@ namespace DbUp.Tests.Support.SqlServer
             var objectName = "    MyObject   ";
             var quotedObjectName = "[    MyObject   ]";
 
-            var result = SqlObjectParser.QuoteSqlObjectName(objectName, ObjectNameOptions.None);
+            var result = sut.QuoteIdentifier(objectName, ObjectNameOptions.None);
 
             Assert.That(result, Is.EqualTo(quotedObjectName));
         }

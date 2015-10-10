@@ -46,7 +46,7 @@ namespace DbUp.SQLite.Helpers
             sqLiteConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sqLiteConnection.Open();
             sharedConnection = new SharedConnection(sqLiteConnection);
-            sqlRunner = new AdHocSqlRunner(() => sqLiteConnection.CreateCommand(), null, () => true);
+            sqlRunner = new AdHocSqlRunner(() => sqLiteConnection.CreateCommand(), new SQLiteObjectParser(), null, () => true);
         }
 
         /// <summary>
