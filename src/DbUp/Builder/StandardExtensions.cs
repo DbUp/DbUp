@@ -425,4 +425,10 @@ public static class StandardExtensions
         return builder;
     }
 
+    public static UpgradeEngineBuilder ContinueOnError(this UpgradeEngineBuilder builder, bool value)
+    {
+        builder.Configure(c => c.ContinueOnError = value);
+
+        return builder;
+    }
 }

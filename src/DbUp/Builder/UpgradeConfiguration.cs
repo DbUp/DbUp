@@ -67,6 +67,8 @@ namespace DbUp.Builder
         /// </summary>
         public bool VariablesEnabled { get; set; }
 
+        public bool ContinueOnError { get; set; }
+
         /// <summary>
         /// Ensures all expectations have been met regarding this configuration.
         /// </summary>

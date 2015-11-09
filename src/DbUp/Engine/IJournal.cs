@@ -1,4 +1,6 @@
-﻿namespace DbUp.Engine
+﻿using System;
+
+namespace DbUp.Engine
 {
     /// <summary>
     /// This interface is provided to allow different projects to store version information differently.
@@ -16,5 +18,7 @@
         /// </summary>
         /// <param name="script">The script.</param>
         void StoreExecutedScript(SqlScript script);
+
+        void HandleFailedScript(SqlScript script, Exception ex);
     }
 }

@@ -133,6 +133,7 @@ namespace DbUp.Support.SqlServer
                 log().WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0}; Block line {1}; Message: {2}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
                 log().WriteError(sqlException.ToString());
+
                 throw;
             }
             catch (DbException sqlException)
@@ -140,12 +141,14 @@ namespace DbUp.Support.SqlServer
                 log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
                 log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
                 log().WriteError(sqlException.ToString());
+
                 throw;
             }
             catch (Exception ex)
             {
                 log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
                 log().WriteError(ex.ToString());
+
                 throw;
             }
         }

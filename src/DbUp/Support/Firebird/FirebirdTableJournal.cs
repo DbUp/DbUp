@@ -178,5 +178,8 @@ namespace DbUp.Support.Firebird
                 }
             });
         }
+
+        public void HandleFailedScript(SqlScript script, Exception ex)
+        { }
     }
 }

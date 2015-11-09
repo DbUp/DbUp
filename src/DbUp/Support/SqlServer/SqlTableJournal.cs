@@ -164,5 +164,8 @@ namespace DbUp.Support.SqlServer
                 }
             });
         }
+
+        public void HandleFailedScript(SqlScript script, Exception ex)
+        { }
     }
 }

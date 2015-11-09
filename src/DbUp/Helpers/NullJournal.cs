@@ -23,5 +23,8 @@ namespace DbUp.Helpers
         /// <param name="script"></param>
         public void StoreExecutedScript(SqlScript script)
         { }
+
+        public void HandleFailedScript(SqlScript script, Exception ex)
+        { }
     }
 }

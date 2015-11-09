@@ -85,17 +85,23 @@ namespace DbUp.Engine
                         try
                         {
                             configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                            configuration.Journal.StoreExecutedScript(script);
+
+                            executed.Add(script);
                         }
-                        catch (Exception)
+                        catch (Exception ex)
                         {
                             failedScript = script;
 
-                            throw;
+                            if(!configuration.ContinueOnError)
+                            {
+                                throw ex;
+                            }
+                            else
+                            {
+                                configuration.Journal.HandleFailedScript(script, ex);
+                            }
                         }
-                        
-                        configuration.Journal.StoreExecutedScript(script);
-
-                        executed.Add(script);
                     }
 
                     configuration.Log.WriteInformation("Upgrade successful");

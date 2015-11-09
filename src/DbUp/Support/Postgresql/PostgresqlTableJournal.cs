@@ -153,5 +153,8 @@ namespace DbUp.Support.Postgresql
                 }
             });
         }
+
+        public void HandleFailedScript(SqlScript script, Exception ex)
+        { }
     }
 }

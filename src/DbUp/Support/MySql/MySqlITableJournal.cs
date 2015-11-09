@@ -151,5 +151,8 @@ namespace DbUp.Support.MySql
                 }
             });
         }
+
+        public void HandleFailedScript(SqlScript script, Exception ex)
+        { }
     }
 }
