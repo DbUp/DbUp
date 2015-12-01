@@ -16,7 +16,7 @@ Commit transaction
 Dispose transaction
 Begin transaction
 Execute non query command: create table [SchemaVersions] (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[Id] int identity(1,1) not null constraint [PK_SchemaVersions_Id] primary key,
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
 )
@@ -44,7 +44,7 @@ Commit transaction
 Dispose transaction
 Begin transaction
 Execute non query command: create table [SchemaVersions] (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[Id] int identity(1,1) not null constraint [PK_SchemaVersions_Id] primary key,
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
 )

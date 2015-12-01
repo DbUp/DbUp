@@ -38,7 +38,7 @@ namespace DbUp.Support.Firebird
                                         schemaversionsid INTEGER NOT NULL,
                                         scriptname VARCHAR(255) NOT NULL,
                                         applied TIMESTAMP NOT NULL,
-                                        CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+                                        CONSTRAINT pk_{0}_id PRIMARY KEY (schemaversionsid)
                                     )", tableName);
         }
 
