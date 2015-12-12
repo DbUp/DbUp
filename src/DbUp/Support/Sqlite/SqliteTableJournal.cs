@@ -26,7 +26,7 @@ namespace DbUp.Support.SQLite
         protected override string CreateTableSql(string schema, string table)
         {
             var tableName = CreateTableName(null, table);
-            var primaryKeyName = CreatePrimaryKeyName(null, table);
+            var primaryKeyName = CreatePrimaryKeyName(table);
             return string.Format(
                             @"CREATE TABLE {0} (
 	SchemaVersionID INTEGER CONSTRAINT {1} PRIMARY KEY AUTOINCREMENT NOT NULL,
@@ -35,11 +35,10 @@ namespace DbUp.Support.SQLite
 )", tableName, primaryKeyName);
         }
 
-        /// <summary>Combine the <c>schema</c> and <c>table</c> values into an appropriately-quoted identifier for the journal table's unique primary key.</summary>
-        /// <param name="schema">This parameter is ignored as SQLLite doesn't have schemas.</param>
+        /// <summary>Convert the <c>table</c> value into an appropriately-quoted identifier for the journal table's unique primary key.</summary>
         /// <param name="table">Desired table name</param>
         /// <returns>Quoted journal table primary key identifier</returns>
-        protected override string CreatePrimaryKeyName(string schema, string table)
+        protected override string CreatePrimaryKeyName(string table)
         {
             return "'PK_" + table + "_SchemaVersionID'";
         }

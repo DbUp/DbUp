@@ -135,7 +135,7 @@ namespace DbUp.Support.SqlServer
         protected virtual string CreateTableSql(string schema, string table)
         {
             var tableName = CreateTableName(schema, table);
-            var primaryKeyConstraintName = CreatePrimaryKeyName(schema, table);
+            var primaryKeyConstraintName = CreatePrimaryKeyName(table);
 
             return string.Format(@"create table {0} (
 	[Id] int identity(1,1) not null constraint {1} primary key,
@@ -155,15 +155,12 @@ namespace DbUp.Support.SqlServer
                 : SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(table);
         }
 
-        /// <summary>Combine the <c>schema</c> and <c>table</c> values into an appropriately-quoted identifier for the journal table's unique primary key.</summary>
-        /// <param name="schema">Desired schema name supplied by configuration or <c>NULL</c></param>
+        /// <summary>Convert the <c>table</c> value into an appropriately-quoted identifier for the journal table's unique primary key.</summary>
         /// <param name="table">Desired table name</param>
         /// <returns>Quoted journal table primary key identifier</returns>
-        protected virtual string CreatePrimaryKeyName(string schema, string table)
+        protected virtual string CreatePrimaryKeyName(string table)
         {
-            return string.IsNullOrEmpty(schema)
-                ? SqlObjectParser.QuoteSqlObjectName("PK_" + table + "_Id")
-                : SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName("PK_" + table + "_Id");
+            return SqlObjectParser.QuoteSqlObjectName("PK_" + table + "_Id");
         }
 
         private bool DoesTableExist()
