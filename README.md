@@ -17,8 +17,7 @@ DbUp is a .NET library that helps you to deploy changes to SQL Server databases.
 # Fork specific info
 
 For use in Octopus Deploy we created an additional, specialized file system provider to improve support for our build scripts folder structure. 
-DbUp is a very useful project to us, so i hope i can help providing some extra value here. Feel free to cherry pick. 
-The modifications in master were submitted as a pull request (https://github.com/DbUp/DbUp/pull/148) to upstream.
+DbUp is a very useful project to us, so i hope i can help providing some extra value here. Feel free to cherry pick. Al of these customizations (in master) were submitted to upstream as a pull request (https://github.com/DbUp/DbUp/pull/148).
 
 The new provider is named VersionedFolderScriptProvider and adds the following features:
 
