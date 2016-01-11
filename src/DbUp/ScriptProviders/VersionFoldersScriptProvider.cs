@@ -96,7 +96,7 @@ namespace DbUp.ScriptProviders
         /// <exception cref="InvalidOperationException">Thrown when multiple subfolder names parse to the same version number.</exception>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            return targetVersion == null ?
+            return string.IsNullOrEmpty(targetVersion) ?
                 GetScriptsWithoutTargetVersion() :
                 GetScriptsWithTargetVersion();
         }
