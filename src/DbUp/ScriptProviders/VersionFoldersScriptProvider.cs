@@ -39,13 +39,35 @@ namespace DbUp.ScriptProviders
         }
 
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
+        ///<param name="filter">The filter.</param>
+        public VersionFoldersScriptProvider(string directoryPath, Func<string, bool> filter)
+        {
+            this.directoryPath = directoryPath;
+            this.filter = filter;
+            this.encoding = Encoding.Default;
+            this.targetVersion = null;
+        }
+
+        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         ///<param name="encoding">The encoding.</param>
         ///<param name="targetVersion">Exclude scripts in subfolders with a higher version number.</param>
         public VersionFoldersScriptProvider(string directoryPath, Encoding encoding, string targetVersion)
         {
             this.directoryPath = directoryPath;
+            this.filter = null;
             this.encoding = encoding;
             this.targetVersion = targetVersion;
+        }
+
+        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
+        ///<param name="encoding">The encoding.</param>
+        ///<param name="targetVersion">Exclude scripts in subfolders with a higher version number.</param>
+        public VersionFoldersScriptProvider(string directoryPath, Encoding encoding, Func<string, bool> filter)
+        {
+            this.directoryPath = directoryPath;
+            this.filter = filter;
+            this.encoding = encoding;
+            this.targetVersion = null;
         }
 
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>

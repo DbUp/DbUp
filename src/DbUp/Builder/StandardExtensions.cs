@@ -234,7 +234,7 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Adds all scripts from a folder containing version folders on the file system, with a version limit.
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
@@ -248,7 +248,21 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Adds all scripts from a folder containing version folders on the file system, with a version limit and custom encoding.
+    /// Adds all scripts from a folder containing version folders on the file system, with a custom filter.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, filter));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version and custom encoding.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
@@ -263,7 +277,7 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Adds all scripts from a folder containing version folders on the file system, with a version limit and custom filter.
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version and custom filter.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
@@ -278,7 +292,22 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Adds all scripts from a folder containing version folders on the file system, with a version limit, a custom encoding and a custom filter.
+    /// Adds all scripts from a folder containing version folders on the file system, with a custom encoding and a custom filter.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, Encoding encoding, Func<string, bool> filter)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, encoding, filter));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version, a custom encoding and a custom filter.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
