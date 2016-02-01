@@ -7,7 +7,9 @@ Start by creating a simple C# console project in Visual Studio, and adding your 
 
 Next, use NuGet to install the DbUp package:
 
- > Install-Package DbUp
+```
+Install-Package DbUp
+```
 
 Finally, in `Program.cs`, add the following code:
 
