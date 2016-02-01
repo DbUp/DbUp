@@ -167,10 +167,13 @@ public static class SqlServerExtensions
                 CommandType = CommandType.Text
             })
             {
-                var results = (int) command.ExecuteScalar();
+                var results = (int?)command.ExecuteScalar();
 
                 // if the database exists, we're done here...
-                if (results == 1) return;
+                if (results.HasValue && results.Value == 1)
+                {
+                    return;
+                }
             }
 
             sqlCommandText = string.Format
