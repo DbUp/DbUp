@@ -1,6 +1,6 @@
 ﻿Open connection
 Begin transaction
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: select 1 from information_schema.tables where TABLE_NAME = 'SchemaVersions'
 Dispose command
 Commit transaction
 Dispose transaction
@@ -10,7 +10,7 @@ Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: select 1 from information_schema.tables where TABLE_NAME = 'SchemaVersions'
 Dispose command
 Commit transaction
 Dispose transaction
@@ -38,7 +38,7 @@ Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: select 1 from information_schema.tables where TABLE_NAME = 'SchemaVersions'
 Dispose command
 Commit transaction
 Dispose transaction
