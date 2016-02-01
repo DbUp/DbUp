@@ -13,7 +13,7 @@ pages:
 
 - More Info:
   - Script Providers: more-info/script-providers.md
-  - Trasactions: more-info/transactions.md
+  - Transactions: more-info/transactions.md
   - Pre-Processors: more-info/preprocessors.md
   - Logging: more-info/logging.md
   - Journaling: more-info/journaling.md
