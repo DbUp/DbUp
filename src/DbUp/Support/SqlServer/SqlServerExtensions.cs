@@ -156,7 +156,7 @@ public static class SqlServerExtensions
             
             var sqlCommandText = string.Format
                 (
-                    @"select case when db_id('{0}') is not null then 1 else 0 end;",
+                    @"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{0}';",
                     databaseName
                 );
 
