@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Security.Cryptography.X509Certificates;
 using System.Text.RegularExpressions;
 
 namespace DbUp.Engine.Preprocessors
@@ -8,12 +9,15 @@ namespace DbUp.Engine.Preprocessors
     /// </summary>
     public class StripSchemaPreprocessor : IScriptPreprocessor
     {
+
+        private static readonly Regex schemaRegex = new Regex(@"\$\(?schema[\$\)]\.", RegexOptions.IgnoreCase);
+
         /// <summary>
         /// Performs some proprocessing step on a script
         /// </summary>
         public string Process(string contents)
         {
-            return Regex.Replace(contents, @"\$schema\$\.", string.Empty, RegexOptions.IgnoreCase);
+            return schemaRegex.Replace(contents, string.Empty);
         }
     }
 }
