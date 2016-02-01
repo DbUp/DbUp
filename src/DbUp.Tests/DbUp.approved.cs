@@ -325,7 +325,8 @@ namespace DbUp.Support.SQLite
     public sealed class SQLiteTableJournal : DbUp.Support.SqlServer.SqlTableJournal
     {
         public SQLiteTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string table) { }
-        protected override string CreateTableSql(string tableName) { }
+        protected override string CreatePrimaryKeyName(string table) { }
+        protected override string CreateTableSql(string schema, string table) { }
     }
 }
 namespace DbUp.Support.SqlServer
@@ -387,9 +388,11 @@ namespace DbUp.Support.SqlServer
     public class SqlTableJournal : DbUp.Engine.IJournal
     {
         public SqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
-        protected virtual string CreateTableSql(string tableName) { }
+        protected virtual string CreatePrimaryKeyName(string table) { }
+        protected virtual string CreateTableName(string schema, string table) { }
+        protected virtual string CreateTableSql(string schema, string table) { }
         public string[] GetExecutedScripts() { }
-        protected virtual string GetExecutedScriptsSql(string table) { }
+        protected virtual string GetExecutedScriptsSql(string schema, string table) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }
 }
