@@ -327,6 +327,7 @@ namespace DbUp.Support.SQLite
         public SQLiteTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string table) { }
         protected override string CreatePrimaryKeyName(string table) { }
         protected override string CreateTableSql(string schema, string table) { }
+        protected override bool VerifyTableExistsCommand(System.Data.IDbCommand command, string tableName, string schemaName) { }
     }
 }
 namespace DbUp.Support.SqlServer
@@ -394,6 +395,7 @@ namespace DbUp.Support.SqlServer
         public string[] GetExecutedScripts() { }
         protected virtual string GetExecutedScriptsSql(string schema, string table) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
+        protected virtual bool VerifyTableExistsCommand(System.Data.IDbCommand command, string tableName, string schemaName) { }
     }
 }
 

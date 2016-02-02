@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
@@ -41,6 +42,19 @@ namespace DbUp.Support.SQLite
         protected override string CreatePrimaryKeyName(string table)
         {
             return "'PK_" + table + "_SchemaVersionID'";
+        }
+
+        /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
+        /// <param name="command">The <c>IDbCommand</c> to be used for the query</param>
+        /// <param name="tableName">The name of the table</param>
+        /// <param name="schemaName">The schema for the table</param>
+        /// <returns>True if table exists, false otherwise</returns>
+        protected override bool VerifyTableExistsCommand(IDbCommand command, string tableName, string schemaName)
+        {
+            command.CommandText = string.Format("SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = '{0}' COLLATE NOCASE", tableName);
+            command.CommandType = CommandType.Text;
+            var result = (long)command.ExecuteScalar();
+            return result == 1;
         }
     }
 }

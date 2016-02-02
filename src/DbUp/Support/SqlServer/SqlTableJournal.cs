@@ -171,10 +171,7 @@ namespace DbUp.Support.SqlServer
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = string.Format("select count(*) from {0}", CreateTableName(schema, table));
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteScalar();
-                        return true;
+                        return VerifyTableExistsCommand(command, table, schema);
                     }
                 }
                 catch (SqlException)
@@ -186,6 +183,21 @@ namespace DbUp.Support.SqlServer
                     return false;
                 }
             });
+        }
+
+        /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
+        /// <param name="command">The <c>IDbCommand</c> to be used for the query</param>
+        /// <param name="tableName">The name of the table</param>
+        /// <param name="schemaName">The schema for the table</param>
+        /// <returns>True if table exists, false otherwise</returns>
+        protected virtual bool VerifyTableExistsCommand(IDbCommand command, string tableName, string schemaName)
+        {
+            command.CommandText = string.IsNullOrEmpty(schema)
+                            ? string.Format("select 1 from information_schema.tables where TABLE_NAME = '{0}'", tableName)
+                            : string.Format("select 1 from information_schema.tables where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", tableName, schemaName);
+            command.CommandType = CommandType.Text;
+            var result = command.ExecuteScalar() as int?;
+            return result == 1;
         }
     }
 }

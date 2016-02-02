@@ -1,9 +1,9 @@
 ﻿Open connection
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'SchemaVersions' COLLATE NOCASE
 Dispose command
 Execute non query command: print SubstitutedValue
 Dispose command
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'SchemaVersions' COLLATE NOCASE
 Dispose command
 Execute non query command: CREATE TABLE [SchemaVersions] (
 	SchemaVersionID INTEGER CONSTRAINT 'PK_SchemaVersions_SchemaVersionID' PRIMARY KEY AUTOINCREMENT NOT NULL,
