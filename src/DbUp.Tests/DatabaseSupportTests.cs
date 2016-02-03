@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using ApprovalTests;
-using ApprovalTests.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.Firebird;
 using DbUp.MySql;
 using DbUp.Postgresql;
+using DbUp.SqlServer;
 using DbUp.SQLite;
 using DbUp.Support.SqlServer;
 using DbUp.Tests.TestInfrastructure;
@@ -19,11 +18,11 @@ namespace DbUp.Tests
 {
     public class DatabaseSupportTests
     {
-        private IConnectionFactory testConnectionFactory;
-        private UpgradeEngineBuilder upgradeEngineBuilder;
-        private List<SqlScript> scripts;
-        private RecordingDbConnection recordingConnection;
-        private DatabaseUpgradeResult result;
+        IConnectionFactory testConnectionFactory;
+        UpgradeEngineBuilder upgradeEngineBuilder;
+        List<SqlScript> scripts;
+        RecordingDbConnection recordingConnection;
+        DatabaseUpgradeResult result;
         private Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
 
         [Test]
@@ -89,7 +88,7 @@ namespace DbUp.Tests
             }
         }
 
-        private void VariableSubstitutionIsSetup()
+        void VariableSubstitutionIsSetup()
         {
             upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
         }
@@ -101,33 +100,36 @@ namespace DbUp.Tests
 
         private void CommandLogReflectsScript(ExampleAction target)
         {
-            Approvals.Verify(
-                new ApprovalTextWriter(Scrubbers.ScrubDates(recordingConnection.GetCommandLog())),
-                new CustomUnitTestFrameworkNamer(target.ToString().Replace(" ", string.Empty)),
-                Approvals.GetReporter());
+            recordingConnection.GetCommandLog()
+                .ShouldMatchApproved(b =>
+                {
+                    b.LocateTestMethodUsingAttribute<TestAttribute>();
+                    b.WithScrubber(Scrubbers.ScrubDates);
+                    b.WithDescriminator(target.ToString().Replace(" ", string.Empty));
+                });
         }
 
-        private void UpgradeIsSuccessful()
+        void UpgradeIsSuccessful()
         {
             result.Successful.ShouldBe(true);
         }
 
-        private void UpgradeIsPerformed()
+        void UpgradeIsPerformed()
         {
             result = upgradeEngineBuilder.Build().PerformUpgrade();
         }
 
-        private void SingleScriptExists()
+        void SingleScriptExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
         }
 
-        private void SingleScriptWithVariableUsageExists()
+        void SingleScriptWithVariableUsageExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "print $TestVariable$"));
         }
 
-        private void TargetDatabaseIsEmpty()
+        void TargetDatabaseIsEmpty()
         {
         }
 
@@ -145,17 +147,5 @@ namespace DbUp.Tests
                 addCustomNamedJournalToBuilder = addCustomNamedJournal;
             };
         }
-    }
-
-    internal class CustomUnitTestFrameworkNamer : UnitTestFrameworkNamer
-    {
-        private readonly string additional;
-
-        public CustomUnitTestFrameworkNamer(string additional)
-        {
-            this.additional = additional;
-        }
-
-        public override string Name { get { return base.Name + (string.IsNullOrEmpty(additional) ? null : ".") + additional; } }
     }
 }

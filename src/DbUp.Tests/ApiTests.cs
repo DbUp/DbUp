@@ -1,48 +1,58 @@
-﻿using ApiApprover;
-using ApprovalTests.Reporters;
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using NUnit.Framework;
+using Shouldly;
 
 namespace DbUp.Tests
 {
     [TestFixture]
-    [UseReporter(typeof(DiffReporter))]
     public class ApiTests
     {
         [Test]
         public void dbup_has_no_public_api_changes()
         {
-            PublicApiApprover.ApprovePublicApi(typeof(SupportedDatabases).Assembly.Location);
+            PublicApiGenerator.PublicApiGenerator
+                .GetPublicApi(typeof(SupportedDatabases).Assembly)
+                .ShouldMatchApproved();
         }
 
         [Test]
         public void dbup_firebird_has_no_public_api_changes()
         {
-            PublicApiApprover.ApprovePublicApi(typeof(FirebirdExtensions).Assembly.Location);
+            PublicApiGenerator.PublicApiGenerator
+                .GetPublicApi(typeof(FirebirdExtensions).Assembly)
+                .ShouldMatchApproved();
         }
 
         [Test]
         public void dbup_mysql_has_no_public_api_changes()
         {
-            PublicApiApprover.ApprovePublicApi(typeof(MySqlExtensions).Assembly.Location);
+            PublicApiGenerator.PublicApiGenerator
+                .GetPublicApi(typeof(MySqlExtensions).Assembly)
+                .ShouldMatchApproved();
         }
 
         [Test]
         public void dbup_postgres_has_no_public_api_changes()
         {
-            PublicApiApprover.ApprovePublicApi(typeof(PostgresqlExtensions).Assembly.Location);
+            PublicApiGenerator.PublicApiGenerator
+                .GetPublicApi(typeof(PostgresqlExtensions).Assembly)
+                .ShouldMatchApproved();
         }
 
         [Test]
         public void dbup_sqlce_has_no_public_api_changes()
         {
-            PublicApiApprover.ApprovePublicApi(typeof(SqlCeExtensions).Assembly.Location);
+            PublicApiGenerator.PublicApiGenerator
+                .GetPublicApi(typeof(SqlCeExtensions).Assembly)
+                .ShouldMatchApproved();
         }
 
         [Test]
         public void dbup_sqlite_has_no_public_api_changes()
         {
-            PublicApiApprover.ApprovePublicApi(typeof(SQLiteExtensions).Assembly.Location);
+            PublicApiGenerator.PublicApiGenerator
+                .GetPublicApi(typeof(SQLiteExtensions).Assembly)
+                .ShouldMatchApproved();
         }
     }
 }
