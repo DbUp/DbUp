@@ -8,8 +8,8 @@
     <ProjectGuid>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DbUp</RootNamespace>
-    <AssemblyName>DbUp</AssemblyName>
+    <RootNamespace>DbUp.Core</RootNamespace>
+    <AssemblyName>DbUp.Core</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -23,7 +23,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Debug\DbUp.xml</DocumentationFile>
+    <DocumentationFile>bin\Debug\DbUp.Core.xml</DocumentationFile>
     <RunCodeAnalysis>false</RunCodeAnalysis>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
@@ -33,7 +33,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\DbUp.xml</DocumentationFile>
+    <DocumentationFile>bin\Release\DbUp.Core.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>true</SignAssembly>
@@ -107,7 +107,7 @@
     <Compile Include="Builder\SupportedDatabases.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="dbup.nuspec" />
+    <None Include="dbup-core.nuspec" />
     <None Include="dbup.snk" />
   </ItemGroup>
   <ItemGroup />
