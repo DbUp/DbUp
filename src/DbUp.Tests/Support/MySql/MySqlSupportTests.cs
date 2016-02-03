@@ -1,5 +1,4 @@
 ﻿using System;
-using ApprovalTests;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
 using Shouldly;
@@ -36,16 +35,7 @@ END$$").Build();
             var result = upgrader.PerformUpgrade();
 
             result.Successful.ShouldBe(true);
-            var commandLog = recordingDbConnection.GetCommandLog();
-            try
-            {
-                Approvals.Verify(commandLog, Scrubbers.ScrubDates);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine(commandLog);
-                throw;
-            }
+            recordingDbConnection.GetCommandLog().ShouldMatchApproved(b => b.WithScrubber(Scrubbers.ScrubDates));
         }
     }
 }

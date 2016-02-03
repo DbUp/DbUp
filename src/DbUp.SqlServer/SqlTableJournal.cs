@@ -30,7 +30,7 @@ namespace DbUp.SqlServer
             : base(connectionManager, logger, new SqlServerObjectParser(), schema, table)
         {
 
-        }       
+        }
 
         protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {

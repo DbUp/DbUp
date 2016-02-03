@@ -1,8 +1,8 @@
-﻿using ApprovalTests;
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
+using Shouldly;
 using TestStack.BDDfy;
 
 namespace DbUp.Tests
@@ -10,9 +10,9 @@ namespace DbUp.Tests
     [TestFixture]
     public class TransactionScenarios
     {
-        private UpgradeEngineBuilder upgradeEngineBuilder;
-        private RecordingDbConnection testConnection;
-        private SqlScript[] scripts;
+        UpgradeEngineBuilder upgradeEngineBuilder;
+        RecordingDbConnection testConnection;
+        SqlScript[] scripts;
 
         [Test]
         public void UsingNoTransactionsScenario()
@@ -74,7 +74,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
+        void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
         {
             scripts = new[]
             {
@@ -87,32 +87,52 @@ namespace DbUp.Tests
                 .PerformUpgrade();
         }
 
-        private void ShouldStopExecution()
+        void ShouldStopExecution()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldRollbackFailedScriptAndStopExecution()
+        void ShouldRollbackFailedScriptAndStopExecution()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldExecuteAllScriptsInASingleTransaction()
+        void ShouldExecuteAllScriptsInASingleTransaction()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldHaveExecutedEachScriptInATransaction()
+        void ShouldHaveExecutedEachScriptInATransaction()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldExecuteScriptsWithoutUsingATransaction()
+        void ShouldExecuteScriptsWithoutUsingATransaction()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void DbUpSetupToUseSingleTransaction()
+        void DbUpSetupToUseSingleTransaction()
         {
             testConnection = new RecordingDbConnection(false);
             upgradeEngineBuilder = DeployChanges.To
@@ -120,7 +140,7 @@ namespace DbUp.Tests
                 .WithTransaction();
         }
 
-        private void DbUpSetupToNotUseTransactions()
+        void DbUpSetupToNotUseTransactions()
         {
             testConnection = new RecordingDbConnection(false);
             upgradeEngineBuilder = DeployChanges.To
@@ -128,7 +148,7 @@ namespace DbUp.Tests
                 .WithoutTransaction();
         }
 
-        private void DbUpSetupToUseTransactionPerScript()
+        void DbUpSetupToUseTransactionPerScript()
         {
             testConnection = new RecordingDbConnection(false);
             upgradeEngineBuilder = DeployChanges.To
@@ -136,7 +156,7 @@ namespace DbUp.Tests
                 .WithTransactionPerScript();
         }
 
-        private void UpgradeIsPerformedExecutingTwoScripts()
+        void UpgradeIsPerformedExecutingTwoScripts()
         {
             scripts = new[]
             {
