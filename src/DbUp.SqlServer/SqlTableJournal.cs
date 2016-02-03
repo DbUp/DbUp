@@ -88,7 +88,6 @@ namespace DbUp.SqlServer
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
 )", tableName);
-                        
         }
     }
 }

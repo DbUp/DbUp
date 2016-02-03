@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-41
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
 		..\Breaking changes.md = ..\Breaking changes.md
+		dbup.nuspec = dbup.nuspec
 		..\README.md = ..\README.md
 		Information\SolutionInfo.cs = Information\SolutionInfo.cs
 		Information\VersionInfo.cs = Information\VersionInfo.cs
