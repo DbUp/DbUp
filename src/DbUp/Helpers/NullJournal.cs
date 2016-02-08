@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using DbUp.Engine;
 
 namespace DbUp.Helpers
@@ -21,7 +22,8 @@ namespace DbUp.Helpers
         /// Does not store the script, simply returns
         /// </summary>
         /// <param name="script"></param>
-        public void StoreExecutedScript(SqlScript script)
+        /// <param name="dbCommandFactory"></param>
+        public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         { }
     }
 }

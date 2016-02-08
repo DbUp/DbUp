@@ -70,8 +70,6 @@ namespace DbUp.Engine
 
                         configuration.ScriptExecutor.Execute(script, configuration.Variables);
 
-                        configuration.Journal.StoreExecutedScript(script);
-
                         executed.Add(script);
                     }
 
@@ -132,7 +130,8 @@ namespace DbUp.Engine
 
                     foreach (var script in scriptsToExecute)
                     {
-                        configuration.Journal.StoreExecutedScript(script);
+                        configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(
+                            connectionFactory => configuration.Journal.StoreExecutedScript(script, connectionFactory));
                         configuration.Log.WriteInformation("Marking script {0} as executed", script.Name);
                         marked.Add(script);
                     }
@@ -159,7 +158,8 @@ namespace DbUp.Engine
 
                     foreach (var script in scriptsToExecute)
                     {
-                        configuration.Journal.StoreExecutedScript(script);
+                        configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(
+                            commandFactory => configuration.Journal.StoreExecutedScript(script, commandFactory));
                         configuration.Log.WriteInformation("Marking script {0} as executed", script.Name);
                         marked.Add(script);
                         if (script.Name.Equals(latestScript))

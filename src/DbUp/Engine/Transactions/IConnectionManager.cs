@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
+using JetBrains.Annotations;
 
 namespace DbUp.Engine.Transactions
 {
@@ -19,7 +20,7 @@ namespace DbUp.Engine.Transactions
         /// Execute a lambda with the connection managed by the connection manager (i.e transactions, reusing connections etc)
         /// </summary>
         /// <param name="action">Action to execute</param>
-        void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action);
+        void ExecuteCommandsWithManagedConnection([InstantHandle] Action<Func<IDbCommand>> action);
 
         /// <summary>
         /// Execute a lambda with the connection managed by the connection manager (i.e transactions, reusing connections etc)

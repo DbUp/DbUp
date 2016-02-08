@@ -17,11 +17,12 @@ namespace DbUp.Support
     /// </summary>
     public abstract class ScriptExecutor : IScriptExecutor
     {
-        private readonly Func<IConnectionManager> connectionManagerFactory;
-        private readonly Func<IUpgradeLog> log;
-        private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
-        private readonly Func<bool> variablesEnabled;
-        private readonly ISqlObjectParser sqlObjectParser;
+        readonly Func<IConnectionManager> connectionManagerFactory;
+        readonly Func<IUpgradeLog> log;
+        readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
+        readonly Func<IJournal> journal;
+        readonly Func<bool> variablesEnabled;
+        readonly ISqlObjectParser sqlObjectParser;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
@@ -36,13 +37,18 @@ namespace DbUp.Support
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        public ScriptExecutor(Func<IConnectionManager> connectionManagerFactory, ISqlObjectParser sqlObjectParser, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
-            IEnumerable<IScriptPreprocessor> scriptPreprocessors)
+        /// <param name="journal">Database journal</param>
+        public ScriptExecutor(
+            Func<IConnectionManager> connectionManagerFactory, ISqlObjectParser sqlObjectParser,
+            Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+            IEnumerable<IScriptPreprocessor> scriptPreprocessors,
+            Func<IJournal> journal)
         {
             Schema = schema;
             this.log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
+            this.journal = journal;
             this.connectionManagerFactory = connectionManagerFactory;
             this.sqlObjectParser = sqlObjectParser;
         }
@@ -110,7 +116,6 @@ namespace DbUp.Support
             var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
             var index = -1;
 
-
             try
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
@@ -138,9 +143,10 @@ namespace DbUp.Support
                             {
                                 executeAction(command);
                             });
-
                         }
                     }
+
+                    journal().StoreExecutedScript(script, dbCommandFactory);
                 });
             }
             catch (DbException sqlException)
