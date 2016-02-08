@@ -1,51 +1,60 @@
-﻿using DbUp.Engine;
-using DbUp.Engine.Output;
-using DbUp.Engine.Transactions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
+using DbUp.Engine;
+using DbUp.Engine.Output;
+using DbUp.Engine.Transactions;
 
-namespace DbUp.Support
+// ReSharper disable MemberCanBePrivate.Global
+namespace DbUp.Core.Support
 {
     /// <summary>
     /// The base class for Journal implementations that use a table.
     /// </summary>
     public abstract class TableJournal : IJournal
     {
-        private bool tableExists = false;
-        private bool tableIsLatestVersion = false;
-        private bool tableRequiresCreation = false;
-
-        private ISqlObjectParser sqlObjectParser;
+        readonly ISqlObjectParser sqlObjectParser;
+        bool journalExists;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
         /// <param name="logger">The log.</param>
+        /// <param name="sqlObjectParser"></param>
         /// <param name="schema">The schema that contains the table.</param>
-        /// <param name="table">The table name.</param>        
-        public TableJournal(Func<IConnectionManager> connectionManager, 
-                            Func<IUpgradeLog> logger, ISqlObjectParser sqlObjectParser, string schema, string table)
+        /// <param name="table">The table name.</param>
+        protected TableJournal(
+            Func<IConnectionManager> connectionManager,
+            Func<IUpgradeLog> logger,
+            ISqlObjectParser sqlObjectParser,
+            string schema, string table)
         {
+            this.sqlObjectParser = sqlObjectParser;
             ConnectionManager = connectionManager;
             Log = logger;
-            SchemaTableNameWithoutSchema = table;
-            SchemaTableName = string.IsNullOrEmpty(schema)
-                ? QuoteSqlObjectName(table)
-                : QuoteSqlObjectName(schema) + "." + QuoteSqlObjectName(table);
+            UnquotedSchemaTableName = table;
+            SchemaTableSchema = schema;
+            FqSchemaTableName = string.IsNullOrEmpty(schema)
+                ? sqlObjectParser.QuoteIdentifier(table)
+                : sqlObjectParser.QuoteIdentifier(schema) + "." + sqlObjectParser.QuoteIdentifier(table);
         }
 
-        protected string SchemaTableNameWithoutSchema { get; private set; }
+        protected string SchemaTableSchema { get; private set; }
 
-        protected string SchemaTableName { get; private set; }
+        /// <summary>
+        /// Schema table name, no schema and unquoted
+        /// </summary>
+        protected string UnquotedSchemaTableName { get; private set; }
 
-        protected Func<IConnectionManager> ConnectionManager { get; set; }
+        /// <summary>
+        /// Fully qualified schema table name, includes schema and is quoted.
+        /// </summary>
+        protected string FqSchemaTableName { get; private set; }
 
-        protected Func<IUpgradeLog> Log { get; set; }
+        protected Func<IConnectionManager> ConnectionManager { get; private set; }
+
+        protected Func<IUpgradeLog> Log { get; private set; }
 
         /// <summary>
         /// Recalls the version number of the database.
@@ -53,20 +62,13 @@ namespace DbUp.Support
         /// <returns>All executed scripts.</returns>
         public string[] GetExecutedScripts()
         {
-            Log().WriteInformation("Fetching list of already executed scripts.");            
-            if (!TableExists)
-            {                
-                Log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", SchemaTableName));
-                return new string[0];
-            }
-
-            // Ensure the table is migrated to the latest version before we use it.
             EnsureTableIsLatestVersion();
+            Log().WriteInformation("Fetching list of already executed scripts.");
 
             var scripts = new List<string>();
             ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                using (var command = GetSelectExecutedScriptsCommand(dbCommandFactory, SchemaTableName))
+                using (var command = GetJournalEntriesCommand(dbCommandFactory))
                 {
                     using (var reader = command.ExecuteReader())
                     {
@@ -84,87 +86,78 @@ namespace DbUp.Support
         /// Records a database upgrade for a database specified in a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        public void StoreExecutedScript(SqlScript script)
-        {            
-            if (!TableExists)
+        /// <param name="dbCommandFactory"></param>
+        public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
+        {
+            EnsureTableIsLatestVersion();
+            using (var command = GetInsertScriptCommand(dbCommandFactory, script))
             {
-                // Ensure the table is migrated to the latest version before we use it.
-                EnsureTableIsLatestVersion();
+                command.ExecuteNonQuery();
             }
-
-            ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-            {
-                using (var command = GetInsertScriptCommand(dbCommandFactory, script))
-                {
-                    command.ExecuteNonQuery();
-                }
-            });
         }
 
-        protected abstract IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script);
+        protected IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        {
+            var command = dbCommandFactory();
 
-        protected abstract IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName);
+            var scriptNameParam = command.CreateParameter();
+            scriptNameParam.ParameterName = "scriptName";
+            scriptNameParam.Value = script.Name;
+            command.Parameters.Add(scriptNameParam);
 
-        protected abstract IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName);
+            var appliedParam = command.CreateParameter();
+            appliedParam.ParameterName = "applied";
+            appliedParam.Value = DateTime.Now;
+            command.Parameters.Add(appliedParam);
 
-        /// <summary>
-        /// Quotes the name of the SQL object in square brackets to allow Special characters in the object name.
-        /// This function implements System.Data.SqlClient.SqlCommandBuilder.QuoteIdentifier() with an additional
-        /// validation which is missing from the SqlCommandBuilder version.
-        /// </summary>
-        /// <param name="objectName">Name of the object to quote.</param>
-        /// <returns>The quoted object name with trimmed whitespace</returns>
-        protected virtual string QuoteSqlObjectName(string objectName)
-        {                   
-            return sqlObjectParser.QuoteIdentifier(objectName);
+            command.CommandText = GetInsertJournalEntrySql("@scriptName", "@applied");
+            command.CommandType = CommandType.Text;
+            return command;
+        }
+
+        protected IDbCommand GetJournalEntriesCommand(Func<IDbCommand> dbCommandFactory)
+        {
+            var command = dbCommandFactory();
+            command.CommandText = GetJournalEntriesSql();
+            command.CommandType = CommandType.Text;
+            return command;
+        }
+
+        protected IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory)
+        {
+            var command = dbCommandFactory();
+            var primaryKeyName = sqlObjectParser.QuoteIdentifier("PK_" + UnquotedSchemaTableName + "_Id");
+            command.CommandText = CreateSchemaTableSql(primaryKeyName);
+            command.CommandType = CommandType.Text;
+            return command;
         }
 
         /// <summary>
-        /// Unquotes a quoted identifier.       
+        /// Sql for inserting a journal entry
         /// </summary>
-        /// <param name="objectName">identifier to unquote.</param>    
-        protected virtual string UnquoteSqlObjectName(string quotedIdentifier)
+        /// <param name="scriptName">Name of the script name param (i.e @scriptName)</param>
+        /// <param name="applied">Name of the applied param (i.e @applied)</param>
+        /// <returns></returns>
+        protected abstract string GetInsertJournalEntrySql(string @scriptName, string @applied);
+
+        /// <summary>
+        /// Sql for getting the journal entries
+        /// </summary>
+        protected abstract string GetJournalEntriesSql();
+
+        /// <summary>
+        /// Sql for creating journal table
+        /// </summary>
+        /// <param name="quotedPrimaryKeyName">Following PK_{TableName}_Id naming</param>
+        protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
+
+        /// <summary>
+        /// Unquotes a quoted identifier.
+        /// </summary>
+        /// <param name="objectName">identifier to unquote.</param>
+        protected string UnquoteSqlObjectName(string quotedIdentifier)
         {
             return sqlObjectParser.UnquoteIdentifier(quotedIdentifier);
-        }
-
-        /// <summary>
-        /// The sql to select a scalar value from a table. Typically used to check whether a table exists.
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        protected virtual string GetSelectScalarFromTableSql(string tableName)
-        {
-            return string.Format("select count(*) from {0}", tableName);
-        }
-
-        protected virtual void EnsureTableIsLatestVersion()
-        {
-            //TODO: We don't currnelty do any kind of migration, we only create the table if it doesn't exist.
-            // This may change if we find a way to support migrations for the journal table in the future!
-            // The thinking is the table would allways be created first in code in its old / original schema,
-            // but then migrations would be run on it to bring it up to the latest state.        
-            if (!tableIsLatestVersion)
-            {                
-                if (!TableExists)
-                {
-                    Log().WriteInformation(string.Format("Creating the {0} table", SchemaTableName));
-                    ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-                    {
-                        // We will never change the schema of the initial table create.
-                        using (var command = GetCreateTableCommand(dbCommandFactory, SchemaTableName))
-                        {
-                            command.ExecuteNonQuery();
-                        }
-                        Log().WriteInformation(string.Format("The {0} table has been created", SchemaTableName));
-
-                        OnTableCreated(dbCommandFactory);
-                    });
-
-                    
-                }
-                tableIsLatestVersion = true;
-            }
         }
 
         protected virtual void OnTableCreated(Func<IDbCommand> dbCommandFactory)
@@ -173,42 +166,44 @@ namespace DbUp.Support
             
         }
 
-        protected bool TableExists
+        protected void EnsureTableIsLatestVersion()
         {
-            get
+            if (!journalExists && !DoesTableExist())
             {
-                // We cache when it does exist so we don't check multiple times unnecessarily.
-                tableExists = tableExists || DoesTableExist();
-                return tableExists;
+                Log().WriteInformation(string.Format("Creating the {0} table", FqSchemaTableName));
+                ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                {
+                    // We will never change the schema of the initial table create.
+                    using (var command = GetCreateTableCommand(dbCommandFactory))
+                    {
+                        command.ExecuteNonQuery();
+                    }
+                    Log().WriteInformation(string.Format("The {0} table has been created", FqSchemaTableName));
+
+                    OnTableCreated(dbCommandFactory);
+                });
             }
+
+            journalExists = true;
         }
 
-        protected virtual bool DoesTableExist()
+        protected bool DoesTableExist()
         {
-            if(tableRequiresCreation)
-            {
-                // this means we have previously checked and ascertained that the table needs to be created.
-                return false;
-            }
             Log().WriteInformation("Checking whether journal table exists..");
             return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                try
+                using (var command = dbCommandFactory())
                 {
-                    using (var command = dbCommandFactory())
-                    {
-                        command.CommandText = GetSelectScalarFromTableSql(SchemaTableName);
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteScalar();
-                        return true;
-                    }
-                }
-                catch (DbException)
-                {
-                    tableRequiresCreation = true;
-                    return false;
+                    command.CommandText = DoesTableExistSql();
+                    command.CommandType = CommandType.Text;
+                    var result = command.ExecuteScalar() as int?;
+                    return result == 1;
                 }
             });
         }
+
+        /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
+        /// <returns>1 if table exists, 0 otherwise</returns>
+        protected abstract string DoesTableExistSql();
     }
 }

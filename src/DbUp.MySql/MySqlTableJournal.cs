@@ -2,10 +2,7 @@
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using System.Data;
-using System.Data.Common;
-using System.Collections.Generic;
-using DbUp.Support;
+using DbUp.Core.Support;
 
 namespace DbUp.MySql
 {
@@ -14,7 +11,7 @@ namespace DbUp.MySql
     /// MySql database using a table called SchemaVersions.
     /// </summary>
     public class MySqlTableJournal : TableJournal
-    {              
+    {
         /// <summary>
         /// Creates a new MySql table journal.
         /// </summary>
@@ -24,58 +21,37 @@ namespace DbUp.MySql
         /// <param name="table">The name of the journal table.</param>
         public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
             :base(connectionManager, logger, new MySqlObjectParser(), schema, table)
-        {           
-        }        
-
-        private static string GetCreateTableSql(string tableName)
         {
-            return string.Format(
-                @"CREATE TABLE {0} 
-                    (
-                        `schemaversionid` INT NOT NULL AUTO_INCREMENT,
-                        `scriptname` VARCHAR(255) NOT NULL,
-                        `applied` TIMESTAMP NOT NULL,
-                        PRIMARY KEY (`schemaversionid`));", tableName);
-        }               
-
-        private static string GetExecutedScriptsSql(string table)
-        {
-            return string.Format("select scriptname from {0} order by scriptname", table);
         }
 
-        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
-            var command = dbCommandFactory();
-            command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", SchemaTableName);
-
-            var scriptNameParam = command.CreateParameter();
-            scriptNameParam.ParameterName = "scriptName";
-            scriptNameParam.Value = script.Name;
-            command.Parameters.Add(scriptNameParam);
-
-            var appliedParam = command.CreateParameter();
-            appliedParam.ParameterName = "applied";
-            appliedParam.Value = DateTime.Now;
-            command.Parameters.Add(appliedParam);
-
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
-        protected override IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetJournalEntriesSql()
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetExecutedScriptsSql(schemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"select scriptname from {FqSchemaTableName} order by scriptname";
         }
 
-        protected override IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetCreateTableSql(SchemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return 
+$@"CREATE TABLE {FqSchemaTableName} 
+(
+    `schemaversionid` INT NOT NULL AUTO_INCREMENT,
+    `scriptname` VARCHAR(255) NOT NULL,
+    `applied` TIMESTAMP NOT NULL,
+    PRIMARY KEY (`schemaversionid`)
+);";
+        }
+
+        protected override string DoesTableExistSql()
+        {
+            if (string.IsNullOrEmpty(SchemaTableSchema))
+                return $"SELECT count(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME='{UnquotedSchemaTableName}'";
+
+            return $"SELECT count(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME='{UnquotedSchemaTableName}' AND TABLE_SCHEMA='{SchemaTableSchema}'";
         }
     }
 }

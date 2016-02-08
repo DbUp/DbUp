@@ -3,9 +3,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using System.Data;
-using System.Data.Common;
-using System.Collections.Generic;
-using DbUp.Support;
+using DbUp.Core.Support;
 
 namespace DbUp.Firebird
 {
@@ -15,7 +13,6 @@ namespace DbUp.Firebird
     /// </summary>
     public class FirebirdTableJournal : TableJournal
     {
-
         /// <summary>
         /// Creates a new Firebird table journal.
         /// </summary>
@@ -25,49 +22,32 @@ namespace DbUp.Firebird
         public FirebirdTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string tableName)
             : base(connectionManager, logger, new FirebirdObjectParser(), null, tableName)
         {
-
         }
 
-        private static string GetCreateTableSql(string tableName)
+        static string CreateGeneratorSql(string tableName)
         {
-            return string.Format(@"CREATE TABLE {0}
-                                    (
-                                        schemaversionsid INTEGER NOT NULL,
-                                        scriptname VARCHAR(255) NOT NULL,
-                                        applied TIMESTAMP NOT NULL,
-                                        CONSTRAINT pk_{0}_id PRIMARY KEY (schemaversionsid)
-                                    )", tableName);
+            return $@"CREATE SEQUENCE {GeneratorName(tableName)}";
         }
 
-        private static string CreateGeneratorSql(string tableName)
+        static string CreateTriggerSql(string tableName)
         {
-            return string.Format(@"CREATE SEQUENCE {0}", GeneratorName(tableName));
+            return 
+$@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
+    if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({GeneratorName(tableName)},1);
+END;";
         }
 
-        private static string CreateTriggerSql(string tableName)
+        static string GeneratorName(string tableName)
         {
-            return string.Format(
-                                @"CREATE TRIGGER {0} FOR {1} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
-                                        if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({2},1);
-                                  END;", TriggerName(tableName), tableName, GeneratorName(tableName));
+            return $"GEN_{tableName}ID";
         }
 
-        private static string GeneratorName(string tableName)
+        static string TriggerName(string tableName)
         {
-            return string.Format("GEN_{0}ID", tableName);
+            return $"BI_{tableName}ID";
         }
 
-        private static string TriggerName(string tableName)
-        {
-            return string.Format("BI_{0}ID", tableName);
-        }
-
-        private static string GetExecutedScriptsSql(string table)
-        {
-            return string.Format("select ScriptName from {0} order by ScriptName", table);
-        }
-
-        private void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
+        void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
         {
             using (var command = dbCommandFactory())
             {
@@ -79,46 +59,38 @@ namespace DbUp.Firebird
 
         protected override void OnTableCreated(Func<IDbCommand> dbCommandFactory)
         {
-            var unqotedTableName = UnquoteSqlObjectName(SchemaTableName);
+            var unqotedTableName = UnquoteSqlObjectName(FqSchemaTableName);
             ExecuteCommand(dbCommandFactory, CreateGeneratorSql(unqotedTableName));
-            Log().WriteInformation(string.Format("The {0} generator has been created", GeneratorName(unqotedTableName)));
+            Log().WriteInformation($"The {GeneratorName(unqotedTableName)} generator has been created");
             ExecuteCommand(dbCommandFactory, CreateTriggerSql(unqotedTableName));
-            Log().WriteInformation(string.Format("The {0} trigger has been created", TriggerName(unqotedTableName)));
+            Log().WriteInformation($"The {TriggerName(unqotedTableName)} trigger has been created");
         }
 
-        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        protected override string DoesTableExistSql()
         {
-            var command = dbCommandFactory();
-            command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", SchemaTableName);
-
-            var scriptNameParam = command.CreateParameter();
-            scriptNameParam.ParameterName = "scriptName";
-            scriptNameParam.Value = script.Name;
-            command.Parameters.Add(scriptNameParam);
-
-            var appliedParam = command.CreateParameter();
-            appliedParam.ParameterName = "applied";
-            appliedParam.Value = DateTime.Now;
-            command.Parameters.Add(appliedParam);
-
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"SELECT RDB$RELATION_NAME FROM RDB$RELATIONS WHERE RDB$RELATION_NAME = '{UnquotedSchemaTableName}'";
         }
 
-        protected override IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetExecutedScriptsSql(schemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({scriptName}, {applied})";
         }
 
-        protected override IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetJournalEntriesSql()
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetCreateTableSql(SchemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"select ScriptName from {FqSchemaTableName} order by ScriptName";
+        }
+
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
+        {
+            return 
+$@"CREATE TABLE {FqSchemaTableName}
+(
+    schemaversionsid INTEGER NOT NULL,
+    scriptname VARCHAR(255) NOT NULL,
+    applied TIMESTAMP NOT NULL,
+    CONSTRAINT pk_{UnquotedSchemaTableName}_id PRIMARY KEY (schemaversionsid)
+)";
         }
     }
 }

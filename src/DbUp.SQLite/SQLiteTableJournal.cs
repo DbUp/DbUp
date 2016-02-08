@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Data;
+using DbUp.Core.Support;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.SQLite
 {
@@ -20,62 +19,29 @@ namespace DbUp.SQLite
             base(connectionManager, logger, new SQLiteObjectParser(), null, table)
         { }
 
-        /// <summary>
-        /// Create table sql for SQLite
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        private string GetCreateTableSql(string tableName)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
-            return string.Format(
-                            @"CREATE TABLE {0} (
-	SchemaVersionID INTEGER CONSTRAINT 'PK_{0}_SchemaVersionID' PRIMARY KEY AUTOINCREMENT NOT NULL,
-	ScriptName TEXT NOT NULL,
-	Applied DATETIME NOT NULL
-)", tableName);
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
-        /// <summary>
-        /// The Sql which is used to return the names of the scripts which have allready been executed from the journal table. 
-        /// </summary>
-        private string GetExecutedScriptsSql(string table)
+        protected override string GetJournalEntriesSql()
         {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
+            return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
         }
 
-        protected override IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetCreateTableSql(SchemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return
+$@"CREATE TABLE {FqSchemaTableName} (
+    SchemaVersionID INTEGER CONSTRAINT {quotedPrimaryKeyName} PRIMARY KEY AUTOINCREMENT NOT NULL,
+    ScriptName TEXT NOT NULL,
+    Applied DATETIME NOT NULL
+)";
         }
 
-        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        protected override string DoesTableExistSql()
         {
-            var command = dbCommandFactory();
-            command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", SchemaTableName);
-
-            var scriptNameParam = command.CreateParameter();
-            scriptNameParam.ParameterName = "scriptName";
-            scriptNameParam.Value = script.Name;
-            command.Parameters.Add(scriptNameParam);
-
-            var appliedParam = command.CreateParameter();
-            appliedParam.ParameterName = "applied";
-            appliedParam.Value = DateTime.Now;
-            command.Parameters.Add(appliedParam);
-
-            command.CommandType = CommandType.Text;
-            return command;
-        }
-
-        protected override IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
-        {
-            var command = dbCommandFactory();
-            command.CommandText = GetExecutedScriptsSql(schemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = '{UnquotedSchemaTableName}' COLLATE NOCASE";
         }
     }
 }

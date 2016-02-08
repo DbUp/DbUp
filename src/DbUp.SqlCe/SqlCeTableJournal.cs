@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
+using DbUp.Core.Support;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
-using DbUp.Support.SqlServer;
 
 namespace DbUp.SqlCe
 {
@@ -30,65 +25,35 @@ namespace DbUp.SqlCe
         public SqlCeTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
             : base(connectionManager, logger, new SqlCeObjectParser(), schema, table)
         {
-
-        }     
-
-        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
-        {
-            var command = dbCommandFactory();
-            command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", SchemaTableName);
-
-            var scriptNameParam = command.CreateParameter();
-            scriptNameParam.ParameterName = "scriptName";
-            scriptNameParam.Value = script.Name;
-            command.Parameters.Add(scriptNameParam);
-
-            var appliedParam = command.CreateParameter();
-            appliedParam.ParameterName = "applied";
-            appliedParam.Value = DateTime.Now;
-            command.Parameters.Add(appliedParam);
-
-            command.CommandType = CommandType.Text;
-            return command;
-
         }
 
-        protected override IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetExecutedScriptsSql(schemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
-        protected override IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetJournalEntriesSql()
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetCreateTableSql(SchemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
-        }
-        
-        /// <summary>
-        /// The Sql which is used to return the names of the scripts which have allready been executed from the journal table. 
-        /// </summary>
-        protected virtual string GetExecutedScriptsSql(string table)
-        {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
+            return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
         }
 
-        /// <summary>
-        /// The sql to exectute to create the schema versions table
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        protected virtual string GetCreateTableSql(string tableName)
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            return string.Format(@"create table {0} (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
-	[ScriptName] nvarchar(255) not null,
-	[Applied] datetime not null
-)", tableName);
+            return 
+$@"create table {FqSchemaTableName} (
+    [Id] int identity(1,1) not null constraint {quotedPrimaryKeyName} primary key,
+    [ScriptName] nvarchar(255) not null,
+    [Applied] datetime not null
+)";
+        }
+
+        protected override string DoesTableExistSql()
+        {
+            if (string.IsNullOrEmpty(SchemaTableSchema))
+                return $"SELECT count(*) FROM information_schema.tables WHERE table_name='{UnquotedSchemaTableName}'";
+
+            return $"SELECT count(*) FROM information_schema.tables WHERE table_schema = '{SchemaTableSchema}'AND table_name = '{UnquotedSchemaTableName}')";
+
         }
     }
 }
