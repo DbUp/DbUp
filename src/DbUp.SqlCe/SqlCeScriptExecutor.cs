@@ -16,16 +16,17 @@ namespace DbUp.SqlCe
     {
 
         /// <summary>
-        /// Initializes an instance of the <see cref="PostgresqlScriptExecutor"/> class.
+        /// Initializes an instance of the <see cref="SqlCeScriptExecutor"/> class.
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
         /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
+        /// <param name="journal">Database journal</param>
         public SqlCeScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
-            IEnumerable<IScriptPreprocessor> scriptPreprocessors)
-            : base(connectionManagerFactory, new SqlCeObjectParser(), log, schema, variablesEnabled, scriptPreprocessors)
+            IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
+            : base(connectionManagerFactory, new SqlCeObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
         {
 
         }

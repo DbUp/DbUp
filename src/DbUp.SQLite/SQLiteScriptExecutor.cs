@@ -28,11 +28,11 @@ namespace DbUp.SQLite
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
+        /// <param name="journal">Database journal</param>
         public SQLiteScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
-            IEnumerable<IScriptPreprocessor> scriptPreprocessors)
-            : base(connectionManagerFactory, new SQLiteObjectParser(), log, schema, variablesEnabled, scriptPreprocessors)
+            IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
+            : base(connectionManagerFactory, new SQLiteObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
         {
-
         }
 
         protected override string GetVerifySchemaSql(string schema)

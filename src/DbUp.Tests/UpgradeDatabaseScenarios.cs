@@ -182,9 +182,9 @@ namespace DbUp.Tests
         private void GivenAnUpToDateDatabase()
         {
             var journal = GetJournal();
-            journal.StoreExecutedScript(scripts[0]);
-            journal.StoreExecutedScript(scripts[1]);
-            journal.StoreExecutedScript(scripts[2]);
+            journal.StoreExecutedScript(scripts[0], () => database.SharedConnection.CreateCommand());
+            journal.StoreExecutedScript(scripts[1], () => database.SharedConnection.CreateCommand());
+            journal.StoreExecutedScript(scripts[2], () => database.SharedConnection.CreateCommand());
         }
 
         private SQLiteTableJournal GetJournal()

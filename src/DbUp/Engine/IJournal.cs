@@ -1,4 +1,7 @@
-﻿namespace DbUp.Engine
+﻿using System;
+using System.Data;
+
+namespace DbUp.Engine
 {
     /// <summary>
     /// This interface is provided to allow different projects to store version information differently.
@@ -15,6 +18,7 @@
         /// Records an upgrade script for a database.
         /// </summary>
         /// <param name="script">The script.</param>
-        void StoreExecutedScript(SqlScript script);
+        /// <param name="dbCommandFactory"></param>
+        void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory);
     }
 }
