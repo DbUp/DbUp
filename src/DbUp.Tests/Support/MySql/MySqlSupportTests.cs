@@ -11,10 +11,12 @@ namespace DbUp.Tests.Support.MySql
         [Test]
         public void CanHandleDelimiter()
         {
-            var recordingDbConnection = new RecordingDbConnection(true);
+            var logger = new CaptureLogsLogger();
+            var recordingDbConnection = new RecordingDbConnection(logger, true, "SchemaVersions");
             var upgrader = DeployChanges.To
                 .MySqlDatabase(string.Empty)
                 .OverrideConnectionFactory(recordingDbConnection)
+                .LogTo(logger)
                 .WithScript("Script0003", @"USE `test`;
 DROP procedure IF EXISTS `testSproc`;
 
@@ -35,7 +37,7 @@ END$$").Build();
             var result = upgrader.PerformUpgrade();
 
             result.Successful.ShouldBe(true);
-            recordingDbConnection.GetCommandLog().ShouldMatchApproved(b => b.WithScrubber(Scrubbers.ScrubDates));
+            logger.Log.ShouldMatchApproved(b => b.WithScrubber(Scrubbers.ScrubDates));
         }
     }
 }

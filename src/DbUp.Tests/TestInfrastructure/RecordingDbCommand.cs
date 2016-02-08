@@ -6,19 +6,21 @@ namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbCommand : IDbCommand
     {
-        private readonly Action<DatabaseAction> add;
-        private readonly bool schemaTableExists;
+        readonly CaptureLogsLogger logger;
+        readonly bool schemaTableExists;
+        readonly string schemaTableName;
 
-        public RecordingDbCommand(Action<DatabaseAction> add, bool schemaTableExists)
+        public RecordingDbCommand(CaptureLogsLogger logger, bool schemaTableExists, string schemaTableName)
         {
-            this.add = add;
+            this.logger = logger;
             this.schemaTableExists = schemaTableExists;
-            Parameters = new RecordingDataParameterCollection(add);
+            this.schemaTableName = schemaTableName;
+            Parameters = new RecordingDataParameterCollection(logger);
         }
 
         public void Dispose()
         {
-            add(DatabaseAction.DisposeCommand());
+            logger.WriteDbOperation("Dispose command");
         }
 
         public void Prepare()
@@ -33,27 +35,27 @@ namespace DbUp.Tests.TestInfrastructure
 
         public IDbDataParameter CreateParameter()
         {
-            add(DatabaseAction.CreateParameter());
+            logger.WriteDbOperation("Create parameter");
             return new RecordingDbDataParameter();
         }
 
         public int ExecuteNonQuery()
         {
-            add(DatabaseAction.ExecuteNonQuery(CommandText));
+            logger.WriteDbOperation(string.Format("Execute non query command: {0}", CommandText));
 
             if (CommandText == "error")
                 ThrowError();
             return 0;
         }
 
-        private void ThrowError()
+        void ThrowError()
         {
             throw new TestDbException();
         }
 
         public IDataReader ExecuteReader()
         {
-            add(DatabaseAction.ExecuteReaderCommand(CommandText));
+            logger.WriteDbOperation(string.Format("Execute reader command: {0}", CommandText));
 
             if (CommandText == "error")
                 ThrowError();
@@ -68,10 +70,18 @@ namespace DbUp.Tests.TestInfrastructure
 
         public object ExecuteScalar()
         {
-            add(DatabaseAction.ExecuteScalarCommand(CommandText));
+            logger.WriteDbOperation(string.Format("Execute scalar command: {0}", CommandText));
 
-            if (CommandText == "error" || (CommandText.ToLower().Contains("count") && CommandText.ToLower().Contains("schemaversion") && !schemaTableExists))
+            if (CommandText == "error")
                 ThrowError();
+
+            if (CommandText.Contains(schemaTableName))
+            {
+                if (schemaTableExists)
+                    return 1;
+                return 0;
+            }
+
             return null;
         }
 
@@ -92,7 +102,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public UpdateRowSource UpdatedRowSource { get; set; }
 
-        private class TestDbException : DbException
+        class TestDbException : DbException
         {
         }
     }

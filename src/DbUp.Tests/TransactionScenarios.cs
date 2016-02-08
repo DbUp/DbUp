@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using DbUp.Engine;
+using DbUp.Engine.Output;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
 using Shouldly;
@@ -13,6 +14,13 @@ namespace DbUp.Tests
         UpgradeEngineBuilder upgradeEngineBuilder;
         RecordingDbConnection testConnection;
         SqlScript[] scripts;
+        CaptureLogsLogger logger;
+
+        [SetUp]
+        public void CaptureLogs()
+        {
+            logger = new CaptureLogsLogger();
+        }
 
         [Test]
         public void UsingNoTransactionsScenario()
@@ -89,7 +97,7 @@ namespace DbUp.Tests
 
         void ShouldStopExecution()
         {
-            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            logger.Log.ShouldMatchApproved(b =>
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<TestAttribute>();
@@ -98,7 +106,7 @@ namespace DbUp.Tests
 
         void ShouldRollbackFailedScriptAndStopExecution()
         {
-            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            logger.Log.ShouldMatchApproved(b =>
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<TestAttribute>();
@@ -107,7 +115,7 @@ namespace DbUp.Tests
 
         void ShouldExecuteAllScriptsInASingleTransaction()
         {
-            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            logger.Log.ShouldMatchApproved(b =>
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<TestAttribute>();
@@ -116,7 +124,7 @@ namespace DbUp.Tests
 
         void ShouldHaveExecutedEachScriptInATransaction()
         {
-            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            logger.Log.ShouldMatchApproved(b =>
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<TestAttribute>();
@@ -125,7 +133,7 @@ namespace DbUp.Tests
 
         void ShouldExecuteScriptsWithoutUsingATransaction()
         {
-            testConnection.GetCommandLog().ShouldMatchApproved(b =>
+            logger.Log.ShouldMatchApproved(b =>
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<TestAttribute>();
@@ -134,25 +142,28 @@ namespace DbUp.Tests
 
         void DbUpSetupToUseSingleTransaction()
         {
-            testConnection = new RecordingDbConnection(false);
+            testConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
+                .JournalToSqlTable("dbo", "SchemaVersions")
                 .WithTransaction();
         }
 
         void DbUpSetupToNotUseTransactions()
         {
-            testConnection = new RecordingDbConnection(false);
+            testConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
+                .JournalToSqlTable("dbo", "SchemaVersions")
                 .WithoutTransaction();
         }
 
         void DbUpSetupToUseTransactionPerScript()
         {
-            testConnection = new RecordingDbConnection(false);
+            testConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
+                .JournalToSqlTable("dbo", "SchemaVersions")
                 .WithTransactionPerScript();
         }
 
@@ -165,6 +176,7 @@ namespace DbUp.Tests
             };
              var result = upgradeEngineBuilder
                 .WithScripts(scripts)
+                .LogTo(logger)
                 .Build()
                 .PerformUpgrade();
         }

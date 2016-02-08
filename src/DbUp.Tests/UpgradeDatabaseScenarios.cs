@@ -20,13 +20,13 @@ namespace DbUp.Tests
         SoThat = "So that my application's database is up to date")]
     public class UpgradeDatabaseScenarios
     {
-        private DatabaseUpgradeResult upgradeResult;
-        private TemporarySQLiteDatabase database;
-        private List<SqlScript> scripts;
-        private UpgradeEngine upgradeEngine;
-        private IUpgradeLog log;
-        private UpgradeEngineBuilder upgradeEngineBuilder;
-        private bool isUpgradeRequired;
+        DatabaseUpgradeResult upgradeResult;
+        TemporarySQLiteDatabase database;
+        List<SqlScript> scripts;
+        UpgradeEngine upgradeEngine;
+        IUpgradeLog log;
+        UpgradeEngineBuilder upgradeEngineBuilder;
+        bool isUpgradeRequired;
 
         [SetUp]
         public void SetUp()
@@ -110,7 +110,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void AndErrorMessageShouldBeLogged()
+        void AndErrorMessageShouldBeLogged()
         {
             log.Received().WriteError("Script block number: {0}; Error code {1}; Message: {2}", 0, 1,
                 "SQL logic error or missing database\r\n" +
@@ -122,22 +122,22 @@ namespace DbUp.Tests
                 Arg.Is<string>(s => s.Contains("System.Data.SQLite.SQLiteException")));
         }
 
-        private void ConfiguredToUseTransaction()
+        void ConfiguredToUseTransaction()
         {
             upgradeEngineBuilder.WithTransaction();
         }
 
-        private void AndShouldHaveFailedResult()
+        void AndShouldHaveFailedResult()
         {
             Assert.IsFalse(upgradeResult.Successful, "Upgrade should not be successful");
         }
 
-        private void AndTheFourthScriptToRunHasAnError()
+        void AndTheFourthScriptToRunHasAnError()
         {
             scripts.Add(new SqlScript("ScriptWithError.sql", "slect * from Oops"));
         }
 
-        private void AndTheScriptToRunHasAnError()
+        void AndTheScriptToRunHasAnError()
         {
             scripts.Clear();
             scripts.Add(new SqlScript("ScriptWithError.sql", "slect * from Oops"));
@@ -149,13 +149,13 @@ namespace DbUp.Tests
             database.Dispose();
         }
 
-        private void AndShouldLogInformation()
+        void AndShouldLogInformation()
         {
             log.Received().WriteInformation("Beginning database upgrade");
             log.Received().WriteInformation("Upgrade successful");
         }
 
-        private void AndShouldHaveRunAllScriptsInOrder()
+        void AndShouldHaveRunAllScriptsInOrder()
         {
             // Check both results and journal
             Assert.AreEqual(3, upgradeResult.Scripts.Count());
@@ -165,21 +165,21 @@ namespace DbUp.Tests
             Assert.AreEqual(3, GetJournal().GetExecutedScripts().Count());
         }
 
-        public void ThenShouldNotRunAnyScripts()
+        void ThenShouldNotRunAnyScripts()
         {
             Assert.AreEqual(0, upgradeResult.Scripts.Count());
         }
 
-        private void ThenShouldHaveSuccessfulResult()
+        void ThenShouldHaveSuccessfulResult()
         {
             Assert.IsTrue(upgradeResult.Successful);
         }
 
-        private void GivenAnOutOfDateDatabase()
+        void GivenAnOutOfDateDatabase()
         {
         }
 
-        private void GivenAnUpToDateDatabase()
+        void GivenAnUpToDateDatabase()
         {
             var journal = GetJournal();
             journal.StoreExecutedScript(scripts[0], () => database.SharedConnection.CreateCommand());
@@ -187,7 +187,7 @@ namespace DbUp.Tests
             journal.StoreExecutedScript(scripts[2], () => database.SharedConnection.CreateCommand());
         }
 
-        private SQLiteTableJournal GetJournal()
+        SQLiteTableJournal GetJournal()
         {
             var sqLiteConnectionManager = new SQLiteConnectionManager(database.SharedConnection);
             sqLiteConnectionManager.OperationStarting(log, new List<SqlScript>());
@@ -195,13 +195,13 @@ namespace DbUp.Tests
             return journal;
         }
 
-        private void WhenCheckIfDatabaseUpgradeIsRequired()
+        void WhenCheckIfDatabaseUpgradeIsRequired()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             isUpgradeRequired = upgradeEngine.IsUpgradeRequired();
         }
 
-        private void WhenDatabaseIsUpgraded()
+        void WhenDatabaseIsUpgraded()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             upgradeResult = upgradeEngine.PerformUpgrade();
@@ -212,7 +212,7 @@ namespace DbUp.Tests
             Assert.IsFalse(isUpgradeRequired);
         }
 
-        private void ThenUpgradeShouldBeRequired()
+        void ThenUpgradeShouldBeRequired()
         {
             Assert.True(isUpgradeRequired);
         }
@@ -230,7 +230,7 @@ namespace DbUp.Tests
 
         public class TestScriptProvider : IScriptProvider
         {
-            private readonly List<SqlScript> sqlScripts;
+            readonly List<SqlScript> sqlScripts;
 
             public TestScriptProvider(List<SqlScript> sqlScripts)
             {

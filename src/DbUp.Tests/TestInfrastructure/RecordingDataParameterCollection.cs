@@ -2,17 +2,18 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
+using DbUp.Engine.Output;
 
 namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDataParameterCollection : IDataParameterCollection
     {
-        private readonly Action<DatabaseAction> recordAction;
-        private readonly List<object> backingList;
+        readonly IUpgradeLog logger;
+        readonly List<object> backingList;
 
-        public RecordingDataParameterCollection(Action<DatabaseAction> recordAction)
+        public RecordingDataParameterCollection(IUpgradeLog logger)
         {
-            this.recordAction = recordAction;
+            this.logger = logger;
             backingList = new List<object>();
         }
 
@@ -31,7 +32,7 @@ namespace DbUp.Tests.TestInfrastructure
         public bool IsSynchronized { get; private set; }
         public int Add(object value)
         {
-            recordAction(DatabaseAction.AddParameterToCommand(value));
+            logger.WriteInformation(string.Format("DB Operation: Add parameter to command: {0}", value));
             backingList.Add(value);
             return backingList.Count - 1;
         }
