@@ -1,17 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Data.Common;
-using System.Data.SqlClient;
-using DbUp.Engine;
+using DbUp.Core.Support;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.SqlServer
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="Engine.IJournal"/> interface which tracks version numbers for a 
     /// SQL Server database using a table called dbo.SchemaVersions.
     /// </summary>
     public class SqlTableJournal : TableJournal
@@ -29,65 +24,34 @@ namespace DbUp.SqlServer
         public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
             : base(connectionManager, logger, new SqlServerObjectParser(), schema, table)
         {
-
         }
 
-        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
-            var command = dbCommandFactory();
-            command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", SchemaTableName);
-
-            var scriptNameParam = command.CreateParameter();
-            scriptNameParam.ParameterName = "scriptName";
-            scriptNameParam.Value = script.Name;
-            command.Parameters.Add(scriptNameParam);
-
-            var appliedParam = command.CreateParameter();
-            appliedParam.ParameterName = "applied";
-            appliedParam.Value = DateTime.Now;
-            command.Parameters.Add(appliedParam);
-
-            command.CommandType = CommandType.Text;
-            return command;
-
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
-        protected override IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetJournalEntriesSql()
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetExecutedScriptsSql(schemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
         }
 
-        protected override IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            var command = dbCommandFactory();
-            command.CommandText = GetCreateTableSql(SchemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
-        }
-        
-        /// <summary>
-        /// The Sql which is used to return the names of the scripts which have allready been executed from the journal table. 
-        /// </summary>
-        protected virtual string GetExecutedScriptsSql(string table)
-        {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
+            return 
+$@"create table {FqSchemaTableName} (
+    [Id] int identity(1,1) not null constraint {quotedPrimaryKeyName} primary key,
+    [ScriptName] nvarchar(255) not null,
+    [Applied] datetime not null
+)";
         }
 
-        /// <summary>
-        /// The sql to exectute to create the schema versions table
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        protected virtual string GetCreateTableSql(string tableName)
+        protected override string DoesTableExistSql()
         {
-            return string.Format(@"create table {0} (
-        	[Id] int identity(1,1) not null constraint PK_{0}_Id primary key,
-	[ScriptName] nvarchar(255) not null,
-	[Applied] datetime not null
-)", tableName);
+
+            return string.IsNullOrEmpty(SchemaTableSchema)
+                ? $"select 1 from information_schema.tables where TABLE_NAME = '{UnquotedSchemaTableName}'"
+                : $"select 1 from information_schema.tables where TABLE_NAME = '{UnquotedSchemaTableName}' and TABLE_SCHEMA = '{SchemaTableSchema}'";
         }
     }
 }

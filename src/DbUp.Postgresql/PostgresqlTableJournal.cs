@@ -1,9 +1,8 @@
 ﻿using System;
-using System.Data;
+using DbUp.Core.Support;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.Postgresql
 {
@@ -23,49 +22,36 @@ namespace DbUp.Postgresql
         public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string tableName)
             :base(connectionManager, logger, new PostgresqlObjectParser(), schema, tableName)
         {
-        }    
-
-        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
-        {
-            var command = dbCommandFactory();
-            command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", SchemaTableName);
-
-            var scriptNameParam = command.CreateParameter();
-            scriptNameParam.ParameterName = "scriptName";
-            scriptNameParam.Value = script.Name;
-            command.Parameters.Add(scriptNameParam);
-
-            var appliedParam = command.CreateParameter();
-            appliedParam.ParameterName = "applied";
-            appliedParam.Value = DateTime.Now;
-            command.Parameters.Add(appliedParam);
-
-            command.CommandType = CommandType.Text;
-            return command;
         }
 
-        protected override IDbCommand GetSelectExecutedScriptsCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
-            var command = dbCommandFactory();
-            command.CommandText = string.Format("select ScriptName from {0} order by ScriptName", schemaTableName);
-            command.CommandType = CommandType.Text;
-            return command;
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
-        protected override IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory, string schemaTableName)
+        protected override string GetJournalEntriesSql()
         {
-            var command = dbCommandFactory();
-            var primaryKeyName = QuoteSqlObjectName("PK_" + SchemaTableNameWithoutSchema + "_Id");
-            command.CommandText = string.Format(
-                @"CREATE TABLE {0}
+            return $"select ScriptName from {FqSchemaTableName} order by ScriptName";
+        }
+
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
+        {
+            return 
+$@"CREATE TABLE {FqSchemaTableName}
 (
     schemaversionsid serial NOT NULL,
     scriptname character varying(255) NOT NULL,
     applied timestamp without time zone NOT NULL,
-    CONSTRAINT {1} PRIMARY KEY (schemaversionsid)
-)", schemaTableName, primaryKeyName);
-            command.CommandType = CommandType.Text;
-            return command;
+    CONSTRAINT {quotedPrimaryKeyName} PRIMARY KEY (schemaversionsid)
+)";
+        }
+
+        protected override string DoesTableExistSql()
+        {
+            if (string.IsNullOrEmpty(SchemaTableSchema))
+                return $"SELECT count(*) FROM information_schema.tables WHERE table_name='{UnquotedSchemaTableName}'";
+
+            return $"SELECT count(*) FROM information_schema.tables WHERE table_schema = '{SchemaTableSchema}'AND table_name = '{UnquotedSchemaTableName}')";
         }
     }
 }
