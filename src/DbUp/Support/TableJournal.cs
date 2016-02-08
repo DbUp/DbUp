@@ -6,7 +6,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 
 // ReSharper disable MemberCanBePrivate.Global
-namespace DbUp.Core.Support
+namespace DbUp.Support
 {
     /// <summary>
     /// The base class for Journal implementations that use a table.

@@ -2,7 +2,7 @@
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Core.Support;
+using DbUp.Support;
 
 namespace DbUp.MySql
 {

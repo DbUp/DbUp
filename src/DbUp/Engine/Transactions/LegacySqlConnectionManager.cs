@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
-using DbUp.Support.SqlServer;
+using DbUp.Support;
 
 namespace DbUp.Engine.Transactions
 {

@@ -1,7 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.Support
 {
     /// <summary>
     /// Responsible for splitting SQL text into a list of commands.

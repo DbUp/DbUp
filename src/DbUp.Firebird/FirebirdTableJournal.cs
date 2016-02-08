@@ -3,7 +3,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using System.Data;
-using DbUp.Core.Support;
+using DbUp.Support;
 
 namespace DbUp.Firebird
 {

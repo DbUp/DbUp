@@ -1,9 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Text;
+
 // ReSharper disable MemberCanBePrivate.Global
 
-namespace DbUp.Support.SqlServer
+namespace DbUp.Support
 {
     /// <summary>
     /// Reads SQL commands from an underlying text stream.
