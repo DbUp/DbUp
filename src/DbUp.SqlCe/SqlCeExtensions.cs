@@ -4,7 +4,6 @@ using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
-using DbUp.Support.SqlServer;
 
 /// <summary>
 /// Configuration extension methods for SQL CE.

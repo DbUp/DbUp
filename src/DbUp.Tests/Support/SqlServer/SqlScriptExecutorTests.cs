@@ -4,7 +4,6 @@ using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;

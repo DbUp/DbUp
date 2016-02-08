@@ -5,7 +5,6 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using System.Data.SqlServerCe;
 using DbUp.Support;
-using DbUp.Support.SqlServer;
 
 namespace DbUp.SqlCe
 {

@@ -8,7 +8,7 @@
     <ProjectGuid>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DbUp.Core</RootNamespace>
+    <RootNamespace>DbUp</RootNamespace>
     <AssemblyName>DbUp.Core</AssemblyName>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
@@ -77,7 +77,7 @@
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
     <Compile Include="Helpers\Filters.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
-    <Compile Include="JetbrainsAnnotations.cs" />
+    <Compile Include="Properties\JetbrainsAnnotations.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptsProvider.cs" />
     <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />

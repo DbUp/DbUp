@@ -1,8 +1,8 @@
 ﻿using System;
-using DbUp.Core.Support;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Support;
 
 namespace DbUp.SQLite
 {

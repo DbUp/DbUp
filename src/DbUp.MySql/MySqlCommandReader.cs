@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Text;
-using DbUp.Support.SqlServer;
+using DbUp.Support;
 
 namespace DbUp.MySql
 {

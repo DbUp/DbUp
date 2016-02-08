@@ -5,7 +5,6 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using MySql.Data.MySqlClient;
 using DbUp.Support;
-using DbUp.Support.SqlServer;
 
 namespace DbUp.MySql
 {
