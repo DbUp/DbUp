@@ -93,6 +93,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CaptureLogsLogger.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ApiTests.cs" />
     <Compile Include="DatabaseSupportTests.cs" />
@@ -106,7 +107,6 @@
     <Compile Include="TestInfrastructure\RecordingDataParameterCollection.cs" />
     <Compile Include="TestInfrastructure\RecordingDbDataParameter.cs" />
     <Compile Include="TestInfrastructure\TestDatabaseExtension.cs" />
-    <Compile Include="TestInfrastructure\DatabaseAction.cs" />
     <Compile Include="TestInfrastructure\RecordingDbCommand.cs" />
     <Compile Include="TestInfrastructure\RecordingDbConnection.cs" />
     <Compile Include="TestInfrastructure\RecordingDbTransaction.cs" />

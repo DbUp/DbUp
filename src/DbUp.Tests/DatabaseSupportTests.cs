@@ -8,7 +8,6 @@ using DbUp.MySql;
 using DbUp.Postgresql;
 using DbUp.SqlServer;
 using DbUp.SQLite;
-using DbUp.Support.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
 using Shouldly;
@@ -23,7 +22,8 @@ namespace DbUp.Tests
         List<SqlScript> scripts;
         RecordingDbConnection recordingConnection;
         DatabaseUpgradeResult result;
-        private Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
+        Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
+        CaptureLogsLogger logger;
 
         [Test]
         public void VerifyBasicSupport()
@@ -72,18 +72,18 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private ExampleTable DatabaseExampleTable
+        ExampleTable DatabaseExampleTable
         {
             get
             {
                 return new ExampleTable("Deploy to")
                 {
-                    { new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
-                    { new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })) },
-                    { new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
-                    { new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SQLiteTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })) },
-                    { new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
-                    { new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) }
+                    new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+                    new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
+                    new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+                    new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SQLiteTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
+                    new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+                    new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))
                 };
             }
         }
@@ -93,14 +93,14 @@ namespace DbUp.Tests
             upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
         }
 
-        private void JournalTableNameIsCustomised()
+        void JournalTableNameIsCustomised()
         {
             upgradeEngineBuilder = addCustomNamedJournalToBuilder(upgradeEngineBuilder, "test", "TestSchemaVersions");
         }
 
-        private void CommandLogReflectsScript(ExampleAction target)
+        void CommandLogReflectsScript(ExampleAction target)
         {
-            recordingConnection.GetCommandLog()
+            logger.Log
                 .ShouldMatchApproved(b =>
                 {
                     b.LocateTestMethodUsingAttribute<TestAttribute>();
@@ -133,16 +133,18 @@ namespace DbUp.Tests
         {
         }
 
-        private Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo, Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournal)
+        Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo, Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournal)
         {
             return () =>
             {
                 scripts = new List<SqlScript>();
-                recordingConnection = new RecordingDbConnection(false);
+                logger = new CaptureLogsLogger();
+                recordingConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
                 testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
                 upgradeEngineBuilder = deployTo(DeployChanges.To)
                     .WithScripts(scripts)
-                    .OverrideConnectionFactory(testConnectionFactory);
+                    .OverrideConnectionFactory(testConnectionFactory)
+                    .LogTo(logger);
 
                 addCustomNamedJournalToBuilder = addCustomNamedJournal;
             };
