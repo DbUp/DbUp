@@ -98,9 +98,9 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\DbUp.Core\DbUp.Core.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />
