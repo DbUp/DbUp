@@ -6,50 +6,52 @@ namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbConnection : IDbConnection
     {
-        private readonly bool schemaTableExists;
+        readonly CaptureLogsLogger logger;
+        readonly bool schemaTableExists;
+        readonly string schemaTableName;
 
-        public RecordingDbConnection(bool schemaTableExists)
+        public RecordingDbConnection(CaptureLogsLogger logger, bool schemaTableExists, string schemaTableName)
         {
+            this.logger = logger;
             this.schemaTableExists = schemaTableExists;
+            this.schemaTableName = schemaTableName;
         }
-
-        private readonly List<DatabaseAction> dbActions = new List<DatabaseAction>();
 
         public IDbTransaction BeginTransaction()
         {
-            dbActions.Add(DatabaseAction.BeginTransaction());
-            return new RecordingDbTransaction(dbActions.Add);
+            logger.WriteDbOperation("Begin transaction");
+            return new RecordingDbTransaction(logger);
         }
 
         public IDbTransaction BeginTransaction(IsolationLevel il)
         {
-            dbActions.Add(DatabaseAction.BeginTransaction(il));
-            return new RecordingDbTransaction(dbActions.Add);
+            logger.WriteDbOperation(string.Format("Begin transaction with isolationLevel of {0}", il));
+            return new RecordingDbTransaction(logger);
         }
 
         public void Close()
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public void ChangeDatabase(string databaseName)
         {
-            throw new System.NotImplementedException();
+            throw new NotImplementedException();
         }
 
         public IDbCommand CreateCommand()
         {
-            return new RecordingDbCommand(dbActions.Add, schemaTableExists);
+            return new RecordingDbCommand(logger, schemaTableExists, schemaTableName);
         }
 
         public void Open()
         {
-            dbActions.Add(DatabaseAction.OpenConnection());
+            logger.WriteDbOperation("Open connection");
         }
 
         public void Dispose()
         {
-            dbActions.Add(DatabaseAction.DisposeConnection());
+            logger.WriteDbOperation("Dispose connection");
         }
 
         public string ConnectionString { get; set; }
@@ -59,10 +61,5 @@ namespace DbUp.Tests.TestInfrastructure
         public string Database { get; private set; }
 
         public ConnectionState State { get; private set; }
-
-        public string GetCommandLog()
-        {
-            return string.Join(Environment.NewLine, dbActions);
-        }
     }
 }

@@ -1,5 +1,4 @@
 ﻿using System;
-using ApprovalTests;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
 using Shouldly;
@@ -12,10 +11,12 @@ namespace DbUp.Tests.Support.MySql
         [Test]
         public void CanHandleDelimiter()
         {
-            var recordingDbConnection = new RecordingDbConnection(true);
+            var logger = new CaptureLogsLogger();
+            var recordingDbConnection = new RecordingDbConnection(logger, true, "schemaversions");
             var upgrader = DeployChanges.To
                 .MySqlDatabase(string.Empty)
                 .OverrideConnectionFactory(recordingDbConnection)
+                .LogTo(logger)
                 .WithScript("Script0003", @"USE `test`;
 DROP procedure IF EXISTS `testSproc`;
 
@@ -36,16 +37,7 @@ END$$").Build();
             var result = upgrader.PerformUpgrade();
 
             result.Successful.ShouldBe(true);
-            var commandLog = recordingDbConnection.GetCommandLog();
-            try
-            {
-                Approvals.Verify(commandLog, Scrubbers.ScrubDates);
-            }
-            catch (Exception)
-            {
-                Console.WriteLine(commandLog);
-                throw;
-            }
+            logger.Log.ShouldMatchApproved(b => b.WithScrubber(Scrubbers.ScrubDates));
         }
     }
 }

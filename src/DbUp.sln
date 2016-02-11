@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp", "DbUp\DbUp.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.Core", "DbUp.Core\DbUp.Core.csproj", "{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{C6A39A77-AEF6-421D-8198-E15821B80F9D}"
 EndProject
@@ -13,6 +13,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-41
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
 		..\Breaking changes.md = ..\Breaking changes.md
+		dbup.nuspec = dbup.nuspec
 		..\README.md = ..\README.md
 		Information\SolutionInfo.cs = Information\SolutionInfo.cs
 		Information\VersionInfo.cs = Information\VersionInfo.cs
@@ -37,6 +38,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.MySql", "DbUp.MySql\DbUp.MySql.csproj", "{4E0F1564-ED5F-49A6-8FB0-E8EB7EA2D63F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SQLite.Mono", "DbUp.SQLite.Mono\DbUp.SQLite.Mono.csproj", "{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DbUp.SqlServer", "DbUp.SqlServer\DbUp.SqlServer.csproj", "{EE71E015-3442-45B3-97B6-7886B7DE8351}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -92,6 +95,10 @@ Global
 		{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
 		{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{5C474B5C-019C-4C03-9E20-2D0CDEAAEA7B}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{EE71E015-3442-45B3-97B6-7886B7DE8351}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{EE71E015-3442-45B3-97B6-7886B7DE8351}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{EE71E015-3442-45B3-97B6-7886B7DE8351}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{EE71E015-3442-45B3-97B6-7886B7DE8351}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

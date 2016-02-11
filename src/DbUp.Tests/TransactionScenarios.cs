@@ -1,8 +1,9 @@
-﻿using ApprovalTests;
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using DbUp.Engine;
+using DbUp.Engine.Output;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
+using Shouldly;
 using TestStack.BDDfy;
 
 namespace DbUp.Tests
@@ -10,9 +11,16 @@ namespace DbUp.Tests
     [TestFixture]
     public class TransactionScenarios
     {
-        private UpgradeEngineBuilder upgradeEngineBuilder;
-        private RecordingDbConnection testConnection;
-        private SqlScript[] scripts;
+        UpgradeEngineBuilder upgradeEngineBuilder;
+        RecordingDbConnection testConnection;
+        SqlScript[] scripts;
+        CaptureLogsLogger logger;
+
+        [SetUp]
+        public void CaptureLogs()
+        {
+            logger = new CaptureLogsLogger();
+        }
 
         [Test]
         public void UsingNoTransactionsScenario()
@@ -74,7 +82,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
+        void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
         {
             scripts = new[]
             {
@@ -87,56 +95,79 @@ namespace DbUp.Tests
                 .PerformUpgrade();
         }
 
-        private void ShouldStopExecution()
+        void ShouldStopExecution()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            logger.Log.ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldRollbackFailedScriptAndStopExecution()
+        void ShouldRollbackFailedScriptAndStopExecution()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            logger.Log.ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldExecuteAllScriptsInASingleTransaction()
+        void ShouldExecuteAllScriptsInASingleTransaction()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            logger.Log.ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldHaveExecutedEachScriptInATransaction()
+        void ShouldHaveExecutedEachScriptInATransaction()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            logger.Log.ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void ShouldExecuteScriptsWithoutUsingATransaction()
+        void ShouldExecuteScriptsWithoutUsingATransaction()
         {
-            Approvals.Verify(testConnection.GetCommandLog(), Scrubbers.ScrubDates);
+            logger.Log.ShouldMatchApproved(b =>
+            {
+                b.WithScrubber(Scrubbers.ScrubDates);
+                b.LocateTestMethodUsingAttribute<TestAttribute>();
+            });
         }
 
-        private void DbUpSetupToUseSingleTransaction()
+        void DbUpSetupToUseSingleTransaction()
         {
-            testConnection = new RecordingDbConnection(false);
+            testConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
+                .JournalToSqlTable("dbo", "SchemaVersions")
                 .WithTransaction();
         }
 
-        private void DbUpSetupToNotUseTransactions()
+        void DbUpSetupToNotUseTransactions()
         {
-            testConnection = new RecordingDbConnection(false);
+            testConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
+                .JournalToSqlTable("dbo", "SchemaVersions")
                 .WithoutTransaction();
         }
 
-        private void DbUpSetupToUseTransactionPerScript()
+        void DbUpSetupToUseTransactionPerScript()
         {
-            testConnection = new RecordingDbConnection(false);
+            testConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
                 .TestDatabase(testConnection)
+                .JournalToSqlTable("dbo", "SchemaVersions")
                 .WithTransactionPerScript();
         }
 
-        private void UpgradeIsPerformedExecutingTwoScripts()
+        void UpgradeIsPerformedExecutingTwoScripts()
         {
             scripts = new[]
             {
@@ -145,6 +176,7 @@ namespace DbUp.Tests
             };
              var result = upgradeEngineBuilder
                 .WithScripts(scripts)
+                .LogTo(logger)
                 .Build()
                 .PerformUpgrade();
         }

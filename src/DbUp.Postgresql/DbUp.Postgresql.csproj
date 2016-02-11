@@ -62,15 +62,18 @@
     <Compile Include="..\Information\VersionInfo.cs">
       <Link>Properties\VersionInfo.cs</Link>
     </Compile>
+    <Compile Include="PostgresqlObjectParser.cs" />
+    <Compile Include="PostgresqlScriptExecutor.cs" />
     <Compile Include="PostgresqlConnectionManager.cs" />
     <Compile Include="PostgresqlExtensions.cs" />
     <Compile Include="PostgresqlPreprocessor.cs" />
+    <Compile Include="PostgresqlTableJournal.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\DbUp.Core\DbUp.Core.csproj">
       <Project>{2d2c117a-7841-4285-a4ce-e7c4fc64ad9b}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

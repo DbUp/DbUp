@@ -1,8 +1,8 @@
 ﻿using System;
 using NUnit.Framework;
-using DbUp.Support.SqlServer;
 using System.Text;
 using System.Linq;
+using DbUp.Support;
 using Shouldly;
 
 namespace DbUp.Tests.Support.SqlServer
