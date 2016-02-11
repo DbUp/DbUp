@@ -11,8 +11,11 @@
     <releaseNotes>https://github.com/DbUp/DbUp/releases</releaseNotes>
     <projectUrl>http://dbup.github.com</projectUrl>
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
+    <dependencies>
+      <dependency id="dbup-sqlserver" version="$version$" />
+    </dependencies>
   </metadata>
-  <dependencies>
-    <dependency id="dbup-sqlserver" version="$version$" />
-  </dependencies>
+  <files>
+    <file src="shim.txt" target="" />
+  </files>
 </package>
