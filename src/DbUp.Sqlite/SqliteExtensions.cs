@@ -1,10 +1,6 @@
-﻿using System;
-using DbUp;
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using DbUp.SQLite.Helpers;
-using DbUp.Support.SQLite;
 using DbUp.SQLite;
-using DbUp.Support.SqlServer;
 
 /// <summary>
 /// Configuration extension methods for SQLite (see http://www.sqlite.org/)
@@ -29,8 +25,8 @@ public static class SQLiteExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(connectionString));
         builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
-            () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new SQLiteScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+            () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
     }
@@ -48,8 +44,8 @@ public static class SQLiteExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(sharedConnection));
         builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
-            () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new SQLiteScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+            () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
     }

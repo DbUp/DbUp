@@ -1,10 +1,6 @@
 ﻿using DbUp.Builder;
-using System;
-using DbUp;
 using DbUp.Firebird;
 using DbUp.Engine.Transactions;
-using DbUp.Support.SqlServer;
-using DbUp.Support.Firebird;
 
 // ReSharper disable once CheckNamespace
 
@@ -37,7 +33,7 @@ public static class FirebirdExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors));
+        builder.Configure(c => c.ScriptExecutor = new FirebirdScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
         builder.Configure(c => c.Journal = new FirebirdTableJournal(() => c.ConnectionManager, () => c.Log, "schemaversions"));
         builder.WithPreprocessor(new FirebirdPreprocessor());
         return builder;

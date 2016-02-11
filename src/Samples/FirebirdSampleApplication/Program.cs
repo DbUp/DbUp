@@ -12,8 +12,6 @@ namespace FirebirdSampleApplication
         {
             var connectionString = ConfigurationManager.ConnectionStrings["SampleFirebird"].ConnectionString;
 
-
-
             var upgrader =
                 DeployChanges.To
                     .FirebirdDatabase(connectionString)

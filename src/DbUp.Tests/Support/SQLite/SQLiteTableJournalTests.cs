@@ -1,13 +1,12 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support.SQLite;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;
+using DbUp.SQLite;
 
 namespace DbUp.Tests.Support.SQLite
 {
@@ -45,12 +44,12 @@ namespace DbUp.Tests.Support.SQLite
             var param2 = Substitute.For<IDbDataParameter>();
             dbConnection.CreateCommand().Returns(command);
             command.CreateParameter().Returns(param1, param2);
-            command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
+            command.ExecuteScalar().Returns(x => 0);
             var consoleUpgradeLog = new ConsoleUpgradeLog();
             var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
 
             // When
-            journal.StoreExecutedScript(new SqlScript("test", "select 1"));
+            journal.StoreExecutedScript(new SqlScript("test", "select 1"), () => command);
 
             // Expect
             command.Received(2).CreateParameter();

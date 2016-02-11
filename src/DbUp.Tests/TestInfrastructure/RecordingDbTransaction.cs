@@ -1,25 +1,26 @@
 using System;
 using System.Data;
+using DbUp.Engine.Output;
 
 namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbTransaction : IDbTransaction
     {
-        private readonly Action<DatabaseAction> recordAction;
+        readonly CaptureLogsLogger logger;
 
-        public RecordingDbTransaction(Action<DatabaseAction> recordAction)
+        public RecordingDbTransaction(CaptureLogsLogger logger)
         {
-            this.recordAction = recordAction;
+            this.logger = logger;
         }
 
         public void Dispose()
         {
-            recordAction(DatabaseAction.DisposeTransaction());
+            logger.WriteDbOperation("Dispose transaction");
         }
 
         public void Commit()
         {
-            recordAction(DatabaseAction.CommitTransaction());
+            logger.WriteDbOperation("Commit transaction");
         }
 
         public void Rollback()
