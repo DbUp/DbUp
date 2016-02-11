@@ -1,7 +1,7 @@
 ﻿DB Operation: Open connection
 Info:         Beginning database upgrade
 Info:         Checking whether journal table exists..
-DB Operation: Execute scalar command: SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'TestSchemaVersions' COLLATE NOCASE
+DB Operation: Execute scalar command: SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = 'TestSchemaVersions'
 DB Operation: Dispose command
 Info:         Creating the [TestSchemaVersions] table
 DB Operation: Execute non query command: CREATE TABLE [TestSchemaVersions] (

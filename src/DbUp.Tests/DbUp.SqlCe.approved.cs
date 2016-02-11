@@ -23,18 +23,17 @@ namespace DbUp.SqlCe
     }
     public class SqlCeScriptExecutor : DbUp.Support.ScriptExecutor
     {
-        public SqlCeScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
+        public SqlCeScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors, System.Func<DbUp.Engine.IJournal> journal) { }
         protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action excuteCommand) { }
         protected override string GetVerifySchemaSql(string schema) { }
     }
     public class SqlCeTableJournal : DbUp.Support.TableJournal
     {
         public SqlCeTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
-        protected override System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
-        protected virtual string GetCreateTableSql(string tableName) { }
-        protected virtual string GetExecutedScriptsSql(string table) { }
-        protected override System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
-        protected override System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
+        protected override string DoesTableExistSql() { }
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override string GetJournalEntriesSql() { }
     }
 }
 

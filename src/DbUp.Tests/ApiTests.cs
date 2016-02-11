@@ -12,7 +12,7 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(SupportedDatabases).Assembly)
-                .ShouldMatchApproved();
+                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.{type}.cs"));
         }
 
         [Test]
@@ -20,7 +20,7 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(FirebirdExtensions).Assembly)
-                .ShouldMatchApproved();
+                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.Firebird.{type}.cs"));
         }
 
         [Test]
@@ -28,7 +28,7 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(MySqlExtensions).Assembly)
-                .ShouldMatchApproved();
+                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.MySql.{type}.cs"));
         }
 
         [Test]
@@ -36,7 +36,7 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(PostgresqlExtensions).Assembly)
-                .ShouldMatchApproved();
+                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.Postgresql.{type}.cs"));
         }
 
         [Test]
@@ -44,7 +44,7 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(SqlCeExtensions).Assembly)
-                .ShouldMatchApproved();
+                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.SqlCe.{type}.cs"));
         }
 
         [Test]
@@ -52,7 +52,7 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(SQLiteExtensions).Assembly)
-                .ShouldMatchApproved();
+                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.SqLite.{type}.cs"));
         }
     }
 }

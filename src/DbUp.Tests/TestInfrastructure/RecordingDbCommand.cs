@@ -75,7 +75,8 @@ namespace DbUp.Tests.TestInfrastructure
             if (CommandText == "error")
                 ThrowError();
 
-            if (CommandText.Contains(schemaTableName))
+            // Are we checking if schemaversions exists
+            if (CommandText.IndexOf(schemaTableName, StringComparison.OrdinalIgnoreCase) != -1)
             {
                 if (schemaTableExists)
                     return 1;

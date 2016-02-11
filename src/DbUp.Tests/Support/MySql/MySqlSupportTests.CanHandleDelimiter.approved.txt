@@ -3,16 +3,6 @@ Info:         Beginning database upgrade
 Info:         Checking whether journal table exists..
 DB Operation: Execute scalar command: SELECT count(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME='schemaversions'
 DB Operation: Dispose command
-Info:         Creating the `schemaversions` table
-DB Operation: Execute non query command: CREATE TABLE `schemaversions` 
-(
-    `schemaversionid` INT NOT NULL AUTO_INCREMENT,
-    `scriptname` VARCHAR(255) NOT NULL,
-    `applied` TIMESTAMP NOT NULL,
-    PRIMARY KEY (`schemaversionid`)
-);
-DB Operation: Dispose command
-Info:         The `schemaversions` table has been created
 Info:         Fetching list of already executed scripts.
 DB Operation: Execute reader command: select scriptname from `schemaversions` order by scriptname
 DB Operation: Dispose command

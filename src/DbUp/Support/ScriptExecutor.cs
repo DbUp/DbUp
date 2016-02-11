@@ -18,7 +18,6 @@ namespace DbUp.Support
     public abstract class ScriptExecutor : IScriptExecutor
     {
         readonly Func<IConnectionManager> connectionManagerFactory;
-        readonly Func<IUpgradeLog> log;
         readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         readonly Func<IJournal> journal;
         readonly Func<bool> variablesEnabled;
@@ -45,7 +44,7 @@ namespace DbUp.Support
             Func<IJournal> journal)
         {
             Schema = schema;
-            this.log = log;
+            Log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.journal = journal;
@@ -110,7 +109,7 @@ namespace DbUp.Support
         public virtual void Execute(SqlScript script, IDictionary<string, string> variables)
         {
             var contents = PreprocessScriptContents(script, variables);
-            log().WriteInformation("Executing Database Server script '{0}'", script.Name);
+            Log().WriteInformation("Executing Database Server script '{0}'", script.Name);
 
             var connectionManager = connectionManagerFactory();
             var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
@@ -151,15 +150,15 @@ namespace DbUp.Support
             }
             catch (DbException sqlException)
             {
-                log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
-                log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
-                log().WriteError(sqlException.ToString());
+                Log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
+                Log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
+                Log().WriteError(sqlException.ToString());
                 throw;
             }
             catch (Exception ex)
             {
-                log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
-                log().WriteError(ex.ToString());
+                Log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
+                Log().WriteError(ex.ToString());
                 throw;
             }
         }
@@ -225,21 +224,18 @@ namespace DbUp.Support
                 format = "|" + format;
                 totalLength += 1;
 
-                log().WriteInformation(new string('-', totalLength));
-                log().WriteInformation(format, names.ToArray());
-                log().WriteInformation(new string('-', totalLength));
+                Log().WriteInformation(new string('-', totalLength));
+                Log().WriteInformation(format, names.ToArray());
+                Log().WriteInformation(new string('-', totalLength));
                 foreach (var line in lines)
                 {
-                    log().WriteInformation(format, line.ToArray());
+                    Log().WriteInformation(format, line.ToArray());
                 }
-                log().WriteInformation(new string('-', totalLength));
-                log().WriteInformation("\r\n");
+                Log().WriteInformation(new string('-', totalLength));
+                Log().WriteInformation("\r\n");
             } while (reader.NextResult());
         }
 
         protected Func<IUpgradeLog> Log { get; private set; }
-
-
-
     }
 }
