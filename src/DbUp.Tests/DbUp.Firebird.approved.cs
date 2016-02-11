@@ -22,16 +22,17 @@ namespace DbUp.Firebird
     }
     public class FirebirdScriptExecutor : DbUp.Support.ScriptExecutor
     {
-        public FirebirdScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
+        public FirebirdScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors, System.Func<DbUp.Engine.IJournal> journal) { }
         protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action excuteCommand) { }
         protected override string GetVerifySchemaSql(string schema) { }
     }
     public class FirebirdTableJournal : DbUp.Support.TableJournal
     {
         public FirebirdTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string tableName) { }
-        protected override System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
-        protected override System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
-        protected override System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName) { }
+        protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
+        protected override string DoesTableExistSql() { }
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override string GetJournalEntriesSql() { }
         protected override void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
     }
 }

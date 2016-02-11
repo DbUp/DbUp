@@ -66,7 +66,7 @@ namespace DbUp.Engine
     public interface IJournal
     {
         string[] GetExecutedScripts();
-        void StoreExecutedScript(DbUp.Engine.SqlScript script);
+        void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory);
     }
     public interface IScript
     {
@@ -189,7 +189,7 @@ namespace DbUp.Engine.Transactions
     {
         bool IsScriptOutputLogged { get; set; }
         DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
-        void ExecuteCommandsWithManagedConnection(System.Action<System.Func<System.Data.IDbCommand>> action);
+        void ExecuteCommandsWithManagedConnection([JetBrains.Annotations.InstantHandleAttribute()] System.Action<System.Func<System.Data.IDbCommand>> action);
         T ExecuteCommandsWithManagedConnection<T>(System.Func<System.Func<System.Data.IDbCommand>, T> actionWithResult);
         System.IDisposable OperationStarting(DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts);
         System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
@@ -236,8 +236,8 @@ namespace DbUp.Helpers
     {
         public NullJournal() { }
         public string[] GetExecutedScripts() { }
-        public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
-    }   
+        public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+    }
 }
 namespace DbUp.ScriptProviders
 {
@@ -281,7 +281,7 @@ namespace DbUp.Support
     }
     public abstract class ScriptExecutor : DbUp.Engine.IScriptExecutor
     {
-        public ScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors) { }
+        public ScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors, System.Func<DbUp.Engine.IJournal> journal) { }
         public System.Nullable<int> ExecutionTimeoutSeconds { get; set; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         public string Schema { get; set; }
@@ -296,36 +296,6 @@ namespace DbUp.Support
         public void VerifySchema() { }
         protected virtual void WriteReaderToLog(System.Data.IDataReader reader) { }
     }
-    public abstract class SqlObjectParser : DbUp.Engine.ISqlObjectParser
-    {
-        protected SqlObjectParser(System.Data.Common.DbCommandBuilder commandBuilder) { }
-        public string QuoteIdentifier(string objectName) { }
-        public virtual string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
-        public virtual string UnquoteIdentifier(string objectName) { }
-    }
-    public abstract class TableJournal : DbUp.Engine.IJournal
-    {
-        public TableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, string table) { }
-        protected System.Func<DbUp.Engine.Transactions.IConnectionManager> ConnectionManager { get; set; }
-        protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; set; }
-        protected string SchemaTableName { get; }
-        protected bool TableExists { get; }
-        protected virtual bool DoesTableExist() { }
-        protected virtual void EnsureTableIsLatestVersion() { }
-        protected abstract System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName);
-        public string[] GetExecutedScripts() { }
-        protected abstract System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script);
-        protected abstract System.Data.IDbCommand GetSelectExecutedScriptsCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, string schemaTableName);
-        protected virtual string GetSelectScalarFromTableSql(string tableName) { }
-        protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
-        protected virtual string QuoteSqlObjectName(string objectName) { }
-        public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
-        protected virtual string UnquoteSqlObjectName(string quotedIdentifier) { }
-    }
-}
-namespace DbUp.Support.SqlServer
-{
-    
     public class SqlCommandReader : System.IO.StringReader
     {
         protected const int FailedRead = -1;
@@ -357,7 +327,36 @@ namespace DbUp.Support.SqlServer
     {
         public SqlCommandSplitter() { }
         public virtual System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
-    }      
+    }
+    public abstract class SqlObjectParser : DbUp.Engine.ISqlObjectParser
+    {
+        protected SqlObjectParser(System.Data.Common.DbCommandBuilder commandBuilder) { }
+        public string QuoteIdentifier(string objectName) { }
+        public virtual string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
+        public virtual string UnquoteIdentifier(string objectName) { }
+    }
+    public abstract class TableJournal : DbUp.Engine.IJournal
+    {
+        protected TableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, string table) { }
+        protected System.Func<DbUp.Engine.Transactions.IConnectionManager> ConnectionManager { get; }
+        protected string FqSchemaTableName { get; }
+        protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
+        protected string SchemaTableSchema { get; }
+        protected string UnquotedSchemaTableName { get; }
+        protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
+        protected bool DoesTableExist() { }
+        protected abstract string DoesTableExistSql();
+        protected void EnsureTableIsLatestVersion() { }
+        protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        public string[] GetExecutedScripts() { }
+        protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);
+        protected System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
+        protected System.Data.IDbCommand GetJournalEntriesCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        protected abstract string GetJournalEntriesSql();
+        protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        protected string UnquoteSqlObjectName(string quotedIdentifier) { }
+    }
 }
 
 public class static StandardExtensions

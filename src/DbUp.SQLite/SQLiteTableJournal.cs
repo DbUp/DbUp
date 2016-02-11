@@ -41,7 +41,7 @@ $@"CREATE TABLE {FqSchemaTableName} (
 
         protected override string DoesTableExistSql()
         {
-            return $"SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = '{UnquotedSchemaTableName}' COLLATE NOCASE";
+            return $"SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = '{UnquotedSchemaTableName}'";
         }
     }
 }
