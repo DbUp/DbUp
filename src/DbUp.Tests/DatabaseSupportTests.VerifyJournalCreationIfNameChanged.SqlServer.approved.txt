@@ -1,9 +1,9 @@
 ﻿Open connection
-Execute scalar command: select 1 from information_schema.tables where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
 Dispose command
 Execute non query command: script1contents
 Dispose command
-Execute scalar command: select 1 from information_schema.tables where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
 Dispose command
 Execute non query command: create table [test].[TestSchemaVersions] (
 	[Id] int identity(1,1) not null constraint [PK_TestSchemaVersions_Id] primary key,

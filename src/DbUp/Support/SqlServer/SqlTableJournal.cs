@@ -193,8 +193,8 @@ namespace DbUp.Support.SqlServer
         protected virtual bool VerifyTableExistsCommand(IDbCommand command, string tableName, string schemaName)
         {
             command.CommandText = string.IsNullOrEmpty(schema)
-                            ? string.Format("select 1 from information_schema.tables where TABLE_NAME = '{0}'", tableName)
-                            : string.Format("select 1 from information_schema.tables where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", tableName, schemaName);
+                            ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", tableName)
+                            : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", tableName, schemaName);
             command.CommandType = CommandType.Text;
             var result = command.ExecuteScalar() as int?;
             return result == 1;
