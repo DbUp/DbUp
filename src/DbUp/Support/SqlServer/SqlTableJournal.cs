@@ -136,7 +136,7 @@ namespace DbUp.Support.SqlServer
         /// <param name="command">The IDbCommand that will be used to execute the parameters</param>
         /// <param name="script">The SQL script to be recorded in the journal</param>
         /// <returns></returns>
-        protected virtual IList<IDbDataParameter> AddInsertParameters(IDbCommand command, SqlScript script)
+        protected virtual IList<IDbDataParameter> CreateInsertParameters(IDbCommand command, SqlScript script)
         {
             var scriptNameParam = command.CreateParameter();
             scriptNameParam.ParameterName = "scriptName";
