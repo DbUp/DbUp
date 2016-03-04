@@ -185,7 +185,8 @@ public static class SqlServerExtensions
             // Create the database...
             using (var command = new SqlCommand(sqlCommandText, connection)
             {
-                CommandType = CommandType.Text
+                CommandType = CommandType.Text,
+				CommandTimeout = 120
             })
             {
                 command.ExecuteNonQuery();
