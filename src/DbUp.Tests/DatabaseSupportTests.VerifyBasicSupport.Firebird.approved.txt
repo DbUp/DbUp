@@ -1,9 +1,9 @@
 ﻿Open connection
-Execute scalar command: select count(*) from schemaversions
+Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'schemaversions'
 Dispose command
 Execute non query command: script1contents
 Dispose command
-Execute scalar command: select count(*) from schemaversions
+Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'schemaversions'
 Dispose command
 Execute non query command: CREATE TABLE schemaversions
                                     (
