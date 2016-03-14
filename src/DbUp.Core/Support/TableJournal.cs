@@ -206,6 +206,11 @@ namespace DbUp.Support
 
         /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
         /// <returns>1 if table exists, 0 otherwise</returns>
-        protected abstract string DoesTableExistSql();
+        protected virtual string DoesTableExistSql()
+        {
+            return string.IsNullOrEmpty(SchemaTableSchema)
+                            ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", UnquotedSchemaTableName)
+                            : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", UnquotedSchemaTableName, SchemaTableSchema);
+        }
     }
 }

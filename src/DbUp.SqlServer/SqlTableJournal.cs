@@ -45,13 +45,5 @@ $@"create table {FqSchemaTableName} (
     [Applied] datetime not null
 )";
         }
-
-        protected override string DoesTableExistSql()
-        {
-
-            return string.IsNullOrEmpty(SchemaTableSchema)
-                ? $"select 1 from information_schema.tables where TABLE_NAME = '{UnquotedSchemaTableName}'"
-                : $"select 1 from information_schema.tables where TABLE_NAME = '{UnquotedSchemaTableName}' and TABLE_SCHEMA = '{SchemaTableSchema}'";
-        }
     }
 }

@@ -1,7 +1,7 @@
 ﻿DB Operation: Open connection
 Info:         Beginning database upgrade
 Info:         Checking whether journal table exists..
-DB Operation: Execute scalar command: select 1 from information_schema.tables where TABLE_NAME = 'SchemaVersions' and TABLE_SCHEMA = 'dbo'
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions' and TABLE_SCHEMA = 'dbo'
 DB Operation: Dispose command
 Info:         Creating the [dbo].[SchemaVersions] table
 DB Operation: Execute non query command: create table [dbo].[SchemaVersions] (

@@ -345,7 +345,7 @@ namespace DbUp.Support
         protected string UnquotedSchemaTableName { get; }
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
         protected bool DoesTableExist() { }
-        protected abstract string DoesTableExistSql();
+        protected virtual string DoesTableExistSql() { }
         protected void EnsureTableIsLatestVersion() { }
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public string[] GetExecutedScripts() { }

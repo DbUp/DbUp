@@ -68,7 +68,7 @@ END;";
 
         protected override string DoesTableExistSql()
         {
-            return $"SELECT RDB$RELATION_NAME FROM RDB$RELATIONS WHERE RDB$RELATION_NAME = '{UnquotedSchemaTableName}'";
+            return $"select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = '{UnquotedSchemaTableName}'";
         }
 
         protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)

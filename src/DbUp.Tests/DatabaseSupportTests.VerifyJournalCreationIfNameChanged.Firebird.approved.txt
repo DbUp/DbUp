@@ -1,7 +1,7 @@
 ﻿DB Operation: Open connection
 Info:         Beginning database upgrade
 Info:         Checking whether journal table exists..
-DB Operation: Execute scalar command: SELECT RDB$RELATION_NAME FROM RDB$RELATIONS WHERE RDB$RELATION_NAME = 'TestSchemaVersions'
+DB Operation: Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'TestSchemaVersions'
 DB Operation: Dispose command
 Info:         Creating the "TestSchemaVersions" table
 DB Operation: Execute non query command: CREATE TABLE "TestSchemaVersions"
