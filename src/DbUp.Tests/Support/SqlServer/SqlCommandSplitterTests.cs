@@ -57,6 +57,25 @@ SELECT AccountId,
             Assert.That(commands.Count(), Is.EqualTo(expectedNumberOfCommands));
         }
 
+		[Test]
+		public void should_treat_bracketed_text_as_single_item()
+		{
+			var sb = new StringBuilder();
+			sb.AppendLine("SELECT 1 as [']");
+			sb.AppendLine("GO");
+			sb.AppendLine("Select 2");
+			var commands = sut.SplitScriptIntoCommands(sb.ToString());
+			commands.Count().ShouldBe(2);
+		}
+
+		[Test]
+		public void multiple_brackets_should_escape_properly()
+		{
+			var sql = "Select 1 as [[a]][b]][c]]]";
+			var commands = sut.SplitScriptIntoCommands(sql);
+			commands.Count().ShouldBe(1);
+		}
+
         [Test]
         public void should_split_statements_on_go_and_handle_comments()
         {

@@ -22,6 +22,8 @@ namespace DbUp.Support
         private const char DashChar = '-';
         private const char SlashChar = '/';
         private const char StarChar = '*';
+	    private const char OpenBracketChar = '[';
+	    private const char CloseBracketChar = ']';
 
         protected const int FailedRead = -1;
 
@@ -94,6 +96,11 @@ namespace DbUp.Support
                     ReadQuotedString();
                     continue;
                 }
+				if (IsBeginningOfBracketedText)
+				{
+					ReadBracketedText();
+					continue;
+				}
                 if (IsBeginningOfDashDashComment)
                 {
                     ReadDashDashComment();
@@ -281,6 +288,22 @@ namespace DbUp.Support
             return true;
         }
 
+	    private bool IsBeginningOfBracketedText
+	    {
+		    get
+		    {
+			    return CurrentChar == OpenBracketChar;
+		    }
+	    }
+
+	    private bool IsEndOfBracketedText
+	    {
+		    get
+		    {
+				return CurrentChar == CloseBracketChar;
+		    }
+	    }
+
         private bool IsBeginningOfDashDashComment
         {
             get
@@ -336,6 +359,30 @@ namespace DbUp.Support
                 }
             }
         }
+
+		private void ReadBracketedText()
+		{
+			WriteCurrentCharToCommandTextBuffer();
+			while(Read() != FailedRead)
+			{
+				WriteCurrentCharToCommandTextBuffer();
+				if (IsEndOfBracketedText)
+				{
+					var peekChar = PeekChar();
+					// Close brackets within brackets are escaped with another
+					// Close bracket. e.g. [a[b]]c] => a[b]c
+					if (peekChar == CloseBracketChar)
+					{
+						Read();
+						WriteCurrentCharToCommandTextBuffer();
+					}
+					else
+					{
+						return;
+					}
+				}
+			}
+		}
 
         private void ReadDashDashComment()
         {
