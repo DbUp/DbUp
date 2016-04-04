@@ -1,7 +1,7 @@
 ﻿DB Operation: Open connection
 Info:         Beginning database upgrade
 Info:         Checking whether journal table exists..
-DB Operation: Execute scalar command: SELECT count(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME='schemaversions'
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
 DB Operation: Dispose command
 Info:         Fetching list of already executed scripts.
 DB Operation: Execute reader command: select scriptname from `schemaversions` order by scriptname

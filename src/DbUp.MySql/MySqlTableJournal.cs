@@ -45,13 +45,5 @@ $@"CREATE TABLE {FqSchemaTableName}
     PRIMARY KEY (`schemaversionid`)
 );";
         }
-
-        protected override string DoesTableExistSql()
-        {
-            if (string.IsNullOrEmpty(SchemaTableSchema))
-                return $"SELECT count(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME='{UnquotedSchemaTableName}'";
-
-            return $"SELECT count(TABLE_NAME) FROM information_schema.TABLES WHERE TABLE_NAME='{UnquotedSchemaTableName}' AND TABLE_SCHEMA='{SchemaTableSchema}'";
-        }
     }
 }
