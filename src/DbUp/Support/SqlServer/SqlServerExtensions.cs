@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Text;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Output;
@@ -114,14 +112,27 @@ public static class SqlServerExtensions
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
     }
 
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger)
+	/// <summary>
+	/// Ensures that the database specified in the connection string exists.
+	/// </summary>
+	/// <param name="supported">Fluent helper type.</param>
+	/// <param name="connectionString">The connection string.</param>
+	/// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+	/// <returns></returns>
+	public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout)
+	{
+		SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+	}
+
+	/// <summary>
+	/// Ensures that the database specified in the connection string exists.
+	/// </summary>
+	/// <param name="supported">Fluent helper type.</param>
+	/// <param name="connectionString">The connection string.</param>
+	/// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+	/// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+	/// <returns></returns>
+	public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, int timeout=-1)
     {
         if (supported == null) throw new ArgumentNullException("supported");
         
@@ -166,6 +177,7 @@ public static class SqlServerExtensions
             {
                 CommandType = CommandType.Text
             })
+
             {
                 var results = (int?)command.ExecuteScalar();
 
@@ -188,6 +200,11 @@ public static class SqlServerExtensions
                 CommandType = CommandType.Text
             })
             {
+				if (timeout >= 0)
+	            {
+		            command.CommandTimeout = timeout;
+	            }
+
                 command.ExecuteNonQuery();
 
             }
@@ -195,6 +212,4 @@ public static class SqlServerExtensions
             logger.WriteInformation(@"Created database {0}", databaseName);
         }
     }
-
-
 }
