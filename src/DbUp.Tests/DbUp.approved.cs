@@ -411,7 +411,8 @@ public class static SqlServerExtensions
         "erScript() to manage connection behaviour")]
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, System.Func<System.Data.IDbConnection> connectionFactory, string schema) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger, int timeout = -1) { }
 }
 public class static StandardExtensions
 {
