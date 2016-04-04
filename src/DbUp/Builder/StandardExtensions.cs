@@ -133,7 +133,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params SqlScript[] scripts)
     {
-        return WithScripts(builder, (IEnumerable<SqlScript>)scripts);
+        return WithScripts(builder, (IEnumerable<SqlScript>) scripts);
     }
 
     /// <summary>
@@ -218,6 +218,108 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding)
     {
         return WithScripts(builder, new FileSystemScriptProvider(path, filter, encoding));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="targetVersion">Exclude version folders with a higher version number.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, string targetVersion)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, targetVersion));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a custom filter.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, filter));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version and custom encoding.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="targetVersion">Exclude version folders with a higher version number.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, Encoding encoding, string targetVersion)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, targetVersion));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version and custom filter.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <param name="targetVersion">Exclude version folders with a higher version number.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, string targetVersion)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, filter, targetVersion));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a custom encoding and a custom filter.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, Encoding encoding, Func<string, bool> filter)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, encoding, filter));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder containing version folders on the file system, with a target version, a custom encoding and a custom filter.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="encoding">The encoding.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <param name="targetVersion">Exclude version folders with a higher version number.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromVersionFolders(this UpgradeEngineBuilder builder, string path, Encoding encoding, Func<string, bool> filter, string targetVersion)
+    {
+        return WithScripts(builder, new VersionFoldersScriptProvider(path, encoding, filter, targetVersion));
     }
 
     /// <summary>
