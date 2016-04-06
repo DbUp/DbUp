@@ -43,7 +43,7 @@ namespace DbUp.SQLite.Helpers
             connectionManager = new SQLiteConnectionManager(connectionStringBuilder.ConnectionString);
             sharedConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sharedConnection.Open();
-            sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), null, () => true);
+            sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), new SQLiteObjectParser(),  null, () => true);
         }
 
         public string ConnectionString { get; set; }

@@ -5,10 +5,10 @@ using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Support.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;
+using DbUp.SqlServer;
 
 namespace DbUp.Tests.Engine
 {
@@ -16,11 +16,11 @@ namespace DbUp.Tests.Engine
     {
         public class when_upgrading_a_database_with_variable_substitution : SpecificationFor<UpgradeEngine>
         {
-            private IJournal versionTracker;
-            private IScriptProvider scriptProvider;
-            private IScriptExecutor scriptExecutor;
-            private IDbConnection dbConnection;
-            private IDbCommand dbCommand;
+            IJournal versionTracker;
+            IScriptProvider scriptProvider;
+            IScriptExecutor scriptExecutor;
+            IDbConnection dbConnection;
+            IDbCommand dbCommand;
 
             public override UpgradeEngine Given()
             {
@@ -31,7 +31,7 @@ namespace DbUp.Tests.Engine
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
                 var connectionManager = new TestConnectionManager(dbConnection);
-                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), null, () => true, null);
+                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), null, () => true, null, () => versionTracker);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
@@ -58,9 +58,9 @@ namespace DbUp.Tests.Engine
 
         public class when_marking_scripts_as_read : SpecificationFor<UpgradeEngine>
         {
-            private IJournal versionTracker;
-            private IScriptProvider scriptProvider;
-            private IScriptExecutor scriptExecutor;
+            IJournal versionTracker;
+            IScriptProvider scriptProvider;
+            IScriptExecutor scriptExecutor;
 
             public override UpgradeEngine Given()
             {
@@ -69,8 +69,10 @@ namespace DbUp.Tests.Engine
                 versionTracker = Substitute.For<IJournal>();
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
-                var config = new UpgradeConfiguration();
-                config.ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
+                var config = new UpgradeConfiguration
+                {
+                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
+                };
                 config.ScriptProviders.Add(scriptProvider);
                 config.ScriptExecutor = scriptExecutor;
                 config.Journal = versionTracker;
@@ -87,7 +89,7 @@ namespace DbUp.Tests.Engine
             [Then]
             public void the_scripts_are_journalled()
             {
-                versionTracker.Received().StoreExecutedScript(Arg.Is<SqlScript>(s => s.Name == "1234"));
+                versionTracker.Received().StoreExecutedScript(Arg.Is<SqlScript>(s => s.Name == "1234"), Arg.Any<Func<IDbCommand>>());
             }
 
             [Then]

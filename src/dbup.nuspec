@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?> 
+<package> 
+  <metadata> 
+    <id>dbup</id> 
+    <title>OBSOLETE: DbUp SqlServer Upgrade Shim</title>
+    <version>$version$</version> 
+    <authors>Paul Stovell, Jim Burger, Jake Ginnivan, Damian Maclennan</authors>
+    <description>For SqlServer support, install dbup-sqlserver instead!</description> 
+    <language>en-US</language>
+    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <releaseNotes>https://github.com/DbUp/DbUp/releases</releaseNotes>
+    <projectUrl>http://dbup.github.com</projectUrl>
+    <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
+    <dependencies>
+      <dependency id="dbup-sqlserver" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files>
+    <file src="shim.txt" target="" />
+  </files>
+</package>
