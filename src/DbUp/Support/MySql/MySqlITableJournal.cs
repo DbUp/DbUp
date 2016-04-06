@@ -164,7 +164,7 @@ namespace DbUp.Support.MySql
                             ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", tableName)
                             : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", tableName, schemaName);
             command.CommandType = CommandType.Text;
-            var result = command.ExecuteScalar() as int?;
+            var result = Convert.ToInt32(command.ExecuteScalar());
             return result == 1;
         }
     }
