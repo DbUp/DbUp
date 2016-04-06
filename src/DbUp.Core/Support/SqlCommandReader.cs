@@ -143,8 +143,8 @@ namespace DbUp.Support
                 currentIndex++;
                 LastChar = CurrentChar;
                 CurrentChar = (char)result;
-                // We don't care about Carriage returns, just skip them
-                if (CurrentChar == CarriageReturn)
+                // We don't care about Carriage returns, unless it is followed by End of line
+                if (CurrentChar == CarriageReturn && PeekChar() != EndOfLineChar)
                     return Read();
                 return result;
             }
