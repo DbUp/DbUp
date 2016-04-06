@@ -1,0 +1,20 @@
+﻿Open connection
+Execute scalar command: SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'TestSchemaVersions' COLLATE NOCASE
+Dispose command
+Execute non query command: script1contents
+Dispose command
+Execute scalar command: SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'TestSchemaVersions' COLLATE NOCASE
+Dispose command
+Execute non query command: CREATE TABLE [TestSchemaVersions] (
+	SchemaVersionID INTEGER CONSTRAINT 'PK_TestSchemaVersions_SchemaVersionID' PRIMARY KEY AUTOINCREMENT NOT NULL,
+	ScriptName TEXT NOT NULL,
+	Applied DATETIME NOT NULL
+)
+Dispose command
+Create parameter
+Add parameter to command: scriptName=Script0001.sql
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into [TestSchemaVersions] (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Dispose connection

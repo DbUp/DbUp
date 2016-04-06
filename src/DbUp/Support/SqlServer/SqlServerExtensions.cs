@@ -1,8 +1,6 @@
-﻿using System;
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using System.Text;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Output;
@@ -86,7 +84,7 @@ public static class SqlServerExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors));
-        builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, "SchemaVersions"));
+        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, "SchemaVersions"));
         return builder;
     }
 
@@ -99,7 +97,7 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, table));
+        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
         return builder;
     }
 
@@ -119,12 +117,25 @@ public static class SqlServerExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
-    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger)
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout)
+    {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
     {
         if (supported == null) throw new ArgumentNullException("supported");
-        
+
         if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
         {
             throw new ArgumentNullException("connectionString");
@@ -145,18 +156,18 @@ public static class SqlServerExtensions
 
         var logMasterConnectionStringBuilder = new SqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString)
         {
-            Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length,'*')
+            Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*')
         };
-        
+
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
 
         using (var connection = new SqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
             connection.Open();
-            
+
             var sqlCommandText = string.Format
                 (
-                    @"select case when db_id('{0}') is not null then 1 else 0 end;",
+                    @"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{0}';",
                     databaseName
                 );
 
@@ -166,11 +177,15 @@ public static class SqlServerExtensions
             {
                 CommandType = CommandType.Text
             })
+
             {
-                var results = (int) command.ExecuteScalar();
+                var results = (int?)command.ExecuteScalar();
 
                 // if the database exists, we're done here...
-                if (results == 1) return;
+                if (results.HasValue && results.Value == 1)
+                {
+                    return;
+                }
             }
 
             sqlCommandText = string.Format
@@ -185,6 +200,11 @@ public static class SqlServerExtensions
                 CommandType = CommandType.Text
             })
             {
+                if (timeout >= 0)
+                {
+                    command.CommandTimeout = timeout;
+                }
+
                 command.ExecuteNonQuery();
 
             }
@@ -192,6 +212,4 @@ public static class SqlServerExtensions
             logger.WriteInformation(@"Created database {0}", databaseName);
         }
     }
-
-
 }

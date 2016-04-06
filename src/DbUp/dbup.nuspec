@@ -16,5 +16,7 @@
     <file src="bin\$configuration$\DbUp.dll" target="lib\net35\" />
     <file src="bin\$configuration$\DbUp.pdb" target="lib\net35\" />
     <file src="bin\$configuration$\DbUp.xml" target="lib\net35\" />
+    <file src="..\Tools\init.ps1" target="tools" />
+    <file src="..\Tools\DbUp.psm1" target="tools" />
   </files>
 </package>

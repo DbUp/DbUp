@@ -1,6 +1,6 @@
 ﻿Open connection
 Begin transaction
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions'
 Dispose command
 Commit transaction
 Dispose transaction
@@ -10,13 +10,13 @@ Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions'
 Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
 Execute non query command: create table [SchemaVersions] (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[Id] int identity(1,1) not null constraint [PK_SchemaVersions_Id] primary key,
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
 )
@@ -38,13 +38,13 @@ Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions'
 Dispose command
 Commit transaction
 Dispose transaction
 Begin transaction
 Execute non query command: create table [SchemaVersions] (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[Id] int identity(1,1) not null constraint [PK_SchemaVersions_Id] primary key,
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
 )

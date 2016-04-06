@@ -1,6 +1,6 @@
 ﻿Open connection
 Begin transaction
-Execute scalar command: select count(*) from [SchemaVersions]
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions'
 Dispose command
 Execute non query command: error
 Dispose command

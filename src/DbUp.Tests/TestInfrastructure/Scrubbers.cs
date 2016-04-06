@@ -7,7 +7,7 @@ namespace DbUp.Tests.TestInfrastructure
     {
         public static string ScrubDates(string arg)
         {
-            return Regex.Replace(arg, @"\d?\d/\d?\d/\d?\d?\d\d \d?\d:\d\d:\d\d ..", "<date>");
+            return Regex.Replace(arg, @"\d?\d/\d?\d/\d?\d?\d\d \d?\d:\d\d:\d\d", "<date>");
         }
     }
 }

@@ -15,9 +15,10 @@ namespace DbUp.Support.SqlServer
     /// </summary>
     public class SqlTableJournal : IJournal
     {
-        private readonly string schemaTableName;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
+        private readonly string schema;
+        private readonly string table;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
@@ -31,10 +32,11 @@ namespace DbUp.Support.SqlServer
         /// </example>
         public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
-            schemaTableName = string.IsNullOrEmpty(schema) 
-                ? SqlObjectParser.QuoteSqlObjectName(table)
-                : SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(table);
+            this.schema = schema;
+            this.table = table;
+
             this.connectionManager = connectionManager;
+
             log = logger;
         }
 
@@ -48,7 +50,7 @@ namespace DbUp.Support.SqlServer
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", schemaTableName));
+                log().WriteInformation(string.Format("The {0} table could not be found. The database is assumed to be at version 0.", CreateTableName(schema, table)));
                 return new string[0];
             }
 
@@ -57,7 +59,7 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = GetExecutedScriptsSql(schemaTableName);
+                    command.CommandText = GetExecutedScriptsSql(schema, table);
                     command.CommandType = CommandType.Text;
 
                     using (var reader = command.ExecuteReader())
@@ -72,11 +74,11 @@ namespace DbUp.Support.SqlServer
         }
 
         /// <summary>
-        /// The Sql which gets 
+        /// Create an SQL statement which will retrieve all executed scripts in order.
         /// </summary>
-        protected virtual string GetExecutedScriptsSql(string table)
+        protected virtual string GetExecutedScriptsSql(string schema, string table)
         {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", table);
+            return string.Format("select [ScriptName] from {0} order by [ScriptName]", CreateTableName(schema, table));
         }
 
         /// <summary>
@@ -88,19 +90,19 @@ namespace DbUp.Support.SqlServer
             var exists = DoesTableExist();
             if (!exists)
             {
-                log().WriteInformation(string.Format("Creating the {0} table", schemaTableName));
+                log().WriteInformation(string.Format("Creating the {0} table", CreateTableName(schema, table)));
 
                 connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = CreateTableSql(schemaTableName);
+                        command.CommandText = CreateTableSql(schema, table);
 
                         command.CommandType = CommandType.Text;
                         command.ExecuteNonQuery();
                     }
 
-                    log().WriteInformation(string.Format("The {0} table has been created", schemaTableName));
+                    log().WriteInformation(string.Format("The {0} table has been created", CreateTableName(schema, table)));
                 });
             }
 
@@ -108,7 +110,7 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", schemaTableName);
+                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", CreateTableName(schema, table));
 
                     var scriptNameParam = command.CreateParameter();
                     scriptNameParam.ParameterName = "scriptName";
@@ -126,18 +128,39 @@ namespace DbUp.Support.SqlServer
             });
         }
 
-        /// <summary>
-        /// The sql to exectute to create the schema versions table
-        /// </summary>
-        /// <param name="tableName"></param>
-        /// <returns></returns>
-        protected virtual string CreateTableSql(string tableName)
+        /// <summary>Generates an SQL statement that, when exectuted, will create the journal database table.</summary>
+        /// <param name="schema">Desired schema name supplied by configuration or <c>NULL</c></param>
+        /// <param name="table">Desired table name</param>
+        /// <returns>A <c>CREATE TABLE</c> SQL statement</returns>
+        protected virtual string CreateTableSql(string schema, string table)
         {
+            var tableName = CreateTableName(schema, table);
+            var primaryKeyConstraintName = CreatePrimaryKeyName(table);
+
             return string.Format(@"create table {0} (
-	[Id] int identity(1,1) not null constraint PK_SchemaVersions_Id primary key,
+	[Id] int identity(1,1) not null constraint {1} primary key,
 	[ScriptName] nvarchar(255) not null,
 	[Applied] datetime not null
-)", tableName);
+)", tableName, primaryKeyConstraintName);
+        }
+
+        /// <summary>Combine the <c>schema</c> and <c>table</c> values into an appropriately-quoted identifier for the journal table.</summary>
+        /// <param name="schema">Desired schema name supplied by configuration or <c>NULL</c></param>
+        /// <param name="table">Desired table name</param>
+        /// <returns>Quoted journal table identifier</returns>
+        protected virtual string CreateTableName(string schema, string table)
+        {
+            return string.IsNullOrEmpty(schema)
+                ? SqlObjectParser.QuoteSqlObjectName(table)
+                : SqlObjectParser.QuoteSqlObjectName(schema) + "." + SqlObjectParser.QuoteSqlObjectName(table);
+        }
+
+        /// <summary>Convert the <c>table</c> value into an appropriately-quoted identifier for the journal table's unique primary key.</summary>
+        /// <param name="table">Desired table name</param>
+        /// <returns>Quoted journal table primary key identifier</returns>
+        protected virtual string CreatePrimaryKeyName(string table)
+        {
+            return SqlObjectParser.QuoteSqlObjectName("PK_" + table + "_Id");
         }
 
         private bool DoesTableExist()
@@ -148,10 +171,7 @@ namespace DbUp.Support.SqlServer
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteScalar();
-                        return true;
+                        return VerifyTableExistsCommand(command, table, schema);
                     }
                 }
                 catch (SqlException)
@@ -163,6 +183,21 @@ namespace DbUp.Support.SqlServer
                     return false;
                 }
             });
+        }
+
+        /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
+        /// <param name="command">The <c>IDbCommand</c> to be used for the query</param>
+        /// <param name="tableName">The name of the table</param>
+        /// <param name="schemaName">The schema for the table</param>
+        /// <returns>True if table exists, false otherwise</returns>
+        protected virtual bool VerifyTableExistsCommand(IDbCommand command, string tableName, string schemaName)
+        {
+            command.CommandText = string.IsNullOrEmpty(schema)
+                            ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", tableName)
+                            : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", tableName, schemaName);
+            command.CommandType = CommandType.Text;
+            var result = command.ExecuteScalar() as int?;
+            return result == 1;
         }
     }
 }

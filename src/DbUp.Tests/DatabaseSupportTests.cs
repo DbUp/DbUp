@@ -5,6 +5,11 @@ using ApprovalTests.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Support.Firebird;
+using DbUp.Support.MySql;
+using DbUp.Support.Postgresql;
+using DbUp.Support.SQLite;
+using DbUp.Support.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
 using Shouldly;
@@ -19,6 +24,7 @@ namespace DbUp.Tests
         private List<SqlScript> scripts;
         private RecordingDbConnection recordingConnection;
         private DatabaseUpgradeResult result;
+        private Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
 
         [Test]
         public void VerifyBasicSupport()
@@ -51,18 +57,34 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
+        [Test]
+        public void VerifyJournalCreationIfNameChanged()
+        {
+            ExampleAction deployTo = null;
+            this
+                .Given(() => deployTo)
+                .And(_ => TargetDatabaseIsEmpty())
+                .And(_ => JournalTableNameIsCustomised())
+                .And(_ => SingleScriptExists())
+                .When(_ => UpgradeIsPerformed())
+                .Then(_ => UpgradeIsSuccessful())
+                .And(_ => CommandLogReflectsScript(deployTo), "Command log matches expected steps")
+                .WithExamples(DatabaseExampleTable)
+                .BDDfy();
+        }
+
         private ExampleTable DatabaseExampleTable
         {
             get
             {
                 return new ExampleTable("Deploy to")
                 {
-                    { new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty))) },
-                    { new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty))) },
-                    { new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty))) },
-                    { new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty))) },
-                    { new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty))) },
-                    { new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty))) }
+                    { new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
+                    { new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })) },
+                    { new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
+                    { new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SQLiteTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })) },
+                    { new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) },
+                    { new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlITableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })) }
                 };
             }
         }
@@ -70,6 +92,11 @@ namespace DbUp.Tests
         private void VariableSubstitutionIsSetup()
         {
             upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
+        }
+
+        private void JournalTableNameIsCustomised()
+        {
+            upgradeEngineBuilder = addCustomNamedJournalToBuilder(upgradeEngineBuilder, "test", "TestSchemaVersions");
         }
 
         private void CommandLogReflectsScript(ExampleAction target)
@@ -104,7 +131,7 @@ namespace DbUp.Tests
         {
         }
 
-        private Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo)
+        private Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo, Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournal)
         {
             return () =>
             {
@@ -114,6 +141,8 @@ namespace DbUp.Tests
                 upgradeEngineBuilder = deployTo(DeployChanges.To)
                     .WithScripts(scripts)
                     .OverrideConnectionFactory(testConnectionFactory);
+
+                addCustomNamedJournalToBuilder = addCustomNamedJournal;
             };
         }
     }

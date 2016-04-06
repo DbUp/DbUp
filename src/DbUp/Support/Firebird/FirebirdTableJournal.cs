@@ -38,7 +38,7 @@ namespace DbUp.Support.Firebird
                                         schemaversionsid INTEGER NOT NULL,
                                         scriptname VARCHAR(255) NOT NULL,
                                         applied TIMESTAMP NOT NULL,
-                                        CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+                                        CONSTRAINT pk_{0}_id PRIMARY KEY (schemaversionsid)
                                     )", tableName);
         }
 
@@ -165,10 +165,7 @@ namespace DbUp.Support.Firebird
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = string.Format("select count(*) from {0}", tableName);
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteScalar();
-                        return true;
+                        return VerifyTableExistsCommand(command);
                     }
                 }
                 // can't catch FbException here because this project does not depend upon Firebird
@@ -177,6 +174,17 @@ namespace DbUp.Support.Firebird
                     return false;
                 }
             });
+        }
+
+        /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
+        /// <param name="command">The <c>IDbCommand</c> to be used for the query</param>
+        /// <returns>True if table exists, false otherwise</returns>
+        private bool VerifyTableExistsCommand(IDbCommand command)
+        {
+            command.CommandText = string.Format("select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = '{0}'", tableName);
+            command.CommandType = CommandType.Text;
+            var result = command.ExecuteScalar() as int?;
+            return result == 1;
         }
     }
 }

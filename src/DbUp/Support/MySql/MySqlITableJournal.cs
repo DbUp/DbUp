@@ -15,6 +15,8 @@ namespace DbUp.Support.MySql
     public sealed class MySqlITableJournal : IJournal
     {
         private readonly string schemaTableName;
+        private readonly string table;
+        private readonly string schema;
         private readonly Func<IConnectionManager> connectionManager;
         private readonly Func<IUpgradeLog> log;
 
@@ -32,6 +34,8 @@ namespace DbUp.Support.MySql
         /// <param name="table">The name of the journal table.</param>
         public MySqlITableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
         {
+            this.table = table;
+            this.schema = schema;
             schemaTableName = string.IsNullOrEmpty(schema)
                 ? QuoteIdentifier(table)
                 : QuoteIdentifier(schema) + "." + QuoteIdentifier(table);
@@ -139,10 +143,7 @@ namespace DbUp.Support.MySql
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = string.Format("select count(*) from {0}", schemaTableName);
-                        command.CommandType = CommandType.Text;
-                        command.ExecuteScalar();
-                        return true;
+                        return VerifyTableExistsCommand(command, table, schema);
                     }
                 }
                 catch (DbException)
@@ -150,6 +151,21 @@ namespace DbUp.Support.MySql
                     return false;
                 }
             });
+        }
+
+        /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
+        /// <param name="command">The <c>IDbCommand</c> to be used for the query</param>
+        /// <param name="tableName">The name of the table</param>
+        /// <param name="schemaName">The schema for the table</param>
+        /// <returns>True if table exists, false otherwise</returns>
+        private bool VerifyTableExistsCommand(IDbCommand command, string tableName, string schemaName)
+        {
+            command.CommandText = string.IsNullOrEmpty(schema)
+                            ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", tableName)
+                            : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", tableName, schemaName);
+            command.CommandType = CommandType.Text;
+            var result = Convert.ToInt32(command.ExecuteScalar());
+            return result == 1;
         }
     }
 }

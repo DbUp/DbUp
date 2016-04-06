@@ -325,7 +325,9 @@ namespace DbUp.Support.SQLite
     public sealed class SQLiteTableJournal : DbUp.Support.SqlServer.SqlTableJournal
     {
         public SQLiteTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string table) { }
-        protected override string CreateTableSql(string tableName) { }
+        protected override string CreatePrimaryKeyName(string table) { }
+        protected override string CreateTableSql(string schema, string table) { }
+        protected override bool VerifyTableExistsCommand(System.Data.IDbCommand command, string tableName, string schemaName) { }
     }
 }
 namespace DbUp.Support.SqlServer
@@ -387,10 +389,13 @@ namespace DbUp.Support.SqlServer
     public class SqlTableJournal : DbUp.Engine.IJournal
     {
         public SqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
-        protected virtual string CreateTableSql(string tableName) { }
+        protected virtual string CreatePrimaryKeyName(string table) { }
+        protected virtual string CreateTableName(string schema, string table) { }
+        protected virtual string CreateTableSql(string schema, string table) { }
         public string[] GetExecutedScripts() { }
-        protected virtual string GetExecutedScriptsSql(string table) { }
+        protected virtual string GetExecutedScriptsSql(string schema, string table) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
+        protected virtual bool VerifyTableExistsCommand(System.Data.IDbCommand command, string tableName, string schemaName) { }
     }
 }
 
@@ -406,7 +411,8 @@ public class static SqlServerExtensions
         "erScript() to manage connection behaviour")]
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, System.Func<System.Data.IDbConnection> connectionFactory, string schema) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger, int timeout = -1) { }
 }
 public class static StandardExtensions
 {

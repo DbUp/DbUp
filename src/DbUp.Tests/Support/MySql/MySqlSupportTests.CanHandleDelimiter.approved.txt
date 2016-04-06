@@ -1,7 +1,5 @@
 ﻿Open connection
-Execute scalar command: select count(*) from `schemaversions`
-Dispose command
-Execute reader command: select scriptname from `schemaversions` order by scriptname
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
 Dispose command
 Execute non query command: USE `test`
 Dispose command
@@ -20,7 +18,14 @@ BEGIN
 
 END
 Dispose command
-Execute scalar command: select count(*) from `schemaversions`
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
+Dispose command
+Execute non query command: CREATE TABLE `schemaversions` 
+                    (
+                        `schemaversionid` INT NOT NULL AUTO_INCREMENT,
+                        `scriptname` VARCHAR(255) NOT NULL,
+                        `applied` TIMESTAMP NOT NULL,
+                        PRIMARY KEY (`schemaversionid`));
 Dispose command
 Create parameter
 Add parameter to command: scriptName=Script0003

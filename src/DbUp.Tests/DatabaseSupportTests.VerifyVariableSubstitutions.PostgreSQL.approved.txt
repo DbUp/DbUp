@@ -1,16 +1,16 @@
 ﻿Open connection
-Execute scalar command: select count(*) from "schemaversions"
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
 Dispose command
 Execute non query command: print SubstitutedValue
 Dispose command
-Execute scalar command: select count(*) from "schemaversions"
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
 Dispose command
 Execute non query command: CREATE TABLE "schemaversions"
                               (
                                 schemaversionsid serial NOT NULL,
                                 scriptname character varying(255) NOT NULL,
                                 applied timestamp without time zone NOT NULL,
-                                CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+                                CONSTRAINT "PK_schemaversions_Id" PRIMARY KEY (schemaversionsid)
                               )
 Dispose command
 Create parameter

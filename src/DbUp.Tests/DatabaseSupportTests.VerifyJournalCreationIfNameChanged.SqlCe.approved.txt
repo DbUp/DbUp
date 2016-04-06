@@ -1,0 +1,20 @@
+﻿Open connection
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
+Dispose command
+Execute non query command: script1contents
+Dispose command
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
+Dispose command
+Execute non query command: create table [test].[TestSchemaVersions] (
+	[Id] int identity(1,1) not null constraint [PK_TestSchemaVersions_Id] primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)
+Dispose command
+Create parameter
+Add parameter to command: scriptName=Script0001.sql
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into [test].[TestSchemaVersions] (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Dispose connection

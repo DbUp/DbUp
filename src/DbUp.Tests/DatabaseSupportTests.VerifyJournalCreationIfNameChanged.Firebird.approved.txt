@@ -1,0 +1,28 @@
+﻿Open connection
+Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'TestSchemaVersions'
+Dispose command
+Execute non query command: script1contents
+Dispose command
+Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'TestSchemaVersions'
+Dispose command
+Execute non query command: CREATE TABLE TestSchemaVersions
+                                    (
+                                        schemaversionsid INTEGER NOT NULL,
+                                        scriptname VARCHAR(255) NOT NULL,
+                                        applied TIMESTAMP NOT NULL,
+                                        CONSTRAINT pk_TestSchemaVersions_id PRIMARY KEY (schemaversionsid)
+                                    )
+Dispose command
+Execute non query command: CREATE SEQUENCE GEN_TestSchemaVersionsID
+Dispose command
+Execute non query command: CREATE TRIGGER BI_TestSchemaVersionsID FOR TestSchemaVersions ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
+                                        if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id(GEN_TestSchemaVersionsID,1);
+                                  END;
+Dispose command
+Create parameter
+Add parameter to command: scriptName=Script0001.sql
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into TestSchemaVersions (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Dispose connection

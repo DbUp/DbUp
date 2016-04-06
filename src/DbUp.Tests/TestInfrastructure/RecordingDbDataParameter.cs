@@ -18,7 +18,18 @@ namespace DbUp.Tests.TestInfrastructure
 
         public override string ToString()
         {
-            return string.Format("{0}={1}", ParameterName, Value);
+            var format = "{0}={1}";
+            if ((DbType == DbType.Date)
+                || (DbType == DbType.DateTime)
+                || (DbType == DbType.DateTime2)
+                || (DbType == DbType.DateTimeOffset)
+                || (DbType == DbType.AnsiString // If DbType is not explicitly set it will default to AnsiString so check our Value's type
+                    && (Value != null && (Value.GetType() == typeof(DateTime) || Value.GetType() == typeof(DateTimeOffset)))))
+            {
+                format = "{0}={1:dd\\/MM\\/yyyy hh\\:mm\\:ss}"; // Be explicit and don't rely on the system's formatting for dates so we can scrub them out later
+            }
+
+            return string.Format(format, ParameterName, Value);
         }
     }
 }
