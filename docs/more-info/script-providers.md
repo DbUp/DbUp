@@ -22,11 +22,6 @@ builder.WithScriptsEmbeddedInAssemblies(new[]
 (string s) => s.StartsWith("Script"))
 ```
 
-## FileSystemScriptProvider
-Finds scripts in a specified directory
-### Usage
-`builder.WithScriptsFromFileSystem(path)`
-
 ## StaticScriptProvider
 Allows you to easily programatically supply scripts from code
 
@@ -51,3 +46,83 @@ An enhanced script provider implementation which retrieves upgrade scripts or IS
 
 ###Usage
 `builder.WithScriptsAndCodeEmbeddedInAssembly(Assembly)`
+
+## FileSystemScriptProvider
+Finds scripts in a specified directory
+### Usage
+`builder.WithScriptsFromFileSystem(path)`
+
+## VersionFoldersScriptProvider
+Finds scripts in version subfolders in a specified directory.
+
+### Reading scripts from a folder containing one subfolder per version
+Example folder structure:
+```
+my-script-root-folder\
+   1.0\
+        1_apple.sql
+        2_banana.sql
+   1.0.1\
+        1_apple.sql
+        2_pear.sql
+   2.0\
+        apple.sql
+        banana.sql
+```
+
+The found scripts are flattened to one list by combining the relative folder name with the script name. In this example, the resulting ordered set of scripts of will be:
+```
+1.0\1_apple.sql
+1.0\2_banana.sql
+1.0.1\1_apple.sql
+1.0.1\2_pear.sql
+2.0\apple.sql
+2.0\banana.sql
+```
+
+### Optional: specify a target version
+Use semantic versioning to exclude scripts from folders for versions newer than the target version. This makes it possible to use the same script base for patch and release deploys. To qualify, the names of all non-excluded subfolders must be parseable to a version (1 to 4 decimals delimited by dots)
+
+In the example above, a target version of '1.0.1' will result in the following ordered set of scripts:
+```
+1.0\1_apple.sql
+1.0\2_banana.sql
+1.0.1\1_apple.sql
+1.0.1\2_pear.sql
+```
+
+### Optional: specify a filter function
+During search, the script provider filter is applied twice:
+1. To the subfolder name
+2. To the effective scriptname, e.g. subfolder\script.sql
+
+### Usage 
+`builder.WithScriptsFromVersionFolders(path, targetVersion)`
+
+### Example 
+From Powershell:
+
+```
+$databaseName = $args[0]
+$databaseServer = $args[1]
+$scriptRootFolder = $args[2]
+$targetVersion = $args[3]
+
+Add-Type -Path "drive:\path\to\DbUp.dll"
+
+function FilterFunc ($a,$b) {
+  return `
+	-not $a.ToLower().Contains("obsolete") -and `
+	-not $a.ToLower().StartsWith("branches") -and `
+	-not $a.ToLower().StartsWith("customerspecific") -and `
+	-not $a.ToLower().StartsWith("1.4.6-broken");
+}
+
+$dbUp = [DbUp.DeployChanges]::To
+$dbUp = [SqlServerExtensions]::SqlDatabase($dbUp, "server=$databaseServer;database=$databaseName;Trusted_Connection=Yes;Connection Timeout=120;")
+$dbUp = [StandardExtensions]::WithScriptsFromVersionFolders($dbUp, $scriptRootFolder, ${function:FilterFunc}, $targetVersion)
+$dbUp = [SqlServerExtensions]::JournalToSqlTable($dbUp, 'dbo', 'SchemaVersions')
+$dbUp = [StandardExtensions]::LogToConsole($dbUp)
+$upgradeResult = $dbUp.Build().PerformUpgrade()
+```
+

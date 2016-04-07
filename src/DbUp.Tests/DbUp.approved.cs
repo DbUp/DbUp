@@ -270,6 +270,17 @@ namespace DbUp.ScriptProviders
         public StaticScriptProvider(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> scripts) { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
     }
+    public class VersionFoldersScriptProvider : DbUp.Engine.IScriptProvider
+    {
+        public VersionFoldersScriptProvider(string directoryPath) { }
+        public VersionFoldersScriptProvider(string directoryPath, string targetVersion) { }
+        public VersionFoldersScriptProvider(string directoryPath, System.Func<string, bool> filter) { }
+        public VersionFoldersScriptProvider(string directoryPath, System.Text.Encoding encoding, string targetVersion) { }
+        public VersionFoldersScriptProvider(string directoryPath, System.Text.Encoding encoding, System.Func<string, bool> filter) { }
+        public VersionFoldersScriptProvider(string directoryPath, System.Func<string, bool> filter, string targetVersion) { }
+        public VersionFoldersScriptProvider(string directoryPath, System.Text.Encoding encoding, System.Func<string, bool> filter, string targetVersion) { }
+        public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
+    }
 }
 namespace DbUp.Support
 {
@@ -389,6 +400,13 @@ public class static StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Text.Encoding encoding) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromVersionFolders(this DbUp.Builder.UpgradeEngineBuilder builder, string path) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromVersionFolders(this DbUp.Builder.UpgradeEngineBuilder builder, string path, string targetVersion) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromVersionFolders(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromVersionFolders(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Text.Encoding encoding, string targetVersion) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromVersionFolders(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter, string targetVersion) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromVersionFolders(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Text.Encoding encoding, System.Func<string, bool> filter) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromVersionFolders(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Text.Encoding encoding, System.Func<string, bool> filter, string targetVersion) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransactionPerScript(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithVariable(this DbUp.Builder.UpgradeEngineBuilder builder, string variableName, string value) { }
