@@ -232,6 +232,10 @@ namespace DbUp.Helpers
         public string[] GetExecutedScripts() { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }
+    public class static SqlCommentRangeFinder
+    {
+        public static System.Collections.Generic.List<System.Collections.Generic.KeyValuePair<int, int>> FindRanges(string str) { }
+    }
     public class TemporarySqlDatabase : System.IDisposable
     {
         public TemporarySqlDatabase(string name) { }

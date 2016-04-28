@@ -76,6 +76,7 @@
     <Compile Include="Engine\Transactions\TransactionPerScriptStrategy.cs" />
     <Compile Include="Helpers\Filters.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
+    <Compile Include="Helpers\SqlCommentRangeFinder.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptsProvider.cs" />
     <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
     <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />

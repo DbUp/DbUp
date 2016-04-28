@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
+using System.Linq;
 using System.Text.RegularExpressions;
+using DbUp.Helpers;
 
 namespace DbUp.Engine.Preprocessors
 {
@@ -29,35 +31,18 @@ namespace DbUp.Engine.Preprocessors
         /// <param name="contents"></param>
         public string Process(string contents)
         {
-            Regex regexObj = new Regex(@"/\*(?>(?:(?!\*/|/\*).)*)(?>(?:/\*(?>(?:(?!\*/|/\*).)*)\*/(?>(?:(?!\*/|/\*).)*))*).*?\*/|--.*?\r?[\n]", RegexOptions.Singleline);
-            Match commentMatch = regexObj.Match(contents);
-
-            return tokenRegex.Replace(contents, match => ReplaceToken(match, variables, commentMatch));
+            List<KeyValuePair<int, int>> comments = SqlCommentRangeFinder.FindRanges(contents);
+            return tokenRegex.Replace(contents, match => ReplaceToken(match, variables, comments));
         }
 
-        private static bool IsInComment(Match commentMatch, Match variableMatch)
-        {
-            Match m = commentMatch;
-            while (m.Success)
-            {
-                if (variableMatch.Index >= m.Index && variableMatch.Index <= m.Index + m.Length)
-                {
-                    return true;
-                }
-
-                m = m.NextMatch();
-            }
-            return false;
-        }
-
-        private static string ReplaceToken(Match match, IDictionary<string, string> variables, Match commentMatch)
+        private static string ReplaceToken(Match match, IDictionary<string, string> variables, List<KeyValuePair<int, int>> comments)
         {
             var variableName = match.Groups["variableName"].Value;
             string replaceValue;
 
             if (!variables.TryGetValue(variableName, out replaceValue))
             {
-                if (!IsInComment(commentMatch, match))
+                if (!IsInComment(comments, match))
                 {
                     throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Variable {0} has no value defined", variableName));
                 }
@@ -70,6 +55,13 @@ namespace DbUp.Engine.Preprocessors
             {
                 return replaceValue;
             }
+        }
+
+        private static bool IsInComment(List<KeyValuePair<int, int>> commentRanges, Match match)
+        {
+            return commentRanges
+                .TakeWhile(x => x.Key < match.Index)
+                .Any(x => x.Key < match.Index && x.Value > (match.Index + match.Length));
         }
     }
 }
