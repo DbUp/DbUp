@@ -1,0 +1,146 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{DA1A2B25-48A3-47FA-AC55-A1BF96614D2C}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DbUpXamarin.Tests</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>DbUpXamarin.Tests</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;__UNIFIED__;__MOBILE__;__IOS__;MONO</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;MONO</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AppStore|AnyCPU'">
+    <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;MONO</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="ApprovalTests, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\ApprovalTests.3.0.9\lib\net40\ApprovalTests.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ApprovalUtilities, Version=3.0.0.0, Culture=neutral, PublicKeyToken=11bd7d124fc62e0f, processorArchitecture=MSIL">
+      <HintPath>..\packages\ApprovalUtilities.3.0.9\lib\net35\ApprovalUtilities.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Mdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.Mdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Pdb, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.Pdb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Cecil.Rocks, Version=0.9.6.0, Culture=neutral, PublicKeyToken=0738eb9f132ed756, processorArchitecture=MSIL">
+      <HintPath>..\packages\Mono.Cecil.0.9.6.1\lib\net40\Mono.Cecil.Rocks.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NSubstitute">
+      <HintPath>..\packages\NSubstitute.1.6.0.0\lib\NET40\NSubstitute.dll</HintPath>
+    </Reference>
+    <Reference Include="nunit.framework, Version=2.6.2.12296, Culture=neutral, PublicKeyToken=96d09a1eb7f44a77, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
+    </Reference>
+    <Reference Include="Shouldly, Version=2.6.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
+      <HintPath>..\packages\Shouldly.2.6.0\lib\net40\Shouldly.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Xamarin.iOS" />
+    <Reference Include="TestStack.BDDfy, Version=4.1.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TestStack.BDDfy.4.1.2\lib\NET40\TestStack.BDDfy.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="App_Packages\ApiApprover.3.0.1\" />
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DatabaseSupportTests.cs" />
+    <Compile Include="DeployChangesBuilderTests.cs" />
+    <Compile Include="Engine\UpgradeEngineTests.cs" />
+    <Compile Include="Helpers\FilterFactoryTests.cs" />
+    <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ScriptProvider\EmbeddedScriptAndCodeProviderTests.cs" />
+    <Compile Include="ScriptProvider\FileSystemScriptProviderTests.cs" />
+    <Compile Include="Support\SQLite\SQLiteSupportTests.cs" />
+    <Compile Include="Support\SQLite\SQLiteTableJournalTests.cs" />
+    <Compile Include="Support\SqlServer\SqlCommandSplitterTests.cs" />
+    <Compile Include="Support\SqlServer\SqlObjectParserTests.cs" />
+    <Compile Include="Support\SqlServer\SqlScriptExecutorTests.cs" />
+    <Compile Include="TestInfrastructure\DatabaseAction.cs" />
+    <Compile Include="TestInfrastructure\RecordingDataParameterCollection.cs" />
+    <Compile Include="TestInfrastructure\RecordingDbCommand.cs" />
+    <Compile Include="TestInfrastructure\RecordingDbConnection.cs" />
+    <Compile Include="TestInfrastructure\RecordingDbDataParameter.cs" />
+    <Compile Include="TestInfrastructure\RecordingDbTransaction.cs" />
+    <Compile Include="TestInfrastructure\Scrubbers.cs" />
+    <Compile Include="TestInfrastructure\SpecificationFor.cs" />
+    <Compile Include="TestInfrastructure\TestConnectionManager.cs" />
+    <Compile Include="TestInfrastructure\TestDatabaseExtension.cs" />
+    <Compile Include="TestInfrastructure\ThenAttribute.cs" />
+    <Compile Include="TestScripts\Script20120723_1_Test4.cs" />
+    <Compile Include="TransactionScenarios.cs" />
+    <Compile Include="UpgradeDatabaseScenarios.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="TestFilterFiles\ScriptNames.txt">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <EmbeddedResource Include="TestScripts\Script20130525_2_Test5.sql" />
+    <EmbeddedResource Include="TestScripts\Script20130525_1_Test5.sql" />
+    <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
+    <EmbeddedResource Include="TestScripts\Script20110301_2_Test2.sql" />
+    <EmbeddedResource Include="TestScripts\Script20110301_1_Test1.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DbUp.SQLite.Mono\DbUpXamarin.SQLite.Mono.csproj">
+      <Project>{2dce6c5a-bfc6-4e1a-ba82-4ea5bb0dc80a}</Project>
+      <Name>DbUpXamarin.SQLite.Mono</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUp\DbUpXamarin.csproj">
+      <Project>{e1e5eacf-3e76-45a0-a008-7a46c6c261a0}</Project>
+      <Name>DbUpXamarin</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

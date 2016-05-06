@@ -1,0 +1,85 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{2DCE6C5A-BFC6-4E1A-BA82-4EA5BB0DC80A}</ProjectGuid>
+    <ProjectTypeGuids>{FEACFBD2-3405-455C-9665-78FE426C6842};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <RootNamespace>DbUpXamarin.SQLite.Mono</RootNamespace>
+    <IPhoneResourcePrefix>Resources</IPhoneResourcePrefix>
+    <AssemblyName>DbUpXamarin.SQLite.Mono</AssemblyName>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug</OutputPath>
+    <DefineConstants>DEBUG;__UNIFIED__;__MOBILE__;__IOS__;MONO</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>full</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <ConsolePause>false</ConsolePause>
+    <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;MONO</DefineConstants>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'AppStore|AnyCPU'">
+    <DefineConstants>__UNIFIED__;__MOBILE__;__IOS__;MONO</DefineConstants>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="Mono.Data.Sqlite" />
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Transactions" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="Xamarin.iOS" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Resources\" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\dbup.sqlite\helpers\InMemorySQLiteDatabase.cs">
+      <Link>Helpers\InMemorySQLiteDatabase.cs</Link>
+    </Compile>
+    <Compile Include="..\dbup.sqlite\helpers\SharedConnection.cs">
+      <Link>Helpers\SharedConnection.cs</Link>
+    </Compile>
+    <Compile Include="..\dbup.sqlite\helpers\TemporarySQLiteDatabase.cs">
+      <Link>Helpers\TemporarySQLiteDatabase.cs</Link>
+    </Compile>
+    <Compile Include="..\DbUp.SQLite\SQLiteConnectionManager.cs">
+      <Link>SQLiteConnectionManager.cs</Link>
+    </Compile>
+    <Compile Include="..\DbUp.SQLite\SqliteExtensions.cs">
+      <Link>SqliteExtensions.cs</Link>
+    </Compile>
+    <Compile Include="..\DbUp.SQLite\SqlitePreprocessor.cs">
+      <Link>SqlitePreprocessor.cs</Link>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="dbup.snk" />
+    <None Include="dbup.sqlite.mono.nuspec" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\DbUp\DbUpXamarin.csproj">
+      <Project>{e1e5eacf-3e76-45a0-a008-7a46c6c261a0}</Project>
+      <Name>DbUpXamarin</Name>
+      <IsAppExtension>false</IsAppExtension>
+      <IsWatchApp>false</IsWatchApp>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath)\Xamarin\iOS\Xamarin.iOS.CSharp.targets" />
+</Project>

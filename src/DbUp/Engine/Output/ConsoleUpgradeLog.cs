@@ -39,9 +39,13 @@ namespace DbUp.Engine.Output
 
         private static void Write(ConsoleColor color, string format, object[] args)
         {
+#if !MONO
             Console.ForegroundColor = color;
+#endif
             Console.WriteLine(format, args);
+#if !MONO
             Console.ResetColor();
+#endif
         }
     }
 }
