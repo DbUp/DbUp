@@ -134,7 +134,6 @@ namespace DbUp.Tests.ScriptProvider
         {
             private string testPath;
             private IEnumerable<SqlScript> filesToExecute;
-            private bool _FilterExecuted = false;
 
             public override FileSystemScriptProvider Given()
             {

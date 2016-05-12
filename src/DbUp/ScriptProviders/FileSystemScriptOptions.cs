@@ -8,6 +8,9 @@ namespace DbUp.ScriptProviders
     /// </summary>
     public class FileSystemScriptOptions
     {
+        /// <summary>
+        /// Create new options for the <see cref="FileSystemScriptProvider"/>
+        /// </summary>
         public FileSystemScriptOptions()
         {
             Encoding = Encoding.Default;
