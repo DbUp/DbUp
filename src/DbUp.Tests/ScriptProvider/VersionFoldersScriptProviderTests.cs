@@ -273,8 +273,8 @@ namespace DbUp.Tests.ScriptProvider
             {
                 Assert.That(filesToExecute.Count() == 4);
                 Assert.That(filesToExecute.ElementAt(0).Name.EndsWith(@"3 4\DbUp.Tests.TestScripts.Script20110301_1_Test1.sql"));
-                Assert.That(filesToExecute.ElementAt(1).Name.EndsWith(@"3,6.0\DbUp.Tests.TestScripts.Script20110302_1_Test3.sql"));
-                Assert.That(filesToExecute.ElementAt(2).Name.EndsWith(@"3-5_0~2\DbUp.Tests.TestScripts.Script20110301_2_Test2.sql"));
+                Assert.That(filesToExecute.ElementAt(1).Name.EndsWith(@"3-5_0~2\DbUp.Tests.TestScripts.Script20110301_2_Test2.sql"));
+                Assert.That(filesToExecute.ElementAt(2).Name.EndsWith(@"3,6.0\DbUp.Tests.TestScripts.Script20110302_1_Test3.sql"));
                 Assert.That(filesToExecute.ElementAt(3).Name.EndsWith(@"3.6.0.1\DbUp.Tests.TestScripts.Script20130525_1_Test5.sql"));
             }
         }

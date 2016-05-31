@@ -134,28 +134,38 @@ namespace DbUp.ScriptProviders
 
             if (folderNames.Any())
             {
-                Version target = ParseVersion(targetVersion);
-                var parsedVersions = new List<Version>();
+                Version parsedVersion = ParseVersion(targetVersion);
+                var filteredFolders = ParseAndFilterFolders(folderNames, parsedVersion);
 
-                foreach (var folderName in folderNames)
-                {
-                    // Expecting all encountered folder names to be parseable. 
-                    var folderVersion = ParseVersion(folderName);
-
-                    if (folderVersion <= target)
-                    {
-                        if (parsedVersions.Contains(folderVersion))
-                        {
-                            throw new InvalidOperationException(string.Format("Version '{0}' parsed for folder '{1}' is ambiguous.", folderVersion, folderName));
-                        }
-
-                        scripts.AddRange(GetScriptsFromFolder(folderName));
-                        parsedVersions.Add(folderVersion);
-                    }
-                }
+                // Add scripts in folder version order
+                scripts.AddRange(filteredFolders.Values.SelectMany(folderName => GetScriptsFromFolder(folderName)));
             }
 
             return scripts;
+        }
+
+        private static SortedDictionary<Version, string> ParseAndFilterFolders(IEnumerable<string> folderNames, Version targetVersion)
+        {
+            var parsedVersions = new SortedDictionary<Version, string>();
+
+            // Filter folders by target version
+            foreach (var folderName in folderNames)
+            {
+                // Expecting all encountered folder names to be parseable. 
+                var folderVersion = ParseVersion(folderName);
+
+                if (folderVersion <= targetVersion)
+                {
+                    if (parsedVersions.ContainsKey(folderVersion))
+                    {
+                        throw new InvalidOperationException(string.Format("Version '{0}' parsed for folder '{1}' is ambiguous.", folderVersion, folderName));
+                    }
+
+                    parsedVersions.Add(folderVersion, folderName);
+                }
+            }
+
+            return parsedVersions;
         }
 
         /// <summary>
