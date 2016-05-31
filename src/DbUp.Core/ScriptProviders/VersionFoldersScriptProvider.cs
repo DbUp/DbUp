@@ -93,33 +93,13 @@ namespace DbUp.ScriptProviders
             this.targetVersion = targetVersion;
         }
 
-        /// <exception cref="InvalidOperationException">Thrown when multiple subfolder names parse to the same version number.</exception>
-        public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
-        {
-            return string.IsNullOrEmpty(targetVersion) ?
-                GetScriptsWithoutTargetVersion() :
-                GetScriptsWithTargetVersion();
-        }
-
-        private IEnumerable<SqlScript> GetScriptsWithoutTargetVersion()
-        {
-            var scripts = new List<SqlScript>();
-
-            foreach (var folderPath in Directory.GetDirectories(directoryPath))
-            {
-                var folderName = new DirectoryInfo(folderPath).Name;
-                scripts.AddRange(GetScriptsFromFolder(folderName));
-            }
-
-            return scripts;
-        }
-
         /// <summary>
-        /// Excludes scripts from version folders with a version higher than target version.
+        /// Excludes scripts from version folders with a version higher than target version (if any).
+        /// Folders are ordered semantically by the version parsed from the folder name.
         /// A <see cref="filter"/> must be supplied for folders to exclude.
         /// </summary>
         /// <exception cref="InvalidOperationException">Thrown when an unparseable folder version is encountered, or when multiple subfolder names parse to the same version number.</exception>
-        private IEnumerable<SqlScript> GetScriptsWithTargetVersion()
+        public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
             var folderNames = Directory.GetDirectories(directoryPath)
                 .Select(d => new DirectoryInfo(d).Name);
@@ -134,28 +114,37 @@ namespace DbUp.ScriptProviders
 
             if (folderNames.Any())
             {
-                Version target = ParseVersion(targetVersion);
-                var parsedVersions = new List<Version>();
+                var filteredFolders = ParseAndFilterFolders(folderNames);
 
-                foreach (var folderName in folderNames)
-                {
-                    // Expecting all encountered folder names to be parseable. 
-                    var folderVersion = ParseVersion(folderName);
-
-                    if (folderVersion <= target)
-                    {
-                        if (parsedVersions.Contains(folderVersion))
-                        {
-                            throw new InvalidOperationException(string.Format("Version '{0}' parsed for folder '{1}' is ambiguous.", folderVersion, folderName));
-                        }
-
-                        scripts.AddRange(GetScriptsFromFolder(folderName));
-                        parsedVersions.Add(folderVersion);
-                    }
-                }
+                // Add scripts folder by folder, where folders are sorted semantically
+                scripts.AddRange(filteredFolders.Values.SelectMany(folderName => GetScriptsFromFolder(folderName)));
             }
 
             return scripts;
+        }
+
+        private SortedDictionary<Version, string> ParseAndFilterFolders(IEnumerable<string> folderNames)
+        {
+            Version parsedTargetVersion = string.IsNullOrEmpty(targetVersion) ? null : ParseVersion(targetVersion);
+
+            // Filter folders by target version
+            var filteredFolders = new SortedDictionary<Version, string>();
+            foreach (var folderName in folderNames)
+            {
+                // Expecting all encountered folder names to be parseable. 
+                var parsedFolderVersion = ParseVersion(folderName);
+                if (parsedTargetVersion == null || parsedFolderVersion <= parsedTargetVersion)
+                {
+                    if (filteredFolders.ContainsKey(parsedFolderVersion))
+                    {
+                        throw new InvalidOperationException(string.Format("Version '{0}' parsed for folder '{1}' is ambiguous.", parsedFolderVersion, folderName));
+                    }
+
+                    filteredFolders.Add(parsedFolderVersion, folderName);
+                }
+            }
+
+            return filteredFolders;
         }
 
         /// <summary>
