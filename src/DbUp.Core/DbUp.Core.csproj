@@ -79,6 +79,7 @@
     <Compile Include="Helpers\NullJournal.cs" />
     <Compile Include="Properties\JetbrainsAnnotations.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptsProvider.cs" />
+    <Compile Include="ScriptProviders\VersionFoldersScriptProvider.cs" />
     <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
