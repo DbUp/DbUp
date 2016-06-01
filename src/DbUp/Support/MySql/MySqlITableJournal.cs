@@ -160,7 +160,7 @@ namespace DbUp.Support.MySql
         /// <returns>True if table exists, false otherwise</returns>
         private bool VerifyTableExistsCommand(IDbCommand command, string tableName, string schemaName)
         {
-            command.CommandText = string.IsNullOrEmpty(schema)
+            command.CommandText = string.IsNullOrEmpty(schemaName)
                             ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", tableName)
                             : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", tableName, schemaName);
             command.CommandType = CommandType.Text;

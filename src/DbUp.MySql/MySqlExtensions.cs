@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using System;
+using System.Linq;
 using DbUp;
 using DbUp.MySql;
 using DbUp.Engine.Transactions;
@@ -22,6 +23,11 @@ public static class MySqlExtensions
     /// </returns>
     public static UpgradeEngineBuilder MySqlDatabase(this SupportedDatabases supported, string connectionString)
     {
+        foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
+        {
+            return MySqlDatabase(new MySqlConnectionManager(connectionString), pair[1]);
+        }
+
         return MySqlDatabase(new MySqlConnectionManager(connectionString));
     }
 
