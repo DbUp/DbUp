@@ -143,10 +143,10 @@ SELECT AccountId,
             sqlCommands.ShouldNotBeNull();
             sqlCommands.Length.ShouldBe(4);
 
-            sqlCommands[0].ShouldBe(sqlCommandWithMultiLineComment.Replace("\r\n", "\n").Trim());
-            sqlCommands[1].ShouldBe(sqlCommandWithSingleLineComment.Replace("\r\n", "\n").Trim());
-            sqlCommands[2].ShouldBe(sqlCommandWithSingleLineCommentWithEndDashes.Replace("\r\n", "\n").Trim());
-            sqlCommands[3].ShouldBe(strangeInsert.Replace("\r\n", "\n").Trim());
+            sqlCommands[0].ShouldBe(sqlCommandWithMultiLineComment.Trim());
+            sqlCommands[1].ShouldBe(sqlCommandWithSingleLineComment.Trim());
+            sqlCommands[2].ShouldBe(sqlCommandWithSingleLineCommentWithEndDashes.Trim());
+            sqlCommands[3].ShouldBe(strangeInsert.Trim());
         }
     }
 }
