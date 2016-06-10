@@ -1,4 +1,5 @@
-﻿using Microsoft.SqlServer.Server;
+﻿#if SUPPORTS_SQL_CONTEXT
+using Microsoft.SqlServer.Server;
 
 namespace DbUp.Engine.Output
 {
@@ -20,3 +21,4 @@ namespace DbUp.Engine.Output
         }
     }
 }
+#endif

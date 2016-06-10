@@ -86,36 +86,5 @@ namespace DbUp.SqlServer.Helpers
             master.ExecuteNonQuery("drop database [" + databaseName + "]");
             masterSqlConnection.Dispose();
         }
-
-        internal class TraceLog : IUpgradeLog
-        {
-            public void WriteInformation(string format, params object[] args)
-            {
-                Trace.TraceInformation(format, args);
-            }
-
-            public void WriteError(string format, params object[] args)
-            {
-                Trace.TraceError(format, args);
-            }
-
-            public void WriteWarning(string format, params object[] args)
-            {
-                Trace.TraceWarning(format, args);
-            }
-
-            public IDisposable Indent()
-            {
-                return new FooDisposable();
-            }
-
-
-            public class FooDisposable : IDisposable
-            {
-                public void Dispose()
-                {
-                }
-            }
-        }
     }
 }

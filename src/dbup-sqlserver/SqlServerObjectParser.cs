@@ -11,7 +11,7 @@ namespace DbUp.SqlServer
     public class SqlServerObjectParser : SqlObjectParser
     {
 
-        public SqlServerObjectParser() : base(new SqlCommandBuilder())
+        public SqlServerObjectParser() : base("[", "]")
         {
 
         }

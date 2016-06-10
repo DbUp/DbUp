@@ -124,6 +124,7 @@ public static class SqlServerExtensions
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
     }
 
+#if SUPPORTS_SQL_CONTEXT
     /// <summary>
     /// Logs to SqlContext.Pipe, for use with "context connection=true".
     /// </summary>
@@ -133,8 +134,9 @@ public static class SqlServerExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
     {
-        return LogTo(builder, new SqlContextUpgradeLog());
+        return builder.LogTo(new SqlContextUpgradeLog());
     }
+#endif
 
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
