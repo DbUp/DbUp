@@ -151,7 +151,7 @@ namespace DbUp.Support
             catch (DbException sqlException)
             {
                 Log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Error code {1}; Message: {2}", index, sqlException.ErrorCode, sqlException.Message);
+                Log().WriteError("Script block number: {0}; Message: {1}", index, sqlException.Message);
                 Log().WriteError(sqlException.ToString());
                 throw;
             }

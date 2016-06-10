@@ -58,6 +58,7 @@ public static class StandardExtensions
         return builder;
     }
 
+#if TRACE_SUPPORT
     /// <summary>
     /// Logs to System.Diagnostics.Trace.
     /// </summary>
@@ -69,18 +70,7 @@ public static class StandardExtensions
     {
         return LogTo(builder, new TraceUpgradeLog());
     }
-
-    /// <summary>
-    /// Logs to SqlContext.Pipe, for use with "context connection=true".
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
-    {
-        return LogTo(builder, new SqlContextUpgradeLog());
-    }
+#endif
 
     /// <summary>
     /// Uses a custom journal for recording which scripts were executed.
@@ -230,7 +220,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase)));
     }
 
     /// <summary>
@@ -244,7 +234,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Encoding encoding)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase), encoding));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding));
     }
 
     /// <summary>
@@ -286,7 +276,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase)));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase)));
     }
 
     /// <summary>
@@ -435,11 +425,11 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies)
     {
-        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase));
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase));
     }
 
     /// <summary>
-    /// Adds all scripts matching the specified filter found as embedded resources in the given assemblies, using the default <see cref="Encoding" />.
+    /// Adds all scripts matching the specified filter found as embedded resources in the given assemblies, using the UTF8 <see cref="Encoding" />.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assemblies">The assemblies.</param>
@@ -449,7 +439,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter)
     {
-        return WithScriptsEmbeddedInAssemblies(builder, assemblies, filter, Encoding.Default);
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, filter, DbUpDefaults.DefaultEncoding);
     }
 
     /// <summary>
@@ -463,7 +453,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Encoding encoding)
     {
-        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.InvariantCultureIgnoreCase), encoding);
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding);
     }
 
     /// <summary>

@@ -20,22 +20,10 @@ namespace DbUp.ScriptProviders
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        public FileSystemScriptProvider(string directoryPath)
-        {
-            this.directoryPath = directoryPath;
-            this.filter = null;
-            this.encoding = Encoding.Default;
-        }
-
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         ///<param name="filter">The filter.</param>
-        public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter)
+        public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter = null)
+            : this(directoryPath, filter, DbUpDefaults.DefaultEncoding)
         {
-            this.directoryPath = directoryPath;
-            this.filter = filter;
-            this.encoding = Encoding.Default;
         }
 
         ///<summary>
@@ -45,7 +33,7 @@ namespace DbUp.ScriptProviders
         public FileSystemScriptProvider(string directoryPath, Encoding encoding)
         {
             this.directoryPath = directoryPath;
-            this.filter = null;
+            filter = null;
             this.encoding = encoding;
         }
 
@@ -67,7 +55,7 @@ namespace DbUp.ScriptProviders
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
             var files = Directory.GetFiles(directoryPath, "*.sql").AsEnumerable();
-            if (this.filter != null)
+            if (filter != null)
             {
                 files = files.Where(filter);
             }

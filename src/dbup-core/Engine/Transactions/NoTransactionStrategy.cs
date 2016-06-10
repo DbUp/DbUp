@@ -5,7 +5,7 @@ using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
-    class NoTransactionStrategy : ITransactionStrategy
+    internal class NoTransactionStrategy : ITransactionStrategy
     {
         private IDbConnection connection;
 

@@ -15,7 +15,8 @@ namespace DbUp.ScriptProviders
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, Encoding.Default)
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter) :
+            this(assembly, filter, DbUpDefaults.DefaultEncoding)
         {
         }
 

@@ -2,7 +2,7 @@
 
 namespace DbUp.Engine
 {
-    class DelegateDisposable : IDisposable
+    internal class DelegateDisposable : IDisposable
     {
         private readonly Action dispose;
 

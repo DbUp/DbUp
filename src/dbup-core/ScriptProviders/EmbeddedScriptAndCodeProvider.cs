@@ -31,8 +31,16 @@ namespace DbUp.ScriptProviders
             var script = typeof(IScript);
             return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory => assembly
                 .GetTypes()
-                .Where(type => script.IsAssignableFrom(type) && type.IsClass)
-                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", () => ((IScript)Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
+                .Where(type =>
+                {
+                    return script.IsAssignableFrom(type) &&
+#if USE_TYPE_INFO
+                        type.GetTypeInfo().IsClass;
+#else
+                        type.IsClass;
+#endif
+                })
+                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
                 .ToList());
         }
 

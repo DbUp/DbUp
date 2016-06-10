@@ -1,19 +1,18 @@
 ﻿using DbUp.Engine;
 using System;
-using System.Collections.Generic;
-using System.Data.Common;
-using System.Linq;
-using System.Text;
+using System.Text.RegularExpressions;
 
 namespace DbUp.Support
 {
     public abstract class SqlObjectParser : ISqlObjectParser
     {
-        private DbCommandBuilder commandBuilder;
+        readonly string quotePrefix;
+        readonly string quoteSuffix;
 
-        protected SqlObjectParser(DbCommandBuilder commandBuilder)
+        protected SqlObjectParser(string quotePrefix, string quoteSuffix)
         {
-            this.commandBuilder = commandBuilder;
+            this.quotePrefix = quotePrefix;
+            this.quoteSuffix = quoteSuffix;
         }
 
         /// <summary>
@@ -40,14 +39,16 @@ namespace DbUp.Support
             if (ObjectNameOptions.Trim == objectNameOptions)
                 objectName = objectName.Trim();
 
-            // defer to sqlite command implementation.           
-            return commandBuilder.QuoteIdentifier(objectName);
+            // defer to sqlite command implementation.
+            return $"{quotePrefix}{objectName}{quoteSuffix}";
         }
 
         public virtual string UnquoteIdentifier(string objectName)
         {
-            return commandBuilder.UnquoteIdentifier(objectName);
+            var prefix = Regex.Escape(quotePrefix);
+            var suffix = Regex.Escape(quoteSuffix);
+            var match = Regex.Match(objectName, $"^({prefix})?(?<unquoted>.*)({suffix})?$");
+            return match.Groups["unquoted"].Value;
         }
     }
-
 }

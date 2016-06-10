@@ -5,8 +5,8 @@ namespace DbUp.ScriptProviders
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using DbUp.Engine;
-    using DbUp.Engine.Transactions;
+    using Engine;
+    using Engine.Transactions;
 
     /// <summary>
     /// An <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts embedded in assemblies.
@@ -36,13 +36,13 @@ namespace DbUp.ScriptProviders
         /// <returns></returns>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var sqlScripts = this.assemblies
+            var sqlScripts = assemblies
                 .Select(assembly => new
                 {
                     Assembly = assembly,
-                    ResourceNames = assembly.GetManifestResourceNames().Where(this.filter).ToArray()
+                    ResourceNames = assembly.GetManifestResourceNames().Where(filter).ToArray()
                 })
-                .SelectMany(x => x.ResourceNames.Select(resourceName => SqlScript.FromStream(resourceName, x.Assembly.GetManifestResourceStream(resourceName), this.encoding)))
+                .SelectMany(x => x.ResourceNames.Select(resourceName => SqlScript.FromStream(resourceName, x.Assembly.GetManifestResourceStream(resourceName), encoding)))
                 .OrderBy(sqlScript => sqlScript.Name)
                 .ToList();
 

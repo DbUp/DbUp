@@ -22,8 +22,8 @@ namespace DbUp.Support
         private const char DashChar = '-';
         private const char SlashChar = '/';
         private const char StarChar = '*';
-	    private const char OpenBracketChar = '[';
-	    private const char CloseBracketChar = ']';
+        private const char OpenBracketChar = '[';
+        private const char CloseBracketChar = ']';
 
         protected const int FailedRead = -1;
 
@@ -96,11 +96,11 @@ namespace DbUp.Support
                     ReadQuotedString();
                     continue;
                 }
-				if (IsBeginningOfBracketedText)
-				{
-					ReadBracketedText();
-					continue;
-				}
+                if (IsBeginningOfBracketedText)
+                {
+                    ReadBracketedText();
+                    continue;
+                }
                 if (IsBeginningOfDashDashComment)
                 {
                     ReadDashDashComment();
@@ -288,23 +288,23 @@ namespace DbUp.Support
             return true;
         }
 
-	    private bool IsBeginningOfBracketedText
-	    {
-		    get
-		    {
-			    return CurrentChar == OpenBracketChar;
-		    }
-	    }
+        bool IsBeginningOfBracketedText
+        {
+            get
+            {
+                return CurrentChar == OpenBracketChar;
+            }
+        }
 
-	    private bool IsEndOfBracketedText
-	    {
-		    get
-		    {
-				return CurrentChar == CloseBracketChar;
-		    }
-	    }
+        bool IsEndOfBracketedText
+        {
+            get
+            {
+                return CurrentChar == CloseBracketChar;
+            }
+        }
 
-        private bool IsBeginningOfDashDashComment
+        bool IsBeginningOfDashDashComment
         {
             get
             {
@@ -316,7 +316,7 @@ namespace DbUp.Support
             }
         }
 
-        private bool IsBeginningOfSlashStarComment
+        bool IsBeginningOfSlashStarComment
         {
             get
             {
@@ -324,7 +324,7 @@ namespace DbUp.Support
             }
         }
 
-        private bool IsBeginningOfDelimiter
+        bool IsBeginningOfDelimiter
         {
             get
             {
@@ -333,21 +333,21 @@ namespace DbUp.Support
                 string result;
                 return
                     lastCharIsNullOrEmpty &&
-                    isCurrentCharacterStartOfDelimiter && 
+                    isCurrentCharacterStartOfDelimiter &&
                     TryPeek(Delimiter.Length - 1, out result) &&
                     string.Equals(result, Delimiter.Substring(1), StringComparison.OrdinalIgnoreCase);
             }
         }
 
-        private bool IsEndOfSlashStarComment
+        bool IsEndOfSlashStarComment
         {
             get
             {
                 return LastChar == StarChar && CurrentChar == SlashChar;
             }
-        }     
+        }
 
-        private void ReadQuotedString()
+        void ReadQuotedString()
         {
             WriteCurrentCharToCommandTextBuffer();
             while (Read() != FailedRead)
@@ -360,31 +360,31 @@ namespace DbUp.Support
             }
         }
 
-		private void ReadBracketedText()
-		{
-			WriteCurrentCharToCommandTextBuffer();
-			while(Read() != FailedRead)
-			{
-				WriteCurrentCharToCommandTextBuffer();
-				if (IsEndOfBracketedText)
-				{
-					var peekChar = PeekChar();
-					// Close brackets within brackets are escaped with another
-					// Close bracket. e.g. [a[b]]c] => a[b]c
-					if (peekChar == CloseBracketChar)
-					{
-						Read();
-						WriteCurrentCharToCommandTextBuffer();
-					}
-					else
-					{
-						return;
-					}
-				}
-			}
-		}
+        void ReadBracketedText()
+        {
+            WriteCurrentCharToCommandTextBuffer();
+            while (Read() != FailedRead)
+            {
+                WriteCurrentCharToCommandTextBuffer();
+                if (IsEndOfBracketedText)
+                {
+                    var peekChar = PeekChar();
+                    // Close brackets within brackets are escaped with another
+                    // Close bracket. e.g. [a[b]]c] => a[b]c
+                    if (peekChar == CloseBracketChar)
+                    {
+                        Read();
+                        WriteCurrentCharToCommandTextBuffer();
+                    }
+                    else
+                    {
+                        return;
+                    }
+                }
+            }
+        }
 
-        private void ReadDashDashComment()
+        void ReadDashDashComment()
         {
             // Writes the current dash.
             WriteCurrentCharToCommandTextBuffer();
@@ -400,7 +400,7 @@ namespace DbUp.Support
             while (!IsEndOfLine);
         }
 
-        private void ReadSlashStarComment()
+        void ReadSlashStarComment()
         {
             // Write the current slash.
             WriteCurrentCharToCommandTextBuffer();
@@ -424,7 +424,7 @@ namespace DbUp.Support
             }
         }
 
-        private bool ReadDelimiter()
+        bool ReadDelimiter()
         {
             var currentChar = CurrentChar;
             var buffer = new char[Delimiter.Length - 1];
@@ -451,19 +451,19 @@ namespace DbUp.Support
             return true;
         }
 
-        private void ResetCommandBuffer()
+        void ResetCommandBuffer()
         {
             LastChar = NullChar;
             CurrentChar = NullChar;
             commandScriptBuilder.Length = 0;
         }
 
-        private void WriteCurrentCharToCommandTextBuffer()
+        void WriteCurrentCharToCommandTextBuffer()
         {
             commandScriptBuilder.Append(CurrentChar);
         }
 
-        private string GetCurrentCommandTextFromBuffer()
+        string GetCurrentCommandTextFromBuffer()
         {
             return commandScriptBuilder.ToString();
         }

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using DbUp.Engine;
 using DbUp.Engine.Preprocessors;
 
@@ -70,7 +71,7 @@ namespace DbUp.Helpers
         /// <param name="query">The query.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public object ExecuteScalar(string query, params Func<string, object>[] parameters)
+        public object ExecuteScalar(string query, params Expression<Func<string, object>>[] parameters)
         {
             object result = null;
             Execute(query, parameters,
@@ -87,7 +88,7 @@ namespace DbUp.Helpers
         /// <param name="query">The query.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public int ExecuteNonQuery(string query, params Func<string, object>[] parameters)
+        public int ExecuteNonQuery(string query, params Expression<Func<string, object>>[] parameters)
         {
             var result = 0;
             Execute(query, parameters,
@@ -104,33 +105,33 @@ namespace DbUp.Helpers
         /// <param name="query">The query.</param>
         /// <param name="parameters">The parameters.</param>
         /// <returns></returns>
-        public List<Dictionary<string, string>> ExecuteReader(string query, params Func<string, object>[] parameters)
+        public List<Dictionary<string, string>> ExecuteReader(string query, params Expression<Func<string, object>>[] parameters)
         {
             var results = new List<Dictionary<string, string>>();
             Execute(query, parameters,
-                    command =>
+                command =>
+                {
+                    using (var reader = command.ExecuteReader())
                     {
-                        using (var reader = command.ExecuteReader())
+                        while (reader.Read())
                         {
-                            while (reader.Read())
+                            var line = new Dictionary<string, string>();
+                            for (int i = 0; i < reader.FieldCount; i++)
                             {
-                                var line = new Dictionary<string, string>();
-                                for (int i = 0; i < reader.FieldCount; i++)
-                                {
-                                    var name = reader.GetName(i);
-                                    var value = reader.GetValue(i);
-                                    value = value == DBNull.Value ? null : value.ToString();
-                                    line.Add(name, (string)value);
-                                }
-                                results.Add(line);
+                                var name = reader.GetName(i);
+                                var value = reader.GetValue(i);
+                                value = value == DBNull.Value ? null : value.ToString();
+                                line.Add(name, (string) value);
                             }
+                            results.Add(line);
                         }
-                    });
+                    }
+                });
 
             return results;
         }
 
-        private void Execute(string commandText, IEnumerable<Func<string, object>> parameters, Action<IDbCommand> executor)
+        void Execute(string commandText, IEnumerable<Expression<Func<string, object>>> parameters, Action<IDbCommand> executor)
         {
             commandText = Preprocess(commandText);
             using (var command = commandFactory())
@@ -139,8 +140,8 @@ namespace DbUp.Helpers
 
                 foreach (var param in parameters)
                 {
-                    var key = param.Method.GetParameters()[0].Name;
-                    var value = param(null);
+                    var key = param.Parameters[0].Name;
+                    var value = param.Compile()(null);
                     var p = command.CreateParameter();
                     p.ParameterName = key;
                     p.Value = value;
@@ -151,12 +152,12 @@ namespace DbUp.Helpers
             }
         }
 
-        private string Preprocess(string query)
+        string Preprocess(string query)
         {
             if (string.IsNullOrEmpty(Schema))
                 query = new StripSchemaPreprocessor().Process(query);
             if (!string.IsNullOrEmpty(Schema) && !variables.ContainsKey("schema"))
-                variables.Add("schema", this.sqlObjectParser.QuoteIdentifier(Schema));
+                variables.Add("schema", sqlObjectParser.QuoteIdentifier(Schema));
             if (variablesEnabled())
                 query = new VariableSubstitutionPreprocessor(variables).Process(query);
             query = additionalScriptPreprocessors.Aggregate(query, (current, additionalScriptPreprocessor) => additionalScriptPreprocessor.Process(current));

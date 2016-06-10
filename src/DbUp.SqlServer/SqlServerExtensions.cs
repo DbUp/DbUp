@@ -125,6 +125,18 @@ public static class SqlServerExtensions
     }
 
     /// <summary>
+    /// Logs to SqlContext.Pipe, for use with "context connection=true".
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
+    {
+        return LogTo(builder, new SqlContextUpgradeLog());
+    }
+
+    /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>

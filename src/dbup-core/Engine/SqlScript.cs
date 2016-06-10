@@ -21,7 +21,7 @@ namespace DbUp.Engine
         /// <param name="contents">The contents.</param>
         public SqlScript(string name, string contents)
         {
-            this.name = name;
+            Name = name;
             this.contents = contents;
         }
 
@@ -38,10 +38,7 @@ namespace DbUp.Engine
         /// Gets the name of the script.
         /// </summary>
         /// <value></value>
-        public string Name
-        {
-            get { return name; }
-        }
+        public string Name { get; }
 
         /// <summary>
         /// Create a SqlScript from a file using Default encoding
@@ -50,7 +47,7 @@ namespace DbUp.Engine
         /// <returns></returns>
         public static SqlScript FromFile(string path)
         {
-            return FromFile(path, Encoding.Default);
+            return FromFile(path, DbUpDefaults.DefaultEncoding);
         }
 
         /// <summary>
@@ -76,7 +73,7 @@ namespace DbUp.Engine
         /// <returns></returns>
         public static SqlScript FromStream(string scriptName, Stream stream)
         {
-            return FromStream(scriptName, stream, Encoding.Default);
+            return FromStream(scriptName, stream, DbUpDefaults.DefaultEncoding);
         }
 
         /// <summary>

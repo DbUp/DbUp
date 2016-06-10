@@ -1,6 +1,3 @@
-install:
-  - choco install gitversion.portable -pre -y
-  
 platform:
   - Mixed Platforms
 
@@ -15,7 +12,7 @@ before_build:
   - ps: gitversion /l console /output buildserver /updateAssemblyInfo src\Information\VersionInfo.cs
 
 build:
-  project: src\DbUp.sln
+  powershell: ./build.ps1
 
 after_build:
   - cmd: nuget pack src\dbup.nuspec -version "%GitVersion_NuGetVersion%"

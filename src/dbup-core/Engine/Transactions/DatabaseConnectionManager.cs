@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using DbUp.Engine.Output;
 
@@ -131,7 +130,7 @@ namespace DbUp.Engine.Transactions
         public IDisposable OverrideFactoryForTest(IConnectionFactory connectionFactory)
         {
             connectionFactoryOverride = connectionFactory;
-            return new DelegateDisposable(() => this.connectionFactoryOverride = null);
+            return new DelegateDisposable(() => connectionFactoryOverride = null);
         }
 
         IDbConnection CreateConnection(IUpgradeLog upgradeLog)
