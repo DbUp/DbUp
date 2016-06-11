@@ -1,8 +1,4 @@
-﻿using DbUp.Engine;
-using DbUp.Support;
-using System;
-using System.Linq;
-using FirebirdSql.Data.FirebirdClient;
+﻿using DbUp.Support;
 
 namespace DbUp.Firebird
 {
@@ -11,9 +7,8 @@ namespace DbUp.Firebird
     /// </summary>
     public class FirebirdObjectParser : SqlObjectParser
     {
-        public FirebirdObjectParser():base(new FbCommandBuilder())
+        public FirebirdObjectParser() : base("\"", "\"")
         {
-
-        }       
+        }
     }
 }
