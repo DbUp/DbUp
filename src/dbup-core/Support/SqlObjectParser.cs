@@ -8,11 +8,16 @@ namespace DbUp.Support
     {
         readonly string quotePrefix;
         readonly string quoteSuffix;
+        Regex matchQuotes;
 
         protected SqlObjectParser(string quotePrefix, string quoteSuffix)
         {
             this.quotePrefix = quotePrefix;
             this.quoteSuffix = quoteSuffix;
+
+            var prefix = Regex.Escape(quotePrefix);
+            var suffix = Regex.Escape(quoteSuffix);
+            matchQuotes = new Regex($"^({prefix})?(?<unquoted>.*)({suffix})?$");
         }
 
         /// <summary>
@@ -39,16 +44,17 @@ namespace DbUp.Support
             if (ObjectNameOptions.Trim == objectNameOptions)
                 objectName = objectName.Trim();
 
+            // Don't double quote
+            if (matchQuotes.IsMatch(objectName))
+                return objectName;
+
             // defer to sqlite command implementation.
             return $"{quotePrefix}{objectName}{quoteSuffix}";
         }
 
         public virtual string UnquoteIdentifier(string objectName)
         {
-            var prefix = Regex.Escape(quotePrefix);
-            var suffix = Regex.Escape(quoteSuffix);
-            var match = Regex.Match(objectName, $"^({prefix})?(?<unquoted>.*)({suffix})?$");
-            return match.Groups["unquoted"].Value;
+            return matchQuotes.Match(objectName).Groups["unquoted"].Value;
         }
     }
 }
