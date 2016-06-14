@@ -30,7 +30,25 @@ namespace DbUp.Support.SqlServer
         {
             while (!HasReachedEnd)
             {
-                this.ReadCharacter += (type, c) => commandScriptBuilder.Append(c);
+                this.ReadCharacter += (type, c) =>
+                {
+                    switch (type)
+                    {
+                        case CharacterType.Command:
+                        case CharacterType.SlashStarComment:
+                        case CharacterType.DashComment:
+                        case CharacterType.BracketedText:
+                        case CharacterType.QuotedString:
+                        case CharacterType.CustomStatement:
+                            commandScriptBuilder.Append(c);
+                            break;
+                        case CharacterType.Delimiter:
+                            break;
+                        default:
+                            throw new ArgumentOutOfRangeException("type", type, null);
+                    }
+                    
+                };
                 this.CommandEnded += () =>
                 {
                     var commandText = GetCurrentCommandTextFromBuffer();
@@ -40,7 +58,7 @@ namespace DbUp.Support.SqlServer
                         ResetCommandBuffer();
                     }
                 };
-                
+
                 Parse();
             }
         }
@@ -54,6 +72,5 @@ namespace DbUp.Support.SqlServer
         {
             return commandScriptBuilder.ToString().Trim();
         }
-
     }
 }

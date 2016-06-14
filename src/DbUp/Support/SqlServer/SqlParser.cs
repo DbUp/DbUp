@@ -434,25 +434,47 @@ namespace DbUp.Support.SqlServer
         {
             var previousChar = CurrentChar;
             var buffer = new char[Delimiter.Length - 1];
+
             // read the rest of the delimiter
-            if (Read(buffer, 0, Delimiter.Length - 1) != Delimiter.Length - 1)
-            {
-                return true;
-            }
+            Read(buffer, 0, Delimiter.Length - 1);
+
             // Support terminator.
             var peekChar = PeekChar();
+            char? terminator = null;
             if (peekChar == ';' || peekChar == '\0')
             {
-                Read();
+                // if '\0' read will not succeed and CurrentChar will not change
+                if (Read() > 0)
+                {
+                    terminator = CurrentChar;
+                }
             }
             // Check that the statement is indeed a GO and not text starting with Go
             // If it is not a go, add text to buffer and continue
             else if (!char.IsWhiteSpace(peekChar) && DelimiterRequiresWhitespace)
             {
                 ReadCharacter(CharacterType.Command, previousChar);
-                ReadCharacter(CharacterType.Command, CurrentChar);
+
+                foreach (var @char in buffer)
+                {
+                    ReadCharacter(CharacterType.Command, @char);
+                }
+
                 return false;
             }
+
+            // add the first char of the delimiter
+            ReadCharacter(CharacterType.Delimiter, previousChar);
+
+            // add the body of the delimiter
+            foreach (var @char in buffer)
+            {
+                ReadCharacter(CharacterType.Delimiter, @char);
+            }
+
+            // add the ';' terminator, if present
+            if (terminator.HasValue)
+                ReadCharacter(CharacterType.Delimiter, terminator.Value);
 
             return true;
         }
@@ -472,8 +494,11 @@ namespace DbUp.Support.SqlServer
             BracketedText,
             /// <summary>Character belongs to "quoted" text</summary>
             QuotedString,
+            /// <summary>Character belongs do a delimiter (like GO)</summary>
+            Delimiter,
             /// <summary>Character is a custom statement (open for new implementation)</summary>
-            CustomStatement
+            CustomStatement,
+            
         }
     }
 }
