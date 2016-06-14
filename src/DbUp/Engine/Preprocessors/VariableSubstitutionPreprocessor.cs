@@ -16,7 +16,6 @@ namespace DbUp.Engine.Preprocessors
     public class VariableSubstitutionPreprocessor : IScriptPreprocessor
     {
         private readonly IDictionary<string, string> variables;
-        private static readonly Regex tokenRegex = new Regex(@"\$(?<variableName>\w+)\$");
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableSubstitutionPreprocessor"/> class.
