@@ -152,6 +152,16 @@ namespace DbUp.Engine.Preprocessors
         public VariableSubstitutionPreprocessor(System.Collections.Generic.IDictionary<string, string> variables) { }
         public string Process(string contents) { }
     }
+    public class VariableSubstitutionSqlParser : DbUp.Support.SqlServer.SqlParser
+    {
+        public VariableSubstitutionSqlParser(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = True) { }
+        protected override bool IsCustomStatement { get; }
+        protected virtual char VariableDelimiter { get; }
+        public event System.Action<string> ReadVariableName;
+        protected override void ReadCustomStatement() { }
+        public string ReplaceVariables(System.Collections.Generic.IDictionary<string, string> variables) { }
+        protected virtual bool ValidVariableNameCharacter(char c) { }
+    }
 }
 namespace DbUp.Engine.Transactions
 {
