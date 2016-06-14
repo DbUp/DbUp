@@ -96,6 +96,7 @@
     <Compile Include="Support\SQLite\SQLiteObjectParser.cs" />
     <Compile Include="Support\SQLite\SQLiteTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
+    <Compile Include="Support\SqlServer\SqlParser.cs" />
     <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
     <Compile Include="Engine\IScriptPreprocessor.cs" />
     <Compile Include="Engine\Preprocessors\VariableSubstitutionPreprocessor.cs" />
