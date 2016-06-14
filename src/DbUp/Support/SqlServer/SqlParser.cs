@@ -118,6 +118,20 @@ namespace DbUp.Support.SqlServer
         /// </example>
         /// </summary>
         protected event Action<CharacterType, char> ReadCharacter;
+
+        /// <summary>
+        /// Enables signaling of the `ReadCharacter` event from derived classes
+        /// </summary>
+        /// <param name="type">The character's type or where it belongs to</param>
+        /// <param name="c">The character that was read</param>
+        protected void OnReadCharacter(CharacterType type, char c)
+        {
+            if (ReadCharacter != null)
+            {
+                ReadCharacter(type, c);
+            }
+
+        }
         #endregion
 
 

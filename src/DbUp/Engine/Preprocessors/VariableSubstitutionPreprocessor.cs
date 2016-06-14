@@ -3,8 +3,10 @@ using System.Collections.Generic;
 using System.Collections.Specialized;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using DbUp.Helpers;
+using DbUp.Support.SqlServer;
 
 namespace DbUp.Engine.Preprocessors
 {
@@ -31,37 +33,82 @@ namespace DbUp.Engine.Preprocessors
         /// <param name="contents"></param>
         public string Process(string contents)
         {
-            List<KeyValuePair<int, int>> comments = SqlCommentRangeFinder.FindRanges(contents);
-            return tokenRegex.Replace(contents, match => ReplaceToken(match, variables, comments));
+            using (var parser = new VariableSubstitutionSqlParser(contents))
+            {
+                return parser.ReplaceVariables(variables);
+            }
         }
 
-        private static string ReplaceToken(Match match, IDictionary<string, string> variables, List<KeyValuePair<int, int>> comments)
+        private class VariableSubstitutionSqlParser : SqlParser
         {
-            var variableName = match.Groups["variableName"].Value;
-            string replaceValue;
-
-            if (!variables.TryGetValue(variableName, out replaceValue))
+            public VariableSubstitutionSqlParser(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true) 
+                : base(sqlText, delimiter, delimiterRequiresWhitespace)
             {
-                if (!IsInComment(comments, match))
+            }
+
+            public string ReplaceVariables(IDictionary<string, string> variables)
+            {
+                var sb = new StringBuilder();
+
+                this.ReadCharacter += (type, c) => sb.Append(c);
+
+                this.ReadVariableName += (name) =>
                 {
-                    throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Variable {0} has no value defined", variableName));
+                    if (!variables.ContainsKey(name))
+                    {
+                        throw new InvalidOperationException(string.Format(CultureInfo.CurrentCulture, "Variable {0} has no value defined", name));
+                    }
+
+                    sb.Append(variables[name]);
+                };
+
+                this.Parse();
+
+                return sb.ToString();
+            }
+
+            protected override bool IsCustomStatement
+            {
+                get
+                {
+                    var c = PeekChar();
+                    return CurrentChar == '$' 
+                        && ValidVariableNameCharacter(c);
+                }
+            }
+
+            private static bool ValidVariableNameCharacter(char c)
+            {
+                return (char.IsLetterOrDigit(c) || c == '_' || c == '-');
+            }
+
+            protected override void ReadCustomStatement()
+            {
+                var sb = new StringBuilder();
+                while (Read() > 0 && CurrentChar != '$' && ValidVariableNameCharacter(CurrentChar))
+                {
+                    sb.Append(CurrentChar);
+                }
+
+                var buffer = sb.ToString();
+
+                if (CurrentChar == '$' && ReadVariableName != null)
+                {
+                    ReadVariableName(buffer);
                 }
                 else
                 {
-                    return match.Value;
+                    OnReadCharacter(CharacterType.Command, '$');
+                    foreach (var c in buffer)
+                    {
+                        OnReadCharacter(CharacterType.Command, c);
+                    }
+                    OnReadCharacter(CharacterType.Command, CurrentChar);
                 }
+                
             }
-            else
-            {
-                return replaceValue;
-            }
-        }
 
-        private static bool IsInComment(List<KeyValuePair<int, int>> commentRanges, Match match)
-        {
-            return commentRanges
-                .TakeWhile(x => x.Key < match.Index)
-                .Any(x => x.Key < match.Index && x.Value > (match.Index + match.Length));
+            private event Action<string> ReadVariableName;
         }
     }
 }
