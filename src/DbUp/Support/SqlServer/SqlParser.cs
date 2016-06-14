@@ -455,9 +455,9 @@ namespace DbUp.Support.SqlServer
             // Support terminator.
             var peekChar = PeekChar();
             char? terminator = null;
-            if (peekChar == ';' || peekChar == '\0')
+            if (peekChar == ';' || peekChar == NullChar)
             {
-                // if '\0' read will not succeed and CurrentChar will not change
+                // if NullChar read will not succeed and CurrentChar will not change
                 if (Read() > 0)
                 {
                     terminator = CurrentChar;
