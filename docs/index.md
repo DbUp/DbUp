@@ -46,6 +46,14 @@ static int Main(string[] args)
     return 0;
 }
 ```
+**Note**: If you want your application to create the database for you, add the following line after the connection string:
+
+```
+EnsureDatabase.For.SqlDatabase(connectionString);
+```
+
+This way it will check if the target database exist if not it will create the database and then run your scripts  
+
 
 You now have a console application that can run change scripts against your database! After running it, you'll see something like this:
 ![First run - the scripts get executed](./images/first-run.png)
