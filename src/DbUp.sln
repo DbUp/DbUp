@@ -1,13 +1,17 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
 		..\appveyor.yml = ..\appveyor.yml
 		..\Breaking changes.md = ..\Breaking changes.md
+		..\build.cake = ..\build.cake
+		..\build.ps1 = ..\build.ps1
 		dbup.nuspec = dbup.nuspec
+		..\GitVersionConfig.yaml = ..\GitVersionConfig.yaml
+		..\global.json = ..\global.json
 		..\README.md = ..\README.md
 		Information\SolutionInfo.cs = Information\SolutionInfo.cs
 		Information\VersionInfo.cs = Information\VersionInfo.cs
@@ -26,6 +30,8 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-postgresql", "dbup-postgresql\dbup-postgresql.xproj", "{3D5F0B68-6B3F-4624-8322-289C8E321593}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-sqlite", "dbup-sqlite\dbup-sqlite.xproj", "{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-tests", "dbup-tests\dbup-tests.xproj", "{854B6565-B423-4E2C-938B-406C6EAC9C0E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +67,10 @@ Global
 		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Release|Any CPU.Build.0 = Release|Any CPU
+		{854B6565-B423-4E2C-938B-406C6EAC9C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{854B6565-B423-4E2C-938B-406C6EAC9C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{854B6565-B423-4E2C-938B-406C6EAC9C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{854B6565-B423-4E2C-938B-406C6EAC9C0E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

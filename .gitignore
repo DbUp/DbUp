@@ -88,3 +88,4 @@ src/_NCrunch_DbUp
 dbup*.nupkg
 
 src/.vs/
+project.lock.json

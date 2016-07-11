@@ -3,9 +3,9 @@
     "title": "DbUp Core",
     "description": "DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts.",
     "authors": [ "Paul Stovell", "Jim Burger", "Jake Ginnivan", "Damian Maclennan" ],
-    "projectUrl": "http://dbup.github.com",
     "packOptions": {
         "licenseUrl": "http://www.opensource.org/licenses/mit-license.php",
+        "projectUrl": "http://dbup.github.com",
         "releaseNotes": "https://github.com/DbUp/DbUp/releases",
         "iconUrl": "https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png"
     },
@@ -17,11 +17,11 @@
         "netstandard1.3": {
             "imports": "dnxcore50",
             "dependencies": {
-                "NETStandard.Library": "1.5.0-rc2-24027",
-                "System.Data.Common": "4.0.1-rc2-24027",
-                "System.Linq.Expressions": "4.0.11-rc2-24027",
-                "System.Reflection": "4.1.0-rc2-24027",
-                "System.Reflection.TypeExtensions": "4.1.0-rc2-24027"
+                "NETStandard.Library": "1.6.0",
+                "System.Data.Common": "4.1.0",
+                "System.Linq.Expressions": "4.1.0",
+                "System.Reflection": "4.1.0",
+                "System.Reflection.TypeExtensions": "4.1.0"
             },
             "buildOptions": {
                 "define": [
