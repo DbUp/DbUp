@@ -1,0 +1,34 @@
+﻿Open connection
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
+Dispose command
+Execute non query command: CREATE TABLE test ( keycol int default autoincrement, datacol char(10))
+Dispose command
+Execute non query command: CREATE TRIGGER insert_test AFTER INSERT ON test
+                                                    REFERENCING NEW AS new_row
+                                                    FOR EACH ROW
+                                                    BEGIN
+                                                    SET aicol=new_row.keycol;
+                                                    END
+Dispose command
+Execute non query command: CREATE VARIABLE aicol int
+Dispose command
+Execute non query command: INSERT INTO test (datacol) VALUES ('mytest')
+Dispose command
+Execute non query command: SELECT aicol FROM dummy
+Dispose command
+Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
+Dispose command
+Execute non query command: CREATE TABLE `schemaversions` 
+                    (
+                        `schemaversionid` INT NOT NULL AUTO_INCREMENT,
+                        `scriptname` VARCHAR(255) NOT NULL,
+                        `applied` TIMESTAMP NOT NULL,
+                        PRIMARY KEY (`schemaversionid`));
+Dispose command
+Create parameter
+Add parameter to command: scriptName=ScriptName
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into `schemaversions` (ScriptName, Applied) values (@scriptName, @applied)
+Dispose command
+Dispose connection
