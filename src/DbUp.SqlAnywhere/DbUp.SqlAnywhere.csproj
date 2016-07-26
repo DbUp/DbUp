@@ -32,6 +32,12 @@
     <WarningLevel>4</WarningLevel>
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
+  <PropertyGroup>
+    <SignAssembly>true</SignAssembly>
+  </PropertyGroup>
+  <PropertyGroup>
+    <AssemblyOriginatorKeyFile>..\DbUp\dbup.snk</AssemblyOriginatorKeyFile>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="iAnywhere.Data.SQLAnywhere.v4.5, Version=16.0.0.19484, Culture=neutral, PublicKeyToken=f222fc4333e0d400, processorArchitecture=MSIL">
       <HintPath>..\packages\iAnywhere.Data.SQLAnywhere.v4.5.16.0.0.19484\lib\net45\iAnywhere.Data.SQLAnywhere.v4.5.dll</HintPath>
@@ -63,6 +69,10 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <None Include="..\DbUp\dbup.snk">
+      <Link>dbup.snk</Link>
+    </None>
+    <None Include="dbup.sqlanywhere.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
