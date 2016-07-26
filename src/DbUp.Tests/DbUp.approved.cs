@@ -142,6 +142,11 @@ namespace DbUp.Engine.Output
 namespace DbUp.Engine.Preprocessors
 {
     
+    public class NullPreprocessor : DbUp.Engine.IScriptPreprocessor
+    {
+        public NullPreprocessor() { }
+        public string Process(string contents) { }
+    }
     public class StripSchemaPreprocessor : DbUp.Engine.IScriptPreprocessor
     {
         public StripSchemaPreprocessor() { }
@@ -324,6 +329,15 @@ namespace DbUp.Support.Postgresql
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }
 }
+namespace DbUp.Support.SqlAnywhere
+{
+    
+    public class SqlAnywhereTableJournal : DbUp.Support.SqlServer.SqlTableJournal
+    {
+        public SqlAnywhereTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table, DbUp.Engine.IScriptPreprocessor sqlProcessor) { }
+        protected override bool VerifyTableExistsCommand(System.Data.IDbCommand command, string tableName, string schemaName) { }
+    }
+}
 namespace DbUp.Support.SQLite
 {
     
@@ -399,6 +413,7 @@ namespace DbUp.Support.SqlServer
     }
     public class SqlTableJournal : DbUp.Engine.IJournal
     {
+        protected DbUp.Engine.IScriptPreprocessor SqlProcessor;
         public SqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
         protected virtual string CreatePrimaryKeyName(string table) { }
         protected virtual string CreateTableName(string schema, string table) { }

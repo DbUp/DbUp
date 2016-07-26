@@ -5,6 +5,7 @@ using System.Data.Common;
 using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Preprocessors;
 using DbUp.Engine.Transactions;
 
 namespace DbUp.Support.SqlServer
@@ -19,6 +20,7 @@ namespace DbUp.Support.SqlServer
         private readonly Func<IUpgradeLog> log;
         private readonly string schema;
         private readonly string table;
+        protected IScriptPreprocessor SqlProcessor = new NullPreprocessor();
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
@@ -78,7 +80,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         protected virtual string GetExecutedScriptsSql(string schema, string table)
         {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", CreateTableName(schema, table));
+            return SqlProcessor.Process(string.Format("select [ScriptName] from {0} order by [ScriptName]", CreateTableName(schema, table)));
         }
 
         /// <summary>
@@ -96,7 +98,7 @@ namespace DbUp.Support.SqlServer
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = CreateTableSql(schema, table);
+                        command.CommandText = SqlProcessor.Process(CreateTableSql(schema, table));
 
                         command.CommandType = CommandType.Text;
                         command.ExecuteNonQuery();
@@ -110,7 +112,7 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", CreateTableName(schema, table));
+                    command.CommandText = SqlProcessor.Process(string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", CreateTableName(schema, table)));
 
                     var scriptNameParam = command.CreateParameter();
                     scriptNameParam.ParameterName = "scriptName";

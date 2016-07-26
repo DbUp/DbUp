@@ -110,6 +110,7 @@
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
     <Compile Include="ScriptProvider\TestScripts.cs" />
+    <Compile Include="Support\SqlAnywhere\SqlAnywhereSqlPreprocessorTest.cs" />
     <Compile Include="Support\SqlAnywhere\SqlAnywhereSupportTests.cs" />
     <Compile Include="Support\SqlAnywhere\SqlAnywhereConnectionManagerTests.cs" />
     <Compile Include="TestInfrastructure\Scrubbers.cs" />

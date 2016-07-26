@@ -59,6 +59,7 @@
     <Compile Include="Builder\StandardExtensions.cs" />
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
+    <Compile Include="Engine\Preprocessors\NullPreprocessor.cs" />
     <Compile Include="EnsureDatabase.cs" />
     <Compile Include="DeployChanges.cs" />
     <Compile Include="Engine\DelegateDisposable.cs" />
@@ -82,6 +83,7 @@
     <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />
     <Compile Include="Support\MySql\MySqlITableJournal.cs" />
     <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
+    <Compile Include="Support\SqlAnywhere\SqlAnywhereTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitter.cs" />
     <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />

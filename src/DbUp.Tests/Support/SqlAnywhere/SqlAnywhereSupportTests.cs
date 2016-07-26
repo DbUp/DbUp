@@ -1,5 +1,7 @@
 ﻿using System;
 using ApprovalTests;
+using DbUp.Builder;
+using DbUp.SqlAnywhere;
 using DbUp.Tests.TestInfrastructure;
 using NUnit.Framework;
 using Shouldly;
@@ -27,7 +29,7 @@ namespace DbUp.Tests.Support.SqlAnywhere
         {
             var recordingDbConnection = new RecordingDbConnection(true);
             var upgrader = DeployChanges.To
-                                        .SqlAnywhereDatabase("We don't care about connection string")
+                                        .SqlAnywhereDatabase("We don't care about connection string", "nor the schema name")
                                         .OverrideConnectionFactory(recordingDbConnection)
                                         .WithScript("ScriptName", MultilineSqlScript).Build();
 
@@ -43,6 +45,25 @@ namespace DbUp.Tests.Support.SqlAnywhere
             {
                 Console.WriteLine(commandLog);
             }
+        }
+
+        [Test]
+        public void Should_Configure_ScriptPreprocessors()
+        {
+            UpgradeConfiguration config = null;
+            var builder = DeployChanges.To.SqlAnywhereDatabase("We don't care about connection string", "SchemaName").WithScriptsEmbeddedInAssembly(GetType().Assembly);
+
+            config = ExtractConfigurationFromBuilder(builder);
+
+            config.ScriptPreprocessors.ShouldContain(x => x.GetType() == typeof(SqlAnywhereSqlPreprocessor));
+        }
+
+        private static UpgradeConfiguration ExtractConfigurationFromBuilder(UpgradeEngineBuilder builder)
+        {
+            UpgradeConfiguration config = null;
+            builder.Configure(c => config = c);
+            builder.Build();
+            return config;
         }
     }
 }
