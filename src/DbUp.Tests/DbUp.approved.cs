@@ -388,13 +388,18 @@ namespace DbUp.Support.SqlServer
     }
     public class SqlTableJournal : DbUp.Engine.IJournal
     {
+        protected readonly System.Func<DbUp.Engine.Transactions.IConnectionManager> ConnectionManager;
+        protected readonly System.Func<DbUp.Engine.Output.IUpgradeLog> Log;
+        protected readonly string Schema;
+        protected readonly string Table;
         public SqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
         protected virtual string CreatePrimaryKeyName(string table) { }
         protected virtual string CreateTableName(string schema, string table) { }
         protected virtual string CreateTableSql(string schema, string table) { }
+        protected bool DoesTableExist() { }
         public string[] GetExecutedScripts() { }
         protected virtual string GetExecutedScriptsSql(string schema, string table) { }
-        public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
+        public virtual void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
         protected virtual bool VerifyTableExistsCommand(System.Data.IDbCommand command, string tableName, string schemaName) { }
     }
 }
