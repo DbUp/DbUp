@@ -1,2 +1,6 @@
 next-version: 3.3.0
 commit-message-incrementing: Enabled
+branches:
+  Sybase_Sql_Anywhere:
+    mode: ContinuousDeployment
+    increment: Patch
