@@ -4,4 +4,3 @@ branches:
   Sybase_Sql_Anywhere:
     mode: ContinuousDeployment
     increment: Patch
-
