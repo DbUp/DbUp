@@ -6,6 +6,8 @@ using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
 #if MONO
 using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
+#elif NETCORE
+using SQLiteConnection = Microsoft.Data.Sqlite.SqliteConnection;
 #else
 using System.Data.SQLite;
 #endif

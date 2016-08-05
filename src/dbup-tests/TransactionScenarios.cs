@@ -1,4 +1,5 @@
-﻿using DbUp.Builder;
+﻿#if !NETCORE
+using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Tests.TestInfrastructure;
@@ -181,3 +182,4 @@ namespace DbUp.Tests
         }
     }
 }
+#endif

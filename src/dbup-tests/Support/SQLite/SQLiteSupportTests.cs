@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETCORE
+using System;
 using System.Data.SQLite;
 using System.IO;
 using NUnit.Framework;
@@ -33,3 +34,4 @@ namespace DbUp.Tests.Support.SQLite
        
     }
 }
+#endif

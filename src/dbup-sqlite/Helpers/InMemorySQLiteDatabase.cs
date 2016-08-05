@@ -6,6 +6,9 @@ using DbUp.Helpers;
 using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
 using SQLiteConnectionStringBuilder = Mono.Data.Sqlite.SqliteConnectionStringBuilder;
 using SQLiteJournalModeEnum = Mono.Data.Sqlite.SQLiteJournalModeEnum;
+#elif NETCORE
+using SQLiteConnection = Microsoft.Data.Sqlite.SqliteConnection;
+using SQLiteConnectionStringBuilder = Microsoft.Data.Sqlite.SqliteConnectionStringBuilder;
 #else
 using System.Data.SQLite;
 #endif
@@ -29,6 +32,7 @@ namespace DbUp.SQLite.Helpers
             var connectionStringBuilder = new SQLiteConnectionStringBuilder
             {
                 DataSource = ":memory:",
+#if !NETCORE
                 Version = 3,
                 DefaultTimeout = 5,
 #if MONO
@@ -37,6 +41,7 @@ namespace DbUp.SQLite.Helpers
                 JournalMode = SQLiteJournalModeEnum.Memory,
 #endif
                 UseUTF16Encoding = true
+#endif
             };
             ConnectionString = connectionStringBuilder.ToString();
 

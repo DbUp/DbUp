@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETCORE
+using System;
 using System.Data;
 using DbUp.Helpers;
 using NSubstitute;
@@ -29,3 +30,4 @@ namespace DbUp.Tests.Helpers
         }
     }
 }
+#endif

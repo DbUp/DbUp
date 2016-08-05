@@ -1,3 +1,4 @@
+#if !NETCORE
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -101,3 +102,4 @@ namespace DbUp.Tests.Engine
         }
     }
 }
+#endif

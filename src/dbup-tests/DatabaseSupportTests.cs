@@ -3,15 +3,18 @@ using System.Collections.Generic;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.Firebird;
-using DbUp.MySql;
-using DbUp.Postgresql;
 using DbUp.SqlServer;
 using DbUp.SQLite;
 using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
+#if !NETCORE
+using DbUp.Firebird;
+using DbUp.MySql;
+using DbUp.Postgresql;
+using DbUp.SQLite;
+#endif
 
 namespace DbUp.Tests
 {
@@ -79,11 +82,13 @@ namespace DbUp.Tests
                 return new ExampleTable("Deploy to")
                 {
                     new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+                    new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SQLiteTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
+#if !NETCORE
                     new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
                     new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
-                    new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SQLiteTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
                     new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))
+#endif
                 };
             }
         }
@@ -100,6 +105,7 @@ namespace DbUp.Tests
 
         void CommandLogReflectsScript(ExampleAction target)
         {
+#if !NETCORE
             logger.Log
                 .ShouldMatchApproved(b =>
                 {
@@ -107,6 +113,7 @@ namespace DbUp.Tests
                     b.WithScrubber(Scrubbers.ScrubDates);
                     b.WithDescriminator(target.ToString().Replace(" ", string.Empty));
                 });
+#endif
         }
 
         void UpgradeIsSuccessful()

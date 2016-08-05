@@ -7,6 +7,8 @@ using DbUp.Support;
 
 #if MONO
 using SQLiteException = Mono.Data.Sqlite.SqliteException;
+#elif NETCORE
+using SQLiteException = Microsoft.Data.Sqlite.SqliteException;
 #else
 using System.Data.SQLite;
 #endif
@@ -49,7 +51,11 @@ namespace DbUp.SQLite
             catch (SQLiteException exception)
             {
                 Log().WriteInformation("SQLite exception has occured in script: '{0}'", script.Name);
+#if NETCORE
+                Log().WriteError("Script block number: {0}; Error Code: {1}; Message: {2}", index, exception.SqliteErrorCode, exception.Message);
+#else
                 Log().WriteError("Script block number: {0}; Error Code: {1}; Message: {2}", index, exception.ErrorCode, exception.Message);
+#endif
                 Log().WriteError(exception.ToString());
                 throw;
             }

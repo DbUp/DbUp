@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETCORE
+using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
@@ -208,3 +209,4 @@ namespace DbUp.Tests.Support.SqlServer
         }
     }
 }
+#endif

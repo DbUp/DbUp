@@ -1,7 +1,7 @@
 ﻿{
   "version": "1.0.0-*",
 
-  "title": "DbUp SQLite Support",
+  "title": "DbUp SQLite Support targeting Mono",
   "description": "DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SQLite support.",
   "authors": [ "Paul Stovell", "Jim Burger", "Jake Ginnivan", "Damian Maclennan" ],
   "packOptions": {
@@ -11,6 +11,13 @@
     "iconUrl": "https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png"
   },
   "buildOptions": {
+    "compile": {
+      "include": "../dbup-sqlite/**/*.cs",
+      "exclude": [
+        "../dbup-sqlite/obj/**/*.cs",
+        "../dbup-sqlite/Properties/**/*.cs"
+      ]
+    },
     "keyFile": "../dbup.snk"
   },
 
@@ -19,19 +26,14 @@
   },
 
   "frameworks": {
-    "netstandard1.3": {
+    "net40": {
       "buildOptions": {
         "define": [
-          "NETCORE"
+          "MONO"
         ]
       },
       "dependencies": {
-        "Microsoft.Data.SQLite": "1.0.0"
-      }
-    },
-    "net40": {
-      "dependencies": {
-        "System.Data.SQLite.Core": "1.0.98.1"
+        "Mono.Data.Sqlite.Portable": "1.0.3.5"
       }
     }
   }

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETCORE
+using System;
 using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using Xunit;
@@ -40,3 +41,4 @@ END$$").Build();
         }
     }
 }
+#endif

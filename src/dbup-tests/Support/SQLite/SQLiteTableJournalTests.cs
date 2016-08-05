@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿#if !NETCORE
+using System.Data;
 using System.Data.SQLite;
 using DbUp.Engine;
 using DbUp.Engine.Output;
@@ -59,3 +60,4 @@ namespace DbUp.Tests.Support.SQLite
         }
     }
 }
+#endif

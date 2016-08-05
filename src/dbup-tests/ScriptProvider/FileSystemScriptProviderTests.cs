@@ -1,3 +1,4 @@
+#if !NETCORE
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -169,3 +170,4 @@ namespace DbUp.Tests.ScriptProvider
         }
     }
 }
+#endif

@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETCORE
+using System;
 using System.Linq;
 using DbUp.MySql;
 using NUnit.Framework;
@@ -57,3 +58,4 @@ namespace DbUp.Tests.Support.MySql
         }
     }
 }
+#endif

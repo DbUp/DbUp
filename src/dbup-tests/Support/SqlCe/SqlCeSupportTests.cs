@@ -1,4 +1,5 @@
-﻿using System;
+﻿#if !NETCORE
+using System;
 using System.Data.SqlServerCe;
 using System.IO;
 using Shouldly;
@@ -31,3 +32,4 @@ namespace DbUp.Tests.Support.SqlCe
         }
     }
 }
+#endif

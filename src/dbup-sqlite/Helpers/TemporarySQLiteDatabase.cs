@@ -6,6 +6,9 @@ using DbUp.Helpers;
 using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
 using SQLiteConnectionStringBuilder = Mono.Data.Sqlite.SqliteConnectionStringBuilder;
 using SQLiteJournalModeEnum = Mono.Data.Sqlite.SQLiteJournalModeEnum;
+#elif NETCORE
+using SQLiteConnection = Microsoft.Data.Sqlite.SqliteConnection;
+using SQLiteConnectionStringBuilder = Microsoft.Data.Sqlite.SqliteConnectionStringBuilder;
 #else
 using System.Data.SQLite;
 #endif
@@ -28,11 +31,12 @@ namespace DbUp.SQLite.Helpers
         /// <param name="name">The name.</param>
         public TemporarySQLiteDatabase(string name)
         {
-            dataSourcePath = Path.Combine(Environment.CurrentDirectory, name);
+            dataSourcePath = Path.Combine(Directory.GetCurrentDirectory(), name);
 
             var connectionStringBuilder = new SQLiteConnectionStringBuilder
             {
                 DataSource = name,
+#if !NETCORE
                 Version = 3,
                 DefaultTimeout = 5,
 #if MONO
@@ -41,6 +45,7 @@ namespace DbUp.SQLite.Helpers
                 JournalMode = SQLiteJournalModeEnum.Memory,
 #endif
                 UseUTF16Encoding = true
+#endif
             };
 
             sqLiteConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
@@ -67,11 +72,13 @@ namespace DbUp.SQLite.Helpers
         /// </summary>
         public void Create()
         {
+#if !NETCORE
             var filePath = new FileInfo(dataSourcePath);
             if (!filePath.Exists)
             {
                 SQLiteConnection.CreateFile(dataSourcePath);
             }
+#endif
         }
 
         /// <summary>
@@ -83,12 +90,14 @@ namespace DbUp.SQLite.Helpers
             if (!filePath.Exists) return;
             sharedConnection.Dispose();
             sqLiteConnection.Dispose();
+#if !NETCORE
             SQLiteConnection.ClearAllPools();
 
             // SQLite requires all created sql connection/command objects to be disposed
             // in order to delete the database file
             GC.Collect(2, GCCollectionMode.Forced);
             System.Threading.Thread.Sleep(100);
+#endif
 
             File.Delete(dataSourcePath);
         }
