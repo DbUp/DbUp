@@ -197,6 +197,8 @@ namespace DbUp.Support
                     command.CommandText = DoesTableExistSql();
                     command.CommandType = CommandType.Text;
                     var executeScalar = command.ExecuteScalar();
+                    if (executeScalar == null)
+                        return false;
                     if (executeScalar is long)
                         return (long)executeScalar == 1;
                     return (int)executeScalar == 1;
