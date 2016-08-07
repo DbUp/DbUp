@@ -39,7 +39,7 @@ namespace DbUp.Tests.Helpers
 
             var scriptsToRun = testScripts.Where(filter);
 
-            scriptsToRun.ShouldBeNull();
+            scriptsToRun.ShouldNotBeNull();
             scriptsToRun.Count().ShouldBe(2);
             scriptsToRun.ShouldNotContain("ShouldNotRemain.txt");
         }

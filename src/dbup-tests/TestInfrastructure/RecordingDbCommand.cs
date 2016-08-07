@@ -60,11 +60,7 @@ namespace DbUp.Tests.TestInfrastructure
             if (CommandText == "error")
                 ThrowError();
 
-#if NETCORE
-            return null;
-#else
-            return new DataTableReader(new DataTable());
-#endif
+            return new EmptyReader();
         }
 
         public IDataReader ExecuteReader(CommandBehavior behavior)
