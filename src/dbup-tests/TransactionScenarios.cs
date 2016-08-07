@@ -99,6 +99,7 @@ namespace DbUp.Tests
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<FactAttribute>();
+                b.SubFolder("ApprovalFiles");
             });
         }
 
@@ -108,6 +109,7 @@ namespace DbUp.Tests
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<FactAttribute>();
+                b.SubFolder("ApprovalFiles");
             });
         }
 
@@ -117,6 +119,7 @@ namespace DbUp.Tests
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<FactAttribute>();
+                b.SubFolder("ApprovalFiles");
             });
         }
 
@@ -126,6 +129,7 @@ namespace DbUp.Tests
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<FactAttribute>();
+                b.SubFolder("ApprovalFiles");
             });
         }
 
@@ -135,6 +139,7 @@ namespace DbUp.Tests
             {
                 b.WithScrubber(Scrubbers.ScrubDates);
                 b.LocateTestMethodUsingAttribute<FactAttribute>();
+                b.SubFolder("ApprovalFiles");
             });
         }
 

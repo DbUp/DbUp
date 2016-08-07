@@ -12,7 +12,9 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(SupportedDatabases).Assembly)
-                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.{type}.cs"));
+                .ShouldMatchApproved(b => b
+                    .WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.{type}.cs")
+                    .SubFolder("ApprovalFiles"));
         }
 
         [Fact]
@@ -20,7 +22,9 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(FirebirdExtensions).Assembly)
-                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.Firebird.{type}.cs"));
+                .ShouldMatchApproved(b => b
+                    .WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.Firebird.{type}.cs")
+                    .SubFolder("ApprovalFiles"));
         }
 
         [Fact]
@@ -28,7 +32,9 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(MySqlExtensions).Assembly)
-                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.MySql.{type}.cs"));
+                .ShouldMatchApproved(b => b
+                    .WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.MySql.{type}.cs")
+                    .SubFolder("ApprovalFiles"));
         }
 
         [Fact]
@@ -36,7 +42,9 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(PostgresqlExtensions).Assembly)
-                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.Postgresql.{type}.cs"));
+                .ShouldMatchApproved(b => b
+                    .WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.Postgresql.{type}.cs")
+                    .SubFolder("ApprovalFiles"));
         }
 
         [Fact]
@@ -44,7 +52,9 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(SqlCeExtensions).Assembly)
-                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.SqlCe.{type}.cs"));
+                .ShouldMatchApproved(b => b
+                    .WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.SqlCe.{type}.cs")
+                    .SubFolder("ApprovalFiles"));
         }
 
         [Fact]
@@ -52,7 +62,9 @@ namespace DbUp.Tests
         {
             PublicApiGenerator.PublicApiGenerator
                 .GetPublicApi(typeof(SQLiteExtensions).Assembly)
-                .ShouldMatchApproved(b => b.WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.SqLite.{type}.cs"));
+                .ShouldMatchApproved(b => b
+                    .WithFilenameGenerator((info, descriminator, type, extension) => $"DbUp.SqLite.{type}.cs")
+                    .SubFolder("ApprovalFiles"));
         }
     }
 }

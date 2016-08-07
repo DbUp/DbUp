@@ -111,6 +111,7 @@ namespace DbUp.Tests
                     b.LocateTestMethodUsingAttribute<FactAttribute>();
                     b.WithScrubber(Scrubbers.ScrubDates);
                     b.WithDescriminator(target.ToString().Replace(" ", string.Empty));
+                    b.SubFolder("ApprovalFiles");
                 });
 #endif
         }
