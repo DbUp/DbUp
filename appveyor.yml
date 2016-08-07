@@ -1,38 +1,14 @@
-platform:
-  - Mixed Platforms
+assembly_info:
+  patch: false
 
 configuration:
   - Debug
 
-assembly_info:
-  patch: false
+build_script:
+  - ps: .\build.ps1
 
-before_build:
-  - nuget restore src\
-  - ps: gitversion /l console /output buildserver /updateAssemblyInfo src\Information\VersionInfo.cs
-
-build:
-  powershell: ./build.ps1
-
-after_build:
-  - cmd: nuget pack src\dbup.nuspec -version "%GitVersion_NuGetVersion%"
-  - cmd: nuget pack src\DbUp.Core\dbup-core.nuspec -BasePath src\DbUp.Core\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SqlServer\DbUp.SqlServer.nuspec -BasePath src\DbUp.SqlServer\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.Firebird\DbUp.Firebird.nuspec -BasePath src\DbUp.Firebird\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.MySql\DbUp.MySql.nuspec -BasePath src\DbUp.MySql\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.Postgresql\DbUp.Postgresql.nuspec -BasePath src\DbUp.Postgresql\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SqlCe\DbUp.SqlCe.nuspec -BasePath src\DbUp.SqlCe\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SQLite\DbUp.SQLite.nuspec -BasePath src\DbUp.SQLite\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: nuget pack src\DbUp.SQLite.Mono\DbUp.SQLite.Mono.nuspec -BasePath src\DbUp.SQLite.Mono\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
-  - cmd: appveyor PushArtifact "DbUp.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-core.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-SqlServer.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-Firebird.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-MySql.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-Postgresql.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-SqlCe.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-SQLite.%GitVersion_NuGetVersion%.nupkg"
-  - cmd: appveyor PushArtifact "DbUp-SQLite-Mono.%GitVersion_NuGetVersion%.nupkg"
+test: off
+skip_tags: true
 
 cache:
   - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
