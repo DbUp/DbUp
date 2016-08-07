@@ -7,7 +7,13 @@
         "**/*.approved.cs",
         "**/*.received.cs"
       ]
-    }
+    },
+    "copyToOutput": [
+      "TestFilterFiles/ScriptNames.txt"
+    ],
+    "embed": [
+      "TestScripts/*.sql"
+    ]
   },
   "dependencies": {
     "dbup-core": {
@@ -26,20 +32,20 @@
   },
 
   "frameworks": {
-    "netcoreapp1.0": {
-      "dependencies": {
-        "Microsoft.NETCore.App": {
-          "type": "platform",
-          "version": "1.0.0"
-        }
-      },
-      "buildOptions": {
-        "define": [
-          "USE_TYPE_INFO",
-          "NETCORE"
-        ]
-      }
-    },
+     "netcoreapp1.0": {
+     "dependencies": {
+       "Microsoft.NETCore.App": {
+         "type": "platform",
+         "version": "1.0.0"
+       }
+     },
+     "buildOptions": {
+       "define": [
+         "USE_TYPE_INFO",
+         "NETCORE"
+       ]
+     }
+     },
     "net46": {
       "dependencies": {
         "dbup-sqlce": {

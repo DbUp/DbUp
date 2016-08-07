@@ -79,7 +79,6 @@ namespace DbUp.Support
             });
 
             return scripts.ToArray();
-
         }
 
         /// <summary>

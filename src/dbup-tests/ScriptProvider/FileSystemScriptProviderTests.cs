@@ -9,7 +9,6 @@ using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using NUnit.Framework;
 using Shouldly;
 
 namespace DbUp.Tests.ScriptProvider
@@ -25,7 +24,6 @@ namespace DbUp.Tests.ScriptProvider
             {
                 CreateTestFiles();
 
-
                 return new FileSystemScriptProvider(testPath);
             }
 
@@ -37,7 +35,6 @@ namespace DbUp.Tests.ScriptProvider
                 testPath = Path.Combine(directory, "sqlfiles");
                 Directory.CreateDirectory(testPath);
 
-
                 foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.Contains(".sql")))
                 {
                     using (var stream = assembly.GetManifestResourceStream(scriptName))
@@ -45,7 +42,6 @@ namespace DbUp.Tests.ScriptProvider
                         var filePath = Path.Combine(testPath, scriptName);
                         using (var writer = new FileStream(filePath, FileMode.CreateNew))
                         {
-
                             stream.CopyTo(writer);
                             writer.Flush();
                             writer.Close();
@@ -82,11 +78,6 @@ namespace DbUp.Tests.ScriptProvider
             [Then]
             public void encoding_reader_is_correct()
             {
-                // ANSI encoding
-                filesToExecute.Single(f => f.Name.EndsWith("Script20130525_1_Test5.sql"))
-                    .Contents
-                    .ShouldBe("é");
-
                 // UTF8 encoding
                 filesToExecute.Single(f => f.Name.EndsWith("Script20130525_2_Test5.sql"))
                     .Contents
@@ -102,10 +93,10 @@ namespace DbUp.Tests.ScriptProvider
         public class when_returning_scripts_from_a_directory_and_using_a_filter : SpecificationFor<FileSystemScriptProvider>,
              IDisposable
         {
-            private string testPath;
-            private Func<string, bool> filter;
-            private IEnumerable<SqlScript> filesToExecute;
-            private bool _FilterExecuted = false;
+            string testPath;
+            Func<string, bool> filter;
+            IEnumerable<SqlScript> filesToExecute;
+            bool filterExecuted;
 
             public override FileSystemScriptProvider Given()
             {
@@ -113,7 +104,7 @@ namespace DbUp.Tests.ScriptProvider
                 // Given a filter is provided..
                 filter = (a) =>
                 {
-                    _FilterExecuted = true;
+                    filterExecuted = true;
                     return true;
                 };
                 return new FileSystemScriptProvider(testPath, filter);
@@ -153,7 +144,7 @@ namespace DbUp.Tests.ScriptProvider
             [Then]
             public void the_filter_should_have_been_executed()
             {
-                _FilterExecuted.ShouldBe(true);
+                filterExecuted.ShouldBe(true);
             }
 
             [Then]

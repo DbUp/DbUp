@@ -12,7 +12,8 @@ namespace DbUp.Tests.Support.MySql
         public void CanHandleDelimiter()
         {
             var logger = new CaptureLogsLogger();
-            var recordingDbConnection = new RecordingDbConnection(logger, true, "schemaversions");
+            var recordingDbConnection = new RecordingDbConnection(logger, "schemaversions");
+            recordingDbConnection.SetupRunScripts();
             var upgrader = DeployChanges.To
                 .MySqlDatabase(string.Empty)
                 .OverrideConnectionFactory(recordingDbConnection)

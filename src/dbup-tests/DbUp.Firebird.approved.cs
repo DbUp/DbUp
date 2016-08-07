@@ -1,7 +1,7 @@
 ﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("a0df89fb-5f3e-4690-af40-acf2816e89f1")]
-[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.0", FrameworkDisplayName=".NET Framework 4")]
+[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.0")]
 
 namespace DbUp.Firebird
 {

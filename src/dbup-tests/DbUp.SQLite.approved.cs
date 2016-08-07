@@ -1,6 +1,7 @@
 ﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("9f949414-f078-49bf-b50e-a3859c18fb6e")]
+[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.0")]
 
 namespace DbUp.SQLite.Helpers
 {
@@ -50,7 +51,6 @@ namespace DbUp.SQLite
     public class SQLiteObjectParser : DbUp.Support.SqlObjectParser
     {
         public SQLiteObjectParser() { }
-        public override string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
     }
     public class SQLitePreprocessor : DbUp.Engine.IScriptPreprocessor
     {

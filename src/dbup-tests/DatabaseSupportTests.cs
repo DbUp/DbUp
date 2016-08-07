@@ -13,7 +13,6 @@ using Xunit;
 using DbUp.Firebird;
 using DbUp.MySql;
 using DbUp.Postgresql;
-using DbUp.SQLite;
 #endif
 
 namespace DbUp.Tests
@@ -146,7 +145,7 @@ namespace DbUp.Tests
             {
                 scripts = new List<SqlScript>();
                 logger = new CaptureLogsLogger();
-                recordingConnection = new RecordingDbConnection(logger, false, "SchemaVersions");
+                recordingConnection = new RecordingDbConnection(logger, "SchemaVersions");
                 testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
                 upgradeEngineBuilder = deployTo(DeployChanges.To)
                     .WithScripts(scripts)

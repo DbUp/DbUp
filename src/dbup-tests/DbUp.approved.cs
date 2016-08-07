@@ -33,6 +33,10 @@ namespace DbUp.Builder
 namespace DbUp
 {
     
+    public class static DbUpDefaults
+    {
+        public static System.Text.Encoding DefaultEncoding;
+    }
     public class static DeployChanges
     {
         public static DbUp.Builder.SupportedDatabases To { get; }
@@ -137,6 +141,13 @@ namespace DbUp.Engine.Output
         void WriteInformation(string format, params object[] args);
         void WriteWarning(string format, params object[] args);
     }
+    public class NoOpUpgradeLog : DbUp.Engine.Output.IUpgradeLog
+    {
+        public NoOpUpgradeLog() { }
+        public void WriteError(string format, params object[] args) { }
+        public void WriteInformation(string format, params object[] args) { }
+        public void WriteWarning(string format, params object[] args) { }
+    }
     public class TraceUpgradeLog : DbUp.Engine.Output.IUpgradeLog
     {
         public TraceUpgradeLog() { }
@@ -227,9 +238,9 @@ namespace DbUp.Helpers
         public AdHocSqlRunner(System.Func<System.Data.IDbCommand> commandFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, params DbUp.Engine.IScriptPreprocessor[] additionalScriptPreprocessors) { }
         public AdHocSqlRunner(System.Func<System.Data.IDbCommand> commandFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, System.Func<bool> variablesEnabled, params DbUp.Engine.IScriptPreprocessor[] additionalScriptPreprocessors) { }
         public string Schema { get; set; }
-        public int ExecuteNonQuery(string query, params System.Func<, >[] parameters) { }
-        public System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>> ExecuteReader(string query, params System.Func<, >[] parameters) { }
-        public object ExecuteScalar(string query, params System.Func<, >[] parameters) { }
+        public int ExecuteNonQuery(string query, params System.Linq.Expressions.Expression<>[] parameters) { }
+        public System.Collections.Generic.List<System.Collections.Generic.Dictionary<string, string>> ExecuteReader(string query, params System.Linq.Expressions.Expression<>[] parameters) { }
+        public object ExecuteScalar(string query, params System.Linq.Expressions.Expression<>[] parameters) { }
         public DbUp.Helpers.AdHocSqlRunner WithVariable(string variableName, string value) { }
     }
     public class NullJournal : DbUp.Engine.IJournal
@@ -259,8 +270,7 @@ namespace DbUp.ScriptProviders
     }
     public class FileSystemScriptProvider : DbUp.Engine.IScriptProvider
     {
-        public FileSystemScriptProvider(string directoryPath) { }
-        public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter) { }
+        public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter = null) { }
         public FileSystemScriptProvider(string directoryPath, System.Text.Encoding encoding) { }
         public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
@@ -330,7 +340,7 @@ namespace DbUp.Support
     }
     public abstract class SqlObjectParser : DbUp.Engine.ISqlObjectParser
     {
-        protected SqlObjectParser(System.Data.Common.DbCommandBuilder commandBuilder) { }
+        protected SqlObjectParser(string quotePrefix, string quoteSuffix) { }
         public string QuoteIdentifier(string objectName) { }
         public virtual string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
         public virtual string UnquoteIdentifier(string objectName) { }
@@ -365,7 +375,6 @@ public class static StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder LogScriptOutput(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogTo(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.Output.IUpgradeLog log) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToConsole(this DbUp.Builder.UpgradeEngineBuilder builder) { }
-    public static DbUp.Builder.UpgradeEngineBuilder LogToSqlContext(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToTrace(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithExecutionTimeout(this DbUp.Builder.UpgradeEngineBuilder builder, System.Nullable<System.TimeSpan> timeout) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithoutTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }

@@ -1,20 +1,27 @@
 using System;
+using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using DbUp.Engine;
 
 namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbCommand : IDbCommand
     {
         readonly CaptureLogsLogger logger;
-        readonly bool schemaTableExists;
+        readonly SqlScript[] runScripts;
         readonly string schemaTableName;
+        readonly Dictionary<string, Func<object>> scalarResults;
+        readonly Dictionary<string, Func<int>> nonQueryResults;
 
-        public RecordingDbCommand(CaptureLogsLogger logger, bool schemaTableExists, string schemaTableName)
+        public RecordingDbCommand(CaptureLogsLogger logger, SqlScript[] runScripts, string schemaTableName,
+            Dictionary<string, Func<object>> scalarResults, Dictionary<string, Func<int>> nonQueryResults)
         {
             this.logger = logger;
-            this.schemaTableExists = schemaTableExists;
+            this.runScripts = runScripts;
             this.schemaTableName = schemaTableName;
+            this.scalarResults = scalarResults;
+            this.nonQueryResults = nonQueryResults;
             Parameters = new RecordingDataParameterCollection(logger);
         }
 
@@ -41,10 +48,13 @@ namespace DbUp.Tests.TestInfrastructure
 
         public int ExecuteNonQuery()
         {
-            logger.WriteDbOperation(string.Format("Execute non query command: {0}", CommandText));
+            logger.WriteDbOperation($"Execute non query command: {CommandText}");
 
             if (CommandText == "error")
                 ThrowError();
+
+            if (nonQueryResults.ContainsKey(CommandText))
+                return nonQueryResults[CommandText]();
             return 0;
         }
 
@@ -55,10 +65,16 @@ namespace DbUp.Tests.TestInfrastructure
 
         public IDataReader ExecuteReader()
         {
-            logger.WriteDbOperation(string.Format("Execute reader command: {0}", CommandText));
+            logger.WriteDbOperation($"Execute reader command: {CommandText}");
 
             if (CommandText == "error")
                 ThrowError();
+
+            // Reading SchemaVersions
+            if (CommandText.IndexOf(schemaTableName, StringComparison.OrdinalIgnoreCase) != -1)
+            {
+                return new ScriptReader(runScripts);
+            }
 
             return new EmptyReader();
         }
@@ -70,7 +86,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public object ExecuteScalar()
         {
-            logger.WriteDbOperation(string.Format("Execute scalar command: {0}", CommandText));
+            logger.WriteDbOperation($"Execute scalar command: {CommandText}");
 
             if (CommandText == "error")
                 ThrowError();
@@ -78,9 +94,14 @@ namespace DbUp.Tests.TestInfrastructure
             // Are we checking if schemaversions exists
             if (CommandText.IndexOf(schemaTableName, StringComparison.OrdinalIgnoreCase) != -1)
             {
-                if (schemaTableExists)
+                if (runScripts != null)
                     return 1;
                 return 0;
+            }
+
+            if (scalarResults.ContainsKey(CommandText))
+            {
+                return scalarResults[CommandText]();
             }
 
             return null;
@@ -99,7 +120,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public CommandType CommandType { get; set; }
 
-        public IDataParameterCollection Parameters { get; private set; }
+        public IDataParameterCollection Parameters { get; }
 
         public UpdateRowSource UpdatedRowSource { get; set; }
 

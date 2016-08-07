@@ -1,7 +1,7 @@
 ﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("2523f9cc-42c7-48da-b873-74851c335931")]
-[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.0", FrameworkDisplayName=".NET Framework 4")]
+[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.0")]
 
 namespace DbUp.SqlCe
 {
@@ -14,7 +14,6 @@ namespace DbUp.SqlCe
     public class SqlCeObjectParser : DbUp.Support.SqlObjectParser
     {
         public SqlCeObjectParser() { }
-        public override string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
     }
     public class SqlCePreprocessor : DbUp.Engine.IScriptPreprocessor
     {

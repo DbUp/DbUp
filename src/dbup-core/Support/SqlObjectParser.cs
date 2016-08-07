@@ -8,7 +8,7 @@ namespace DbUp.Support
     {
         readonly string quotePrefix;
         readonly string quoteSuffix;
-        Regex matchQuotes;
+        readonly Regex matchQuotes;
 
         protected SqlObjectParser(string quotePrefix, string quoteSuffix)
         {
@@ -17,7 +17,7 @@ namespace DbUp.Support
 
             var prefix = Regex.Escape(quotePrefix);
             var suffix = Regex.Escape(quoteSuffix);
-            matchQuotes = new Regex($"^({prefix})?(?<unquoted>.*)({suffix})?$");
+            matchQuotes = new Regex($"^({prefix}){{1}}?(?<unquoted>.*)({suffix}){{1}}$");
         }
 
         /// <summary>

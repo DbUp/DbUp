@@ -1,38 +1,33 @@
-﻿#if !NETCORE
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.SQLite;
-using DbUp.SQLite.Helpers;
-using NSubstitute;
+using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
 
 namespace DbUp.Tests
 {
-    //TODO Use recording connection rather than Sqlite
     [Story(
-        AsA = "As a DbUp User",
-        IWant = "I want to DbUp to upgrade my database to the latest version",
-        SoThat = "So that my application's database is up to date")]
-    public class UpgradeDatabaseScenarios : IDisposable
+         AsA = "As a DbUp User",
+         IWant = "I want to DbUp to upgrade my database to the latest version",
+         SoThat = "So that my application's database is up to date")]
+    public class UpgradeDatabaseScenarios
     {
+        readonly List<SqlScript> scripts;
+        readonly UpgradeEngineBuilder upgradeEngineBuilder;
+        readonly CaptureLogsLogger logger;
+        readonly DelegateConnectionFactory testConnectionFactory;
+        readonly RecordingDbConnection recordingConnection;
         DatabaseUpgradeResult upgradeResult;
-        TemporarySQLiteDatabase database;
-        List<SqlScript> scripts;
         UpgradeEngine upgradeEngine;
-        IUpgradeLog log;
-        UpgradeEngineBuilder upgradeEngineBuilder;
         bool isUpgradeRequired;
 
         public UpgradeDatabaseScenarios()
         {
-            log = Substitute.For<IUpgradeLog>();
             upgradeResult = null;
             scripts = new List<SqlScript>
             {
@@ -40,11 +35,16 @@ namespace DbUp.Tests
                 new SqlScript("Script2.sql", "alter table Foo add column Name varchar(255)"),
                 new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')")
             };
-            database = new TemporarySQLiteDatabase("IntegrationScenarios");
+
+            logger = new CaptureLogsLogger();
+            recordingConnection = new RecordingDbConnection(logger, "SchemaVersions");
+            testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
+
             upgradeEngineBuilder = DeployChanges.To
-                .SQLiteDatabase(database.SharedConnection)
+                .SqlDatabase("testconn")
                 .WithScripts(new TestScriptProvider(scripts))
-                .LogTo(log);
+                .OverrideConnectionFactory(testConnectionFactory)
+                .LogTo(logger);
         }
 
         [Fact]
@@ -113,14 +113,7 @@ namespace DbUp.Tests
 
         void AndErrorMessageShouldBeLogged()
         {
-            log.Received().WriteError("Script block number: {0}; Error code {1}; Message: {2}", 0, 1,
-                "SQL logic error or missing database\r\n" +
-                "near \"slect\": syntax error");
-
-            log.Received().WriteError(Arg.Is<string>(s => s.StartsWith("System.Data.SQLite.SQLiteException (0x80004005): SQL logic error or missing database")));
-            log.Received().WriteError(
-                Arg.Is<string>(s => s.StartsWith("Upgrade failed due to an unexpected exception:")),
-                Arg.Is<string>(s => s.Contains("System.Data.SQLite.SQLiteException")));
+            logger.Log.ShouldContain("Upgrade failed due to an unexpected exception:");
         }
 
         void ConfiguredToUseTransaction()
@@ -135,32 +128,29 @@ namespace DbUp.Tests
 
         void AndTheFourthScriptToRunHasAnError()
         {
-            scripts.Add(new SqlScript("ScriptWithError.sql", "slect * from Oops"));
+            var errorSql = "slect * from Oops";
+            recordingConnection.SetupNonQueryResult(errorSql, () => { throw new TestSqlException(); });
+            scripts.Add(new SqlScript("ScriptWithError.sql", errorSql));
         }
 
         void AndTheScriptToRunHasAnError()
         {
             scripts.Clear();
-            scripts.Add(new SqlScript("ScriptWithError.sql", "slect * from Oops"));
-        }
-
-        public void Dispose()
-        {
-            database.Dispose();
+            AndTheFourthScriptToRunHasAnError();
         }
 
         void AndShouldLogInformation()
         {
-            log.Received().WriteInformation("Beginning database upgrade");
-            log.Received().WriteInformation("Upgrade successful");
+            logger.InfoMessages.ShouldContain("Beginning database upgrade");
+            logger.InfoMessages.ShouldContain("Upgrade successful");
         }
 
         void AndShouldHaveRunAllScriptsInOrder()
         {
             // Check both results and journal
-            upgradeResult.Scripts.Select(s => s.Name)
+            upgradeResult.Scripts
+                .Select(s => s.Name)
                 .ShouldBe(new[] {"Script1.sql", "Script2.sql", "Script3.sql"});
-            GetJournal().GetExecutedScripts().Count().ShouldBe(3);
         }
 
         void ThenShouldNotRunAnyScripts()
@@ -179,18 +169,7 @@ namespace DbUp.Tests
 
         void GivenAnUpToDateDatabase()
         {
-            var journal = GetJournal();
-            journal.StoreExecutedScript(scripts[0], () => database.SharedConnection.CreateCommand());
-            journal.StoreExecutedScript(scripts[1], () => database.SharedConnection.CreateCommand());
-            journal.StoreExecutedScript(scripts[2], () => database.SharedConnection.CreateCommand());
-        }
-
-        SQLiteTableJournal GetJournal()
-        {
-            var sqLiteConnectionManager = new SQLiteConnectionManager(database.SharedConnection);
-            sqLiteConnectionManager.OperationStarting(log, new List<SqlScript>());
-            var journal = new SQLiteTableJournal(() => sqLiteConnectionManager, () => log, "SchemaVersions");
-            return journal;
+            recordingConnection.SetupRunScripts(scripts[0], scripts[1], scripts[2]);
         }
 
         void WhenCheckIfDatabaseUpgradeIsRequired()
@@ -222,8 +201,8 @@ namespace DbUp.Tests
 
         public void ShouldLogNoAction()
         {
-            log.Received().WriteInformation("Beginning database upgrade");
-            log.Received().WriteInformation("No new scripts need to be executed - completing.");
+            logger.Log.ShouldContain("Beginning database upgrade");
+            logger.Log.ShouldContain("No new scripts need to be executed - completing.");
         }
 
         public class TestScriptProvider : IScriptProvider
@@ -242,4 +221,3 @@ namespace DbUp.Tests
         }
     }
 }
-#endif

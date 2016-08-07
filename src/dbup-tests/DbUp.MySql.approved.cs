@@ -24,7 +24,6 @@ namespace DbUp.MySql
     public class MySqlObjectParser : DbUp.Support.SqlObjectParser
     {
         public MySqlObjectParser() { }
-        public override string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions) { }
     }
     public class MySqlPreprocessor : DbUp.Engine.IScriptPreprocessor
     {
@@ -49,5 +48,7 @@ namespace DbUp.MySql
 public class static MySqlExtensions
 {
     public static DbUp.Builder.UpgradeEngineBuilder MySqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
+    public static DbUp.Builder.UpgradeEngineBuilder MySqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
     public static DbUp.Builder.UpgradeEngineBuilder MySqlDatabase(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
+    public static DbUp.Builder.UpgradeEngineBuilder MySqlDatabase(DbUp.Engine.Transactions.IConnectionManager connectionManager, string schema) { }
 }
