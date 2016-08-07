@@ -1,8 +1,16 @@
-#tool "nuget:?package=GitReleaseNotes"
+﻿#tool "nuget:?package=GitReleaseNotes"
+#tool "nuget:?package=GitVersion.CommandLine"
 
 var target = Argument("target", "Default");
-var shouldlyProj = "./src/Shouldly/project.json";
 var outputDir = "./artifacts/";
+
+void UpdateProjectJsonVersion(string projectName) {
+    var proj = string.Format("./src/{0}/project.json", projectName);
+    var updatedProjectJson = System.IO.File.ReadAllText(proj)
+        .Replace("1.0.0-*", versionInfo.NuGetVersion);
+
+    System.IO.File.WriteAllText(proj, updatedProjectJson);
+}
 
 Task("Clean")
     .Does(() => {
@@ -14,7 +22,7 @@ Task("Clean")
 
 Task("Restore")
     .Does(() => {
-        NuGetRestore("./src/Shouldly.sln");
+        DotNetCoreRestore();
     });
 
 GitVersion versionInfo = null;
@@ -25,11 +33,14 @@ Task("Version")
             OutputType = GitVersionOutput.BuildServer
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
-        // Update project.json
-        var updatedProjectJson = System.IO.File.ReadAllText(shouldlyProj)
-            .Replace("1.0.0-*", versionInfo.NuGetVersion);
-
-        System.IO.File.WriteAllText(shouldlyProj, updatedProjectJson);
+        UpdateProjectJsonVersion("dbup-core");
+        UpdateProjectJsonVersion("dbup-firebird");
+        UpdateProjectJsonVersion("dbup-mysql");
+        UpdateProjectJsonVersion("dbup-postgresql");
+        UpdateProjectJsonVersion("dbup-sqlce");
+        UpdateProjectJsonVersion("dbup-sqlite");
+        UpdateProjectJsonVersion("dbup-sqlite-mono");
+        UpdateProjectJsonVersion("dbup-sqlserver");
     });
 
 Task("Build")
@@ -37,13 +48,13 @@ Task("Build")
     .IsDependentOn("Version")
     .IsDependentOn("Restore")
     .Does(() => {
-        MSBuild("./src/Shouldly.sln");
+        MSBuild("./src/DbUp.sln");
     });
 
 Task("Test")
     .IsDependentOn("Build")
     .Does(() => {
-        DotNetCoreTest("./src/Shouldly.Tests");
+        DotNetCoreTest("./src/dbup-tests");
     });
 
 Task("Package")
@@ -55,13 +66,15 @@ Task("Package")
             NoBuild = true
         };
 
-        DotNetCorePack(shouldlyProj, settings);
+        DotNetCorePack("./src/dbup-core/project.json", settings);
+        DotNetCorePack("./src/dbup-firebird/project.json", settings);
+        DotNetCorePack("./src/dbup-mysql/project.json", settings);
+        DotNetCorePack("./src/dbup-postgresql/project.json", settings);
+        DotNetCorePack("./src/dbup-sqlce/project.json", settings);
+        DotNetCorePack("./src/dbup-sqlite/project.json", settings);
+        DotNetCorePack("./src/dbup-sqlite-mono/project.json", settings);
+        DotNetCorePack("./src/dbup-sqlserver/project.json", settings);
 
-        // TODO not sure why this isn't working
-        // GitReleaseNotes("outputDir/releasenotes.md", new GitReleaseNotesSettings {
-        //     WorkingDirectory         = ".",
-        //     AllTags                  = false
-        // });
         var releaseNotesExitCode = StartProcess(
             @"tools\GitReleaseNotes\tools\gitreleasenotes.exe", 
             new ProcessSettings { Arguments = ". /o artifacts/releasenotes.md" });
@@ -70,9 +83,16 @@ Task("Package")
 
         if (releaseNotesExitCode != 0) throw new Exception("Failed to generate release notes");
 
-        System.IO.File.WriteAllLines(outputDir + "artifacts", new[]{
-            "nuget:Shouldly." + versionInfo.NuGetVersion + ".nupkg",
-            "nugetSymbols:Shouldly." + versionInfo.NuGetVersion + ".symbols.nupkg",
+        System.IO.File.WriteAllLines(outputDir + "artifacts", new[]
+        {
+            "core:dbup-core." + versionInfo.NuGetVersion + ".nupkg",
+            "firebird:dbup-firebird." + versionInfo.NuGetVersion + ".nupkg",
+            "mysql:dbup-mysql." + versionInfo.NuGetVersion + ".nupkg",
+            "postgresql:dbup-postgresql." + versionInfo.NuGetVersion + ".nupkg",
+            "sqlce:dbup-sqlce." + versionInfo.NuGetVersion + ".nupkg",
+            "sqlite:dbup-sqlite." + versionInfo.NuGetVersion + ".nupkg",
+            "sqlite-mono:dbup-sqlite-mono." + versionInfo.NuGetVersion + ".nupkg",
+            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg",
             "releaseNotes:releasenotes.md"
         });
 

@@ -8,7 +8,7 @@ namespace DbUp.Tests.Helpers
 {
     public class FilterFactoryTests
     {
-        [Fact]
+        [Fact(Skip = "Need to come up with a better way than current directory")]
         public void Should_Exclude_ScriptNames_Listed_In_File()
         {
             var currentDir = System.IO.Directory.GetCurrentDirectory();
@@ -25,7 +25,7 @@ namespace DbUp.Tests.Helpers
             scriptsToRun.ShouldBe(new [] { "ShouldRemain.txt" });
         }
 
-        [Fact]
+        [Fact(Skip = "Need to come up with a better way than current directory")]
         public void Should_Include_Only_ScriptNames_Listed_In_File()
         {
             var currentDir = System.IO.Directory.GetCurrentDirectory();

@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-41
 		..\GitVersionConfig.yaml = ..\GitVersionConfig.yaml
 		..\global.json = ..\global.json
 		..\README.md = ..\README.md
-		Information\SolutionInfo.cs = Information\SolutionInfo.cs
-		Information\VersionInfo.cs = Information\VersionInfo.cs
 	EndProjectSection
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-core", "dbup-core\dbup-core.xproj", "{C98DE7C6-AF51-4901-904D-75FCCB17EE31}"
