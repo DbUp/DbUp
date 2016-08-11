@@ -294,7 +294,7 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The Sql Script filter (only affects embdeeded scripts, does not filter IScript files). Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
     /// <returns>
     /// The same builder
     /// </returns>

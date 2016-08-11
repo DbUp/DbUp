@@ -1,0 +1,1 @@
+* EmbeddedScriptAndCodeProvider (used by the extension method WithScriptsAndCodeEmbeddedInAssembly) now also applies the given filter to the code based scripts

@@ -14,15 +14,17 @@ namespace DbUp.ScriptProviders
     {
         private readonly EmbeddedScriptProvider embeddedScriptProvider;
         private readonly Assembly assembly;
+        private readonly Func<string, bool> filter;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        /// <param name="filter">The embedded sql script filter.</param>
+        /// <param name="filter">The embedded script filter.</param>
         public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter)
         {
             this.assembly = assembly;
+            this.filter = filter;
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
@@ -45,6 +47,7 @@ namespace DbUp.ScriptProviders
                 .GetScripts(connectionManager)
                 .Concat(ScriptsFromScriptClasses(connectionManager))
                 .OrderBy(x => x.Name)
+                .Where(x => filter(x.Name))
                 .ToList();
 
             return sqlScripts;

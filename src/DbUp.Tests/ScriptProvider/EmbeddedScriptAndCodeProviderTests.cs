@@ -12,7 +12,7 @@ using NUnit.Framework;
 
 namespace DbUp.Tests.ScriptProvider
 {
-    public class EmbeddedScriptAndCodeProviderTests : SpecificationFor<EmbeddedScriptAndCodeProvider>
+    public class when_no_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
     {
         private SqlScript[] scriptsToExecute;
 
@@ -20,7 +20,7 @@ namespace DbUp.Tests.ScriptProvider
         {
             var assembly = Assembly.GetExecutingAssembly();
 
-            return new EmbeddedScriptAndCodeProvider(assembly, s=>true);
+            return new EmbeddedScriptAndCodeProvider(assembly, s => true);
         }
 
         public override void When()
@@ -40,6 +40,36 @@ namespace DbUp.Tests.ScriptProvider
         public void should_provide_content_for_code_script()
         {
             Assert.AreEqual("test4", scriptsToExecute.Single(s => s.Name.EndsWith("Script20120723_1_Test4.cs")).Contents);
+        }
+    }
+    public class when_a_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
+    {
+        private SqlScript[] scriptsToExecute;
+
+        public override EmbeddedScriptAndCodeProvider Given()
+        {
+            var assembly = Assembly.GetExecutingAssembly();
+
+            return new EmbeddedScriptAndCodeProvider(assembly, s => !s.Contains("Test4"));
+        }
+
+        public override void When()
+        {
+            var testConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
+            testConnectionManager.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+            scriptsToExecute = Subject.GetScripts(testConnectionManager).ToArray();
+        }
+
+        [Then]
+        public void should_not_return_the_code_based_script()
+        {
+            Assert.False(scriptsToExecute.Any(x => x.Name.Contains("Test4")));
+        }
+
+        [Then]
+        public void it_should_only_return_the_sql_scripts()
+        {
+            Assert.AreEqual(5, scriptsToExecute.Length);
         }
     }
 }
