@@ -75,9 +75,10 @@ Task("Package")
         DotNetCorePack("./src/dbup-sqlite-mono/project.json", settings);
         DotNetCorePack("./src/dbup-sqlserver/project.json", settings);
 
+	    var githubToken = Argument<string>("githubToken");
         var releaseNotesExitCode = StartProcess(
             @"tools\GitReleaseNotes\tools\gitreleasenotes.exe", 
-            new ProcessSettings { Arguments = ". /o artifacts/releasenotes.md" });
+            new ProcessSettings { Arguments = ". /o artifacts/releasenotes.md /repoToken " + githubToken });
         if (string.IsNullOrEmpty(System.IO.File.ReadAllText("./artifacts/releasenotes.md")))
             System.IO.File.WriteAllText("./artifacts/releasenotes.md", "No issues closed since last release");
 
