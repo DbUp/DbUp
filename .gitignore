@@ -86,3 +86,10 @@ src/packages/
 src/_NCrunch_DbUp
 *.received.cs
 dbup*.nupkg
+
+src/.vs/
+project.lock.json
+project.lock.json
+project.lock.json
+tools/*/
+artifacts/

@@ -6,7 +6,7 @@ DeployChanges.To
   .WithVariable("TestVariable", "Value")
 ```
 
-The in your database script:
+Then in your database script:
 
 ```
 print '$TestVariable$'
