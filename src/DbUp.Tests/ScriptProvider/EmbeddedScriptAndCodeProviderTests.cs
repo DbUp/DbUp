@@ -33,7 +33,7 @@ namespace DbUp.Tests.ScriptProvider
         [Then]
         public void it_should_return_all_sql_files()
         {
-            Assert.AreEqual(6, scriptsToExecute.Length);
+            Assert.AreEqual(10, scriptsToExecute.Length);
         }
 
         [Then]

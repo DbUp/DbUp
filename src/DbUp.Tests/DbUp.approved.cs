@@ -270,12 +270,23 @@ namespace DbUp.ScriptProviders
         public EmbeddedScriptsProvider(System.Reflection.Assembly[] assemblies, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
     }
+    public class FileSystemScriptOptions
+    {
+        public FileSystemScriptOptions() { }
+        public System.Text.Encoding Encoding { get; set; }
+        public System.Func<string, bool> Filter { get; set; }
+        public bool IncludeSubDirectories { get; set; }
+    }
     public class FileSystemScriptProvider : DbUp.Engine.IScriptProvider
     {
         public FileSystemScriptProvider(string directoryPath) { }
+        [System.ObsoleteAttribute("Use the constructor with Options argument instead")]
         public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter) { }
+        [System.ObsoleteAttribute("Use the constructor with Options argument instead")]
         public FileSystemScriptProvider(string directoryPath, System.Text.Encoding encoding) { }
+        [System.ObsoleteAttribute("Use the constructor with Options argument instead")]
         public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
+        public FileSystemScriptProvider(string directoryPath, DbUp.ScriptProviders.FileSystemScriptOptions options) { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
     }
     public sealed class StaticScriptProvider : DbUp.Engine.IScriptProvider
@@ -474,6 +485,7 @@ public class static StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Text.Encoding encoding) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, DbUp.ScriptProviders.FileSystemScriptOptions options) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransactionPerScript(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithVariable(this DbUp.Builder.UpgradeEngineBuilder builder, string variableName, string value) { }

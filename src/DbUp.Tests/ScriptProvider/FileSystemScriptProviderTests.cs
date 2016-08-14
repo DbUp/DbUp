@@ -9,11 +9,22 @@ using DbUp.ScriptProviders;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NUnit.Framework;
+using Shouldly;
 
 namespace DbUp.Tests.ScriptProvider
 {
     public class FileSystemScriptProviderTests
     {
+        [TestFixture]
+        public class when_options_are_invalid
+        {
+            [Test]
+            public void it_should_throw_when_empty_options()
+            {
+                Should.Throw<ArgumentNullException>(() => { new FileSystemScriptProvider("Whatever", (FileSystemScriptOptions) null); });
+            }
+        }
+
         [TestFixture]
         public class when_returning_scripts_from_a_directory : SpecificationFor<FileSystemScriptProvider>
         {
@@ -22,9 +33,7 @@ namespace DbUp.Tests.ScriptProvider
 
             public override FileSystemScriptProvider Given()
             {
-                CreateTestFiles();
-
-
+                TestScripts.Create(out testPath);
                 return new FileSystemScriptProvider(testPath);
             }
 
@@ -32,32 +41,6 @@ namespace DbUp.Tests.ScriptProvider
             public void CleanUp()
             {
                 Directory.Delete(testPath, true);
-            }
-
-            private void CreateTestFiles()
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                var directory = new FileInfo(assembly.Location).DirectoryName;
-
-                testPath = Path.Combine(directory, "sqlfiles");
-                Directory.CreateDirectory(testPath);
-
-
-                foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.Contains(".sql")))
-                {
-                    using (var stream = assembly.GetManifestResourceStream(scriptName))
-                    {
-                        var filePath = Path.Combine(testPath, scriptName);
-                        using (var writer = new FileStream(filePath, FileMode.CreateNew))
-                        {
-
-                            stream.CopyTo(writer);
-                            writer.Flush();
-                            writer.Close();
-                        }
-                        stream.Close();
-                    }
-                }
             }
 
             public override void When()
@@ -102,52 +85,28 @@ namespace DbUp.Tests.ScriptProvider
         public class when_returning_scripts_from_a_directory_and_using_a_filter : SpecificationFor<FileSystemScriptProvider>
         {
             private string testPath;
-            private Func<string, bool> filter;
             private IEnumerable<SqlScript> filesToExecute;
             private bool _FilterExecuted = false;
+            private FileSystemScriptOptions options;
 
             public override FileSystemScriptProvider Given()
             {
-                CreateTestFiles();
+                TestScripts.Create(out testPath);
                 // Given a filter is provided..
-                filter = (a) =>
-                {
-                    _FilterExecuted = true;
-                    return true;
+                options = new FileSystemScriptOptions() {
+                    Filter = (a) =>
+                    {
+                        _FilterExecuted = true;
+                        return true;
+                    }
                 };
-                return new FileSystemScriptProvider(testPath, filter);
+                return new FileSystemScriptProvider(testPath, options);
             }
 
             [TearDown]
             public void CleanUp()
             {
                 Directory.Delete(testPath, true);
-            }
-
-            private void CreateTestFiles()
-            {
-                var assembly = Assembly.GetExecutingAssembly();
-                var directory = new FileInfo(assembly.Location).DirectoryName;
-
-                testPath = Path.Combine(directory, "sqlfiles");
-                Directory.CreateDirectory(testPath);
-
-
-                foreach (var scriptName in assembly.GetManifestResourceNames().Where(f => f.Contains(".sql")))
-                {
-                    using (var stream = assembly.GetManifestResourceStream(scriptName))
-                    {
-                        var filePath = Path.Combine(testPath, scriptName);
-                        using (var writer = new FileStream(filePath, FileMode.CreateNew))
-                        {
-
-                            stream.CopyTo(writer);
-                            writer.Flush();
-                            writer.Close();
-                        }
-                        stream.Close();
-                    }
-                }
             }
 
             public override void When()
@@ -168,6 +127,62 @@ namespace DbUp.Tests.ScriptProvider
                 Assert.That(filesToExecute.Last().Name.EndsWith("Script20130525_2_Test5.sql"));
             }
           
+        }
+
+        [TestFixture]
+        public class when_returning_scripts_from_a_directory_and_using_subdirectories_option : SpecificationFor<FileSystemScriptProvider>
+        {
+            private string testPath;
+            private IEnumerable<SqlScript> filesToExecute;
+
+            public override FileSystemScriptProvider Given()
+            {
+                TestScripts.Create(out testPath);
+                var options = new FileSystemScriptOptions() {IncludeSubDirectories = true};
+                return new FileSystemScriptProvider(testPath, options);
+            }
+
+            [TearDown]
+            public void CleanUp()
+            {
+                Directory.Delete(testPath, true);
+            }
+
+            public override void When()
+            {
+                filesToExecute = Subject.GetScripts(Arg.Any<IConnectionManager>());
+            }
+
+
+            [Then]
+            public void it_should_return_all_sql_files()
+            {
+                Assert.AreEqual(9, filesToExecute.Count());
+            }
+
+            [Then]
+            public void the_file_should_contain_content()
+            {
+                foreach (var sqlScript in filesToExecute)
+                {
+                    Assert.IsTrue(sqlScript.Contents.Length > 0);
+                }
+            }
+
+            [Then]
+            public void the_files_should_be_correctly_ordered_with_subdirectory_order()
+            {
+                filesToExecute.ElementAt(0).Name.ShouldEndWith("Script20110301_1_Test1.sql");
+                filesToExecute.ElementAt(1).Name.ShouldEndWith("Script20110301_2_Test2.sql");
+                filesToExecute.ElementAt(2).Name.ShouldEndWith("Script20110302_1_Test3.sql");
+                filesToExecute.ElementAt(3).Name.ShouldEndWith("Script20130525_1_Test5.sql");
+                filesToExecute.ElementAt(4).Name.ShouldEndWith("Script20130525_2_Test5.sql");
+                filesToExecute.ElementAt(5).Name.ShouldEndWith("Test1__9.sql");
+                filesToExecute.ElementAt(6).Name.ShouldEndWith("Test2__9.sql");
+                filesToExecute.ElementAt(7).Name.ShouldEndWith("Test1__1.sql");
+                filesToExecute.ElementAt(8).Name.ShouldEndWith("Test2__1.sql");
+            }
+
         }
     }
 }
