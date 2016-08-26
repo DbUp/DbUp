@@ -71,9 +71,29 @@ END;";
             return $"select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = '{UnquotedSchemaTableName}'";
         }
 
+        protected override string GetCreateBatchNumberColumnSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetDoesBatchNumberColumnExistSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetMaximumBatchNumberSql()
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({scriptName}, {applied})";
+        }
+
+        protected override string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber)
+        {
+            throw new NotImplementedException();
         }
 
         protected override string GetJournalEntriesSql()

@@ -32,6 +32,11 @@ namespace DbUp.SqlCe
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
+        protected override string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string GetJournalEntriesSql()
         {
             return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
@@ -54,6 +59,21 @@ $@"create table {FqSchemaTableName} (
 
             return $"SELECT count(*) FROM information_schema.tables WHERE table_schema = '{SchemaTableSchema}'AND table_name = '{UnquotedSchemaTableName}')";
 
+        }
+
+        protected override string GetCreateBatchNumberColumnSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetDoesBatchNumberColumnExistSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetMaximumBatchNumberSql()
+        {
+            throw new NotImplementedException();
         }
     }
 }

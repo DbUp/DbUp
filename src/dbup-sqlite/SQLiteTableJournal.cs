@@ -24,6 +24,11 @@ namespace DbUp.SQLite
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
+        protected override string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string GetJournalEntriesSql()
         {
             return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
@@ -42,6 +47,21 @@ $@"CREATE TABLE {FqSchemaTableName} (
         protected override string DoesTableExistSql()
         {
             return $"SELECT count(name) FROM sqlite_master WHERE type = 'table' AND name = '{UnquotedSchemaTableName}'";
+        }
+
+        protected override string GetCreateBatchNumberColumnSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetDoesBatchNumberColumnExistSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetMaximumBatchNumberSql()
+        {
+            throw new NotImplementedException();
         }
     }
 }

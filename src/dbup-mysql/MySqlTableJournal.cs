@@ -29,6 +29,11 @@ namespace DbUp.MySql
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
+        protected override string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string GetJournalEntriesSql()
         {
             return $"select scriptname from {FqSchemaTableName} order by scriptname";
@@ -44,6 +49,21 @@ $@"CREATE TABLE {FqSchemaTableName}
     `applied` TIMESTAMP NOT NULL,
     PRIMARY KEY (`schemaversionid`)
 );";
+        }
+
+        protected override string GetCreateBatchNumberColumnSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetDoesBatchNumberColumnExistSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetMaximumBatchNumberSql()
+        {
+            throw new NotImplementedException();
         }
     }
 }

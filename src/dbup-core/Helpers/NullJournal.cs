@@ -25,5 +25,7 @@ namespace DbUp.Helpers
         /// <param name="dbCommandFactory"></param>
         public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         { }
+
+        public bool BatchNumberEnabled { get; set; }
     }
 }
