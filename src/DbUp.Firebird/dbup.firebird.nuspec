@@ -12,7 +12,7 @@
     <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
     <dependencies>
         <dependency id="FirebirdSql.Data.FirebirdClient" version="4.5.2.0" />
-        <dependency id="DbUp" version="$version$" />
+        <dependency id="dbup" version="$version$" />
     </dependencies>
   </metadata>
   <files>

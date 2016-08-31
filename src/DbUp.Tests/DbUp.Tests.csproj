@@ -101,6 +101,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Engine\VariableSubstitutionPreprocessorTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="App_Packages\ApiApprover.3.0.1\PublicApiApprover.cs" />
     <Compile Include="App_Packages\ApiApprover.3.0.1\PublicApiGenerator.cs" />
@@ -109,6 +110,7 @@
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="Support\SqlServer\SqlParserTests.cs" />
     <Compile Include="ScriptProvider\TestScripts.cs" />
     <Compile Include="Support\SqlAnywhere\SqlAnywhereSqlPreprocessorTest.cs" />
     <Compile Include="Support\SqlAnywhere\SqlAnywhereSupportTests.cs" />
