@@ -16,7 +16,7 @@ DbUp supports a number of different databases, the platforms are also listed und
     - &gt;= .NET 4.0
 * Firebird
     - &gt;= .NET 4.0
-* Sql Anywhere 16 (backward compatible to 12) - Note: Sql Anywhere Client 16 has to be installed before using DbUp
+* Sql Anywhere 16 (backward compatible to 11) - Note: Sql Anywhere Client 16 has to be installed before using DbUp
     - &gt;= .NET 4.5
 
 If you would like to see a new database or a new target platform, please [submit a pull request](./contributing.md)
