@@ -30,7 +30,7 @@ namespace DbUp.Support.SqlAnywhere
 
         protected override bool VerifyTableExistsCommand(IDbCommand command, string tableName, string schemaName)
         {
-            command.CommandText = string.Format("SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = '{0}'", CreateTableName(null, tableName));
+            command.CommandText = string.Format("SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = '{0}'", tableName);
             command.CommandType = CommandType.Text;
             var result = command.ExecuteScalar() as int?;
             return result.GetValueOrDefault() > 0;

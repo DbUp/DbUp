@@ -1,5 +1,5 @@
 ﻿Open connection
-Execute scalar command: SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = '[schemaversions]'
+Execute scalar command: SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = 'schemaversions'
 Dispose command
 Execute non query command: CREATE TABLE test ( keycol int default autoincrement, datacol char(10))
 Dispose command
@@ -16,7 +16,7 @@ Execute non query command: INSERT INTO test (datacol) VALUES ('mytest')
 Dispose command
 Execute non query command: SELECT aicol FROM dummy
 Dispose command
-Execute scalar command: SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = '[schemaversions]'
+Execute scalar command: SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = 'schemaversions'
 Dispose command
 Execute non query command: create table [nor the schema name].[schemaversions] (
 	[Id] int identity not null constraint [PK_schemaversions_Id] primary key,
