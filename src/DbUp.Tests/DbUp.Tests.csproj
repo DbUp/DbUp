@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project DefaultTargets="Build" ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project DefaultTargets="Build" ToolsVersion="12.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -10,7 +10,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>DbUp.Tests</RootNamespace>
     <AssemblyName>DbUp.Tests</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6</TargetFrameworkVersion>
     <TargetFrameworkProfile />
     <NuGetPackageImportStamp>
     </NuGetPackageImportStamp>
@@ -25,6 +25,7 @@
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
     <LangVersion>5</LangVersion>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>none</DebugType>
@@ -33,6 +34,7 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <ConsolePause>false</ConsolePause>
+    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <PropertyGroup>
     <SignAssembly>false</SignAssembly>
@@ -73,6 +75,10 @@
       <SpecificVersion>False</SpecificVersion>
       <HintPath>..\packages\NUnit.2.6.2\lib\nunit.framework.dll</HintPath>
     </Reference>
+    <Reference Include="Parsley, Version=0.0.6.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Parsley.0.0.6\lib\net452\Parsley.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Shouldly, Version=2.6.0.0, Culture=neutral, PublicKeyToken=6042cbcb05cbc941, processorArchitecture=MSIL">
       <HintPath>..\packages\Shouldly.2.6.0\lib\net40\Shouldly.dll</HintPath>
       <Private>True</Private>
@@ -105,6 +111,8 @@
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="Support\Oracle\OracleParserTests.cs" />
+    <Compile Include="Support\Oracle\OracleSqlLexerTests.cs" />
     <Compile Include="Support\SqlServer\SqlParserTests.cs" />
     <Compile Include="ScriptProvider\TestScripts.cs" />
     <Compile Include="TestInfrastructure\Scrubbers.cs" />
@@ -141,6 +149,10 @@
     <ProjectReference Include="..\DbUp.MySql\DbUp.MySql.csproj">
       <Project>{4e0f1564-ed5f-49a6-8fb0-e8eb7ea2d63f}</Project>
       <Name>DbUp.MySql</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\DbUp.Oracle\DbUp.Oracle.csproj">
+      <Project>{a0dc5d39-9d15-49f2-8ada-e821f8e3ea4b}</Project>
+      <Name>DbUp.Oracle</Name>
     </ProjectReference>
     <ProjectReference Include="..\DbUp.Postgresql\DbUp.Postgresql.csproj">
       <Project>{27246d0e-bf23-4315-a946-ea8c93d9bff1}</Project>

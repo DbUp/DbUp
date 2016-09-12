@@ -1,0 +1,26 @@
+﻿CREATE TABLE "Departments"
+   (	"DepartmentId" NUMBER(10,0) NOT NULL ENABLE, 
+	"Name" VARCHAR2(255), 
+	"ManagerId" NUMBER(10,0) NOT NULL ENABLE, 
+	 CONSTRAINT "PK_Departments" PRIMARY KEY ("DepartmentId"),
+	 CONSTRAINT "FK_Departments_ManagerId" FOREIGN KEY ("ManagerId")
+	  REFERENCES "Employees" ("EmployeeId") ON DELETE CASCADE ENABLE);
+
+CREATE SEQUENCE "SQ_Departments" 
+	MINVALUE 1 
+	MAXVALUE 9999999999999999999999999999 
+	INCREMENT BY 1 START WITH 1 CACHE 20 
+	NOORDER 
+	NOCYCLE;
+
+ CREATE OR REPLACE TRIGGER "TR_Departments"
+	BEFORE INSERT ON "Departments"
+	FOR EACH ROW 
+	BEGIN
+		SELECT "SQ_Departments".nextval INTO 
+		:new."DepartmentId" 		
+		FROM dual; 
+	END; 
+/
+
+ ALTER TRIGGER "TR_Departments" ENABLE;

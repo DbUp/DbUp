@@ -82,6 +82,7 @@
     <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
     <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />
     <Compile Include="Support\MySql\MySqlITableJournal.cs" />
+    <Compile Include="Support\Oracle\OracleTableJournal.cs" />
     <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitter.cs" />
     <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
