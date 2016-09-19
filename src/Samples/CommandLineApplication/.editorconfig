@@ -1,0 +1,17 @@
+# EditorConfig (http://editorconfig.org) is awesome. It defines and maintains consistent coding styles between different editors and IDEs.
+# IDE Extensions
+#   Visual Studio, install https://visualstudiogallery.msdn.microsoft.com/c8bccfe2-650c-4b42-bc5c-845e21f96328
+#   VS Code, install https://marketplace.visualstudio.com/items?itemName=EditorConfig.EditorConfig
+root = false
+
+[*.cs]
+indent_style = space
+indent_size = 4
+
+[*.{json,config,xml}]
+indent_style = space
+indent_size = 2
+
+[*.sql]
+indent_style = space
+indent_size = 2

@@ -1,0 +1,31 @@
+{
+  "title": "CommandLineApplication",
+  "version": "0.1.0-*",
+
+  "dependencies": {
+    "dbup": "3.3.4",
+    "Microsoft.Extensions.CommandLineUtils": "1.0.0",
+    "System.Data.Common": "4.1.0"
+  },
+
+  "frameworks": {
+    "net452": {}
+  },
+
+  "buildOptions": {
+    "emitEntryPoint": true,
+    "preserveCompilationContext": true,
+    "embed": [
+      "Migrations/**/*.sql"
+    ]
+  },
+
+  "configurations": {
+    "Release": {
+      "buildOptions": {
+        "optimize": true
+      }
+    }
+  }
+}
+

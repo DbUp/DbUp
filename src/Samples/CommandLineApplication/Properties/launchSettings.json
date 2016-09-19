@@ -1,0 +1,16 @@
+{
+  "profiles": {
+    "Display Help": {
+      "commandName": "Project",
+      "commandLineArgs": "--help"
+    },
+    "Migrate Schema": {
+      "commandName": "Project",
+      "commandLineArgs": "migrate \"Server=localhost;Database=<DatabaseName>;Trusted_Connection=True;\""
+    },
+    "Migrate Stable Schema": {
+      "commandName": "Project",
+      "commandLineArgs": "migrate --stable \"Server=localhost;Database=<DatabaseName>;Trusted_Connection=True;\""
+    }
+  }
+}
