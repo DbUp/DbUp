@@ -1,12 +1,13 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using System.Linq;
 
-namespace CommandLineApplication.DbUp
+namespace DbUp.Sample.SchemaMigrator.DbUp
 {
     public static class UpgradeEngineExtensions
     {

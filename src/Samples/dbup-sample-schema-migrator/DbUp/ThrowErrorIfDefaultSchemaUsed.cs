@@ -2,7 +2,7 @@ using System;
 using System.Text.RegularExpressions;
 using DbUp.Engine;
 
-namespace CommandLineApplication.DbUp
+namespace DbUp.Sample.SchemaMigrator.DbUp
 {
     /// <summary>Prevent scripts from using [dbo] schema</summary>
     public class ThrowErrorIfDefaultSchemaUsed : IScriptPreprocessor

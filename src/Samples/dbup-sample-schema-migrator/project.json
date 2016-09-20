@@ -1,9 +1,9 @@
 {
-  "title": "CommandLineApplication",
+  "title": "dbup-sample-commandline-migrator",
   "version": "0.1.0-*",
 
   "dependencies": {
-    "dbup": "3.3.4",
+    "dbup": "3.3.5",
     "Microsoft.Extensions.CommandLineUtils": "1.0.0",
     "System.Data.Common": "4.1.0"
   },

@@ -1,10 +1,10 @@
-﻿using CommandLineApplication.DbUp;
-using CommandLineApplication.Migrations;
-using DbUp;
+﻿using System;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Sample.SchemaMigrator.DbUp;
+using DbUp.Sample.SchemaMigrator.Migrations;
 
-namespace CommandLineApplication
+namespace DbUp.Sample.SchemaMigrator
 {
     public sealed class SqlServerMigrator
     {

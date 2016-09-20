@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Diagnostics;
-using DbUp;
 using Microsoft.Extensions.CommandLineUtils;
 
-namespace CommandLineApplication
+namespace DbUp.Sample.SchemaMigrator
 {
     public class Program
     {
