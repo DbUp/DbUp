@@ -46,9 +46,6 @@ namespace CommandLineApplication
 
             _upgradeLogger.WriteInformation("Connecting to {connectionString}", _connectionString);
 
-            if (_stableScriptsOnly)
-                upgrader.AssertThatAnyNewScriptsHaveNotAlreadyBeenExecuted(_scriptNamespace);
-
             return upgrader.PerformUpgrade();
         }
 
