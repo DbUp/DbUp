@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 using FirebirdSql.Data.FirebirdClient;
 using DbUp.Support;
 
@@ -12,18 +13,19 @@ namespace DbUp.Firebird
     /// </summary>
     public class FirebirdScriptExecutor : ScriptExecutor
     {
+        static readonly ILog log = LogProvider.For<FirebirdScriptExecutor>();
+
         /// <summary>
         /// Initializes an instance of the <see cref="FirebirdScriptExecutor"/> class.
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
-        /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journal">Database journal</param>
-        public FirebirdScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public FirebirdScriptExecutor(Func<IConnectionManager> connectionManagerFactory, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
-            : base(connectionManagerFactory, new FirebirdObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
+            : base(connectionManagerFactory, new FirebirdObjectParser(), schema, variablesEnabled, scriptPreprocessors, journal)
         {
 
         }
@@ -41,9 +43,8 @@ namespace DbUp.Firebird
             }
             catch (FbException fbException)
             {
-                Log().WriteInformation("Firebird exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Firebird error code: {0}; SQLSTATE {1}; Message: {2}", index, fbException.ErrorCode, fbException.SQLSTATE, fbException.Message);
-                Log().WriteError(fbException.ToString());
+                log.InfoFormat("Firebird exception has occured in script: '{0}'", script.Name);
+                log.ErrorException("Firebird error code: {0}; SQLSTATE {1}; Message: {2}", fbException, index, fbException.ErrorCode, fbException.SQLSTATE, fbException.Message);
                 throw;
             }
         }
