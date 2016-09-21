@@ -19,7 +19,10 @@
     },
 
     "frameworks": {
-        "net35": {
+        "net40": {
+            "frameworkAssemblies": {
+              "System.Data": "4.0.0.0"
+            }
         }
     }
 }
