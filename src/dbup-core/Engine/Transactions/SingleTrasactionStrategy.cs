@@ -1,16 +1,17 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
+using DbUp.Logging;
 
 namespace DbUp.Engine.Transactions
 {
     internal class SingleTrasactionStrategy : ITransactionStrategy
     {
+        private static readonly ILog log = LogProvider.For<SingleTrasactionStrategy>();
+
         private IDbConnection connection;
         private IDbTransaction transaction;
         private bool errorOccured;
-        private IUpgradeLog log;
         private SqlScript[] executedScriptsListBeforeExecution;
         private List<SqlScript> executedScriptsCollection;
 
@@ -56,13 +57,12 @@ namespace DbUp.Engine.Transactions
             }
         }
 
-        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public void Initialise(IDbConnection dbConnection, List<SqlScript> executedScripts)
         {
             executedScriptsCollection = executedScripts;
             executedScriptsListBeforeExecution = executedScripts.ToArray();
             connection = dbConnection;
-            log = upgradeLog;
-            upgradeLog.WriteInformation("Beginning transaction");
+            log.Info("Beginning transaction");
             transaction = connection.BeginTransaction();
         }
 
@@ -72,7 +72,7 @@ namespace DbUp.Engine.Transactions
                 transaction.Commit();
             else
             {
-                log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
+                log.Warn("Error occured when executing scripts, transaction will be rolled back");
                 //Restore the executed scripts collection
                 executedScriptsCollection.Clear();
                 executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);

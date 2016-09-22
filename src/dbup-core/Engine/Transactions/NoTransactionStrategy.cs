@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
@@ -19,7 +18,7 @@ namespace DbUp.Engine.Transactions
             return actionWithResult(() => connection.CreateCommand());
         }
 
-        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public void Initialise(IDbConnection dbConnection, List<SqlScript> executedScripts)
         {
             connection = dbConnection;
         }

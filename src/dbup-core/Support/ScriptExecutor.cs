@@ -4,10 +4,10 @@ using System.Data;
 using System.Data.Common;
 using System.Linq;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Engine.Preprocessors;
 using DbUp.Engine.Transactions;
 using DbUp.Helpers;
+using DbUp.Logging;
 
 namespace DbUp.Support
 {
@@ -17,6 +17,8 @@ namespace DbUp.Support
     /// </summary>
     public abstract class ScriptExecutor : IScriptExecutor
     {
+        static readonly ILog log = LogProvider.For<ScriptExecutor>();
+
         readonly Func<IConnectionManager> connectionManagerFactory;
         readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
         readonly Func<IJournal> journal;
@@ -32,19 +34,18 @@ namespace DbUp.Support
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
-        /// <param name="log">The logging mechanism.</param>
+        /// <param name="sqlObjectParser">?</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journal">Database journal</param>
         public ScriptExecutor(
             Func<IConnectionManager> connectionManagerFactory, ISqlObjectParser sqlObjectParser,
-            Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+            string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors,
             Func<IJournal> journal)
         {
             Schema = schema;
-            Log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
             this.journal = journal;
@@ -109,7 +110,7 @@ namespace DbUp.Support
         public virtual void Execute(SqlScript script, IDictionary<string, string> variables)
         {
             var contents = PreprocessScriptContents(script, variables);
-            Log().WriteInformation("Executing Database Server script '{0}'", script.Name);
+            log.InfoFormat("Executing Database Server script '{0}'", script.Name);
 
             var connectionManager = connectionManagerFactory();
             var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
@@ -150,15 +151,13 @@ namespace DbUp.Support
             }
             catch (DbException sqlException)
             {
-                Log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Message: {1}", index, sqlException.Message);
-                Log().WriteError(sqlException.ToString());
+                log.InfoFormat("DB exception has occured in script: '{0}'", script.Name);
+                log.ErrorException("Script block number: {0}; Message: {1}", sqlException, index, sqlException.Message);
                 throw;
             }
             catch (Exception ex)
             {
-                Log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
-                Log().WriteError(ex.ToString());
+                log.ErrorException("Exception has occured in script: '{0}'", ex, script.Name);
                 throw;
             }
         }
@@ -224,18 +223,18 @@ namespace DbUp.Support
                 format = "|" + format;
                 totalLength += 1;
 
-                Log().WriteInformation(new string('-', totalLength));
-                Log().WriteInformation(format, names.ToArray());
-                Log().WriteInformation(new string('-', totalLength));
+                log.Info(new string('-', totalLength));
+                log.InfoFormat(format, names);
+                log.Info(new string('-', totalLength));
                 foreach (var line in lines)
                 {
-                    Log().WriteInformation(format, line.ToArray());
+                    log.InfoFormat(format, line);
                 }
-                Log().WriteInformation(new string('-', totalLength));
-                Log().WriteInformation("\r\n");
+
+                log.Info(new string('-', totalLength));
+                log.Info("\r\n");
+
             } while (reader.NextResult());
         }
-
-        protected Func<IUpgradeLog> Log { get; private set; }
     }
 }

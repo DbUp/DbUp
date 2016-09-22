@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
@@ -19,7 +18,7 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Manages Database Connections
         /// </summary>
-        protected DatabaseConnectionManager(Func<IUpgradeLog, IDbConnection> connectionFactory) : this(new DelegateConnectionFactory(connectionFactory))
+        protected DatabaseConnectionManager(Func<IDbConnection> connectionFactory) : this(new DelegateConnectionFactory(connectionFactory))
         {
         }
 
@@ -41,15 +40,15 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tells the connection manager is starting
         /// </summary>
-        public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public IDisposable OperationStarting(List<SqlScript> executedScripts)
         {
-            upgradeConnection = CreateConnection(upgradeLog);
+            upgradeConnection = CreateConnection();
             if (upgradeConnection.State == ConnectionState.Closed)
                 upgradeConnection.Open();
             if (transactionStrategy != null)
                 throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
             transactionStrategy = transactionStrategyFactory[TransactionMode]();
-            transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts);
+            transactionStrategy.Initialise(upgradeConnection, executedScripts);
 
             return new DelegateDisposable(() =>
             {
@@ -63,16 +62,16 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tries to connect to the database.
         /// </summary>
-        public bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage)
+        public bool TryConnect(out string errorMessage)
         {
             try
             {
                 errorMessage = "";
-                upgradeConnection = CreateConnection(upgradeLog);
+                upgradeConnection = CreateConnection();
                 if (upgradeConnection.State == ConnectionState.Closed)
                     upgradeConnection.Open();
                 var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
-                strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
+                strategy.Initialise(upgradeConnection, new List<SqlScript>());
                 strategy.Execute(dbCommandFactory =>
                 {
                     using (var command = dbCommandFactory())
@@ -133,9 +132,9 @@ namespace DbUp.Engine.Transactions
             return new DelegateDisposable(() => connectionFactoryOverride = null);
         }
 
-        IDbConnection CreateConnection(IUpgradeLog upgradeLog)
+        IDbConnection CreateConnection()
         {
-            return (connectionFactoryOverride ?? connectionFactory).CreateConnection(upgradeLog, this);
+            return (connectionFactoryOverride ?? connectionFactory).CreateConnection(this);
         }
     }
 }

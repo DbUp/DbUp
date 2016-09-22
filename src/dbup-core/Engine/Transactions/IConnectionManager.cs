@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
 using JetBrains.Annotations;
 
 namespace DbUp.Engine.Transactions
@@ -14,7 +13,7 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tells the connection manager it is starting an operation
         /// </summary>
-        IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts);
+        IDisposable OperationStarting(List<SqlScript> executedScripts);
 
         /// <summary>
         /// Execute a lambda with the connection managed by the connection manager (i.e transactions, reusing connections etc)
@@ -48,6 +47,6 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tries to connect to the database.
         /// </summary> 
-        bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage);
+        bool TryConnect(out string errorMessage);
     }
 }

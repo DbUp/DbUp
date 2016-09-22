@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data.SqlClient;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 

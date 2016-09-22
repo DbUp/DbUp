@@ -1,5 +1,4 @@
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
@@ -11,9 +10,8 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Creates a database connection, the connection can be opened or closed
         /// </summary>
-        /// <param name="upgradeLog"></param>
         /// <param name="databaseConnectionManager"></param>
         /// <returns></returns>
-        IDbConnection CreateConnection(IUpgradeLog upgradeLog, DatabaseConnectionManager databaseConnectionManager);
+        IDbConnection CreateConnection(DatabaseConnectionManager databaseConnectionManager);
     }
 }

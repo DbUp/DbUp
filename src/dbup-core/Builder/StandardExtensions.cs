@@ -5,7 +5,6 @@ using System.Text;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 
@@ -20,32 +19,6 @@ public static class StandardExtensions
 // ReSharper restore CheckNamespace
 {
     /// <summary>
-    /// Logs to a custom logger.
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <param name="log">The logger.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogTo(this UpgradeEngineBuilder builder, IUpgradeLog log)
-    {
-        builder.Configure(c => c.Log = log);
-        return builder;
-    }
-
-    /// <summary>
-    /// Logs to the console using pretty colours.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToConsole(this UpgradeEngineBuilder builder)
-    {
-        return LogTo(builder, new ConsoleUpgradeLog());
-    }
-
-    /// <summary>
     /// Logs to the console using pretty colours.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -57,20 +30,6 @@ public static class StandardExtensions
         builder.Configure(c => c.ConnectionManager.IsScriptOutputLogged = true);
         return builder;
     }
-
-#if TRACE_SUPPORT
-    /// <summary>
-    /// Logs to System.Diagnostics.Trace.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToTrace(this UpgradeEngineBuilder builder)
-    {
-        return LogTo(builder, new TraceUpgradeLog());
-    }
-#endif
 
     /// <summary>
     /// Uses a custom journal for recording which scripts were executed.
@@ -373,7 +332,7 @@ public static class StandardExtensions
 
         var totalSeconds = timeout.Value.TotalSeconds;
 
-        if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException("timeout", timeout, string.Format("The timeout value must be a value between 1 and {0} seconds", int.MaxValue));
+        if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException(nameof(timeout), timeout, string.Format("The timeout value must be a value between 1 and {0} seconds", int.MaxValue));
 
         builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
         return builder;

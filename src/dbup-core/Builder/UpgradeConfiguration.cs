@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 
 namespace DbUp.Builder
 {
@@ -20,11 +20,7 @@ namespace DbUp.Builder
         /// </summary>
         public UpgradeConfiguration()
         {
-#if TRACE_SUPPORT
-            Log = new TraceUpgradeLog();
-#else
-            Log = new NoOpUpgradeLog();
-#endif
+            Log = LogProvider.For<UpgradeConfiguration>();
             VariablesEnabled = true;
         }
 
@@ -36,7 +32,7 @@ namespace DbUp.Builder
         /// <summary>
         /// Gets or sets a log which captures details about the upgrade.
         /// </summary>
-        public IUpgradeLog Log { get; set; }
+        internal ILog Log { get; set; }
 
         /// <summary>
         /// Gets a mutable list of script providers.

@@ -1,26 +1,25 @@
 using System;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
     public class DelegateConnectionFactory : IConnectionFactory
     {
-        private readonly Func<IUpgradeLog, DatabaseConnectionManager, IDbConnection> createConnection;
+        private readonly Func<DatabaseConnectionManager, IDbConnection> createConnection;
 
-        public DelegateConnectionFactory(Func<IUpgradeLog, IDbConnection> createConnection)
-            : this((l, _) => createConnection(l))
+        public DelegateConnectionFactory(Func<IDbConnection> createConnection)
+            : this(_ => createConnection())
         {
         }
 
-        public DelegateConnectionFactory(Func<IUpgradeLog, DatabaseConnectionManager, IDbConnection> createConnection)
+        public DelegateConnectionFactory(Func<DatabaseConnectionManager, IDbConnection> createConnection)
         {
             this.createConnection = createConnection;
         }
         
-        public IDbConnection CreateConnection(IUpgradeLog upgradeLog, DatabaseConnectionManager databaseConnectionManager)
+        public IDbConnection CreateConnection(DatabaseConnectionManager databaseConnectionManager)
         {
-            return createConnection(upgradeLog, databaseConnectionManager);
+            return createConnection(databaseConnectionManager);
         }
     }
 }

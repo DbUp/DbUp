@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
@@ -25,8 +24,8 @@ namespace DbUp.Engine.Transactions
         T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult);
 
         /// <summary>
-        /// Initialises the transaction strategy with the upgrade log
+        /// Initialises the transaction strategy
         /// </summary>
-        void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts);
+        void Initialise(IDbConnection dbConnection, List<SqlScript> executedScripts);
     }
 }

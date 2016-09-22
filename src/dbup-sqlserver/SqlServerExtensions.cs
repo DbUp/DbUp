@@ -3,7 +3,6 @@ using System.Data;
 using System.Data.SqlClient;
 using DbUp;
 using DbUp.Builder;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SqlServer;
 

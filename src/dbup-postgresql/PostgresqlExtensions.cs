@@ -2,7 +2,6 @@
 using System.Data;
 using DbUp;
 using DbUp.Builder;
-using DbUp.Engine.Output;
 using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
 using Npgsql;

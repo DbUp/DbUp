@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 
 // ReSharper disable MemberCanBePrivate.Global
 namespace DbUp.Support
@@ -13,6 +13,7 @@ namespace DbUp.Support
     /// </summary>
     public abstract class TableJournal : IJournal
     {
+        static readonly ILog log = LogProvider.For<TableJournal>();
         readonly ISqlObjectParser sqlObjectParser;
         bool journalExists;
 
@@ -20,19 +21,16 @@ namespace DbUp.Support
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
-        /// <param name="logger">The log.</param>
         /// <param name="sqlObjectParser"></param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
         protected TableJournal(
             Func<IConnectionManager> connectionManager,
-            Func<IUpgradeLog> logger,
             ISqlObjectParser sqlObjectParser,
             string schema, string table)
         {
             this.sqlObjectParser = sqlObjectParser;
             ConnectionManager = connectionManager;
-            Log = logger;
             UnquotedSchemaTableName = table;
             SchemaTableSchema = schema;
             FqSchemaTableName = string.IsNullOrEmpty(schema)
@@ -54,8 +52,6 @@ namespace DbUp.Support
 
         protected Func<IConnectionManager> ConnectionManager { get; private set; }
 
-        protected Func<IUpgradeLog> Log { get; private set; }
-
         /// <summary>
         /// Recalls the version number of the database.
         /// </summary>
@@ -63,7 +59,7 @@ namespace DbUp.Support
         public string[] GetExecutedScripts()
         {
             EnsureTableIsLatestVersion();
-            Log().WriteInformation("Fetching list of already executed scripts.");
+            log.Info("Fetching list of already executed scripts.");
 
             var scripts = new List<string>();
             ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
@@ -153,7 +149,7 @@ namespace DbUp.Support
         /// <summary>
         /// Unquotes a quoted identifier.
         /// </summary>
-        /// <param name="objectName">identifier to unquote.</param>
+        /// <param name="quotedIdentifier">identifier to unquote.</param>
         protected string UnquoteSqlObjectName(string quotedIdentifier)
         {
             return sqlObjectParser.UnquoteIdentifier(quotedIdentifier);
@@ -169,7 +165,7 @@ namespace DbUp.Support
         {
             if (!journalExists && !DoesTableExist())
             {
-                Log().WriteInformation(string.Format("Creating the {0} table", FqSchemaTableName));
+                log.InfoFormat("Creating the {0} table", FqSchemaTableName);
                 ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     // We will never change the schema of the initial table create.
@@ -177,7 +173,7 @@ namespace DbUp.Support
                     {
                         command.ExecuteNonQuery();
                     }
-                    Log().WriteInformation(string.Format("The {0} table has been created", FqSchemaTableName));
+                    log.InfoFormat("The {0} table has been created", FqSchemaTableName);
 
                     OnTableCreated(dbCommandFactory);
                 });
@@ -188,7 +184,7 @@ namespace DbUp.Support
 
         protected bool DoesTableExist()
         {
-            Log().WriteInformation("Checking whether journal table exists..");
+            log.Info("Checking whether journal table exists..");
             return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
                 using (var command = dbCommandFactory())

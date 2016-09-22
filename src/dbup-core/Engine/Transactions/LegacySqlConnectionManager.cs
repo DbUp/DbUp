@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
 using DbUp.Support;
 
 namespace DbUp.Engine.Transactions
@@ -22,7 +21,7 @@ namespace DbUp.Engine.Transactions
             this.connectionFactory = connectionFactory;
         }
 
-        public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public IDisposable OperationStarting(List<SqlScript> executedScripts)
         {
             return new DoNothingDisposible();
         }
@@ -30,7 +29,7 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tries to connect to the database.
         /// </summary>
-        public bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage)
+        public bool TryConnect(out string errorMessage)
         {
             try
             {
