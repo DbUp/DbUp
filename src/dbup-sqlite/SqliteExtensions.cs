@@ -24,8 +24,8 @@ public static class SQLiteExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(connectionString));
-        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
-        builder.Configure(c => c.ScriptExecutor = new SQLiteScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, "SchemaVersions"));
+        builder.Configure(c => c.ScriptExecutor = new SQLiteScriptExecutor(() => c.ConnectionManager, null,
             () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
@@ -43,8 +43,8 @@ public static class SQLiteExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SQLiteConnectionManager(sharedConnection));
-        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, "SchemaVersions"));
-        builder.Configure(c => c.ScriptExecutor = new SQLiteScriptExecutor(() => c.ConnectionManager, () => c.Log, null,
+        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, "SchemaVersions"));
+        builder.Configure(c => c.ScriptExecutor = new SQLiteScriptExecutor(() => c.ConnectionManager, null,
             () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;

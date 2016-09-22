@@ -22,14 +22,14 @@ namespace DbUp.SQLite
         /// <summary>
         /// Creates new SQLite Connection Manager
         /// </summary>
-        public SQLiteConnectionManager(string connectionString) : base(l => new SQLiteConnection(connectionString))
+        public SQLiteConnectionManager(string connectionString) : base(() => new SQLiteConnection(connectionString))
         {
         }
 
         /// <summary>
         /// Creates new SQLite Connection Manager
         /// </summary>
-        public SQLiteConnectionManager(SharedConnection sharedConnection) : base(l => sharedConnection)
+        public SQLiteConnectionManager(SharedConnection sharedConnection) : base(() => sharedConnection)
         {
         }
 

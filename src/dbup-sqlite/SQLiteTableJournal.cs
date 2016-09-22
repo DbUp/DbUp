@@ -1,6 +1,5 @@
 ﻿using System;
 using DbUp.Engine;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 
@@ -15,8 +14,8 @@ namespace DbUp.SQLite
         /// <summary>
         /// Initializes a new instance of the <see cref="SQLiteTableJournal"/> class.
         /// </summary>
-        public SQLiteTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string table) :
-            base(connectionManager, logger, new SQLiteObjectParser(), null, table)
+        public SQLiteTableJournal(Func<IConnectionManager> connectionManager, string table) :
+            base(connectionManager, new SQLiteObjectParser(), null, table)
         { }
 
         protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)

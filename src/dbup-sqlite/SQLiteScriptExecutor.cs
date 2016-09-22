@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 using DbUp.Support;
 
 #if MONO
@@ -20,19 +21,19 @@ namespace DbUp.SQLite
     /// </summary>
     public class SQLiteScriptExecutor : ScriptExecutor
     {
+        static readonly ILog log = LogProvider.For<SQLiteScriptExecutor>();
 
         /// <summary>
         /// Initializes an instance of the <see cref="SQLiteScriptExecutor"/> class.
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
-        /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journal">Database journal</param>
-        public SQLiteScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public SQLiteScriptExecutor(Func<IConnectionManager> connectionManagerFactory, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
-            : base(connectionManagerFactory, new SQLiteObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
+            : base(connectionManagerFactory, new SQLiteObjectParser(), schema, variablesEnabled, scriptPreprocessors, journal)
         {
         }
 
@@ -49,13 +50,13 @@ namespace DbUp.SQLite
             }
             catch (SQLiteException exception)
             {
-                Log().WriteInformation("SQLite exception has occured in script: '{0}'", script.Name);
+                log.InfoFormat("SQLite exception has occured in script: '{0}'", script.Name);
 #if NETCORE
-                Log().WriteError("Script block number: {0}; Error Code: {1}; Message: {2}", index, exception.SqliteErrorCode, exception.Message);
+                log.ErrorFormat("Script block number: {0}; Error Code: {1}; Message: {2}", index, exception.SqliteErrorCode, exception.Message);
 #else
-                Log().WriteError("Script block number: {0}; Error Code: {1}; Message: {2}", index, exception.ErrorCode, exception.Message);
+                log.ErrorFormat("Script block number: {0}; Error Code: {1}; Message: {2}", index, exception.ErrorCode, exception.Message);
 #endif
-                Log().WriteError(exception.ToString());
+                log.Error(exception.ToString());
                 throw;
             }
         }
