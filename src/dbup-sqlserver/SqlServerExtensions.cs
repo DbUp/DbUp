@@ -4,6 +4,7 @@ using System.Data.SqlClient;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 using DbUp.SqlServer;
 
 /// <summary>
@@ -16,6 +17,8 @@ using DbUp.SqlServer;
 public static class SqlServerExtensions
 // ReSharper restore CheckNamespace
 {
+    static readonly ILog log = LogProvider.For<SupportedDatabases>();
+
     /// <summary>
     /// Creates an upgrader for SQL Server databases.
     /// </summary>
@@ -82,8 +85,8 @@ public static class SqlServerExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, "SchemaVersions"));
+        builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, schema, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
+        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, schema, "SchemaVersions"));
         return builder;
     }
 
@@ -96,46 +99,9 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
+        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, schema, table));
         return builder;
     }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
-    {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout)
-    {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
-    }
-
-#if SUPPORTS_SQL_CONTEXT
-    /// <summary>
-    /// Logs to SqlContext.Pipe, for use with "context connection=true".
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
-    {
-        return builder.LogTo(new SqlContextUpgradeLog());
-    }
-#endif
 
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
@@ -145,7 +111,7 @@ public static class SqlServerExtensions
     /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
     /// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int timeout = -1)
     {
         if (supported == null) throw new ArgumentNullException("supported");
 
@@ -153,8 +119,6 @@ public static class SqlServerExtensions
         {
             throw new ArgumentNullException("connectionString");
         }
-
-        if (logger == null) throw new ArgumentNullException("logger");
 
         var masterConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
 
@@ -172,7 +136,7 @@ public static class SqlServerExtensions
             Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*')
         };
 
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
+        log.InfoFormat("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
 
         using (var connection = new SqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
@@ -222,7 +186,7 @@ public static class SqlServerExtensions
 
             }
 
-            logger.WriteInformation(@"Created database {0}", databaseName);
+            log.InfoFormat(@"Created database {0}", databaseName);
         }
     }
 }

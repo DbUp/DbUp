@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Data.SqlClient;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 using DbUp.Support;
 
 namespace DbUp.SqlServer
@@ -12,19 +13,19 @@ namespace DbUp.SqlServer
     /// </summary>
     public class SqlScriptExecutor : ScriptExecutor
     {
+        static readonly ILog log = LogProvider.For<SqlScriptExecutor>();
 
         /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
         /// <param name="connectionManagerFactory"></param>
-        /// <param name="log">The logging mechanism.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journal">Database journal</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
-            : base(connectionManagerFactory, new SqlServerObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
+            : base(connectionManagerFactory, new SqlServerObjectParser(), schema, variablesEnabled, scriptPreprocessors, journal)
         {
 
         }
@@ -42,9 +43,9 @@ namespace DbUp.SqlServer
             }
             catch (SqlException sqlException)
             {
-                Log().WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Block line {1}; Message: {2}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
-                Log().WriteError(sqlException.ToString());
+                log.InfoFormat("SQL exception has occured in script: '{0}'", script.Name);
+                log.ErrorFormat("Script block number: {0}; Block line {1}; Message: {2}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
+                log.Error(sqlException.ToString());
                 throw;
             }
         }

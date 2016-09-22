@@ -1,5 +1,4 @@
 ﻿using System;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 
@@ -15,14 +14,13 @@ namespace DbUp.SqlServer
         /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
-        /// <param name="logger">The log.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
-        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, new SqlServerObjectParser(), schema, table)
+        public SqlTableJournal(Func<IConnectionManager> connectionManager, string schema, string table)
+            : base(connectionManager, new SqlServerObjectParser(), schema, table)
         {
         }
 
