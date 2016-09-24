@@ -7,7 +7,7 @@
         "**/*.approved.cs",
         "**/*.received.cs"
       ]
-    },
+    }, 
     "copyToOutput": [
       "TestFilterFiles/ScriptNames.txt"
     ],
