@@ -470,4 +470,16 @@ public static class StandardExtensions
     {
         return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding));
     }
+
+
+    /// <summary>
+    /// Sets a configuration flag which will cause the engine to include batch number in schema versions.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithBatchNumberEnabled(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.Journal.BatchNumberEnabled = true);
+        return builder;
+    }
 }

@@ -69,6 +69,7 @@ namespace DbUp.Engine
     }
     public interface IJournal
     {
+        bool BatchNumberEnabled { get; set; }
         string[] GetExecutedScripts();
         void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory);
     }
@@ -246,6 +247,7 @@ namespace DbUp.Helpers
     public class NullJournal : DbUp.Engine.IJournal
     {
         public NullJournal() { }
+        public bool BatchNumberEnabled { get; set; }
         public string[] GetExecutedScripts() { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
     }
@@ -348,21 +350,30 @@ namespace DbUp.Support
     public abstract class TableJournal : DbUp.Engine.IJournal
     {
         protected TableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, string table) { }
+        public bool BatchNumberEnabled { get; set; }
         protected System.Func<DbUp.Engine.Transactions.IConnectionManager> ConnectionManager { get; }
         protected string FqSchemaTableName { get; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         protected string SchemaTableSchema { get; }
         protected string UnquotedSchemaTableName { get; }
+        protected void CreateBatchNumberColumn() { }
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
+        protected bool DoesBatchNumberColumnExist() { }
         protected bool DoesTableExist() { }
         protected virtual string DoesTableExistSql() { }
+        protected void EnsureBatchNumberColumnExist() { }
         protected void EnsureTableIsLatestVersion() { }
+        protected abstract string GetCreateBatchNumberColumnSql();
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        protected abstract string GetDoesBatchNumberColumnExistSql();
         public string[] GetExecutedScripts() { }
         protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);
+        protected abstract string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber);
         protected System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
         protected System.Data.IDbCommand GetJournalEntriesCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected abstract string GetJournalEntriesSql();
+        protected int GetMaximumBatchNumber() { }
+        protected abstract string GetMaximumBatchNumberSql();
         protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected string UnquoteSqlObjectName(string quotedIdentifier) { }
@@ -376,6 +387,7 @@ public class static StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder LogTo(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.Output.IUpgradeLog log) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToConsole(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToTrace(this DbUp.Builder.UpgradeEngineBuilder builder) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithBatchNumberEnabled(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithExecutionTimeout(this DbUp.Builder.UpgradeEngineBuilder builder, System.Nullable<System.TimeSpan> timeout) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithoutTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithPreprocessor(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptPreprocessor preprocessor) { }

@@ -20,5 +20,10 @@ namespace DbUp.Engine
         /// <param name="script">The script.</param>
         /// <param name="dbCommandFactory"></param>
         void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory);
+
+        /// <summary>
+        /// Determines if batch number should be enabled in the schema versions
+        /// </summary>
+        bool BatchNumberEnabled { get; set; }
     }
 }

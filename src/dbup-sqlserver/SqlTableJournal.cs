@@ -31,6 +31,11 @@ namespace DbUp.SqlServer
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
+        protected override string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber)
+        {
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied, BatchNumber) values ({@scriptName}, {@applied}, {@batchNumber})";
+        }
+
         protected override string GetJournalEntriesSql()
         {
             return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
@@ -44,6 +49,23 @@ $@"create table {FqSchemaTableName} (
     [ScriptName] nvarchar(255) not null,
     [Applied] datetime not null
 )";
+        }
+
+        protected override string GetCreateBatchNumberColumnSql()
+        {
+            return $"ALTER TABLE {FqSchemaTableName} ADD [BatchNumber] INT NOT NULL DEFAULT(0)";
+        }
+
+        protected override string GetDoesBatchNumberColumnExistSql()
+        {
+            return string.IsNullOrEmpty(SchemaTableSchema)
+                            ? $"select 1 from INFORMATION_SCHEMA.COLUMNS where COLUMN_NAME = 'BatchNumber' and TABLE_NAME = '{UnquotedSchemaTableName}'"
+                            : $"select 1 from INFORMATION_SCHEMA.TABLES where COLUMN_NAME = 'BatchNumber' and TABLE_NAME = '{UnquotedSchemaTableName}' and TABLE_SCHEMA = '{SchemaTableSchema}'";
+        }
+
+        protected override string GetMaximumBatchNumberSql()
+        {
+            return $"select MAX(BatchNumber) from {FqSchemaTableName}";
         }
     }
 }

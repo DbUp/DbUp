@@ -29,6 +29,11 @@ namespace DbUp.Postgresql
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
+        protected override string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber)
+        {
+            throw new NotImplementedException();
+        }
+
         protected override string GetJournalEntriesSql()
         {
             return $"select ScriptName from {FqSchemaTableName} order by ScriptName";
@@ -44,6 +49,21 @@ $@"CREATE TABLE {FqSchemaTableName}
     applied timestamp without time zone NOT NULL,
     CONSTRAINT {quotedPrimaryKeyName} PRIMARY KEY (schemaversionsid)
 )";
+        }
+
+        protected override string GetCreateBatchNumberColumnSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetDoesBatchNumberColumnExistSql()
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override string GetMaximumBatchNumberSql()
+        {
+            throw new NotImplementedException();
         }
     }
 }

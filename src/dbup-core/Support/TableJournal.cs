@@ -15,6 +15,8 @@ namespace DbUp.Support
     {
         readonly ISqlObjectParser sqlObjectParser;
         bool journalExists;
+        int? nextBatchNumber;
+        bool batchNumberExist;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.
@@ -95,6 +97,11 @@ namespace DbUp.Support
             }
         }
 
+        /// <summary>
+        /// Determines if batch number should be enabled in the schema versions
+        /// </summary>
+        public bool BatchNumberEnabled { get; set; } = false;
+
         protected IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {
             var command = dbCommandFactory();
@@ -109,8 +116,26 @@ namespace DbUp.Support
             appliedParam.Value = DateTime.Now;
             command.Parameters.Add(appliedParam);
 
-            command.CommandText = GetInsertJournalEntrySql("@scriptName", "@applied");
-            command.CommandType = CommandType.Text;
+            if (BatchNumberEnabled)
+            {
+                if (nextBatchNumber == null)
+                {
+                    nextBatchNumber = GetMaximumBatchNumber() + 1;
+                }
+                var batchNumberParam = command.CreateParameter();
+                batchNumberParam.ParameterName = "batchNumber";
+                batchNumberParam.Value = nextBatchNumber;
+                command.Parameters.Add(batchNumberParam);
+
+                command.CommandText = GetInsertJournalEntryWithBatchNumberSql("@scriptName", "@applied", "@batchNumber");
+                command.CommandType = CommandType.Text;
+            }
+            else
+            {
+                command.CommandText = GetInsertJournalEntrySql("@scriptName", "@applied");
+                command.CommandType = CommandType.Text;
+            }
+            
             return command;
         }
 
@@ -140,6 +165,15 @@ namespace DbUp.Support
         protected abstract string GetInsertJournalEntrySql(string @scriptName, string @applied);
 
         /// <summary>
+        /// Sql for inserting a journal entry
+        /// </summary>
+        /// <param name="scriptName">Name of the script name param (i.e @scriptName)</param>
+        /// <param name="applied">Name of the applied param (i.e @applied)</param>
+        /// <param name="batchNumber">Name of the batchNumber param (i.e @batchNumber)</param>
+        /// <returns></returns>
+        protected abstract string GetInsertJournalEntryWithBatchNumberSql(string @scriptName, string @applied,string @batchNumber);
+
+        /// <summary>
         /// Sql for getting the journal entries
         /// </summary>
         protected abstract string GetJournalEntriesSql();
@@ -162,7 +196,6 @@ namespace DbUp.Support
         protected virtual void OnTableCreated(Func<IDbCommand> dbCommandFactory)
         {
             // TODO: Now we could run any migration scripts on it using some mechanism to make sure the table is ready for use.
-            
         }
 
         protected void EnsureTableIsLatestVersion()
@@ -182,6 +215,7 @@ namespace DbUp.Support
                     OnTableCreated(dbCommandFactory);
                 });
             }
+            EnsureBatchNumberColumnExist();
 
             journalExists = true;
         }
@@ -213,5 +247,79 @@ namespace DbUp.Support
                             ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", UnquotedSchemaTableName)
                             : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", UnquotedSchemaTableName, SchemaTableSchema);
         }
+
+        protected void EnsureBatchNumberColumnExist()
+        {
+            if(!BatchNumberEnabled || batchNumberExist)
+                return;
+
+            Log().WriteInformation($"Ensuring the column BatchNumber exist in {FqSchemaTableName} table");
+            if (!DoesBatchNumberColumnExist())
+            {
+                CreateBatchNumberColumn();
+            }
+            batchNumberExist = true;
+        }
+
+        protected void CreateBatchNumberColumn()
+        {
+            Log().WriteInformation($"Adding the column BatchNumber exist to {FqSchemaTableName} table");
+            ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                using (var command = dbCommandFactory())
+                {
+                    command.CommandText = GetCreateBatchNumberColumnSql();
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQuery();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sql for creating the BatchNumber column
+        /// </summary>
+        protected abstract string GetCreateBatchNumberColumnSql();
+
+        protected bool DoesBatchNumberColumnExist()
+        {
+            return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                using (var command = dbCommandFactory())
+                {
+                    command.CommandText = GetDoesBatchNumberColumnExistSql();
+                    command.CommandType = CommandType.Text;
+                    var executeScalar = command.ExecuteScalar();
+                    if (executeScalar == null)
+                        return false;
+                    if (executeScalar is long)
+                        return (long)executeScalar == 1;
+                    return (int)executeScalar == 1;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sql for checking if the BatchNumber column exist
+        /// </summary>
+        protected abstract string GetDoesBatchNumberColumnExistSql();
+
+        protected int GetMaximumBatchNumber()
+        {
+            return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                using (var command = dbCommandFactory())
+                {
+                    command.CommandText = GetMaximumBatchNumberSql();
+                    command.CommandType = CommandType.Text;
+                    var executeScalar = command.ExecuteScalar() as int?;
+                    return executeScalar ?? 0;
+                }
+            });
+        }
+
+        /// <summary>
+        /// Sql for checking if the BatchNumber column exist
+        /// </summary>
+        protected abstract string GetMaximumBatchNumberSql();
     }
 }

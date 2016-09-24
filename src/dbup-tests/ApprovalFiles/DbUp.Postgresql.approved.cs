@@ -30,8 +30,12 @@ namespace DbUp.Postgresql
     {
         public PostgresqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string tableName) { }
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
+        protected override string GetCreateBatchNumberColumnSql() { }
+        protected override string GetDoesBatchNumberColumnExistSql() { }
         protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override string GetInsertJournalEntryWithBatchNumberSql(string scriptName, string applied, string batchNumber) { }
         protected override string GetJournalEntriesSql() { }
+        protected override string GetMaximumBatchNumberSql() { }
     }
 }
 
