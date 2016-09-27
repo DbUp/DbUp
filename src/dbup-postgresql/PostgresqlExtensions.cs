@@ -4,6 +4,7 @@ using DbUp;
 using DbUp.Builder;
 using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 using Npgsql;
 
 // ReSharper disable once CheckNamespace
@@ -13,6 +14,8 @@ using Npgsql;
 /// </summary>
 public static class PostgresqlExtensions
 {
+    static readonly ILog log = LogProvider.For<SupportedDatabases>();
+
     /// <summary>
     /// Creates an upgrader for PostgreSQL databases.
     /// </summary>
@@ -37,8 +40,8 @@ public static class PostgresqlExtensions
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new PostgresqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, null, "schemaversions"));
+        builder.Configure(c => c.ScriptExecutor = new PostgresqlScriptExecutor(() => c.ConnectionManager, null, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
+        builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, null, "schemaversions"));
         builder.WithPreprocessor(new PostgresqlPreprocessor());
         return builder;
     }
@@ -51,26 +54,12 @@ public static class PostgresqlExtensions
     /// <returns></returns>
     public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
     {
-        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
-    /// <returns></returns>
-    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger)
-    {
         if (supported == null) throw new ArgumentNullException("supported");
 
         if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
         {
             throw new ArgumentNullException("connectionString");
         }
-
-        if (logger == null) throw new ArgumentNullException("logger");
 
         var masterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
 
@@ -89,7 +78,7 @@ public static class PostgresqlExtensions
             logMasterConnectionStringBuilder.Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
         }
 
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
+        log.InfoFormat("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
 
         using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
@@ -133,7 +122,7 @@ public static class PostgresqlExtensions
 
             }
 
-            logger.WriteInformation(@"Created database {0}", databaseName);
+            log.InfoFormat(@"Created database {0}", databaseName);
         }
     }
 }

@@ -15,11 +15,10 @@ namespace DbUp.Postgresql
         /// Creates a new PostgreSQL table journal.
         /// </summary>
         /// <param name="connectionManager">The PostgreSQL connection manager.</param>
-        /// <param name="logger">The upgrade logger.</param>
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="tableName">The name of the journal table.</param>
-        public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string tableName)
-            :base(connectionManager, logger, new PostgresqlObjectParser(), schema, tableName)
+        public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, string schema, string tableName)
+            :base(connectionManager, new PostgresqlObjectParser(), schema, tableName)
         {
         }
 

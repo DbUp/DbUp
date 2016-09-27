@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 using Npgsql;
 using DbUp.Support;
 
@@ -12,6 +13,7 @@ namespace DbUp.Postgresql
     /// </summary>
     public class PostgresqlScriptExecutor : ScriptExecutor
     {
+        static readonly ILog log = LogProvider.For<PostgresqlScriptExecutor>();
 
         /// <summary>
         /// Initializes an instance of the <see cref="PostgresqlScriptExecutor"/> class.
@@ -22,9 +24,9 @@ namespace DbUp.Postgresql
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journal">Database journal</param>
-        public PostgresqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public PostgresqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
-            : base(connectionManagerFactory, new PostgresqlObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
+            : base(connectionManagerFactory, new PostgresqlObjectParser(), schema, variablesEnabled, scriptPreprocessors, journal)
         {
 
         }
@@ -42,9 +44,9 @@ namespace DbUp.Postgresql
             }
             catch (NpgsqlException exception)
             {
-                Log().WriteInformation("Npgsql exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Block line {1}; Position: {2}; Message: {3}", index, exception.Line, exception.Position, exception.Message);               
-                Log().WriteError(exception.ToString());
+                log.InfoFormat("Npgsql exception has occured in script: '{0}'", script.Name);
+                log.ErrorFormat("Script block number: {0}; Block line {1}; Position: {2}; Message: {3}", index, exception.Line, exception.Position, exception.Message);
+                log.Error(exception.ToString());
                 throw;
             }
         }
