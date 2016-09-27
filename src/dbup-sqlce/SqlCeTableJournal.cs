@@ -15,14 +15,13 @@ namespace DbUp.SqlCe
         /// Initializes a new instance of the <see cref="SqlCeTableJournal"/> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
-        /// <param name="logger">The log.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
-        public SqlCeTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, new SqlCeObjectParser(), schema, table)
+        public SqlCeTableJournal(Func<IConnectionManager> connectionManager, string schema, string table)
+            : base(connectionManager, new SqlCeObjectParser(), schema, table)
         {
         }
 

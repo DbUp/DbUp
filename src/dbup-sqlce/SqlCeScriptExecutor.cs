@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using System.Data.SqlServerCe;
+using DbUp.Logging;
 using DbUp.Support;
 
 namespace DbUp.SqlCe
@@ -12,6 +13,7 @@ namespace DbUp.SqlCe
     /// </summary>
     public class SqlCeScriptExecutor : ScriptExecutor
     {
+        static readonly ILog log = LogProvider.For<SqlCeScriptExecutor>();
 
         /// <summary>
         /// Initializes an instance of the <see cref="SqlCeScriptExecutor"/> class.
@@ -22,9 +24,9 @@ namespace DbUp.SqlCe
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journal">Database journal</param>
-        public SqlCeScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public SqlCeScriptExecutor(Func<IConnectionManager> connectionManagerFactory, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
-            : base(connectionManagerFactory, new SqlCeObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
+            : base(connectionManagerFactory, new SqlCeObjectParser(), schema, variablesEnabled, scriptPreprocessors, journal)
         {
 
         }
@@ -42,9 +44,9 @@ namespace DbUp.SqlCe
             }
             catch (SqlCeException exception)
             {
-                Log().WriteInformation("SqlCe exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Native Error: {1}; Message: {2}", index, exception.NativeError, exception.Message);
-                Log().WriteError(exception.ToString());
+                log.InfoFormat("SqlCe exception has occured in script: '{0}'", script.Name);
+                log.ErrorFormat("Script block number: {0}; Native Error: {1}; Message: {2}", index, exception.NativeError, exception.Message);
+                log.Error(exception.ToString());
                 throw;
             }
         }
