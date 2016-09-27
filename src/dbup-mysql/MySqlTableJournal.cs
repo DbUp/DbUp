@@ -18,8 +18,8 @@ namespace DbUp.MySql
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
-        public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            :base(connectionManager, logger, new MySqlObjectParser(), schema, table)
+        public MySqlTableJournal(Func<IConnectionManager> connectionManager, string schema, string table)
+            :base(connectionManager, new MySqlObjectParser(), schema, table)
         {
         }
 

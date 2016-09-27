@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Logging;
 using MySql.Data.MySqlClient;
 using DbUp.Support;
 
@@ -12,6 +13,7 @@ namespace DbUp.MySql
     /// </summary>
     public class MySqlScriptExecutor : ScriptExecutor
     {
+        static readonly ILog log = LogProvider.For<MySqlScriptExecutor>();
 
         /// <summary>
         /// Initializes an instance of the <see cref="MySqlScriptExecutor"/> class.
@@ -22,9 +24,9 @@ namespace DbUp.MySql
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journal">Database journal</param>
-        public MySqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public MySqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
-            : base(connectionManagerFactory, new MySqlObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
+            : base(connectionManagerFactory, new MySqlObjectParser(), schema, variablesEnabled, scriptPreprocessors, journal)
         {
 
         }
@@ -44,9 +46,9 @@ namespace DbUp.MySql
             }
             catch (MySqlException exception)
             {
-                Log().WriteInformation("MySql exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("MySql error code: {0}; Number {1}; Message: {2}", index, exception.ErrorCode, exception.Number, exception.Message);
-                Log().WriteError(exception.ToString());
+                log.InfoFormat("MySql exception has occured in script: '{0}'", script.Name);
+                log.ErrorFormat("MySql error code: {0}; Number {1}; Message: {2}", index, exception.ErrorCode, exception.Number, exception.Message);
+                log.Error(exception.ToString());
                 throw;
             }
         }
