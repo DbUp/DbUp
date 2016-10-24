@@ -6,7 +6,7 @@ Dispose command
 Execute scalar command: SELECT count(*) FROM sqlite_master WHERE type = 'table' AND name = 'SchemaVersions' COLLATE NOCASE
 Dispose command
 Execute non query command: CREATE TABLE [SchemaVersions] (
-	SchemaVersionID INTEGER CONSTRAINT 'PK_SchemaVersions_SchemaVersionID' PRIMARY KEY AUTOINCREMENT NOT NULL,
+	Id INTEGER CONSTRAINT 'PK_SchemaVersions_SchemaVersionID' PRIMARY KEY AUTOINCREMENT NOT NULL,
 	ScriptName TEXT NOT NULL,
 	Applied DATETIME NOT NULL
 )

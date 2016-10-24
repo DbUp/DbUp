@@ -74,11 +74,11 @@ namespace DbUp.Support.SqlServer
         }
 
         /// <summary>
-        /// Create an SQL statement which will retrieve all executed scripts in order.
+        /// Create an SQL statement which will retrieve all executed scripts in the order they were executed.
         /// </summary>
         protected virtual string GetExecutedScriptsSql(string schema, string table)
         {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", CreateTableName(schema, table));
+            return string.Format("select [ScriptName] from {0} order by [Id]", CreateTableName(schema, table));
         }
 
         /// <summary>
@@ -122,6 +122,29 @@ namespace DbUp.Support.SqlServer
                     appliedParam.Value = DateTime.Now;
                     command.Parameters.Add(appliedParam);
 
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQuery();
+                }
+            });
+        }
+
+        /// <summary>
+        /// Removes the rolled back script from the database specified in a given connection string.
+        /// </summary>
+        /// <param name="script">The script.</param>
+        public void RemoveExecutedScript(SqlScript script)
+        {
+            var exists = DoesTableExist();
+            if (!exists)
+            {
+                return;
+            }
+
+            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                using (var command = dbCommandFactory())
+                {
+                    command.CommandText = string.Format("delete from {0} where ScriptName = '{1}'", CreateTableName(schema, table), script.Name);
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQuery();
                 }

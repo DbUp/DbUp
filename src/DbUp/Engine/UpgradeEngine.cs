@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using DbUp.Builder;
 
@@ -88,6 +89,56 @@ namespace DbUp.Engine
         }
 
         /// <summary>
+        /// Performs the database downgrade.
+        /// </summary>
+        /// <param name="scriptToRollback">Script to rollback to but not inlcuding itself or the script to rollback
+        /// depending on the multipleRollback flag</param>
+        /// <param name="rollbackSuffix">Suffix of the rollback scripts</param>
+        /// <param name="multipleRollback">True if you want to rollback all scripts up to the given scriptToRollback
+        /// but not including it and false if you just want to rollback the given scriptToRollback and nothing else</param>
+        /// <returns></returns>
+        public DatabaseUpgradeResult PerformDowngrade(string scriptToRollback, string rollbackSuffix, bool multipleRollback)
+        {
+            var rollbacks = new List<SqlScript>();
+
+            string executedScriptName = null;
+            try
+            {
+                using (configuration.ConnectionManager.OperationStarting(configuration.Log, rollbacks))
+                {
+                    configuration.Log.WriteInformation("Beginning database downgrade");
+
+                    var scriptsToExecute = GetRollbackScriptsInsideOperation(scriptToRollback, rollbackSuffix, multipleRollback);
+
+                    if (scriptsToExecute == null || scriptsToExecute.Count == 0)
+                    {
+                        configuration.Log.WriteInformation("No rollback scripts to run {0} - completing.", scriptToRollback);
+                        return new DatabaseUpgradeResult(rollbacks, true, null);
+                    }
+
+                    configuration.ScriptExecutor.VerifySchema();
+
+                    foreach (var script in scriptsToExecute)
+                    {
+                        executedScriptName = script.Name;
+                        configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                        configuration.Journal.RemoveExecutedScript(new SqlScript(executedScriptName.Replace(rollbackSuffix, ""), string.Empty));
+                        rollbacks.Add(script);
+                    }
+
+                    configuration.Log.WriteInformation("Downgrade successful");
+                    return new DatabaseUpgradeResult(rollbacks, true, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("Error occurred in script: ", executedScriptName);
+                configuration.Log.WriteError("Downgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                return new DatabaseUpgradeResult(rollbacks, false, ex);
+            }
+        }
+
+        /// <summary>
         /// Returns a list of scripts that will be executed when the upgrade is performed
         /// </summary>
         /// <returns>The scripts to be executed</returns>
@@ -105,6 +156,65 @@ namespace DbUp.Engine
             var executedScripts = configuration.Journal.GetExecutedScripts();
 
             return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
+        }
+        
+        private List<SqlScript> GetRollbackScriptsInsideOperation(string scriptToRollback, string rollbackSuffix, bool multipleRollback)
+        {
+            var executedScripts = configuration.Journal.GetExecutedScripts();
+            if (!executedScripts.Contains(scriptToRollback))
+            {
+                configuration.Log.WriteError("Script to rollback cannot be found in the Schema Version table: {0}", scriptToRollback);
+                return null;
+            }
+
+            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager)).ToList();
+            var rollbackScripts = new List<SqlScript>();
+
+            if (multipleRollback)
+            {
+                var rollbackStartingPointPassed = false;
+                var rollbackScriptNames = new List<string>();
+
+                foreach (var executedScript in executedScripts)
+                {
+                    if (rollbackStartingPointPassed)
+                    {
+                        var rollbackScriptName = Path.GetFileNameWithoutExtension(executedScript) + rollbackSuffix + Path.GetExtension(executedScript);
+                        rollbackScriptNames.Add(rollbackScriptName);
+                    }
+                    else if (executedScript.Equals(scriptToRollback))
+                    {
+                        rollbackStartingPointPassed = true;
+                    }
+                }
+
+                // Rollback should be in reverse order
+                rollbackScriptNames.Reverse();
+
+                foreach (var rollbackScriptName in rollbackScriptNames)
+                {
+                    var script = allScripts.SingleOrDefault(x => x.Name.Equals(rollbackScriptName));
+                    if (script != null)
+                    {
+                        rollbackScripts.Add(script);
+                    }
+                }
+            }
+            else
+            {
+                var rollbackScriptName = Path.GetFileNameWithoutExtension(scriptToRollback) + rollbackSuffix + Path.GetExtension(scriptToRollback);
+                var script = allScripts.SingleOrDefault(x => x.Name.Equals(rollbackScriptName));
+                if (script == null)
+                {
+                    configuration.Log.WriteWarning("Rollback script cannot be found: {0}", rollbackScriptName);
+                }
+                else
+                {
+                    rollbackScripts.Add(script);
+                }
+            }
+            
+            return rollbackScripts;
         }
 
         public List<string> GetExecutedScripts()

@@ -30,7 +30,7 @@ namespace DbUp.Support.SQLite
             var primaryKeyName = CreatePrimaryKeyName(table);
             return string.Format(
                             @"CREATE TABLE {0} (
-	SchemaVersionID INTEGER CONSTRAINT {1} PRIMARY KEY AUTOINCREMENT NOT NULL,
+	Id INTEGER CONSTRAINT {1} PRIMARY KEY AUTOINCREMENT NOT NULL,
 	ScriptName TEXT NOT NULL,
 	Applied DATETIME NOT NULL
 )", tableName, primaryKeyName);

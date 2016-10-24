@@ -1,5 +1,4 @@
-﻿using System;
-using DbUp.Engine;
+﻿using DbUp.Engine;
 
 namespace DbUp.Helpers
 {
@@ -22,6 +21,13 @@ namespace DbUp.Helpers
         /// </summary>
         /// <param name="script"></param>
         public void StoreExecutedScript(SqlScript script)
+        { }
+
+        /// <summary>
+        /// Does not remove the rolled back script, simply returns
+        /// </summary>
+        /// <param name="script"></param>
+        public void RemoveExecutedScript(SqlScript script)
         { }
     }
 }

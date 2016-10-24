@@ -66,6 +66,7 @@ namespace DbUp.Engine
     public interface IJournal
     {
         string[] GetExecutedScripts();
+        void RemoveExecutedScript(DbUp.Engine.SqlScript script);
         void StoreExecutedScript(DbUp.Engine.SqlScript script);
     }
     public interface IScript
@@ -111,6 +112,7 @@ namespace DbUp.Engine
         public bool IsUpgradeRequired() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(string latestScript) { }
+        public DbUp.Engine.DatabaseUpgradeResult PerformDowngrade(string scriptToRollback, string rollbackSuffix, bool multipleRollback) { }
         public DbUp.Engine.DatabaseUpgradeResult PerformUpgrade() { }
         public bool TryConnect(out string errorMessage) { }
     }
@@ -240,6 +242,7 @@ namespace DbUp.Helpers
     {
         public NullJournal() { }
         public string[] GetExecutedScripts() { }
+        public void RemoveExecutedScript(DbUp.Engine.SqlScript script) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }
     public class TemporarySqlDatabase : System.IDisposable
@@ -302,6 +305,7 @@ namespace DbUp.Support.Firebird
     {
         public FirebirdTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string tableName) { }
         public string[] GetExecutedScripts() { }
+        public void RemoveExecutedScript(DbUp.Engine.SqlScript script) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }
 }
@@ -312,6 +316,7 @@ namespace DbUp.Support.MySql
     {
         public MySqlITableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
         public string[] GetExecutedScripts() { }
+        public void RemoveExecutedScript(DbUp.Engine.SqlScript script) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }
 }
@@ -331,6 +336,7 @@ namespace DbUp.Support.Postgresql
     {
         public PostgresqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
         public string[] GetExecutedScripts() { }
+        public void RemoveExecutedScript(DbUp.Engine.SqlScript script) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
     }
 }
@@ -435,6 +441,7 @@ namespace DbUp.Support.SqlServer
         protected virtual string CreateTableSql(string schema, string table) { }
         public string[] GetExecutedScripts() { }
         protected virtual string GetExecutedScriptsSql(string schema, string table) { }
+        public void RemoveExecutedScript(DbUp.Engine.SqlScript script) { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script) { }
         protected virtual bool VerifyTableExistsCommand(System.Data.IDbCommand command, string tableName, string schemaName) { }
     }
