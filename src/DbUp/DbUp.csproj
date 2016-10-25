@@ -78,6 +78,7 @@
     <Compile Include="Helpers\Filters.cs" />
     <Compile Include="Helpers\NullJournal.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptsProvider.cs" />
+    <Compile Include="Helpers\FileSystemScriptNamers.cs" />
     <Compile Include="ScriptProviders\FileSystemScriptOptions.cs" />
     <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
     <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />

@@ -1,5 +1,7 @@
 using System;
+using System.Collections.Generic;
 using System.Text;
+using DbUp.Engine;
 
 namespace DbUp.ScriptProviders
 {
@@ -14,6 +16,7 @@ namespace DbUp.ScriptProviders
         public FileSystemScriptOptions()
         {
             Encoding = Encoding.Default;
+            ScriptNamer = FileSystemScriptNamers.Default();
         }
         /// <summary>
         /// The provider will look in subdirectories for scripts files.
@@ -30,5 +33,15 @@ namespace DbUp.ScriptProviders
         /// The encoding to be used for reading files 
         /// </summary>
         public Encoding Encoding { get; set; }
+
+        /// <summary>
+        /// The comparer used to customize script execution order
+        /// </summary>
+        public IComparer<string> Comparer { get; set; }
+
+        /// <summary>
+        /// The script namer used to determine <see cref="Engine.SqlScript.Name"/>
+        /// </summary>
+        public Func<string, string> ScriptNamer { get; set; }
     }
 }

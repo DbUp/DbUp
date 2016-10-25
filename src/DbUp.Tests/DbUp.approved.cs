@@ -41,6 +41,12 @@ namespace DbUp
     {
         public static DbUp.SupportedDatabasesForEnsureDatabase For { get; }
     }
+    public class static FileSystemScriptNamers
+    {
+        public static System.Func<string, string> Default() { }
+        public static System.Func<string, string> UseFileNames() { }
+        public static System.Func<string, string> UseRelativePaths(string directoryPath) { }
+    }
     public class static Filters
     {
         public static System.Func<string, bool> ExcludeScriptNamesInFile(string fileName) { }
@@ -100,6 +106,7 @@ namespace DbUp.Engine
         public string Name { get; }
         public static DbUp.Engine.SqlScript FromFile(string path) { }
         public static DbUp.Engine.SqlScript FromFile(string path, System.Text.Encoding encoding) { }
+        public static DbUp.Engine.SqlScript FromFile(string path, System.Text.Encoding encoding, string scriptName) { }
         public static DbUp.Engine.SqlScript FromStream(string scriptName, System.IO.Stream stream) { }
         public static DbUp.Engine.SqlScript FromStream(string scriptName, System.IO.Stream stream, System.Text.Encoding encoding) { }
     }
@@ -270,12 +277,19 @@ namespace DbUp.ScriptProviders
         public EmbeddedScriptsProvider(System.Reflection.Assembly[] assemblies, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
     }
+    public class static FileSystemScriptNamer
+    {
+        public static System.Func<string, string> Filename() { }
+        public static System.Func<string, string> RelativePath(string directoryPath) { }
+    }
     public class FileSystemScriptOptions
     {
         public FileSystemScriptOptions() { }
+        public System.Collections.Generic.IComparer<string> Comparer { get; set; }
         public System.Text.Encoding Encoding { get; set; }
         public System.Func<string, bool> Filter { get; set; }
         public bool IncludeSubDirectories { get; set; }
+        public System.Func<string, string> ScriptNamer { get; set; }
     }
     public class FileSystemScriptProvider : DbUp.Engine.IScriptProvider
     {

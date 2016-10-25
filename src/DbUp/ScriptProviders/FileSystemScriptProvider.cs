@@ -17,11 +17,14 @@ namespace DbUp.ScriptProviders
         private readonly Func<string, bool> filter;
         private readonly Encoding encoding;
         private FileSystemScriptOptions options;
+        private IComparer<string> comparer;
+        private Func<string, string> scriptNamer;
 
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        public FileSystemScriptProvider(string directoryPath):this(directoryPath, new FileSystemScriptOptions())
+        public FileSystemScriptProvider(string directoryPath) : 
+            this(directoryPath, new FileSystemScriptOptions())
         {
         }
 
@@ -68,6 +71,8 @@ namespace DbUp.ScriptProviders
             this.filter = options.Filter;
             this.encoding = options.Encoding;
             this.options = options;
+            this.comparer = options.Comparer;
+            this.scriptNamer = options.ScriptNamer;
         }
 
         /// <summary>
@@ -76,11 +81,16 @@ namespace DbUp.ScriptProviders
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
             var files = Directory.GetFiles(directoryPath, "*.sql", ShouldSearchSubDirectories()).AsEnumerable();
-            if (this.filter != null)
+            if (filter != null)
             {
                 files = files.Where(filter);
             }
-            return files.Select(x => SqlScript.FromFile(x, encoding)).ToList();
+            if (comparer != null)
+            {
+                files = files.OrderBy(x => x, comparer);
+            }
+
+            return files.Select(x => SqlScript.FromFile(x, encoding, scriptNamer.Invoke(x))).ToList();
         }
 
         private SearchOption ShouldSearchSubDirectories()
