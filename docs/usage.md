@@ -32,6 +32,7 @@ You can:
   * Useful for bringing development environments into sync with automated environments
 * Try to connect to the database (`TryConnect()`)
 * Perform the database upgrade (`PerformUpgrade()`)
+* Log script output (`LogScriptOutput()`)
 
 ## Hosting options
 A console is not the only way to use DbUp. For instance FunnelWeb detects if it needs an upgrade when it starts, if an upgrade is required it will put the web app into maintainance mode where an administrator needs to login then click the perform migration button.
