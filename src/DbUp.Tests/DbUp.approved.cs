@@ -106,14 +106,15 @@ namespace DbUp.Engine
     }
     public class UpgradeEngine
     {
+        public const string DisableCdcCommand = "sp_cdc_disable_table";
         public UpgradeEngine(DbUp.Builder.UpgradeConfiguration configuration) { }
         public System.Collections.Generic.List<string> GetExecutedScripts() { }
         public System.Collections.Generic.List<DbUp.Engine.SqlScript> GetScriptsToExecute() { }
         public bool IsUpgradeRequired() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(string latestScript) { }
-        public DbUp.Engine.DatabaseUpgradeResult PerformDowngrade(string scriptToRollback, string rollbackSuffix, bool multipleRollback) { }
-        public DbUp.Engine.DatabaseUpgradeResult PerformUpgrade() { }
+        public DbUp.Engine.DatabaseUpgradeResult PerformDowngrade(string scriptToRollback, string rollbackSuffix, bool multipleRollback, bool checkCdc = False) { }
+        public DbUp.Engine.DatabaseUpgradeResult PerformUpgrade(bool checkCdc = False) { }
         public bool TryConnect(out string errorMessage) { }
     }
 }

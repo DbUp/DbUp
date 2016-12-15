@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using DbUp.Builder;
@@ -12,6 +13,7 @@ namespace DbUp.Engine
     public class UpgradeEngine
     {
         private readonly UpgradeConfiguration configuration;
+        public const string DisableCdcCommand = "sp_cdc_disable_table";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeEngine"/> class.
@@ -43,7 +45,8 @@ namespace DbUp.Engine
         /// <summary>
         /// Performs the database upgrade.
         /// </summary>
-        public DatabaseUpgradeResult PerformUpgrade()
+        /// <param name="checkCdc">Flag to indicate whether we want to check CDC affected scripts or not.</param>
+        public DatabaseUpgradeResult PerformUpgrade(bool checkCdc = false)
         {
             var executed = new List<SqlScript>();
 
@@ -69,10 +72,17 @@ namespace DbUp.Engine
                     {
                         executedScriptName = script.Name;
 
-                        configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                        if (checkCdc && CultureInfo.CurrentCulture.CompareInfo.IndexOf(script.Contents, DisableCdcCommand,
+                            CompareOptions.IgnoreCase) >= 0)
+                        {
+                            ExecuteCdcScriptManually(executedScriptName);
+                        }
+                        else
+                        {
+                            configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                        }
 
                         configuration.Journal.StoreExecutedScript(script);
-
                         executed.Add(script);
                     }
 
@@ -96,8 +106,9 @@ namespace DbUp.Engine
         /// <param name="rollbackSuffix">Suffix of the rollback scripts</param>
         /// <param name="multipleRollback">True if you want to rollback all scripts up to the given scriptToRollback
         /// but not including it and false if you just want to rollback the given scriptToRollback and nothing else</param>
+        /// <param name="checkCdc">Flag to indicate whether we want to check CDC affected scripts or not.</param>
         /// <returns></returns>
-        public DatabaseUpgradeResult PerformDowngrade(string scriptToRollback, string rollbackSuffix, bool multipleRollback)
+        public DatabaseUpgradeResult PerformDowngrade(string scriptToRollback, string rollbackSuffix, bool multipleRollback, bool checkCdc = false)
         {
             var rollbacks = new List<SqlScript>();
 
@@ -121,7 +132,17 @@ namespace DbUp.Engine
                     foreach (var script in scriptsToExecute)
                     {
                         executedScriptName = script.Name;
-                        configuration.ScriptExecutor.Execute(script, configuration.Variables);
+
+                        if (checkCdc && CultureInfo.CurrentCulture.CompareInfo.IndexOf(script.Contents, DisableCdcCommand,
+                            CompareOptions.IgnoreCase) >= 0)
+                        {
+                            ExecuteCdcScriptManually(executedScriptName);
+                        }
+                        else
+                        {
+                            configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                        }
+
                         configuration.Journal.RemoveExecutedScript(new SqlScript(executedScriptName.Replace(rollbackSuffix, ""), string.Empty));
                         rollbacks.Add(script);
                     }
@@ -136,6 +157,19 @@ namespace DbUp.Engine
                 configuration.Log.WriteError("Downgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(rollbacks, false, ex);
             }
+        }
+
+        private void ExecuteCdcScriptManually(string executedScriptName)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            var msg = "Please execute " + executedScriptName + " manually because it requires CDC to be disabled!!";
+            Console.WriteLine(msg);
+            msg = "Once " + executedScriptName + " is executed press any key to continue.";
+            Console.WriteLine(msg);
+            Console.ReadKey();
+            Console.WriteLine();
+
+            configuration.Log.WriteInformation("Script {0} containing CDC has been manually executed.", executedScriptName);
         }
 
         /// <summary>

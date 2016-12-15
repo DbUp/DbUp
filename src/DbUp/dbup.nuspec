@@ -4,8 +4,12 @@
     <id>dbup</id> 
     <title>DbUp</title>
     <version>$version$</version> 
-    <authors>Paul Stovell, Jim Burger, Jake Ginnivan, Damian Maclennan</authors>
-    <description>DbUp makes it easy to deploy and upgrade or rollback and downgrade SQL Server databases by running change scripts.</description> 
+    <authors>Paul Stovell, Jim Burger, Jake Ginnivan, Damian Maclennan, Patrick Tan</authors>
+    <description>
+      DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts.
+      Custom features such as rollback and downgrade SQL Server databases and manual execution of
+      CDC affected scripts were made for use in William Hill.
+    </description> 
     <language>en-US</language>
     <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
     <releaseNotes>https://github.com/DbUp/DbUp/releases</releaseNotes>
