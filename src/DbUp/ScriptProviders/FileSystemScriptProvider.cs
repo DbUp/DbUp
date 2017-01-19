@@ -65,8 +65,8 @@ namespace DbUp.ScriptProviders
             if (options==null)
                 throw new ArgumentNullException("options");
             this.directoryPath = directoryPath;
-            this.filter = options.Filter;
-            this.encoding = options.Encoding;
+            filter = options.Filter;
+            encoding = options.Encoding;
             this.options = options;
         }
 
@@ -76,11 +76,11 @@ namespace DbUp.ScriptProviders
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
             var files = Directory.GetFiles(directoryPath, "*.sql", ShouldSearchSubDirectories()).AsEnumerable();
-            if (this.filter != null)
+            if (filter != null)
             {
                 files = files.Where(filter);
             }
-            return files.Select(x => SqlScript.FromFile(x, encoding)).ToList();
+            return files.Select(x => SqlScript.FromFile(x, encoding)).OrderBy(x => x.Name).ToList();
         }
 
         private SearchOption ShouldSearchSubDirectories()
