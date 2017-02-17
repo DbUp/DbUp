@@ -85,7 +85,7 @@ namespace DbUp.Engine
 
                         configuration.ScriptExecutor.Execute(script, configuration.Variables);
 
-                        OnExecutedScript(new ExecutedScriptEventArgs(script));
+                        OnExecutedScript(new ExecutedScriptEventArgs(script, configuration.ConnectionManager));
 
                         configuration.Journal.StoreExecutedScript(script);
 
