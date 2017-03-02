@@ -1,0 +1,12 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\DbUp",
+    "\\src\\DbUp\\Support",
+    "\\src\\DbUp\\Support\\SQLite",
+    "\\src\\DbUp\\Support\\SqlServer"
+  ],
+  "SelectedNode": "\\src",
+  "PreviewInSolutionExplorer": false
+}

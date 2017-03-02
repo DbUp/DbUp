@@ -78,7 +78,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         protected virtual string GetExecutedScriptsSql(string schema, string table)
         {
-            return string.Format("select [ScriptName] from {0} order by [ScriptName]", CreateTableName(schema, table));
+            return string.Format("select [ScriptName], [FileHash] from {0} order by [ScriptName]", CreateTableName(schema, table));
         }
 
         /// <summary>
@@ -110,17 +110,27 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", CreateTableName(schema, table));
+                    command.CommandText = string.Format("insert into {0} (ScriptName, FileHash, ExecutedOn, ExecutedBy) values (@scriptName, @fileHas, @executedOn, @executedBy)", CreateTableName(schema, table));
 
                     var scriptNameParam = command.CreateParameter();
                     scriptNameParam.ParameterName = "scriptName";
                     scriptNameParam.Value = script.Name;
                     command.Parameters.Add(scriptNameParam);
 
-                    var appliedParam = command.CreateParameter();
-                    appliedParam.ParameterName = "applied";
-                    appliedParam.Value = DateTime.Now;
-                    command.Parameters.Add(appliedParam);
+                    var fileHashParam = command.CreateParameter();
+                    fileHashParam.ParameterName = "fileHash";
+                    fileHashParam.Value = script.GenerateHash();
+                    command.Parameters.Add(fileHashParam);
+
+                    var executedOnParam = command.CreateParameter();
+                    executedOnParam.ParameterName = "executedOn";
+                    executedOnParam.Value = DateTime.Now;
+                    command.Parameters.Add(executedOnParam);
+
+                    var executedByParam = command.CreateParameter();
+                    executedByParam.ParameterName = "executedBy";
+                    executedByParam.Value = DateTime.Now;
+                    command.Parameters.Add(executedByParam);
 
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQuery();
@@ -138,10 +148,12 @@ namespace DbUp.Support.SqlServer
             var primaryKeyConstraintName = CreatePrimaryKeyName(table);
 
             return string.Format(@"create table {0} (
-	[Id] int identity(1,1) not null constraint {1} primary key,
-	[ScriptName] nvarchar(255) not null,
-	[Applied] datetime not null
-)", tableName, primaryKeyConstraintName);
+	            [Id] int identity(1,1) not null constraint {1} primary key,
+	            [ScriptName] nvarchar(255) not null,
+	            [FileHash] nvarchar(256) not null,
+                [ExecutedOn] datetime not null,
+                [ExecutedBy] nvarchar(64) not null
+            )", tableName, primaryKeyConstraintName);
         }
 
         /// <summary>Combine the <c>schema</c> and <c>table</c> values into an appropriately-quoted identifier for the journal table.</summary>
