@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using DbUp.Helpers;
 using NSubstitute;
 using NUnit.Framework;

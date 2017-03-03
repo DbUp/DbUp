@@ -68,10 +68,6 @@
     <EmbeddedResource Include="Scripts\Script0004.sql" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DbUp.Firebird\DbUp.Firebird.csproj">
-      <Project>{5d018e40-9bde-4502-949b-d2e04936d083}</Project>
-      <Name>DbUp.Firebird</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\DbUp\DbUp.csproj">
       <Project>{2d2c117a-7841-4285-a4ce-e7c4fc64ad9b}</Project>
       <Name>DbUp</Name>

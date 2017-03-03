@@ -78,7 +78,7 @@ namespace DbUp.Support.SqlServer
         /// </summary>
         protected virtual string GetExecutedScriptsSql(string schema, string table)
         {
-            return string.Format("select [ScriptName], [FileHash] from {0} order by [ScriptName]", CreateTableName(schema, table));
+            return string.Format("select [ScriptHash] from {0} order by [ScriptName]", CreateTableName(schema, table));
         }
 
         /// <summary>
@@ -110,17 +110,17 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, FileHash, ExecutedOn, ExecutedBy) values (@scriptName, @fileHas, @executedOn, @executedBy)", CreateTableName(schema, table));
+                    command.CommandText = string.Format("insert into {0} (ScriptName, ScriptHash, ExecutedOn, ExecutedBy) values (@scriptName, @scriptHash, @executedOn, @executedBy)", CreateTableName(schema, table));
 
                     var scriptNameParam = command.CreateParameter();
                     scriptNameParam.ParameterName = "scriptName";
                     scriptNameParam.Value = script.Name;
                     command.Parameters.Add(scriptNameParam);
 
-                    var fileHashParam = command.CreateParameter();
-                    fileHashParam.ParameterName = "fileHash";
-                    fileHashParam.Value = script.GenerateHash();
-                    command.Parameters.Add(fileHashParam);
+                    var scriptHashParam = command.CreateParameter();
+                    scriptHashParam.ParameterName = "scriptHash";
+                    scriptHashParam.Value = script.Hash;
+                    command.Parameters.Add(scriptHashParam);
 
                     var executedOnParam = command.CreateParameter();
                     executedOnParam.ParameterName = "executedOn";
@@ -129,7 +129,7 @@ namespace DbUp.Support.SqlServer
 
                     var executedByParam = command.CreateParameter();
                     executedByParam.ParameterName = "executedBy";
-                    executedByParam.Value = DateTime.Now;
+                    executedByParam.Value = System.Security.Principal.WindowsIdentity.GetCurrent().Name;
                     command.Parameters.Add(executedByParam);
 
                     command.CommandType = CommandType.Text;
@@ -150,7 +150,7 @@ namespace DbUp.Support.SqlServer
             return string.Format(@"create table {0} (
 	            [Id] int identity(1,1) not null constraint {1} primary key,
 	            [ScriptName] nvarchar(255) not null,
-	            [FileHash] nvarchar(256) not null,
+	            [ScriptHash] nvarchar(256) not null,
                 [ExecutedOn] datetime not null,
                 [ExecutedBy] nvarchar(64) not null
             )", tableName, primaryKeyConstraintName);

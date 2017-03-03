@@ -80,11 +80,6 @@
     <Compile Include="ScriptProviders\EmbeddedScriptsProvider.cs" />
     <Compile Include="ScriptProviders\FileSystemScriptOptions.cs" />
     <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
-    <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />
-    <Compile Include="Support\MySql\MySqlITableJournal.cs" />
-    <Compile Include="Support\Postgresql\PostgresqlTableJournal.cs" />
-    <Compile Include="Support\SqlServer\SqlCommandSplitter.cs" />
-    <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
     <Compile Include="Helpers\AdHocSqlRunner.cs" />
     <Compile Include="Engine\Output\ConsoleUpgradeLog.cs" />
     <Compile Include="Engine\UpgradeEngine.cs" />
@@ -94,11 +89,6 @@
     <Compile Include="Engine\Transactions\IConnectionManager.cs" />
     <Compile Include="Engine\Transactions\LegacySqlConnectionManager.cs" />
     <Compile Include="Support\ObjectNameOptions.cs" />
-    <Compile Include="Support\SQLite\SQLiteObjectParser.cs" />
-    <Compile Include="Support\SQLite\SQLiteTableJournal.cs" />
-    <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
-    <Compile Include="Support\SqlServer\SqlParser.cs" />
-    <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
     <Compile Include="Engine\IScriptPreprocessor.cs" />
     <Compile Include="Engine\Preprocessors\VariableSubstitutionPreprocessor.cs" />
     <Compile Include="Engine\Output\IUpgradeLog.cs" />
@@ -109,12 +99,17 @@
     <Compile Include="Engine\SqlScript.cs" />
     <Compile Include="Engine\IScriptProvider.cs" />
     <Compile Include="Engine\IJournal.cs" />
-    <Compile Include="Support\SqlServer\SqlTableJournal.cs" />
     <Compile Include="Helpers\TemporarySqlDatabase.cs" />
     <Compile Include="Engine\Output\TraceUpgradeLog.cs" />
-    <Compile Include="Support\SqlServer\SqlServerExtensions.cs" />
     <Compile Include="Builder\SupportedDatabases.cs" />
     <Compile Include="Support\SqlServer\SqlCommandReader.cs" />
+    <Compile Include="Support\SqlServer\SqlCommandSplitter.cs" />
+    <Compile Include="Support\SqlServer\SqlConnectionManager.cs" />
+    <Compile Include="Support\SqlServer\SqlObjectParser.cs" />
+    <Compile Include="Support\SqlServer\SqlParser.cs" />
+    <Compile Include="Support\SqlServer\SqlScriptExecutor.cs" />
+    <Compile Include="Support\SqlServer\SqlServerExtensions.cs" />
+    <Compile Include="Support\SqlServer\SqlTableJournal.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="dbup.nuspec" />

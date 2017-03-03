@@ -1,5 +1,6 @@
-﻿using System;
-using DbUp.Engine;
+﻿using DbUp.Engine;
+using System.Collections.Generic;
+using System;
 
 namespace DbUp.Helpers
 {
@@ -14,7 +15,7 @@ namespace DbUp.Helpers
         /// <returns></returns>
         public string[] GetExecutedScripts()
         {
-            return new string[0];
+            throw new NotImplementedException();
         }
 
         /// <summary>
@@ -23,5 +24,7 @@ namespace DbUp.Helpers
         /// <param name="script"></param>
         public void StoreExecutedScript(SqlScript script)
         { }
+
+        
     }
 }

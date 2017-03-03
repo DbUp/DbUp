@@ -45,6 +45,19 @@ namespace DbUp.Engine
         }
 
         /// <summary>
+        /// Gets a SHA2 Hash for the script content
+        /// </summary>
+        public string Hash
+        {
+            get
+            {
+                var sha = new SHA256Managed();
+                var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(this.contents));
+                return BitConverter.ToString(hash).Replace("-", string.Empty);
+            }
+        }
+
+        /// <summary>
         /// Create a SqlScript from a file using Default encoding
         /// </summary>
         /// <param name="path"></param>
@@ -94,16 +107,6 @@ namespace DbUp.Engine
                 string c = resourceStreamReader.ReadToEnd();
                 return new SqlScript(scriptName, c);
             }
-        }
-
-        /// <summary>
-        /// Generates a SHA2 Hash for the script content
-        /// </summary>
-        public string GenerateHash()
-        {
-            var sha = new SHA256Managed();
-            var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(this.contents));
-            return BitConverter.ToString(hash).Replace("-", string.Empty);
         }
     }
 }

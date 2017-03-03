@@ -1,5 +1,3 @@
-using System;
-
 namespace DbUp.Engine.Transactions
 {
     /// <summary>

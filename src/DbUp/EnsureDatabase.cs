@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DbUp
+﻿namespace DbUp
 {
     /// <summary>
     /// A fluent interface for creating the target database.
