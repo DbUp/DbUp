@@ -122,7 +122,7 @@ namespace DbUp.Support.SqlServer
                             }
                             else
                             {
-                                command.ExecuteNonQuery();
+                                Log(command.ExecuteNonQuery());
                             }
                         }
                     }
@@ -147,6 +147,14 @@ namespace DbUp.Support.SqlServer
                 log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
                 log().WriteError(ex.ToString());
                 throw;
+            }
+        }
+
+        private void Log(int rowsAffected)
+        {
+            if (rowsAffected > -1)
+            {
+                log().WriteInformation("|--> DbCommand: {0} rows affected", rowsAffected);
             }
         }
 
