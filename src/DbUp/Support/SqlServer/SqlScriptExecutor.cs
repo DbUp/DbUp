@@ -151,9 +151,9 @@ namespace DbUp.Support.SqlServer
         }
 
         /// <summary>
-        /// Determines whether any rows could have been affected, and if so log that information.
+        /// Determines whether any rows could have been affected, and if so logs that information.
         /// </summary>
-        /// <param name="rowsAffected">Number of rows affected..</param>
+        /// <param name="rowsAffected">Number of rows affected.</param>
         private void Log(int rowsAffected)
         {
             if (rowsAffected > -1)
