@@ -44,7 +44,7 @@ namespace DbUp.Postgresql
             catch (NpgsqlException exception)
             {
                 Log().WriteInformation("Npgsql exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Block line {1}; Position: {2}; Message: {3}", index, exception.Line, exception.Position, exception.Message);               
+                Log().WriteError("Script block number: {0}; Message: {1}", index, exception.Message);               
                 Log().WriteError(exception.ToString());
                 throw;
             }
