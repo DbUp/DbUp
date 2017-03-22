@@ -15,11 +15,22 @@
 
     "dependencies": {
         "dbup-core": { "target": "project" },
-        "Npgsql": "2.2.1"
+        "Npgsql": "3.2.1"
     },
 
     "frameworks": {
-        "net40": {
-        }
+        "netstandard1.3": {
+            "imports": "dnxcore50",
+            "dependencies": {
+              "NETStandard.Library": "1.6.1",
+              "System.Data.Common": "4.3.0",
+              "System.Linq.Expressions": "4.3.0",
+              "System.Reflection": "4.3.0",
+              "System.Reflection.TypeExtensions": "4.3.0"
+            },
+            "net40": {
+      
+            }
+      }
     }
 }
