@@ -108,8 +108,6 @@
     <Compile Include="Support\SqlServer\SqlParserTests.cs" />
     <Compile Include="ScriptProvider\TestScripts.cs" />
     <Compile Include="TestInfrastructure\Scrubbers.cs" />
-    <Compile Include="Support\MySql\MySqlConnectionManagerTests.cs" />
-    <Compile Include="Support\MySql\MySqlSupportTests.cs" />
     <Compile Include="Support\SqlServer\SqlCommandSplitterTests.cs" />
     <Compile Include="TestInfrastructure\RecordingDataParameterCollection.cs" />
     <Compile Include="TestInfrastructure\RecordingDbDataParameter.cs" />
@@ -119,41 +117,17 @@
     <Compile Include="TestInfrastructure\RecordingDbConnection.cs" />
     <Compile Include="TestInfrastructure\RecordingDbTransaction.cs" />
     <Compile Include="TransactionScenarios.cs" />
-    <Compile Include="UpgradeDatabaseScenarios.cs" />
     <Compile Include="ScriptProvider\EmbeddedScriptAndCodeProviderTests.cs" />
-    <Compile Include="Support\SQLite\SQLiteSupportTests.cs" />
-    <Compile Include="Support\SQLite\SQLiteTableJournalTests.cs" />
     <Compile Include="Support\SqlServer\SqlScriptExecutorTests.cs" />
     <Compile Include="Support\SqlServer\SqlObjectParserTests.cs" />
     <Compile Include="TestInfrastructure\TestConnectionManager.cs" />
     <Compile Include="Engine\UpgradeEngineTests.cs" />
     <Compile Include="ScriptProvider\FileSystemScriptProviderTests.cs" />
     <Compile Include="TestInfrastructure\SpecificationFor.cs" />
-    <Compile Include="Support\SqlCe\SqlCeSupportTests.cs" />
     <Compile Include="TestInfrastructure\ThenAttribute.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
-    <ProjectReference Include="..\DbUp.Firebird\DbUp.Firebird.csproj">
-      <Project>{5D018E40-9BDE-4502-949B-D2E04936D083}</Project>
-      <Name>DbUp.Firebird</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbUp.MySql\DbUp.MySql.csproj">
-      <Project>{4e0f1564-ed5f-49a6-8fb0-e8eb7ea2d63f}</Project>
-      <Name>DbUp.MySql</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbUp.Postgresql\DbUp.Postgresql.csproj">
-      <Project>{27246d0e-bf23-4315-a946-ea8c93d9bff1}</Project>
-      <Name>DbUp.Postgresql</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbUp.SqlCe\DbUp.SqlCe.csproj">
-      <Project>{E7EDAFD6-1DD3-4D85-806A-20340032D2A9}</Project>
-      <Name>DbUp.SqlCe</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\DbUp.Sqlite\DbUp.SQLite.csproj">
-      <Project>{437cdd05-6df9-46cb-95c0-36774b10aacb}</Project>
-      <Name>DbUp.SQLite</Name>
-    </ProjectReference>
     <ProjectReference Include="..\DbUp\DbUp.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
       <Name>DbUp</Name>
@@ -171,7 +145,6 @@
     <EmbeddedResource Include="TestScripts\Script20110302_1_Test3.sql" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Support\Postgresql\Readme.txt" />
     <Content Include="TestFilterFiles\ScriptNames.txt">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

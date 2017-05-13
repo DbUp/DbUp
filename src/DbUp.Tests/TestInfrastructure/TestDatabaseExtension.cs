@@ -1,4 +1,3 @@
-using System;
 using System.Data;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;

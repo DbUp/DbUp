@@ -1,6 +1,7 @@
 ﻿
 using System;
 using System.IO;
+using System.Security.Cryptography;
 using System.Text;
 
 namespace DbUp.Engine
@@ -41,6 +42,19 @@ namespace DbUp.Engine
         public string Name
         {
             get { return name; }
+        }
+
+        /// <summary>
+        /// Gets a SHA2 Hash for the script content
+        /// </summary>
+        public string Hash
+        {
+            get
+            {
+                var sha = new SHA256Managed();
+                var hash = sha.ComputeHash(Encoding.UTF8.GetBytes(this.contents));
+                return BitConverter.ToString(hash).Replace("-", string.Empty);
+            }
         }
 
         /// <summary>
