@@ -110,25 +110,46 @@ namespace DbUp.Support.SqlServer
             {
                 using (var command = dbCommandFactory())
                 {
-                    command.CommandText = string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", CreateTableName(schema, table));
+                    command.CommandText = CreateInsertSql(schema, table);
 
-                    var scriptNameParam = command.CreateParameter();
-                    scriptNameParam.ParameterName = "scriptName";
-                    scriptNameParam.Value = script.Name;
-                    command.Parameters.Add(scriptNameParam);
-
-                    var appliedParam = command.CreateParameter();
-                    appliedParam.ParameterName = "applied";
-                    appliedParam.Value = DateTime.Now;
-                    command.Parameters.Add(appliedParam);
+                    foreach (var parameter in CreateInsertParameters(command, script))
+                    {
+                        command.Parameters.Add(parameter);
+                    }
 
                     command.CommandType = CommandType.Text;
                     command.ExecuteNonQuery();
                 }
             });
         }
+        
+        /// <summary>Generates an SQL statement that, when executed, will insert a row into the journal database table.</summary>
+        /// <param name="schema">Desired schema name supplied by configuration or <c>NULL</c></param>
+        /// <param name="table">Desired table name</param>
+        /// <returns>An INSERT INTO SQL statement</returns>
+        protected virtual string CreateInsertSql(string schema, string table)
+        {
+            return string.Format("insert into {0} (ScriptName, Applied) values (@scriptName, @applied)", CreateTableName(schema, table));
+        }
 
-        /// <summary>Generates an SQL statement that, when exectuted, will create the journal database table.</summary>
+        /// <summary>Creates the database parameters to substitute into the SQL script used to insert a row into the journal database table.</summary>
+        /// <param name="command">The IDbCommand that will be used to execute the parameters</param>
+        /// <param name="script">The SQL script to be recorded in the journal</param>
+        /// <returns></returns>
+        protected virtual IList<IDbDataParameter> CreateInsertParameters(IDbCommand command, SqlScript script)
+        {
+            var scriptNameParam = command.CreateParameter();
+            scriptNameParam.ParameterName = "scriptName";
+            scriptNameParam.Value = script.Name;
+
+            var appliedParam = command.CreateParameter();
+            appliedParam.ParameterName = "applied";
+            appliedParam.Value = DateTime.Now;
+
+            return new List<IDbDataParameter> { scriptNameParam, appliedParam };
+        }
+
+        /// <summary>Generates an SQL statement that, when executed, will create the journal database table.</summary>
         /// <param name="schema">Desired schema name supplied by configuration or <c>NULL</c></param>
         /// <param name="table">Desired table name</param>
         /// <returns>A <c>CREATE TABLE</c> SQL statement</returns>
