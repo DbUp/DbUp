@@ -1,5 +1,9 @@
 ﻿using System;
+#if MONO
+using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
+#else
 using System.Data.SQLite;
+#endif
 using System.IO;
 using NUnit.Framework;
 

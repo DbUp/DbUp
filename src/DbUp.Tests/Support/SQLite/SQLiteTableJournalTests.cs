@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Data;
+#if MONO
+using SQLiteException = Mono.Data.Sqlite.SqliteException;
+#else
 using System.Data.SQLite;
+#endif
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
