@@ -106,6 +106,11 @@ namespace DbUp.Support.SqlServer
                 });
             }
 
+            ExecuteInsertScriptAction(connectionManager, schema, table, script);
+        }
+
+        protected virtual void ExecuteInsertScriptAction(Func<IConnectionManager> connectionManager, string schema, string table, SqlScript script)
+        {
             connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
                 using (var command = dbCommandFactory())

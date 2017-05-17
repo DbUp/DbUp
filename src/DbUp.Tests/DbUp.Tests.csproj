@@ -105,6 +105,7 @@
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="Support\AzureSqlDataWarehouse\AzureSqlDataWarehouseSupportTests.cs" />
     <Compile Include="Support\SqlServer\SqlParserTests.cs" />
     <Compile Include="ScriptProvider\TestScripts.cs" />
     <Compile Include="TestInfrastructure\Scrubbers.cs" />
@@ -134,6 +135,10 @@
   </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <ItemGroup>
+    <ProjectReference Include="..\DbUp.AzureSqlDataWarehouse\DbUp.AzureSqlDataWarehouse.csproj">
+      <Project>{4147e68a-f6ac-4f84-ae82-1670d9b7e254}</Project>
+      <Name>DbUp.AzureSqlDataWarehouse</Name>
+    </ProjectReference>
     <ProjectReference Include="..\DbUp.Firebird\DbUp.Firebird.csproj">
       <Project>{5D018E40-9BDE-4502-949B-D2E04936D083}</Project>
       <Name>DbUp.Firebird</Name>
@@ -185,6 +190,7 @@
   <ItemGroup>
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
+  <ItemGroup />
   <PropertyGroup>
     <PostBuildEvent>
     xcopy /s /y "$(SolutionDir)packages\Microsoft.SqlServer.Compact.4.0.8876.1\NativeBinaries\x86\*.*" "$(TargetDir)x86"
