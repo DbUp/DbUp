@@ -6,6 +6,7 @@
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
     <TargetFrameworks>netstandard1.3;net35</TargetFrameworks>
     <AssemblyName>dbup-core</AssemblyName>
+    <RootNamespace>DbUp</RootNamespace>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>

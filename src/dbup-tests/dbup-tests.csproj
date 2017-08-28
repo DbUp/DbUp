@@ -39,7 +39,7 @@
 
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' ">
-    <DefineConstants>$(DefineConstants);USE_TYPE_INFO;NETCORE</DefineConstants>
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup>
