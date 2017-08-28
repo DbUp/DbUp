@@ -1,4 +1,3 @@
-#if !NETCORE
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -29,7 +28,7 @@ namespace DbUp.Tests.ScriptProvider
 
             private void CreateTestFiles()
             {
-                var assembly = Assembly.GetExecutingAssembly();
+                var assembly = typeof(FileSystemScriptProviderTests).GetTypeInfo().Assembly;
                 var directory = new FileInfo(assembly.Location).DirectoryName;
 
                 testPath = Path.Combine(directory, "sqlfiles");
@@ -44,9 +43,7 @@ namespace DbUp.Tests.ScriptProvider
                         {
                             stream.CopyTo(writer);
                             writer.Flush();
-                            writer.Close();
                         }
-                        stream.Close();
                     }
                 }
             }
@@ -112,7 +109,7 @@ namespace DbUp.Tests.ScriptProvider
 
             private void CreateTestFiles()
             {
-                var assembly = Assembly.GetExecutingAssembly();
+                var assembly = typeof(FileSystemScriptProviderTests).GetTypeInfo().Assembly;
                 var directory = new FileInfo(assembly.Location).DirectoryName;
 
                 testPath = Path.Combine(directory, "sqlfiles");
@@ -129,9 +126,7 @@ namespace DbUp.Tests.ScriptProvider
 
                             stream.CopyTo(writer);
                             writer.Flush();
-                            writer.Close();
                         }
-                        stream.Close();
                     }
                 }
             }
@@ -161,4 +156,3 @@ namespace DbUp.Tests.ScriptProvider
         }
     }
 }
-#endif

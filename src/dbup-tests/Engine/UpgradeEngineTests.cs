@@ -1,4 +1,3 @@
-#if !NETCORE
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -33,7 +32,7 @@ namespace DbUp.Tests.Engine
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
                 var connectionManager = new TestConnectionManager(dbConnection);
-                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => new TraceUpgradeLog(), null, () => true, null, () => versionTracker);
+                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => Substitute.For<IUpgradeLog>(), null, () => true, null, () => versionTracker);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
@@ -102,4 +101,3 @@ namespace DbUp.Tests.Engine
         }
     }
 }
-#endif

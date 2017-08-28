@@ -22,6 +22,7 @@
     <PackageReference Include="Shouldly" Version="2.8.1" />
     <PackageReference Include="TestStack.BDDfy" Version="4.3.1" />
     <PackageReference Include="xunit.core" Version="2.2.0" />
+    <PackageReference Include="NSubstitute" Version="2.0.3" />
   </ItemGroup>
 
 
@@ -31,7 +32,6 @@
     <ProjectReference Include="..\dbup-firebird\dbup-firebird.csproj" />
     <ProjectReference Include="..\dbup-postgresql\dbup-postgresql.csproj" />
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="4.0.8876.1" />
-    <PackageReference Include="NSubstitute" Version="1.10.0" />
     <PackageReference Include="PublicApiGenerator" Version="4.0.1" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />

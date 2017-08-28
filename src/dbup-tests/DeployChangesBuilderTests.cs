@@ -1,5 +1,4 @@
-﻿#if !NETCORE
-using System;
+﻿using System;
 using System.Data;
 using DbUp.Engine;
 using NSubstitute;
@@ -91,4 +90,3 @@ namespace DbUp.Tests
         }
     }
 }
-#endif

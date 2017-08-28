@@ -1,5 +1,4 @@
-﻿#if !NETCORE
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -20,11 +19,11 @@ namespace DbUp.Tests.ScriptProvider
 
         public override EmbeddedScriptAndCodeProvider Given()
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            var assembly = typeof(EmbeddedScriptAndCodeProviderTests).GetTypeInfo().Assembly;
 
             return new EmbeddedScriptAndCodeProvider(assembly, s=>true);
         }
-
+    
         public override void When()
         {
             var testConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
@@ -48,4 +47,3 @@ namespace DbUp.Tests.ScriptProvider
         }
     }
 }
-#endif
