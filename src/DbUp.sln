@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.26730.10
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
@@ -15,23 +15,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-41
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-core", "dbup-core\dbup-core.xproj", "{C98DE7C6-AF51-4901-904D-75FCCB17EE31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-core", "dbup-core\dbup-core.csproj", "{C98DE7C6-AF51-4901-904D-75FCCB17EE31}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-sqlserver", "dbup-sqlserver\dbup-sqlserver.xproj", "{8190B40B-AC5B-414F-8A00-9B6A2C12B010}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlserver", "dbup-sqlserver\dbup-sqlserver.csproj", "{8190B40B-AC5B-414F-8A00-9B6A2C12B010}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-sqlce", "dbup-sqlce\dbup-sqlce.xproj", "{9C8519A1-2C06-4551-A9D4-016485EA0034}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlce", "dbup-sqlce\dbup-sqlce.csproj", "{9C8519A1-2C06-4551-A9D4-016485EA0034}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-firebird", "dbup-firebird\dbup-firebird.xproj", "{9EA9C28D-0E52-4CB1-9E7B-F21705845486}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-firebird", "dbup-firebird\dbup-firebird.csproj", "{9EA9C28D-0E52-4CB1-9E7B-F21705845486}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-mysql", "dbup-mysql\dbup-mysql.xproj", "{E8AF6499-332F-4468-883B-23E3DFB2D148}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-mysql", "dbup-mysql\dbup-mysql.csproj", "{E8AF6499-332F-4468-883B-23E3DFB2D148}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-postgresql", "dbup-postgresql\dbup-postgresql.xproj", "{3D5F0B68-6B3F-4624-8322-289C8E321593}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-postgresql", "dbup-postgresql\dbup-postgresql.csproj", "{3D5F0B68-6B3F-4624-8322-289C8E321593}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-sqlite", "dbup-sqlite\dbup-sqlite.xproj", "{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite", "dbup-sqlite\dbup-sqlite.csproj", "{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-tests", "dbup-tests\dbup-tests.xproj", "{854B6565-B423-4E2C-938B-406C6EAC9C0E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-tests", "dbup-tests\dbup-tests.csproj", "{854B6565-B423-4E2C-938B-406C6EAC9C0E}"
 EndProject
-Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "dbup-sqlite-mono", "dbup-sqlite-mono\dbup-sqlite-mono.xproj", "{CD122205-EEC4-4DB9-9EFA-976EADF80323}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite-mono", "dbup-sqlite-mono\dbup-sqlite-mono.csproj", "{CD122205-EEC4-4DB9-9EFA-976EADF80323}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -78,6 +78,9 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {6807402B-EE7A-4324-A615-28F3499B1E9F}
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = DbUp\DbUp.csproj
