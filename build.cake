@@ -61,9 +61,6 @@ Task("Test")
 Task("Package")
     .IsDependentOn("Build")
     .Does(() => {
-
-        DeleteFile(outputDir + "dbup-test.*");
-
 	    var githubToken = Argument<string>("githubToken");
         var releaseNotesExitCode = StartProcess(
             @"tools\GitReleaseNotes\tools\gitreleasenotes.exe",

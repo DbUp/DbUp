@@ -7,6 +7,7 @@ configuration:
 build_script:
   - ps: .\build.ps1 --gitHubToken=$env:GitHubToken
 
+image: Visual Studio 2017
 test: off
 skip_tags: true
 
