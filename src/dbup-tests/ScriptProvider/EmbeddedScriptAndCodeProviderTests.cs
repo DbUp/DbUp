@@ -34,7 +34,7 @@ namespace DbUp.Tests.ScriptProvider
         [Then]
         public void it_should_return_all_sql_files()
         {
-            scriptsToExecute.Length.ShouldBe(6);
+            scriptsToExecute.Length.ShouldBe(10);
         }
 
         [Then]
