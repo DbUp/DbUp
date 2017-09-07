@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using DbUp.SqlServer;
+using NSubstitute.ExceptionExtensions;
 using Xunit;
 using Shouldly;
 
@@ -205,6 +207,29 @@ namespace DbUp.Tests.Support.SqlServer
             command.Received().ExecuteReader();
             command.DidNotReceive().ExecuteNonQuery();
             command.CommandText.ShouldBe("create [foo].Table");
+        }
+
+        [Fact]
+        public void logs_when_dbexception()
+        {
+            var dbConnection = Substitute.For<IDbConnection>();
+            var command = Substitute.For<IDbCommand>();
+            command.When(x => x.ExecuteNonQuery()).Do(x =>
+            {
+                var ex = Substitute.For<DbException>();
+                ex.Message.Returns("Message with curly braces {0}");
+                throw ex;
+            });
+            dbConnection.CreateCommand().Returns(command);
+            var logger = Substitute.For<IUpgradeLog>();
+            logger.WhenForAnyArgs(x => x.WriteError(null, null)).Do(x => Console.WriteLine(x.Arg<string>(), x.Arg<object[]>()));
+
+            var executor = new SqlScriptExecutor(() => new TestConnectionManager(dbConnection, true), () => logger, null, () => true, null, null);
+
+            Action exec = () => executor.Execute(new SqlScript("Test", "create $schema$.Table"));
+            exec.ShouldThrow<DbException>();
+            command.Received().ExecuteNonQuery();
+            logger.ReceivedWithAnyArgs().WriteError(Arg.Any<string>(), Arg.Any<object[]>());
         }
     }
 }

@@ -152,13 +152,13 @@ namespace DbUp.Support
             {
                 Log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
                 Log().WriteError("Script block number: {0}; Message: {1}", index, sqlException.Message);
-                Log().WriteError(sqlException.ToString());
+                Log().WriteError("{0}", sqlException.ToString());
                 throw;
             }
             catch (Exception ex)
             {
                 Log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
-                Log().WriteError(ex.ToString());
+                Log().WriteError("{0}", ex.ToString());
                 throw;
             }
         }

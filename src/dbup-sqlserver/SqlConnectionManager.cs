@@ -21,7 +21,7 @@ namespace DbUp.SqlServer
                 var conn = new SqlConnection(connectionString);
 
                 if (dbManager.IsScriptOutputLogged)
-                    conn.InfoMessage += (sender, e) => log.WriteInformation(e.Message + "\r\n");
+                    conn.InfoMessage += (sender, e) => log.WriteInformation("{0}\r\n", e.Message);
 
                 return conn;
             }))
