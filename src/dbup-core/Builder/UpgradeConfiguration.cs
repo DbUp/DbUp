@@ -20,11 +20,7 @@ namespace DbUp.Builder
         /// </summary>
         public UpgradeConfiguration()
         {
-#if TRACE_SUPPORT
             Log = new TraceUpgradeLog();
-#else
-            Log = new NoOpUpgradeLog();
-#endif
             VariablesEnabled = true;
         }
 

@@ -58,7 +58,6 @@ public static class StandardExtensions
         return builder;
     }
 
-#if TRACE_SUPPORT
     /// <summary>
     /// Logs to System.Diagnostics.Trace.
     /// </summary>
@@ -70,7 +69,6 @@ public static class StandardExtensions
     {
         return LogTo(builder, new TraceUpgradeLog());
     }
-#endif
 
     /// <summary>
     /// Uses a custom journal for recording which scripts were executed.
