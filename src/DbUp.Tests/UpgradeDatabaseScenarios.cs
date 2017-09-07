@@ -118,7 +118,7 @@ namespace DbUp.Tests
                 "SQL logic error or missing database\r\n" +
                 "near \"slect\": syntax error");
 
-            log.Received().WriteError(Arg.Is<string>(s => s.StartsWith("System.Data.SQLite.SQLiteException (0x80004005): SQL logic error or missing database")));
+            log.Received().WriteError("{0}", Arg.Is<string>(s => s.StartsWith("System.Data.SQLite.SQLiteException (0x80004005): SQL logic error or missing database")));
             log.Received().WriteError(
                 Arg.Is<string>(s => s.StartsWith("Upgrade failed due to an unexpected exception:")),
                 Arg.Is<string>(s => s.Contains("System.Data.SQLite.SQLiteException")));
