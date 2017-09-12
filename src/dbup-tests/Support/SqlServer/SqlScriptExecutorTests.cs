@@ -229,7 +229,7 @@ namespace DbUp.Tests.Support.SqlServer
             Action exec = () => executor.Execute(new SqlScript("Test", "create $schema$.Table"));
             exec.ShouldThrow<DbException>();
             command.Received().ExecuteNonQuery();
-            logger.ReceivedWithAnyArgs().WriteError(Arg.Any<string>(), Arg.Any<object[]>());
+            logger.ReceivedWithAnyArgs().WriteError("", null);
         }
     }
 }

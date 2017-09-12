@@ -141,7 +141,7 @@ namespace DbUp.Tests.ScriptProvider
 
             public override void When()
             {
-                filesToExecute = Subject.GetScripts(Arg.Any<IConnectionManager>());
+                filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
             }
 
 
