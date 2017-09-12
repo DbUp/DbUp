@@ -59,8 +59,14 @@ Task("Test")
     });
 
 Task("Package")
-    .IsDependentOn("Build")
+    .IsDependentOn("Test")
     .Does(() => {
+
+        NuGetPack("./src/dbup/dbup.nuspec", new NuGetPackSettings() {
+            OutputDirectory = System.IO.Path.GetFullPath(outputDir),
+            Version = versionInfo.NuGetVersion
+        });
+
 	    var githubToken = Argument<string>("githubToken");
         var releaseNotesExitCode = StartProcess(
             @"tools\GitReleaseNotes\tools\gitreleasenotes.exe",
