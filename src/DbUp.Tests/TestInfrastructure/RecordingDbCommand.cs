@@ -70,8 +70,12 @@ namespace DbUp.Tests.TestInfrastructure
         {
             add(DatabaseAction.ExecuteScalarCommand(CommandText));
 
-            if (CommandText == "error" || (CommandText.ToLower().Contains("count") && CommandText.ToLower().Contains("schemaversion") && !schemaTableExists))
+            if (CommandText == "error")
                 ThrowError();
+
+            if (CommandText.ToLower().Contains("count") && CommandText.ToLower().Contains("schemaversion") && !schemaTableExists)
+                return CommandText.Contains("sqlite") ? 0L : (object) null;
+
             return null;
         }
 
