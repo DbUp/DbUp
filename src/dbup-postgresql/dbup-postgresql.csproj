@@ -19,11 +19,6 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
   <ItemGroup>
     <PackageReference Include="Npgsql" Version="2.2.1" />
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
