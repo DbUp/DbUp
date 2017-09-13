@@ -120,7 +120,7 @@ namespace DbUp.Support.Postgresql
 
                     var appliedParam = command.CreateParameter();
                     appliedParam.ParameterName = "applied";
-                    appliedParam.Value = DateTime.Now;
+                    appliedParam.Value = DateTime.UtcNow;
                     command.Parameters.Add(appliedParam);
 
                     command.CommandType = CommandType.Text;
