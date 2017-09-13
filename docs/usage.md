@@ -68,7 +68,7 @@ public class Script0005ComplexUpdate : IScript
 {
     public string ProvideScript(Func<IDbCommand> commandFactory)
     {
-        var cmd = sqlConnectionString.CreateCommand();
+        var cmd = commandFactory();
         cmd.CommandText = "Select * from SomeTable";
         var scriptBuilder = new StringBuilder();
 
@@ -80,7 +80,7 @@ public class Script0005ComplexUpdate : IScript
             }
         }
 
-        return scriptBuilder;
+        return scriptBuilder.ToString();
     }
 }
 ```
