@@ -35,6 +35,7 @@ You can:
 
 ## Hosting options
 A console application is not the only way to use DbUp. For example...
+
 * A website can detect if it needs a database upgrade when it starts. If an upgrade is required it can put itself into maintainance mode and require an administrator to login and click a button to perform the migration.
 
 There are any number of other ways to use DbUp. Feel free to submit a pull request to update this section with more information.
