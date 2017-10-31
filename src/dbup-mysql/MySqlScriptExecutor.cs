@@ -45,8 +45,13 @@ namespace DbUp.MySql
             }
             catch (MySqlException exception)
             {
+#if NETCORE
+                long code = exception.Code;
+#else
+                long code = exception.ErrorCode;
+#endif
                 Log().WriteInformation("MySql exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("MySql error code: {0}; Number {1}; Message: {2}", index, exception.ErrorCode, exception.Number, exception.Message);
+                Log().WriteError("MySql error code: {0}; Number {1}; Message: {2}", index, code, exception.Number, exception.Message);
                 Log().WriteError(exception.ToString());
                 throw;
             }
