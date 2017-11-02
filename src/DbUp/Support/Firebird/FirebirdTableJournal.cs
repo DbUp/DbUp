@@ -161,17 +161,9 @@ namespace DbUp.Support.Firebird
         {
             return connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                try
+                using (var command = dbCommandFactory())
                 {
-                    using (var command = dbCommandFactory())
-                    {
-                        return VerifyTableExistsCommand(command);
-                    }
-                }
-                // can't catch FbException here because this project does not depend upon Firebird
-                catch (DbException)
-                {
-                    return false;
+                    return VerifyTableExistsCommand(command);
                 }
             });
         }

@@ -139,16 +139,9 @@ namespace DbUp.Support.MySql
         {
             return connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                try
+                using (var command = dbCommandFactory())
                 {
-                    using (var command = dbCommandFactory())
-                    {
-                        return VerifyTableExistsCommand(command, table, schema);
-                    }
-                }
-                catch (DbException)
-                {
-                    return false;
+                    return VerifyTableExistsCommand(command, table, schema);
                 }
             });
         }

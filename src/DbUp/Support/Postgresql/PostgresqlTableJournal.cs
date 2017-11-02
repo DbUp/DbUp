@@ -151,17 +151,9 @@ namespace DbUp.Support.Postgresql
         {
             return connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                try
+                using (var command = dbCommandFactory())
                 {
-                    using (var command = dbCommandFactory())
-                    {
-                        return VerifyTableExistsCommand(command, table, schema);
-                    }
-                }
-                // can't catch NpgsqlException here because this project does not depend upon npgsql
-                catch (DbException)
-                {
-                    return false;
+                    return VerifyTableExistsCommand(command, table, schema);
                 }
             });
         }

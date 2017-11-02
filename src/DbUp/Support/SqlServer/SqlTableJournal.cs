@@ -167,20 +167,9 @@ namespace DbUp.Support.SqlServer
         {
             return connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                try
+                using (var command = dbCommandFactory())
                 {
-                    using (var command = dbCommandFactory())
-                    {
-                        return VerifyTableExistsCommand(command, table, schema);
-                    }
-                }
-                catch (SqlException)
-                {
-                    return false;
-                }
-                catch (DbException)
-                {
-                    return false;
+                    return VerifyTableExistsCommand(command, table, schema);
                 }
             });
         }
