@@ -45,7 +45,7 @@ namespace DbUp.Tests.Support.SQLite
             var param2 = Substitute.For<IDbDataParameter>();
             dbConnection.CreateCommand().Returns(command);
             command.CreateParameter().Returns(param1, param2);
-            command.ExecuteScalar().Returns(x => 0L);
+            command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
             var consoleUpgradeLog = new ConsoleUpgradeLog();
             var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
 
