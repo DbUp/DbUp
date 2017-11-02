@@ -34,9 +34,11 @@ You can:
 * Perform the database upgrade (`PerformUpgrade()`)
 
 ## Hosting options
-A console is not the only way to use DbUp. For instance FunnelWeb detects if it needs an upgrade when it starts, if an upgrade is required it will put the web app into maintainance mode where an administrator needs to login then click the perform migration button.
+A console application is not the only way to use DbUp. For example...
 
-There are any number of other ways to use DbUp. Feel free to submit a pull request to update this section with more information
+* A website can detect if it needs a database upgrade when it starts. If an upgrade is required it can put itself into maintainance mode and require an administrator to login and click a button to perform the migration.
+
+There are any number of other ways to use DbUp. Feel free to submit a pull request to update this section with more information.
 
 ### From PowerShell
 Another option is call DbUp directly from PowerShell, which is useful when using DbUp from a deployment tool like Octopus Deploy.
@@ -68,7 +70,7 @@ public class Script0005ComplexUpdate : IScript
 {
     public string ProvideScript(Func<IDbCommand> commandFactory)
     {
-        var cmd = sqlConnectionString.CreateCommand();
+        var cmd = commandFactory();
         cmd.CommandText = "Select * from SomeTable";
         var scriptBuilder = new StringBuilder();
 
@@ -80,7 +82,7 @@ public class Script0005ComplexUpdate : IScript
             }
         }
 
-        return scriptBuilder;
+        return scriptBuilder.ToString();
     }
 }
 ```
