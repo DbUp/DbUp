@@ -21,7 +21,7 @@ namespace DbUp.Tests.ScriptProvider
             [Test]
             public void it_should_throw_when_empty_options()
             {
-                Should.Throw<ArgumentNullException>(() => { new FileSystemScriptProvider("Whatever", (FileSystemScriptOptions) null); });
+                Should.Throw<ArgumentNullException>(() => { new FileSystemScriptProvider("Whatever", (FileSystemScriptOptions)null); });
             }
         }
 
@@ -93,7 +93,8 @@ namespace DbUp.Tests.ScriptProvider
             {
                 TestScripts.Create(out testPath);
                 // Given a filter is provided..
-                options = new FileSystemScriptOptions() {
+                options = new FileSystemScriptOptions()
+                {
                     Filter = (a) =>
                     {
                         _FilterExecuted = true;
@@ -118,7 +119,7 @@ namespace DbUp.Tests.ScriptProvider
             public void the_filter_should_have_been_executed()
             {
                 Assert.IsTrue(_FilterExecuted);
-            }            
+            }
 
             [Then]
             public void the_filter_should_not_interfere_with_script_order()
@@ -126,7 +127,7 @@ namespace DbUp.Tests.ScriptProvider
                 Assert.That(filesToExecute.First().Name.EndsWith("20110301_1_Test1.sql"));
                 Assert.That(filesToExecute.Last().Name.EndsWith("Script20130525_2_Test5.sql"));
             }
-          
+
         }
 
         [TestFixture]
@@ -138,7 +139,7 @@ namespace DbUp.Tests.ScriptProvider
             public override FileSystemScriptProvider Given()
             {
                 TestScripts.Create(out testPath);
-                var options = new FileSystemScriptOptions() {IncludeSubDirectories = true};
+                var options = new FileSystemScriptOptions() { IncludeSubDirectories = true };
                 return new FileSystemScriptProvider(testPath, options);
             }
 
@@ -157,7 +158,7 @@ namespace DbUp.Tests.ScriptProvider
             [Then]
             public void it_should_return_all_sql_files()
             {
-                Assert.AreEqual(9, filesToExecute.Count());
+                Assert.AreEqual(13, filesToExecute.Count());
             }
 
             [Then]
@@ -182,7 +183,103 @@ namespace DbUp.Tests.ScriptProvider
                 filesToExecute.ElementAt(7).Name.ShouldEndWith("Test1__1.sql");
                 filesToExecute.ElementAt(8).Name.ShouldEndWith("Test2__1.sql");
             }
+        }
 
+        [TestFixture]
+        public class when_returning_scripts_from_a_directory_and_using_comparer_option : SpecificationFor<FileSystemScriptProvider>
+        {
+            private string testPath;
+            private IEnumerable<SqlScript> filesToExecute;
+
+            private class VersionComparer : IComparer<string>
+            {
+                public int Compare(string x, string y)
+                {
+                    // get version number part from filename like DbUp.Tests.TestScripts.0.1.sql
+                    var xVersion = Path.GetFileNameWithoutExtension(x).Split(new char[] { '.' }, 4).Last();
+                    var yVersion = Path.GetFileNameWithoutExtension(y).Split(new char[] { '.' }, 4).Last();
+
+                    return Version.Parse(xVersion).CompareTo(Version.Parse(yVersion));
+                }
+            }
+
+            public override FileSystemScriptProvider Given()
+            {
+                TestScripts.Create(out testPath);
+                testPath = Path.Combine(testPath, "Folder3");
+                var options = new FileSystemScriptOptions() { Comparer = new VersionComparer() };
+                return new FileSystemScriptProvider(testPath, options);
+            }
+
+            [TearDown]
+            public void CleanUp()
+            {
+                Directory.Delete(testPath, true);
+            }
+
+            public override void When()
+            {
+                filesToExecute = Subject.GetScripts(Arg.Any<IConnectionManager>());
+            }
+
+            [Then]
+            public void it_should_return_all_sql_files()
+            {
+                Assert.AreEqual(4, filesToExecute.Count());
+            }
+
+            [Then]
+            public void the_files_should_be_correctly_ordered_by_version()
+            {
+                filesToExecute.ElementAt(0).Name.ShouldEndWith("0.9.sql");
+                filesToExecute.ElementAt(1).Name.ShouldEndWith("0.10.3.sql");
+                filesToExecute.ElementAt(2).Name.ShouldEndWith("1.2.2.sql");
+                filesToExecute.ElementAt(3).Name.ShouldEndWith("02.1.sql");
+            }
+        }
+
+        [TestFixture]
+        public class when_returning_scripts_from_a_directory_and_using_scriptnamer_option : SpecificationFor<FileSystemScriptProvider>
+        {
+            private string testPath;
+            private IEnumerable<SqlScript> filesToExecute;
+
+            public override FileSystemScriptProvider Given()
+            {
+                TestScripts.Create(out testPath);
+
+                var options = new FileSystemScriptOptions() {
+                    IncludeSubDirectories = true,
+                    ScriptNamer = FileSystemScriptNamers.UseRelativePaths(testPath)
+                };
+                return new FileSystemScriptProvider(testPath, options);
+            }
+
+            [TearDown]
+            public void CleanUp()
+            {
+                Directory.Delete(testPath, true);
+            }
+
+            public override void When()
+            {
+                filesToExecute = Subject.GetScripts(Arg.Any<IConnectionManager>());
+            }
+
+            [Then]
+            public void it_should_return_all_sql_files()
+            {
+                Assert.AreEqual(13, filesToExecute.Count());
+            }
+
+            [Then]
+            public void the_files_should_be_correctly_ordered_by_version()
+            {
+                filesToExecute.ElementAt(0).Name.ShouldEndWith("Script20110301_1_Test1.sql");
+                filesToExecute.ElementAt(5).Name.ShouldEndWith(@"Folder1\DbUp.Tests.TestScripts.Test1__9.sql");
+                filesToExecute.ElementAt(7).Name.ShouldEndWith(@"Folder2\DbUp.Tests.TestScripts.Test1__1.sql");
+                filesToExecute.ElementAt(11).Name.ShouldEndWith(@"Folder3\DbUp.Tests.TestScripts.02.1.sql");
+            }
         }
     }
 }

@@ -28,7 +28,6 @@ namespace DbUp.Engine
         /// <summary>
         /// Gets the contents of the script.
         /// </summary>
-        /// <value></value>
         public virtual string Contents
         {
             get { return contents; }
@@ -37,43 +36,49 @@ namespace DbUp.Engine
         /// <summary>
         /// Gets the name of the script.
         /// </summary>
-        /// <value></value>
         public string Name
         {
             get { return name; }
         }
 
         /// <summary>
-        /// Create a SqlScript from a file using Default encoding
+        /// Create a SqlScript from a file using default encoding and default script namer.
         /// </summary>
-        /// <param name="path"></param>
-        /// <returns></returns>
+        /// <param name="path">path to script</param>
         public static SqlScript FromFile(string path)
         {
             return FromFile(path, Encoding.Default);
         }
 
         /// <summary>
-        /// Create a SqlScript from a file using specified encoding
+        /// Create a SqlScript from a file using specified encoding and default script namer.
         /// </summary>
-        /// <param name="path"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
+        /// <param name="path">path to script</param>
+        /// <param name="encoding">Encoding of script content</param>
         public static SqlScript FromFile(string path, Encoding encoding)
+        {
+            return FromFile(path, encoding, FileSystemScriptNamers.Default().Invoke(path));
+        }
+
+        /// <summary>
+        /// Create a SqlScript from a file using specified encoding and script name.
+        /// </summary>
+        /// <param name="path">path to script</param>
+        /// <param name="encoding">Encoding of script content</param>
+        /// <param name="scriptName">Script name</param>
+        public static SqlScript FromFile(string path, Encoding encoding, string scriptName)
         {
             using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
             {
-                var fileName = new FileInfo(path).Name;
-                return FromStream(fileName, fileStream, encoding);
+                return FromStream(scriptName, fileStream, encoding);
             }
         }
 
         /// <summary>
         /// Create a SqlScript from a stream using Default encoding
         /// </summary>
-        /// <param name="scriptName"></param>
-        /// <param name="stream"></param>
-        /// <returns></returns>
+        /// <param name="scriptName">Script name to use</param>
+        /// <param name="stream">Stream to script content</param>
         public static SqlScript FromStream(string scriptName, Stream stream)
         {
             return FromStream(scriptName, stream, Encoding.Default);
@@ -82,10 +87,9 @@ namespace DbUp.Engine
         /// <summary>
         /// Create a SqlScript from a stream using specified encoding
         /// </summary>
-        /// <param name="scriptName"></param>
-        /// <param name="stream"></param>
-        /// <param name="encoding"></param>
-        /// <returns></returns>
+        /// <param name="scriptName">Script name to use</param>
+        /// <param name="stream">Stream to script content</param>
+        /// <param name="encoding">Encoding of script content</param>
         public static SqlScript FromStream(string scriptName, Stream stream, Encoding encoding)
         {
             using (var resourceStreamReader = new StreamReader(stream, encoding, true))
