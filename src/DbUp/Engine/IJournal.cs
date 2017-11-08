@@ -16,5 +16,11 @@
         /// </summary>
         /// <param name="script">The script.</param>
         void StoreExecutedScript(SqlScript script);
+
+        /// <summary>
+        /// Removes the record for the rolled back executed script in the database.
+        /// </summary>
+        /// <param name="script">The executed script that got rolled back.</param>
+        void RemoveExecutedScript(SqlScript script);
     }
 }

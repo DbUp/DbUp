@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
+using System.IO;
 using System.Linq;
 using DbUp.Builder;
 
@@ -11,6 +13,7 @@ namespace DbUp.Engine
     public class UpgradeEngine
     {
         private readonly UpgradeConfiguration configuration;
+        public const string DisableCdcCommand = "sp_cdc_disable_table";
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeEngine"/> class.
@@ -42,7 +45,8 @@ namespace DbUp.Engine
         /// <summary>
         /// Performs the database upgrade.
         /// </summary>
-        public DatabaseUpgradeResult PerformUpgrade()
+        /// <param name="checkCdc">Flag to indicate whether we want to check CDC affected scripts or not.</param>
+        public DatabaseUpgradeResult PerformUpgrade(bool checkCdc = false)
         {
             var executed = new List<SqlScript>();
 
@@ -68,10 +72,17 @@ namespace DbUp.Engine
                     {
                         executedScriptName = script.Name;
 
-                        configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                        if (checkCdc && CultureInfo.CurrentCulture.CompareInfo.IndexOf(script.Contents, DisableCdcCommand,
+                            CompareOptions.IgnoreCase) >= 0)
+                        {
+                            ExecuteCdcScriptManually(executedScriptName);
+                        }
+                        else
+                        {
+                            configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                        }
 
                         configuration.Journal.StoreExecutedScript(script);
-
                         executed.Add(script);
                     }
 
@@ -85,6 +96,80 @@ namespace DbUp.Engine
                 configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(executed, false, ex);
             }
+        }
+
+        /// <summary>
+        /// Performs the database downgrade.
+        /// </summary>
+        /// <param name="scriptToRollback">Script to rollback to but not inlcuding itself or the script to rollback
+        /// depending on the multipleRollback flag</param>
+        /// <param name="rollbackSuffix">Suffix of the rollback scripts</param>
+        /// <param name="multipleRollback">True if you want to rollback all scripts up to the given scriptToRollback
+        /// but not including it and false if you just want to rollback the given scriptToRollback and nothing else</param>
+        /// <param name="checkCdc">Flag to indicate whether we want to check CDC affected scripts or not.</param>
+        /// <returns></returns>
+        public DatabaseUpgradeResult PerformDowngrade(string scriptToRollback, string rollbackSuffix, bool multipleRollback, bool checkCdc = false)
+        {
+            var rollbacks = new List<SqlScript>();
+
+            string executedScriptName = null;
+            try
+            {
+                using (configuration.ConnectionManager.OperationStarting(configuration.Log, rollbacks))
+                {
+                    configuration.Log.WriteInformation("Beginning database downgrade");
+
+                    var scriptsToExecute = GetRollbackScriptsInsideOperation(scriptToRollback, rollbackSuffix, multipleRollback);
+
+                    if (scriptsToExecute == null || scriptsToExecute.Count == 0)
+                    {
+                        configuration.Log.WriteInformation("No rollback scripts to run {0} - completing.", scriptToRollback);
+                        return new DatabaseUpgradeResult(rollbacks, true, null);
+                    }
+
+                    configuration.ScriptExecutor.VerifySchema();
+
+                    foreach (var script in scriptsToExecute)
+                    {
+                        executedScriptName = script.Name;
+
+                        if (checkCdc && CultureInfo.CurrentCulture.CompareInfo.IndexOf(script.Contents, DisableCdcCommand,
+                            CompareOptions.IgnoreCase) >= 0)
+                        {
+                            ExecuteCdcScriptManually(executedScriptName);
+                        }
+                        else
+                        {
+                            configuration.ScriptExecutor.Execute(script, configuration.Variables);
+                        }
+
+                        configuration.Journal.RemoveExecutedScript(new SqlScript(executedScriptName.Replace(rollbackSuffix, ""), string.Empty));
+                        rollbacks.Add(script);
+                    }
+
+                    configuration.Log.WriteInformation("Downgrade successful");
+                    return new DatabaseUpgradeResult(rollbacks, true, null);
+                }
+            }
+            catch (Exception ex)
+            {
+                ex.Data.Add("Error occurred in script: ", executedScriptName);
+                configuration.Log.WriteError("Downgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                return new DatabaseUpgradeResult(rollbacks, false, ex);
+            }
+        }
+
+        private void ExecuteCdcScriptManually(string executedScriptName)
+        {
+            Console.ForegroundColor = ConsoleColor.Yellow;
+            var msg = "Please execute " + executedScriptName + " manually because it requires CDC to be disabled!!";
+            Console.WriteLine(msg);
+            msg = "Once " + executedScriptName + " is executed press any key to continue.";
+            Console.WriteLine(msg);
+            Console.ReadKey();
+            Console.WriteLine();
+
+            configuration.Log.WriteInformation("Script {0} containing CDC has been manually executed.", executedScriptName);
         }
 
         /// <summary>
@@ -105,6 +190,65 @@ namespace DbUp.Engine
             var executedScripts = configuration.Journal.GetExecutedScripts();
 
             return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
+        }
+        
+        private List<SqlScript> GetRollbackScriptsInsideOperation(string scriptToRollback, string rollbackSuffix, bool multipleRollback)
+        {
+            var executedScripts = configuration.Journal.GetExecutedScripts();
+            if (!executedScripts.Contains(scriptToRollback))
+            {
+                configuration.Log.WriteError("Script to rollback cannot be found in the Schema Version table: {0}", scriptToRollback);
+                return null;
+            }
+
+            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager)).ToList();
+            var rollbackScripts = new List<SqlScript>();
+
+            if (multipleRollback)
+            {
+                var rollbackStartingPointPassed = false;
+                var rollbackScriptNames = new List<string>();
+
+                foreach (var executedScript in executedScripts)
+                {
+                    if (rollbackStartingPointPassed)
+                    {
+                        var rollbackScriptName = Path.GetFileNameWithoutExtension(executedScript) + rollbackSuffix + Path.GetExtension(executedScript);
+                        rollbackScriptNames.Add(rollbackScriptName);
+                    }
+                    else if (executedScript.Equals(scriptToRollback))
+                    {
+                        rollbackStartingPointPassed = true;
+                    }
+                }
+
+                // Rollback should be in reverse order
+                rollbackScriptNames.Reverse();
+
+                foreach (var rollbackScriptName in rollbackScriptNames)
+                {
+                    var script = allScripts.SingleOrDefault(x => x.Name.Equals(rollbackScriptName));
+                    if (script != null)
+                    {
+                        rollbackScripts.Add(script);
+                    }
+                }
+            }
+            else
+            {
+                var rollbackScriptName = Path.GetFileNameWithoutExtension(scriptToRollback) + rollbackSuffix + Path.GetExtension(scriptToRollback);
+                var script = allScripts.SingleOrDefault(x => x.Name.Equals(rollbackScriptName));
+                if (script == null)
+                {
+                    configuration.Log.WriteWarning("Rollback script cannot be found: {0}", rollbackScriptName);
+                }
+                else
+                {
+                    rollbackScripts.Add(script);
+                }
+            }
+            
+            return rollbackScripts;
         }
 
         public List<string> GetExecutedScripts()

@@ -152,9 +152,32 @@ namespace DbUp.Support.Firebird
             });
         }
 
+        /// <summary>
+        /// Removes the rolled back script from the database specified in a given connection string.
+        /// </summary>
+        /// <param name="script">The script.</param>
+        public void RemoveExecutedScript(SqlScript script)
+        {
+            var exists = DoesTableExist();
+            if (!exists)
+            {
+                return;
+            }
+
+            connectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            {
+                using (var command = dbCommandFactory())
+                {
+                    command.CommandText = string.Format("delete from {0} where ScriptName = '{1}'", tableName, script.Name);
+                    command.CommandType = CommandType.Text;
+                    command.ExecuteNonQuery();
+                }
+            });
+        }
+
         private static string GetExecutedScriptsSql(string table)
         {
-            return string.Format("select ScriptName from {0} order by ScriptName", table);
+            return string.Format("select ScriptName from {0} order by Id", table);
         }
 
         private bool DoesTableExist()
