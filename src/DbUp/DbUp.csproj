@@ -59,6 +59,7 @@
     <Compile Include="Builder\StandardExtensions.cs" />
     <Compile Include="Builder\UpgradeConfiguration.cs" />
     <Compile Include="Builder\UpgradeEngineBuilder.cs" />
+    <Compile Include="DropDatabase.cs" />
     <Compile Include="Engine\Preprocessors\VariableSubstitutionSqlParser.cs" />
     <Compile Include="EnsureDatabase.cs" />
     <Compile Include="DeployChanges.cs" />
@@ -79,6 +80,7 @@
     <Compile Include="Helpers\NullJournal.cs" />
     <Compile Include="ScriptProviders\EmbeddedScriptsProvider.cs" />
     <Compile Include="ScriptProviders\FileSystemScriptOptions.cs" />
+    <Compile Include="SupportedDatabasesForDropDatabase.cs" />
     <Compile Include="SupportedDatabasesForEnsureDatabase.cs" />
     <Compile Include="Support\Firebird\FirebirdTableJournal.cs" />
     <Compile Include="Support\MySql\MySqlITableJournal.cs" />

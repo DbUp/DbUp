@@ -37,6 +37,10 @@ namespace DbUp
     {
         public static DbUp.Builder.SupportedDatabases To { get; }
     }
+    public class static DropDatabase
+    {
+        public static DbUp.SupportedDatabasesForDropDatabase For { get; }
+    }
     public class static EnsureDatabase
     {
         public static DbUp.SupportedDatabasesForEnsureDatabase For { get; }
@@ -47,6 +51,10 @@ namespace DbUp
         public static System.Func<string, bool> ExcludeScripts(params string[] scriptNames) { }
         public static System.Func<string, bool> OnlyIncludeScriptNamesInFile(string fileName) { }
         public static System.Func<string, bool> OnlyIncludeScripts(params string[] scriptNames) { }
+    }
+    public class SupportedDatabasesForDropDatabase
+    {
+        public SupportedDatabasesForDropDatabase() { }
     }
     public class SupportedDatabasesForEnsureDatabase
     {
@@ -454,6 +462,9 @@ public class static SqlServerExtensions
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger, int timeout = -1) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString, int commandTimeout) { }
+    public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger, int timeout = -1) { }
 }
 public class static StandardExtensions
 {
