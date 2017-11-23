@@ -1,0 +1,33 @@
+﻿Open connection
+Execute scalar command: SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = 'schemaversions'
+Dispose command
+Execute non query command: CREATE TABLE test ( keycol int default autoincrement, datacol char(10))
+Dispose command
+Execute non query command: CREATE TRIGGER insert_test AFTER INSERT ON test
+                                                    REFERENCING NEW AS new_row
+                                                    FOR EACH ROW
+                                                    BEGIN
+                                                    SET aicol=new_row.keycol;
+                                                    END
+Dispose command
+Execute non query command: CREATE VARIABLE aicol int
+Dispose command
+Execute non query command: INSERT INTO test (datacol) VALUES ('mytest')
+Dispose command
+Execute non query command: SELECT aicol FROM dummy
+Dispose command
+Execute scalar command: SELECT COUNT(SYS.SYSTABLE.table_name) FROM SYS.SYSTABLE WHERE SYS.SYSTABLE.table_name = 'schemaversions'
+Dispose command
+Execute non query command: create table [nor the schema name].[schemaversions] (
+	[Id] int identity not null constraint [PK_schemaversions_Id] primary key,
+	[ScriptName] nvarchar(255) not null,
+	[Applied] datetime not null
+)
+Dispose command
+Create parameter
+Add parameter to command: scriptName=ScriptName
+Create parameter
+Add parameter to command: applied=<date>
+Execute non query command: insert into [nor the schema name].[schemaversions] (ScriptName, Applied) values (:scriptName, :applied)
+Dispose command
+Dispose connection

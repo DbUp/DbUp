@@ -25,6 +25,7 @@ after_build:
   - cmd: nuget pack src\DbUp.SqlCe\DbUp.SqlCe.nuspec -BasePath src\DbUp.SqlCe\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
   - cmd: nuget pack src\DbUp.SQLite\DbUp.SQLite.nuspec -BasePath src\DbUp.SQLite\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
   - cmd: nuget pack src\DbUp.SQLite.Mono\DbUp.SQLite.Mono.nuspec -BasePath src\DbUp.SQLite.Mono\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
+  - cmd: nuget pack src\DbUp.SqlAnywhere\DbUp.SqlAnywhere.nuspec -BasePath src\DbUp.SqlAnywhere\ -version "%GitVersion_NuGetVersion%" -prop "configuration=%CONFIGURATION%"
   - cmd: appveyor PushArtifact "DbUp.%GitVersion_NuGetVersion%.nupkg"
   - cmd: appveyor PushArtifact "DbUp-Firebird.%GitVersion_NuGetVersion%.nupkg"
   - cmd: appveyor PushArtifact "DbUp-MySql.%GitVersion_NuGetVersion%.nupkg"
@@ -32,6 +33,7 @@ after_build:
   - cmd: appveyor PushArtifact "DbUp-SqlCe.%GitVersion_NuGetVersion%.nupkg"
   - cmd: appveyor PushArtifact "DbUp-SQLite.%GitVersion_NuGetVersion%.nupkg"
   - cmd: appveyor PushArtifact "DbUp-SQLite-Mono.%GitVersion_NuGetVersion%.nupkg"
+  - cmd: appveyor PushArtifact "DbUp-SqlAnywhere.%GitVersion_NuGetVersion%.nupkg"
 
 cache:
   - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
