@@ -181,7 +181,7 @@ namespace DbUp.Support.Firebird
         /// <returns>True if table exists, false otherwise</returns>
         private bool VerifyTableExistsCommand(IDbCommand command)
         {
-            command.CommandText = string.Format("select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = '{0}'", tableName);
+            command.CommandText = string.Format("select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = UPPER('{0}')", tableName);
             command.CommandType = CommandType.Text;
             var result = command.ExecuteScalar() as int?;
             return result == 1;
