@@ -494,4 +494,18 @@ public static class StandardExtensions
     {
         return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding));
     }
+
+    /// <summary>
+    /// Sets the logical name of the UpgradeEngineBuilder instance
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="logicalName">The logical name of the builder</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder SetMigrationLogicalName(this UpgradeEngineBuilder builder, string logicalName)
+    {
+        builder.MigrationLogicalName = logicalName;
+        return builder;
+    }
 }

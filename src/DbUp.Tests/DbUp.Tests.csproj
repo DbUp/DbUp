@@ -105,6 +105,7 @@
     <Compile Include="DeployChangesBuilderTests.cs" />
     <Compile Include="Helpers\FilterFactoryTests.cs" />
     <Compile Include="Helpers\NullJournalTests.cs" />
+    <Compile Include="StandardExtensionsTests.cs" />
     <Compile Include="Support\SqlServer\SqlParserTests.cs" />
     <Compile Include="ScriptProvider\TestScripts.cs" />
     <Compile Include="TestInfrastructure\Scrubbers.cs" />

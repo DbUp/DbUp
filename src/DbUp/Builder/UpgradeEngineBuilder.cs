@@ -13,6 +13,11 @@ namespace DbUp.Builder
         private readonly List<Action<UpgradeConfiguration>> callbacks = new List<Action<UpgradeConfiguration>>();
 
         /// <summary>
+        /// The user defined name of the UpgradeEngineBuilder instance
+        /// </summary>
+        public string MigrationLogicalName { get; set; }
+
+        /// <summary>
         /// Adds a callback that will be run to configure the upgrader when Build is called.
         /// </summary>
         /// <param name="configuration">The configuration.</param>
