@@ -368,6 +368,17 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Sets a configuration flag which will cause the engine to throw an exception prior to execution if it detects scripts are to be run out of order
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithScriptOrderEnforced(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.EnforceScriptOrder = true);
+        return builder;
+    }
+
+    /// <summary>
     /// Allows you to set the execution timeout for scripts.
     /// </summary>
     /// <param name="builder">The builder.</param>

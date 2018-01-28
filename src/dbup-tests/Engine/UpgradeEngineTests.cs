@@ -7,7 +7,6 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using NUnit.Framework;
 using DbUp.SqlServer;
 using Shouldly;
 
@@ -97,6 +96,103 @@ namespace DbUp.Tests.Engine
             public void the_scripts_are_not_run()
             {
                 scriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
+            }
+        }
+
+        public class when_upgrading_a_database_with_enforced_script_order_and_out_of_order_scripts : SpecificationFor<UpgradeEngine>
+        {
+            private IJournal versionTracker;
+            private IScriptProvider scriptProvider;
+            private IScriptExecutor scriptExecutor;
+            private DatabaseUpgradeResult result;
+
+            public override UpgradeEngine Given()
+            {
+                scriptProvider = Substitute.For<IScriptProvider>();
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript>
+                {
+                    new SqlScript("1", "foo"),
+                    new SqlScript("2", "bar")
+                });
+                versionTracker = Substitute.For<IJournal>();
+                versionTracker.GetExecutedScripts().Returns(new[] { "2" });
+                scriptExecutor = Substitute.For<IScriptExecutor>();
+
+                var config = new UpgradeConfiguration
+                {
+                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
+                };
+                config.ScriptProviders.Add(scriptProvider);
+                config.ScriptExecutor = scriptExecutor;
+                config.Journal = versionTracker;
+                config.EnforceScriptOrder = true;
+
+                var upgrader = new UpgradeEngine(config);
+                return upgrader;
+            }
+
+            public override void When()
+            {
+                result = Subject.PerformUpgrade();
+            }
+
+            [Then]
+            public void the_scripts_are_not_run()
+            {
+                scriptExecutor.DidNotReceiveWithAnyArgs().Execute(Arg.Any<SqlScript>(), Arg.Any<Dictionary<string, string>>());
+                scriptExecutor.DidNotReceiveWithAnyArgs().Execute(Arg.Any<SqlScript>());
+            }
+
+            [Then]
+            public void the_result_contains_out_of_order_exception_message()
+            {
+                result.Error.ShouldBeOfType<ScriptsOutOfOrderException>();
+            }
+        }
+
+        public class when_upgrading_a_database_with_enforced_script_order_and_in_order_scripts : SpecificationFor<UpgradeEngine>
+        {
+            private IJournal versionTracker;
+            private IScriptProvider scriptProvider;
+            private IScriptExecutor scriptExecutor;
+            private DatabaseUpgradeResult result;
+
+            public override UpgradeEngine Given()
+            {
+                scriptProvider = Substitute.For<IScriptProvider>();
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript>
+                {
+                    new SqlScript("1", "foo"),
+                    new SqlScript("2", "bar"),
+                    new SqlScript("3", "baz")
+                });
+                versionTracker = Substitute.For<IJournal>();
+                versionTracker.GetExecutedScripts().Returns(new[] { "0", "1" });
+                scriptExecutor = Substitute.For<IScriptExecutor>();
+
+                var config = new UpgradeConfiguration
+                {
+                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
+                };
+                config.ScriptProviders.Add(scriptProvider);
+                config.ScriptExecutor = scriptExecutor;
+                config.Journal = versionTracker;
+                config.EnforceScriptOrder = true;
+
+                var upgrader = new UpgradeEngine(config);
+                return upgrader;
+            }
+
+            public override void When()
+            {
+                result = Subject.PerformUpgrade();
+            }
+
+            [Then]
+            public void the_scripts_are_run()
+            {
+                scriptExecutor.Received().Execute(Arg.Is<SqlScript>(s => s.Name == "2"), Arg.Any<Dictionary<string, string>>());
+                scriptExecutor.Received().Execute(Arg.Is<SqlScript>(s => s.Name == "3"), Arg.Any<Dictionary<string, string>>());
             }
         }
     }

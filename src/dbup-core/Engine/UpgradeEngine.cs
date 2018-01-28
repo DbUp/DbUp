@@ -102,7 +102,29 @@ namespace DbUp.Engine
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
             var executedScripts = configuration.Journal.GetExecutedScripts();
 
-            return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
+            if (!configuration.EnforceScriptOrder || executedScripts.Length == 0)
+                return allScripts.Where(s => executedScripts.All(y => y != s.Name)).ToList();
+
+            var allScriptsList = allScripts.ToList();
+            EnsureExecutedScriptsPreceedScriptsToRun(executedScripts, allScriptsList);
+
+            return allScriptsList.Where(s => executedScripts.All(y => y != s.Name)).ToList();
+        }
+
+        private static void EnsureExecutedScriptsPreceedScriptsToRun(IEnumerable<string> executedScripts, List<SqlScript> allScriptsList)
+        {
+            var executedScriptIndexes = executedScripts
+                .Where(x => allScriptsList.Select(s => s.Name).Contains(x))
+                .Select(x => allScriptsList.FindIndex(y => y.Name == x))
+                .OrderBy(x => x)
+                .ToArray();
+
+            // Check executed scripts are at the beginning of all scripts
+            for (var i = 0; i < executedScriptIndexes.Length; i++)
+            {
+                if (i != executedScriptIndexes[i])
+                    throw new ScriptsOutOfOrderException();
+            }
         }
 
         public List<string> GetExecutedScripts()
