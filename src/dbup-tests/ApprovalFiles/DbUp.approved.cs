@@ -13,6 +13,7 @@ namespace DbUp.Builder
     {
         public UpgradeConfiguration() { }
         public DbUp.Engine.Transactions.IConnectionManager ConnectionManager { get; set; }
+        public bool EnforceScriptOrder { get; set; }
         public DbUp.Engine.IJournal Journal { get; set; }
         public DbUp.Engine.Output.IUpgradeLog Log { get; set; }
         public DbUp.Engine.IScriptExecutor ScriptExecutor { get; set; }
@@ -101,6 +102,10 @@ namespace DbUp.Engine
     {
         public LazySqlScript(string name, System.Func<string> contentProvider) { }
         public override string Contents { get; }
+    }
+    public class ScriptsOutOfOrderException : System.Exception
+    {
+        public ScriptsOutOfOrderException() { }
     }
     [System.Diagnostics.DebuggerDisplayAttribute("{Name}")]
     public class SqlScript
@@ -423,6 +428,7 @@ public class static StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder WithPreprocessor(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptPreprocessor preprocessor) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScript(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.SqlScript script) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScript(this DbUp.Builder.UpgradeEngineBuilder builder, string name, string contents) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptOrderEnforced(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScripts(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptProvider scriptProvider) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScripts(this DbUp.Builder.UpgradeEngineBuilder builder, System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> scripts) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScripts(this DbUp.Builder.UpgradeEngineBuilder builder, params DbUp.Engine.SqlScript[] scripts) { }

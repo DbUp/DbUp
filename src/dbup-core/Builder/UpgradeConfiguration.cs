@@ -68,6 +68,11 @@ namespace DbUp.Builder
         public bool VariablesEnabled { get; set; }
 
         /// <summary>
+        /// Ensures that scripts that appear earlier in the run order can not be run if a later script is found in the executed scripts
+        /// </summary>
+        public bool EnforceScriptOrder { get; set; }
+
+        /// <summary>
         /// Ensures all expectations have been met regarding this configuration.
         /// </summary>
         public void Validate()
