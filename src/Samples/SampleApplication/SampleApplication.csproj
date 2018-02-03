@@ -44,9 +44,13 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\DbUp\DbUp.csproj">
+    <ProjectReference Include="..\..\DbUp.SqlServer\DbUp.SqlServer.csproj">
+      <Project>{ee71e015-3442-45b3-97b6-7886b7de8351}</Project>
+      <Name>DbUp.SqlServer</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\DbUp.Core\DbUp.Core.csproj">
       <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
-      <Name>DbUp</Name>
+      <Name>DbUp.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
