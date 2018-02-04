@@ -20,7 +20,11 @@ namespace DbUp.Builder
         /// </summary>
         public UpgradeConfiguration()
         {
+#if SUPPORTS_LIBLOG
+            Log = new AutodetectUpgradeLog();
+#else
             Log = new TraceUpgradeLog();
+#endif
             VariablesEnabled = true;
         }
 

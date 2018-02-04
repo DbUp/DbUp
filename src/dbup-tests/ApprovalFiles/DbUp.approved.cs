@@ -1,6 +1,7 @@
 ﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("9f833e49-6e35-4e4d-b2a0-3d4fed527c89")]
+[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.5", FrameworkDisplayName=".NET Framework 4.5")]
 
 namespace DbUp.Builder
 {
@@ -140,6 +141,13 @@ namespace DbUp.Engine.Output
         void WriteError(string format, params object[] args);
         void WriteInformation(string format, params object[] args);
         void WriteWarning(string format, params object[] args);
+    }
+    public class LibLogUpgradeLog : DbUp.Engine.Output.IUpgradeLog
+    {
+        public LibLogUpgradeLog() { }
+        public void WriteError(string format, params object[] args) { }
+        public void WriteInformation(string format, params object[] args) { }
+        public void WriteWarning(string format, params object[] args) { }
     }
     public class NoOpUpgradeLog : DbUp.Engine.Output.IUpgradeLog
     {
