@@ -45,7 +45,7 @@ namespace DbUp.Tests.Engine
                 return upgrader;
             }
 
-            public override void When()
+            protected override void When()
             {
                 Subject.PerformUpgrade();
             }
@@ -82,7 +82,7 @@ namespace DbUp.Tests.Engine
                 return upgrader;
             }
 
-            public override void When()
+            protected override void When()
             {
                 Subject.MarkAsExecuted();
             }

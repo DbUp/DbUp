@@ -7,6 +7,7 @@ using Xunit;
 
 namespace DbUp.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete
     public class DeployChangesBuilderTests
     {
         [Fact]
@@ -90,3 +91,4 @@ namespace DbUp.Tests
         }
     }
 }
+#pragma warning restore CS0618 // Type or member is obsolete

@@ -12,8 +12,6 @@ namespace DbUp.Support
     {
         private readonly StringBuilder commandScriptBuilder;
 
-        protected const int FailedRead = -1;
-
         /// <summary>
         /// Creates an instance of SqlCommandReader
         /// </summary>

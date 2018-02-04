@@ -9,6 +9,7 @@ using NSubstitute;
 using NUnit.Framework;
 using Shouldly;
 using Xunit;
+#pragma warning disable 618
 
 namespace DbUp.Tests.Engine
 {

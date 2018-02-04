@@ -99,11 +99,6 @@ namespace DbUp.Support
         #region Events to be subscribed to by consuming or deriving classes
 
         /// <summary>
-        /// Notifies a new command has started to be read
-        /// </summary>
-        protected event Action CommandStarted;
-
-        /// <summary>
         /// Notifies a command has finished reading
         /// </summary>
         protected event Action CommandEnded;

@@ -4,6 +4,7 @@ using DbUp.Helpers;
 using NSubstitute;
 using Shouldly;
 using Xunit;
+#pragma warning disable 618
 
 namespace DbUp.Tests.Helpers
 {
@@ -16,7 +17,7 @@ namespace DbUp.Tests.Helpers
             var connection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
             connection.CreateCommand().Returns(command);
-
+            
             var upgradeEngine = DeployChanges.To
                 .SqlDatabase(() => connection, "Db")
                 .WithScript("testscript", "SELECT * FROM BLAH")

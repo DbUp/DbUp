@@ -330,7 +330,6 @@ namespace DbUp.Support
     }
     public class SqlCommandReader : DbUp.Support.SqlParser
     {
-        protected const int FailedRead = -1;
         public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = True) { }
         public void ReadAllCommands(System.Action<string> handleCommand) { }
     }
@@ -361,7 +360,6 @@ namespace DbUp.Support
         protected bool IsWhiteSpace { get; }
         protected char LastChar { get; }
         public event System.Action CommandEnded;
-        public event System.Action CommandStarted;
         public event System.Action<DbUp.Support.SqlParser.CharacterType, char> ReadCharacter;
         protected bool IsCharEqualTo(char comparisonChar, char compareTo) { }
         protected bool IsCurrentCharEqualTo(char comparisonChar) { }

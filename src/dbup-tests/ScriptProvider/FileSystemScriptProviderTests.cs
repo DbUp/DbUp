@@ -39,7 +39,7 @@ namespace DbUp.Tests.ScriptProvider
 
 
 
-            public override void When()
+            protected override void When()
             {
                 filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
             }
@@ -101,7 +101,7 @@ namespace DbUp.Tests.ScriptProvider
             }
 
 
-            public override void When()
+            protected override void When()
             {
                 filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
             }
@@ -139,7 +139,7 @@ namespace DbUp.Tests.ScriptProvider
             }
 
 
-            public override void When()
+            protected override void When()
             {
                 filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
             }

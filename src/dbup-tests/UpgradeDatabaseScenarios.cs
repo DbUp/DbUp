@@ -184,7 +184,7 @@ namespace DbUp.Tests
             upgradeResult = upgradeEngine.PerformUpgrade();
         }
 
-        public void ThenUpgradeShouldNotBeRequired()
+        void ThenUpgradeShouldNotBeRequired()
         {
             isUpgradeRequired.ShouldBeFalse();
         }
@@ -192,17 +192,6 @@ namespace DbUp.Tests
         void ThenUpgradeShouldBeRequired()
         {
             isUpgradeRequired.ShouldBeTrue();
-        }
-
-        public void ShouldReturnSuccess()
-        {
-            upgradeResult.Successful.ShouldBeTrue();
-        }
-
-        public void ShouldLogNoAction()
-        {
-            logger.Log.ShouldContain("Beginning database upgrade");
-            logger.Log.ShouldContain("No new scripts need to be executed - completing.");
         }
 
         public class TestScriptProvider : IScriptProvider

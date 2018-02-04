@@ -9,6 +9,7 @@
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netcoreapp1.0' Or '$(TargetFramework)' == 'netcoreapp2.0' ">
@@ -19,14 +20,14 @@
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
     <ProjectReference Include="..\dbup-sqlserver\dbup-sqlserver.csproj" />
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.0.0" />
-    <PackageReference Include="xunit" Version="2.2.0" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.2.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
+    <PackageReference Include="xunit" Version="2.3.1" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
+    <PackageReference Include="Serilog" Version="2.6.0" />
     <PackageReference Include="Shouldly" Version="2.8.1" />
     <PackageReference Include="Assent" Version="1.0.1" />
     <PackageReference Include="TestStack.BDDfy" Version="4.3.1" />
-    <PackageReference Include="xunit.core" Version="2.2.0" />
-    <PackageReference Include="NSubstitute" Version="2.0.3" />
+    <PackageReference Include="NSubstitute" Version="3.1.0" />
   </ItemGroup>
 
 

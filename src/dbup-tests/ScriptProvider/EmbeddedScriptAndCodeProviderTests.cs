@@ -24,7 +24,7 @@ namespace DbUp.Tests.ScriptProvider
             return new EmbeddedScriptAndCodeProvider(assembly, s=>true);
         }
     
-        public override void When()
+        protected override void When()
         {
             var testConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
             testConnectionManager.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
