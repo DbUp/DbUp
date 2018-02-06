@@ -7,7 +7,7 @@ DbUp has a simple logging abstraction in place using the `IUpgradeLog` interface
 * `TraceUpgradeLog` - Logs to `Trace.Write*`
     - Use `builder.LogToTrace()` to register
 * `NoOpUpgradeLog` - No logging
-    - Use `builder.LogTo(new NoOpUpgradeLog())` to register
+    - Use `builder.LogToNowhere()` to discard all logs
 * `SqlContextUpgradeLog` - Logs to `SqlContext` (available when using the `dbup-sqlserver` package on .NET Framework)
     - Use `builder.LogToSqlContext()` to register
 * Use `builder.LogTo(new MyCustomLogger())` to provide your own logger
