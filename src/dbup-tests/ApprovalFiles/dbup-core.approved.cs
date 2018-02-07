@@ -12,6 +12,7 @@ public static class StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder LogToNowhere(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToTrace(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithExecutionTimeout(this DbUp.Builder.UpgradeEngineBuilder builder, System.Nullable<System.TimeSpan> timeout) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithFilter(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptFilter filter) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithoutTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithPreprocessor(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptPreprocessor preprocessor) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScript(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.SqlScript script) { }
@@ -81,6 +82,7 @@ namespace DbUp.Builder
         public DbUp.Engine.IJournal Journal { get; set; }
         public DbUp.Engine.Output.IUpgradeLog Log { get; set; }
         public DbUp.Engine.IScriptExecutor ScriptExecutor { get; set; }
+        public DbUp.Engine.IScriptFilter ScriptFilter { get; set; }
         public System.Collections.Generic.List<DbUp.Engine.IScriptPreprocessor> ScriptPreprocessors { get; }
         public System.Collections.Generic.List<DbUp.Engine.IScriptProvider> ScriptProviders { get; }
         public DbUp.Engine.IScriptSorter ScriptSorter { get; set; }
@@ -120,6 +122,10 @@ namespace DbUp.Engine
         void Execute(DbUp.Engine.SqlScript script);
         void Execute(DbUp.Engine.SqlScript script, System.Collections.Generic.IDictionary<string, string> variables);
         void VerifySchema();
+    }
+    public interface IScriptFilter
+    {
+        System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Filter(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> sorted, System.Collections.Generic.HashSet<string> executedScriptNames);
     }
     public interface IScriptPreprocessor
     {
@@ -164,6 +170,14 @@ namespace DbUp.Engine
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(string latestScript) { }
         public DbUp.Engine.DatabaseUpgradeResult PerformUpgrade() { }
         public bool TryConnect(out string errorMessage) { }
+    }
+}
+namespace DbUp.Engine.Filters
+{
+    public class DefaultScriptFilter : DbUp.Engine.IScriptFilter
+    {
+        public DefaultScriptFilter() { }
+        public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Filter(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> sorted, System.Collections.Generic.HashSet<string> executedScriptNames) { }
     }
 }
 namespace DbUp.Engine.Output

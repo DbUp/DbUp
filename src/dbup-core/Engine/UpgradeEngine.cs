@@ -103,7 +103,7 @@ namespace DbUp.Engine
             var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
             var sorted = configuration.ScriptSorter.Sort(allScripts);
-            var filtered = sorted.Where(s => !executedScriptNames.Contains(s.Name));
+            var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames);
             return filtered.ToList();
         }
 
