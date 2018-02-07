@@ -11,6 +11,7 @@ public static class StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder LogToConsole(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToNowhere(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToTrace(this DbUp.Builder.UpgradeEngineBuilder builder) { }
+    public static DbUp.Builder.UpgradeEngineBuilder ResetConfiguredLoggers(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithExecutionTimeout(this DbUp.Builder.UpgradeEngineBuilder builder, System.Nullable<System.TimeSpan> timeout) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithFilter(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptFilter filter) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithoutTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
@@ -88,6 +89,7 @@ namespace DbUp.Builder
         public DbUp.Engine.IScriptSorter ScriptSorter { get; set; }
         public System.Collections.Generic.Dictionary<string, string> Variables { get; }
         public bool VariablesEnabled { get; set; }
+        public void AddLog(DbUp.Engine.Output.IUpgradeLog additionalLog) { }
         public void AddVariables(System.Collections.Generic.IDictionary<string, string> newVariables) { }
         public void Validate() { }
     }
@@ -201,6 +203,13 @@ namespace DbUp.Engine.Output
         void WriteError(string format, params object[] args);
         void WriteInformation(string format, params object[] args);
         void WriteWarning(string format, params object[] args);
+    }
+    public class MultipleUpgradeLog : DbUp.Engine.Output.IUpgradeLog
+    {
+        public MultipleUpgradeLog(params DbUp.Engine.Output.IUpgradeLog[] upgradeLogs) { }
+        public void WriteError(string format, params object[] args) { }
+        public void WriteInformation(string format, params object[] args) { }
+        public void WriteWarning(string format, params object[] args) { }
     }
     public class NoOpUpgradeLog : DbUp.Engine.Output.IUpgradeLog
     {

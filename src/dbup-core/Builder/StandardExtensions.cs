@@ -29,7 +29,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogTo(this UpgradeEngineBuilder builder, IUpgradeLog log)
     {
-        builder.Configure(c => c.Log = log);
+        builder.Configure(c => c.AddLog(log));
         return builder;
     }
 
@@ -94,6 +94,17 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder LogToTrace(this UpgradeEngineBuilder builder)
     {
         return LogTo(builder, new TraceUpgradeLog());
+    }
+    
+    /// <summary>
+    /// Resets any loggers configured with 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder ResetConfiguredLoggers(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.Log = null);
+        return builder;
     }
 
     /// <summary>
