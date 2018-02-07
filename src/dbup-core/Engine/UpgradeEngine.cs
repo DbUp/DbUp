@@ -100,9 +100,11 @@ namespace DbUp.Engine
         private List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
-            var executedScripts = configuration.Journal.GetExecutedScripts();
+            var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
-            return allScripts.Where(s => !executedScripts.Any(y => y == s.Name)).ToList();
+            return allScripts.Where(s => !executedScriptNames.Contains(s.Name))
+                .OrderBy(s => s.Name)
+                .ToList();
         }
 
         public List<string> GetExecutedScripts()
