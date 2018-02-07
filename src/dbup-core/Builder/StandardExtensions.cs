@@ -46,6 +46,32 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Discards all log messages
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToNowhere(this UpgradeEngineBuilder builder)
+    {
+        return LogTo(builder, new NoOpUpgradeLog());
+    }
+
+#if SUPPORTS_LIBLOG
+    /// <summary>
+    /// Logs to a automatically detected globally configured logger supported by LibLog.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToAutodetectedLog(this UpgradeEngineBuilder builder)
+    {
+        return LogTo(builder, new AutodetectUpgradeLog());
+    }
+#endif
+
+    /// <summary>
     /// Logs to the console using pretty colours.
     /// </summary>
     /// <param name="builder">The builder.</param>

@@ -1,6 +1,7 @@
 ﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("9f833e49-6e35-4e4d-b2a0-3d4fed527c89")]
+[assembly: System.Runtime.Versioning.TargetFrameworkAttribute(".NETFramework,Version=v4.5", FrameworkDisplayName=".NET Framework 4.5")]
 
 namespace DbUp.Builder
 {
@@ -128,6 +129,13 @@ namespace DbUp.Engine
 namespace DbUp.Engine.Output
 {
     
+    public class AutodetectUpgradeLog : DbUp.Engine.Output.IUpgradeLog
+    {
+        public AutodetectUpgradeLog() { }
+        public void WriteError(string format, params object[] args) { }
+        public void WriteInformation(string format, params object[] args) { }
+        public void WriteWarning(string format, params object[] args) { }
+    }
     public class ConsoleUpgradeLog : DbUp.Engine.Output.IUpgradeLog
     {
         public ConsoleUpgradeLog() { }
@@ -140,6 +148,13 @@ namespace DbUp.Engine.Output
         void WriteError(string format, params object[] args);
         void WriteInformation(string format, params object[] args);
         void WriteWarning(string format, params object[] args);
+    }
+    public class LibLogUpgradeLog : DbUp.Engine.Output.IUpgradeLog
+    {
+        public LibLogUpgradeLog() { }
+        public void WriteError(string format, params object[] args) { }
+        public void WriteInformation(string format, params object[] args) { }
+        public void WriteWarning(string format, params object[] args) { }
     }
     public class NoOpUpgradeLog : DbUp.Engine.Output.IUpgradeLog
     {
@@ -414,7 +429,9 @@ public class static StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder JournalTo(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IJournal journal) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogScriptOutput(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogTo(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.Output.IUpgradeLog log) { }
+    public static DbUp.Builder.UpgradeEngineBuilder LogToAutodetectedLog(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToConsole(this DbUp.Builder.UpgradeEngineBuilder builder) { }
+    public static DbUp.Builder.UpgradeEngineBuilder LogToNowhere(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToTrace(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithExecutionTimeout(this DbUp.Builder.UpgradeEngineBuilder builder, System.Nullable<System.TimeSpan> timeout) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithoutTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
