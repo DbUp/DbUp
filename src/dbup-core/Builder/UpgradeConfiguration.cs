@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Sorters;
 using DbUp.Engine.Transactions;
 
 namespace DbUp.Builder
@@ -57,6 +58,11 @@ namespace DbUp.Builder
         /// Gets or sets the script executor, which runs scripts against the underlying database.
         /// </summary>
         public IScriptExecutor ScriptExecutor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the script sorter, which defines the order the scripts execute in
+        /// </summary>
+        public IScriptSorter ScriptSorter { get; set; } = new AlphabeticalScriptSorter();
 
         /// <summary>
         /// A collection of variables to be replaced in scripts before they are run
