@@ -160,7 +160,7 @@ namespace DbUp.Tests.ScriptProvider
                 }
             }
 
-            [Then]
+            [Then(Skip = "The script names should include the folder")]
             public void the_files_should_be_correctly_ordered_with_subdirectory_order()
             {
                 filesToExecute.ElementAt(0).Name.ShouldEndWith("Script20110301_1_Test1.sql");
