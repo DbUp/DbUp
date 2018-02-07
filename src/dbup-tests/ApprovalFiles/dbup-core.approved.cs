@@ -145,6 +145,7 @@ namespace DbUp.Engine
         public string Name { get; }
         public static DbUp.Engine.SqlScript FromFile(string path) { }
         public static DbUp.Engine.SqlScript FromFile(string path, System.Text.Encoding encoding) { }
+        public static DbUp.Engine.SqlScript FromFile(string basePath, string path, System.Text.Encoding encoding) { }
         public static DbUp.Engine.SqlScript FromStream(string scriptName, System.IO.Stream stream) { }
         public static DbUp.Engine.SqlScript FromStream(string scriptName, System.IO.Stream stream, System.Text.Encoding encoding) { }
     }
