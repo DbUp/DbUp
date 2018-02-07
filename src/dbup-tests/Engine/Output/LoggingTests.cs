@@ -14,11 +14,10 @@ namespace DbUp.Tests.Engine.Output
 {
     public class LoggingTests
     {
+#if SUPPORTS_LIBLOG
         [Fact]
         public void WhenNoLoggerIsSpecified_LoggingShouldGoToAutodiscoveredLogger()
         {
-            var scriptExecutor = Substitute.For<IScriptExecutor>();
-            
             var defaultLogger = Serilog.Log.Logger;
             try
             {
@@ -42,7 +41,7 @@ namespace DbUp.Tests.Engine.Output
                 Serilog.Log.Logger = defaultLogger;
             }
         }
-
+#endif
 
 
         class InMemorySink : ILogEventSink

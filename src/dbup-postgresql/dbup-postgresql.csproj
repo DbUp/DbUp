@@ -4,7 +4,7 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds PostgreSQL support.</Description>
     <AssemblyTitle>DbUp PostgreSQL Support</AssemblyTitle>
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
-    <TargetFramework>net35</TargetFramework>
+    <TargetFrameworks>net35;net45</TargetFrameworks>
     <AssemblyName>dbup-postgresql</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
