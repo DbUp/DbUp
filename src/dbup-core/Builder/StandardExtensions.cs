@@ -346,6 +346,22 @@ public static class StandardExtensions
     }
     
     /// <summary>
+    /// Adds a filter that filters the sorted lists of script prior to execution. This allows
+    /// scripts to be excluded based on which scripts have already been run. This can be used to
+    /// make the filtering case-insensitive, or support re-named scripts
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="filter">The filter.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithFilter(this UpgradeEngineBuilder builder, IScriptFilter filter)
+    {
+        builder.Configure(b => b.ScriptFilter = filter);
+        return builder;
+    }
+    
+    /// <summary>
     /// Adds a preprocessor that can replace portions of a script.
     /// </summary>
     /// <param name="builder">The builder.</param>
