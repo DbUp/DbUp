@@ -14,3 +14,8 @@ DbUp is a .NET library that helps you to deploy changes to SQL Server databases.
 | DbUp-SqlCe       | [![NuGet](https://img.shields.io/nuget/dt/dbup-sqlce.svg)](https://www.nuget.org/packages/dbup-sqlce)  [![NuGet](https://img.shields.io/nuget/v/dbup-sqlce.svg)](https://www.nuget.org/packages/dbup-sqlce) | [![NuGet](https://img.shields.io/nuget/vpre/dbup-sqlce.svg)](https://www.nuget.org/packages/dbup-sqlce) |
 | DbUp-PostgreSQL  | [![NuGet](https://img.shields.io/nuget/dt/dbup-postgresql.svg)](https://www.nuget.org/packages/dbup-postgresql) [![NuGet](https://img.shields.io/nuget/v/dbup-postgresql.svg)](https://www.nuget.org/packages/dbup-postgresql) | [![NuGet](https://img.shields.io/nuget/vpre/dbup-postgresql.svg)](https://www.nuget.org/packages/dbup-postgresql) |
 | DbUp-Firebird  | [![NuGet](https://img.shields.io/nuget/dt/dbup-firebird.svg)](https://www.nuget.org/packages/dbup-firebird) [![NuGet](https://img.shields.io/nuget/v/dbup-firebird.svg)](https://www.nuget.org/packages/dbup-firebird) | [![NuGet](https://img.shields.io/nuget/vpre/dbup-firebird.svg)](https://www.nuget.org/packages/dbup-firebird) |
+
+# Development
+## Getting Started
+Install:
+- Sql CE 4.0 SP1 https://www.microsoft.com/en-us/download/details.aspx?id=30709
