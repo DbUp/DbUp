@@ -12,7 +12,11 @@ DbUp has a simple logging abstraction in place using the `IUpgradeLog` interface
     - Use `builder.LogToSqlContext()` to register
 * Use `builder.LogTo(new MyCustomLogger())` to provide your own logger
 
+These calls use `builder.Configure((UpgradeConfigureation c) => c.AddLog(log))` under the covers.
+
 If no logger is specified, the `AutodetectUpgradeLog` is used for .NET 4.5+ and .NET Core. `TraceUpgradeLog` is used on earlier .NET frameworks.
+
+The first call to `upgradeConfigureation.AddLog(log)` will replace the default logger. Subsequent calls to `upgradeConfigureation.AddLog(log)` will combine the loggers and result in logs going to all specified loggers. To clear previously configured loggers call `UpgradeConfigureation.Log = null` or `builder.ResetConfiguredLoggers()`.
 
 By default, the output of the scripts run by DbUp do not show up in the logs. To also display the script output (e.g.: text displayed by `PRINT` statements in Sql Server), use `builder.LogScriptOutput()`:
 

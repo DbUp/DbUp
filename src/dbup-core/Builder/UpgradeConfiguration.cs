@@ -13,7 +13,10 @@ namespace DbUp.Builder
     {
         private readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
         private readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
-        private readonly Dictionary<string, string> variables = new Dictionary<string, string>(); 
+        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+
+        private readonly IUpgradeLog defaultLog;
+        private IUpgradeLog log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.
@@ -21,9 +24,9 @@ namespace DbUp.Builder
         public UpgradeConfiguration()
         {
 #if SUPPORTS_LIBLOG
-            Log = new AutodetectUpgradeLog();
+            defaultLog = new AutodetectUpgradeLog();
 #else
-            Log = new TraceUpgradeLog();
+            defaultLog = new TraceUpgradeLog();
 #endif
             VariablesEnabled = true;
         }
@@ -36,7 +39,18 @@ namespace DbUp.Builder
         /// <summary>
         /// Gets or sets a log which captures details about the upgrade.
         /// </summary>
-        public IUpgradeLog Log { get; set; }
+        public IUpgradeLog Log
+        {
+            get => log ?? defaultLog;
+            set => log = value;
+        }
+
+        public void AddLog(IUpgradeLog additionalLog)
+        {
+            log = log == null
+                ? additionalLog 
+                : new MultipleUpgradeLog(log, additionalLog);
+        }
 
         /// <summary>
         /// Gets a mutable list of script providers.
