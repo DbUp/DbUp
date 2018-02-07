@@ -102,9 +102,9 @@ namespace DbUp.Engine
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
             var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
-            return allScripts.Where(s => !executedScriptNames.Contains(s.Name))
-                .OrderBy(s => s.Name)
-                .ToList();
+            var sorted = configuration.ScriptSorter.Sort(allScripts);
+            var filtered = sorted.Where(s => !executedScriptNames.Contains(s.Name));
+            return filtered.ToList();
         }
 
         public List<string> GetExecutedScripts()

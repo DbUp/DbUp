@@ -330,7 +330,21 @@ public static class StandardExtensions
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
     }
-
+    
+    /// <summary>
+    /// Adds a sorter that sorts the scripts before filtering and execution
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="sorter">The sorter.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithSorter(this UpgradeEngineBuilder builder, IScriptSorter sorter)
+    {
+        builder.Configure(b => b.ScriptSorter = sorter);
+        return builder;
+    }
+    
     /// <summary>
     /// Adds a preprocessor that can replace portions of a script.
     /// </summary>
