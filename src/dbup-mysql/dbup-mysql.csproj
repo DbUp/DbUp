@@ -4,7 +4,7 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds MySql support.</Description>
     <AssemblyTitle>DbUp MySql Support</AssemblyTitle>
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
-    <TargetFrameworks>net35;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;net40;net45</TargetFrameworks>
     <AssemblyName>dbup-mysql</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -20,14 +20,24 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+  <ItemGroup>
+    <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
     <PackageReference Include="MySql.Data" Version="6.9.5" />
   </ItemGroup>
 
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="MySql.Data" Version="6.10.6" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);MYSQL_NETCORE</DefineConstants>
+  </PropertyGroup>
 
 </Project>
