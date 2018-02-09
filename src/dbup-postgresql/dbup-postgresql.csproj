@@ -20,20 +20,21 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
+    <DefineConstants>$(DefineConstants);NPGSQLv2</DefineConstants>
+  </PropertyGroup>
+  
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
-    <PackageReference Include="Npgsql" Version="2.2.1" />
+    <PackageReference Include="Npgsql" Version="2.2.7" /> <!-- Last version that supports .NET 3.5 -->
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="Npgsql" Version="3.2.5" />
+  <ItemGroup Condition="'$(TargetFramework)' != 'net35'">
+    <PackageReference Include="Npgsql" Version="3.2.6" />
   </ItemGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3' Or '$(TargetFramework)' == 'netstandard2.0'">
-    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
-  </PropertyGroup>
   
 </Project>

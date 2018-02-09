@@ -41,10 +41,10 @@ namespace DbUp.Postgresql
             {
                 excuteCommand();
             }
-#if NETCORE
-            catch (PostgresException exception)
-#else
+#if NPGSQLv2
             catch (NpgsqlException exception)
+#else
+            catch (PostgresException exception)
 #endif
             {
                 Log().WriteInformation("Npgsql exception has occured in script: '{0}'", script.Name);
