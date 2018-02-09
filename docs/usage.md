@@ -32,6 +32,7 @@ You can:
   * Useful for bringing development environments into sync with automated environments
 * Try to connect to the database (`TryConnect()`)
 * Perform the database upgrade (`PerformUpgrade()`)
+* Log script output (`LogScriptOutput()`)
 
 ## Hosting options
 A console application is not the only way to use DbUp. For example...
