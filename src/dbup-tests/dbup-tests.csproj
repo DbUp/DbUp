@@ -18,6 +18,7 @@
     <ProjectReference Include="..\dbup-sqlserver\dbup-sqlserver.csproj" />
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
     <ProjectReference Include="..\dbup-mysql\dbup-mysql.csproj" />
+    <ProjectReference Include="..\dbup-postgresql\dbup-postgresql.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
@@ -30,7 +31,6 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <ProjectReference Include="..\dbup-sqlce\dbup-sqlce.csproj" />
     <ProjectReference Include="..\dbup-firebird\dbup-firebird.csproj" />
-    <ProjectReference Include="..\dbup-postgresql\dbup-postgresql.csproj" />
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="4.0.8876.1" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
