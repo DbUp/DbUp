@@ -137,10 +137,6 @@ namespace DbUp.Engine
     {
         System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager);
     }
-    public interface IScriptSorter
-    {
-        System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Sort(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> filtered);
-    }
     public interface ISqlObjectParser
     {
         string QuoteIdentifier(string objectName);
