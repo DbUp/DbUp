@@ -24,9 +24,9 @@ namespace DbUp.Tests
         [Theory]
         [InlineData(typeof(UpgradeEngine))]
         [InlineData(typeof(SQLiteExtensions))]
+        [InlineData(typeof(MySqlExtensions))]
 #if !NETCORE
         [InlineData(typeof(FirebirdExtensions))]
-        [InlineData(typeof(MySqlExtensions))]
         [InlineData(typeof(PostgresqlExtensions))]
         [InlineData(typeof(SqlCeExtensions))]
 #endif
