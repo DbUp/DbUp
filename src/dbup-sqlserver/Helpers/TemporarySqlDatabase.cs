@@ -29,15 +29,28 @@ namespace DbUp.SqlServer.Helpers
         /// Initializes a new instance of the <see cref="TemporarySqlDatabase"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
-        public TemporarySqlDatabase(string name, string instanceName)
+        public TemporarySqlDatabase(string name, string instanceName) :
+             this(new SqlConnectionStringBuilder($"Server={instanceName};Database={name};Trusted_connection=true;Pooling=false"))
         {
-            databaseName = name;
-            connectionString = string.Format("Server={0};Database={1};Trusted_connection=true;Pooling=false", instanceName, databaseName);
+        }
+
+        /// <summary>
+        /// Creates a new <see cref="TemporarySqlDatabase"/> using the specified <see cref="SqlConnectionStringBuilder"/>.
+        /// </summary>
+        /// <param name="connectionStringBuilder"><see cref="SqlConnectionStringBuilder"/> specifying which database to create.</param>
+        public TemporarySqlDatabase(SqlConnectionStringBuilder connectionStringBuilder)
+        {
+            var builder = new SqlConnectionStringBuilder(connectionStringBuilder.ToString()); //so we don't mangle the connectionStringBuilder coming in
+            builder.Pooling = false; // make sure connection pooling is disabled so the connection is actually closed as expected
+
+            // set the temporary database information
+            databaseName = builder.InitialCatalog;
+            connectionString = builder.ConnectionString;
             sqlConnection = new SqlConnection(connectionString);
             database = new AdHocSqlRunner(sqlConnection.CreateCommand, new SqlServer.SqlServerObjectParser(), "dbo", () => true);
 
-            var builder = new SqlConnectionStringBuilder(connectionString) { InitialCatalog = "master" };
-
+            // set the master database information
+            builder.InitialCatalog = "master";
             masterSqlConnection = new SqlConnection(builder.ToString());
             master = new AdHocSqlRunner(() => masterSqlConnection.CreateCommand(), new SqlServerObjectParser(), "dbo", () => true);
         }
@@ -86,5 +99,13 @@ namespace DbUp.SqlServer.Helpers
             master.ExecuteNonQuery("drop database [" + databaseName + "]");
             masterSqlConnection.Dispose();
         }
+
+        /// <summary>
+        /// Helper method to create a new <see cref="TemporarySqlDatabase"/> from a connection string.
+        /// </summary>
+        /// <param name="connectionString">The connection string to that contains the information for the temporary sql database.</param>
+        /// <returns>An instance of <see cref="TemporarySqlDatabase"/> that will use the connection string provided.</returns>
+        public static TemporarySqlDatabase FromConnectionString(string connectionString)
+            => new TemporarySqlDatabase(new SqlConnectionStringBuilder(connectionString));
     }
 }
