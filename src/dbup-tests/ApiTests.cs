@@ -24,10 +24,10 @@ namespace DbUp.Tests
         [Theory]
         [InlineData(typeof(UpgradeEngine))]
         [InlineData(typeof(SQLiteExtensions))]
+        [InlineData(typeof(PostgresqlExtensions))]
 #if !NETCORE
         [InlineData(typeof(FirebirdExtensions))]
         [InlineData(typeof(MySqlExtensions))]
-        [InlineData(typeof(PostgresqlExtensions))]
         [InlineData(typeof(SqlCeExtensions))]
 #endif
         public void NoPublicApiChanges(Type type)
