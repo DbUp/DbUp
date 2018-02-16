@@ -1,5 +1,5 @@
-﻿#if !NETCORE
-using System;
+﻿using System;
+using Assent;
 using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using Xunit;
@@ -38,8 +38,8 @@ END$$").Build();
             var result = upgrader.PerformUpgrade();
 
             result.Successful.ShouldBe(true);
-            logger.Log.ShouldMatchApproved(b => b.WithScrubber(Scrubbers.ScrubDates));
+            this.Assent(logger.Log, new Configuration().UsingSanitiser(Scrubbers.ScrubDates));
+            
         }
     }
 }
-#endif

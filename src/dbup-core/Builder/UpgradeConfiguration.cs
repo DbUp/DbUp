@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using DbUp.Engine;
+using DbUp.Engine.Filters;
 using DbUp.Engine.Output;
+using DbUp.Engine.Sorters;
 using DbUp.Engine.Transactions;
 
 namespace DbUp.Builder
@@ -13,17 +15,20 @@ namespace DbUp.Builder
     {
         private readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
         private readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
-        private readonly Dictionary<string, string> variables = new Dictionary<string, string>(); 
+        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+
+        private readonly IUpgradeLog defaultLog;
+        private IUpgradeLog log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.
         /// </summary>
         public UpgradeConfiguration()
         {
-#if TRACE_SUPPORT
-            Log = new TraceUpgradeLog();
+#if SUPPORTS_LIBLOG
+            defaultLog = new AutodetectUpgradeLog();
 #else
-            Log = new NoOpUpgradeLog();
+            defaultLog = new TraceUpgradeLog();
 #endif
             VariablesEnabled = true;
         }
@@ -36,7 +41,18 @@ namespace DbUp.Builder
         /// <summary>
         /// Gets or sets a log which captures details about the upgrade.
         /// </summary>
-        public IUpgradeLog Log { get; set; }
+        public IUpgradeLog Log
+        {
+            get => log ?? defaultLog;
+            set => log = value;
+        }
+
+        public void AddLog(IUpgradeLog additionalLog)
+        {
+            log = log == null
+                ? additionalLog 
+                : new MultipleUpgradeLog(log, additionalLog);
+        }
 
         /// <summary>
         /// Gets a mutable list of script providers.
@@ -57,6 +73,16 @@ namespace DbUp.Builder
         /// Gets or sets the script executor, which runs scripts against the underlying database.
         /// </summary>
         public IScriptExecutor ScriptExecutor { get; set; }
+
+        /// <summary>
+        /// Gets or sets the script sorter, which defines the order the scripts execute in
+        /// </summary>
+        public IScriptSorter ScriptSorter { get; set; } = new AlphabeticalScriptSorter();
+
+        /// <summary>
+        /// Gets or sets the script filter, which filters the scripts before execution
+        /// </summary>
+        public IScriptFilter ScriptFilter { get; set; } = new DefaultScriptFilter();
 
         /// <summary>
         /// A collection of variables to be replaced in scripts before they are run

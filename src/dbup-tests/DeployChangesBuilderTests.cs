@@ -1,5 +1,4 @@
-﻿#if !NETCORE
-using System;
+﻿using System;
 using System.Data;
 using DbUp.Engine;
 using NSubstitute;
@@ -8,6 +7,7 @@ using Xunit;
 
 namespace DbUp.Tests
 {
+#pragma warning disable CS0618 // Type or member is obsolete
     public class DeployChangesBuilderTests
     {
         [Fact]
@@ -91,4 +91,4 @@ namespace DbUp.Tests
         }
     }
 }
-#endif
+#pragma warning restore CS0618 // Type or member is obsolete

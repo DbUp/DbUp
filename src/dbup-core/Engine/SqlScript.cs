@@ -12,7 +12,6 @@ namespace DbUp.Engine
     public class SqlScript
     {
         private readonly string contents;
-        private readonly string name;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlScript"/> class.

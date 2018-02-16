@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using Assent;
+using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.SqlServer;
 using DbUp.SQLite;
+using DbUp.Tests.Helpers;
 using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
@@ -27,6 +31,7 @@ namespace DbUp.Tests
         Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
         CaptureLogsLogger logger;
 
+
         [Fact]
         public void VerifyBasicSupport()
         {
@@ -37,7 +42,7 @@ namespace DbUp.Tests
                 .And(_ => SingleScriptExists())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(deployTo), "Command log matches expected steps")
+                .And(_ => CommandLogReflectsScript(deployTo, nameof(VerifyBasicSupport)), "Command log matches expected steps")
                 .WithExamples(DatabaseExampleTable)
                 .BDDfy();
         }
@@ -53,7 +58,7 @@ namespace DbUp.Tests
                 .And(_ => VariableSubstitutionIsSetup())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(deployTo), "Variables substituted correctly in command log")
+                .And(_ => CommandLogReflectsScript(deployTo, nameof(VerifyVariableSubstitutions)), "Variables substituted correctly in command log")
                 .WithExamples(DatabaseExampleTable)
                 .BDDfy();
         }
@@ -61,6 +66,7 @@ namespace DbUp.Tests
         [Fact]
         public void VerifyJournalCreationIfNameChanged()
         {
+
             ExampleAction deployTo = null;
             this
                 .Given(() => deployTo)
@@ -69,7 +75,7 @@ namespace DbUp.Tests
                 .And(_ => SingleScriptExists())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(deployTo), "Command log matches expected steps")
+                .And(_ => CommandLogReflectsScript(deployTo, nameof(VerifyJournalCreationIfNameChanged)), "Command log matches expected steps")
                 .WithExamples(DatabaseExampleTable)
                 .BDDfy();
         }
@@ -102,19 +108,17 @@ namespace DbUp.Tests
             upgradeEngineBuilder = addCustomNamedJournalToBuilder(upgradeEngineBuilder, "test", "TestSchemaVersions");
         }
 
-        void CommandLogReflectsScript(ExampleAction target)
+        void CommandLogReflectsScript(ExampleAction target, string testName)
         {
-#if !NETCORE
-            logger.Log
-                .ShouldMatchApproved(b =>
-                {
-                    b.LocateTestMethodUsingAttribute<FactAttribute>();
-                    b.WithScrubber(Scrubbers.ScrubDates);
-                    b.WithDescriminator(target.ToString().Replace(" ", string.Empty));
-                    b.SubFolder("ApprovalFiles");
-                });
-#endif
+            this.Assent(
+                logger.Log,
+                    new Configuration()
+                        .UsingSanitiser(Scrubbers.ScrubDates)
+                        .UsingNamer(new Namer(target, testName))
+                );
         }
+
+
 
         void UpgradeIsSuccessful()
         {
@@ -155,6 +159,27 @@ namespace DbUp.Tests
 
                 addCustomNamedJournalToBuilder = addCustomNamedJournal;
             };
+        }
+
+        private class Namer : INamer
+        {
+            private readonly ExampleAction target;
+            private readonly string testName;
+
+            public Namer(ExampleAction target, string testName)
+            {
+                this.target = target;
+                this.testName = testName;
+            }
+
+            public string GetName(TestMetadata metadata)
+            {
+                var targetName = target.ToString().Replace(" ", "");
+                var dir = Path.GetDirectoryName(metadata.FilePath);
+                var filename = $"{metadata.TestFixture.GetType().Name}.{testName}.{targetName}";
+
+                return Path.Combine(dir, "ApprovalFiles", filename);
+            }
         }
     }
 }
