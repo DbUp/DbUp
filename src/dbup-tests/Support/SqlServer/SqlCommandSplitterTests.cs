@@ -44,7 +44,6 @@ SELECT AccountId,
         [InlineData("GO", 0)]
         [InlineData(" GO", 0)]
         [InlineData("GO ", 0)]
-        [InlineData("GO ", 0)]
         [InlineData("GO\n", 0)]
         [InlineData("GO\nGO--Dummy comment", 1)]
         [InlineData("\nGO", 0)]

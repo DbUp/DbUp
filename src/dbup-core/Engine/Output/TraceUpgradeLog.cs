@@ -1,5 +1,4 @@
-﻿#if TRACE_SUPPORT
-using System.Diagnostics;
+﻿using System.Diagnostics;
 
 namespace DbUp.Engine.Output
 {
@@ -39,4 +38,3 @@ namespace DbUp.Engine.Output
         }
     }
 }
-#endif

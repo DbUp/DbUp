@@ -1,4 +1,5 @@
-﻿#if !NETCORE
+﻿using Assent;
+using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Tests.TestInfrastructure;
@@ -14,6 +15,9 @@ namespace DbUp.Tests
         RecordingDbConnection testConnection;
         SqlScript[] scripts;
         CaptureLogsLogger logger;
+        Configuration assentConfig = new Configuration()
+            .UsingNamer(new SubdirectoryNamer("ApprovalFiles"))
+            .UsingSanitiser(Scrubbers.ScrubDates);
 
         public TransactionScenarios()
         {
@@ -26,7 +30,7 @@ namespace DbUp.Tests
             this
                 .Given(_ => DbUpSetupToNotUseTransactions())
                 .When(_ => UpgradeIsPerformedExecutingTwoScripts())
-                .Then(_ => ShouldExecuteScriptsWithoutUsingATransaction())
+                .Then(_ => ShouldExecuteScriptsWithoutUsingATransaction(nameof(UsingNoTransactionsScenario)))
                 .BDDfy();
         }
 
@@ -36,7 +40,7 @@ namespace DbUp.Tests
             this
                 .Given(_ => DbUpSetupToNotUseTransactions())
                 .When(_ => UpgradeIsPerformedWithFirstOfTwoScriptsFails())
-                .Then(_ => ShouldStopExecution())
+                .Then(_ => ShouldStopExecution(nameof(UsingNoTransactionsScenarioScriptFails)))
                 .BDDfy();
         }
 
@@ -46,7 +50,7 @@ namespace DbUp.Tests
             this
                 .Given(_ => DbUpSetupToUseTransactionPerScript())
                 .When(_ => UpgradeIsPerformedExecutingTwoScripts())
-                .Then(_ => ShouldHaveExecutedEachScriptInATransaction())
+                .Then(_ => ShouldHaveExecutedEachScriptInATransaction(nameof(UsingTransactionPerScriptScenarioSuccess)))
                 .BDDfy();
         }
 
@@ -56,7 +60,7 @@ namespace DbUp.Tests
             this
                 .Given(_ => DbUpSetupToUseTransactionPerScript())
                 .When(_ => UpgradeIsPerformedWithFirstOfTwoScriptsFails())
-                .Then(_ => ShouldRollbackFailedScriptAndStopExecution())
+                .Then(_ => ShouldRollbackFailedScriptAndStopExecution(nameof(UsingTransactionPerScriptScenarioScriptFails)))
                 .BDDfy();
         }
 
@@ -66,7 +70,7 @@ namespace DbUp.Tests
             this
                 .Given(_ => DbUpSetupToUseSingleTransaction())
                 .When(_ => UpgradeIsPerformedExecutingTwoScripts())
-                .Then(_ => ShouldExecuteAllScriptsInASingleTransaction())
+                .Then(_ => ShouldExecuteAllScriptsInASingleTransaction(nameof(UsingSingleTransactionScenarioSuccess)))
                 .BDDfy();
         }
 
@@ -76,7 +80,7 @@ namespace DbUp.Tests
             this
                 .Given(_ => DbUpSetupToUseSingleTransaction())
                 .When(_ => UpgradeIsPerformedWithFirstOfTwoScriptsFails())
-                .Then(_ => ShouldRollbackFailedScriptAndStopExecution())
+                .Then(_ => ShouldRollbackFailedScriptAndStopExecution(nameof(UsingSingleTransactionScenarioSuccessScriptFails)))
                 .BDDfy();
         }
 
@@ -93,54 +97,29 @@ namespace DbUp.Tests
                 .PerformUpgrade();
         }
 
-        void ShouldStopExecution()
+        void ShouldStopExecution(string testName)
         {
-            logger.Log.ShouldMatchApproved(b =>
-            {
-                b.WithScrubber(Scrubbers.ScrubDates);
-                b.LocateTestMethodUsingAttribute<FactAttribute>();
-                b.SubFolder("ApprovalFiles");
-            });
+            this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldRollbackFailedScriptAndStopExecution()
+        void ShouldRollbackFailedScriptAndStopExecution(string testName)
         {
-            logger.Log.ShouldMatchApproved(b =>
-            {
-                b.WithScrubber(Scrubbers.ScrubDates);
-                b.LocateTestMethodUsingAttribute<FactAttribute>();
-                b.SubFolder("ApprovalFiles");
-            });
+            this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldExecuteAllScriptsInASingleTransaction()
+        void ShouldExecuteAllScriptsInASingleTransaction(string testName)
         {
-            logger.Log.ShouldMatchApproved(b =>
-            {
-                b.WithScrubber(Scrubbers.ScrubDates);
-                b.LocateTestMethodUsingAttribute<FactAttribute>();
-                b.SubFolder("ApprovalFiles");
-            });
+            this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldHaveExecutedEachScriptInATransaction()
+        void ShouldHaveExecutedEachScriptInATransaction(string testName)
         {
-            logger.Log.ShouldMatchApproved(b =>
-            {
-                b.WithScrubber(Scrubbers.ScrubDates);
-                b.LocateTestMethodUsingAttribute<FactAttribute>();
-                b.SubFolder("ApprovalFiles");
-            });
+            this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldExecuteScriptsWithoutUsingATransaction()
+        void ShouldExecuteScriptsWithoutUsingATransaction(string testName)
         {
-            logger.Log.ShouldMatchApproved(b =>
-            {
-                b.WithScrubber(Scrubbers.ScrubDates);
-                b.LocateTestMethodUsingAttribute<FactAttribute>();
-                b.SubFolder("ApprovalFiles");
-            });
+            this.Assent(logger.Log, assentConfig, testName);
         }
 
         void DbUpSetupToUseSingleTransaction()
@@ -185,4 +164,3 @@ namespace DbUp.Tests
         }
     }
 }
-#endif

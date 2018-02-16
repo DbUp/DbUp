@@ -7,7 +7,7 @@ namespace DbUp.Tests.TestInfrastructure
         public T Subject;
 
         public abstract T Given();
-        public abstract void When();
+        protected abstract void When();
 
         public SpecificationFor()
         {

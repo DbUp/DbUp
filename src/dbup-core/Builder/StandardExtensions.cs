@@ -29,7 +29,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogTo(this UpgradeEngineBuilder builder, IUpgradeLog log)
     {
-        builder.Configure(c => c.Log = log);
+        builder.Configure(c => c.AddLog(log));
         return builder;
     }
 
@@ -46,6 +46,32 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Discards all log messages
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToNowhere(this UpgradeEngineBuilder builder)
+    {
+        return LogTo(builder, new NoOpUpgradeLog());
+    }
+
+#if SUPPORTS_LIBLOG
+    /// <summary>
+    /// Logs to a automatically detected globally configured logger supported by LibLog.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToAutodetectedLog(this UpgradeEngineBuilder builder)
+    {
+        return LogTo(builder, new AutodetectUpgradeLog());
+    }
+#endif
+
+    /// <summary>
     /// Logs to the console using pretty colours.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -58,7 +84,6 @@ public static class StandardExtensions
         return builder;
     }
 
-#if TRACE_SUPPORT
     /// <summary>
     /// Logs to System.Diagnostics.Trace.
     /// </summary>
@@ -70,7 +95,17 @@ public static class StandardExtensions
     {
         return LogTo(builder, new TraceUpgradeLog());
     }
-#endif
+    
+    /// <summary>
+    /// Resets any loggers configured with 
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder ResetConfiguredLoggers(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.Log = null);
+        return builder;
+    }
 
     /// <summary>
     /// Uses a custom journal for recording which scripts were executed.
@@ -178,7 +213,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, filter));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter}));
     }
 
     /// <summary>
@@ -192,7 +227,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, encoding));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding}));
     }
 
     /// <summary>
@@ -207,7 +242,21 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, filter, encoding));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() {Filter = filter, Encoding = encoding}));
+    }
+
+    /// <summary>
+    /// Adds all scripts from a folder on the file system, with custom options (Encoding, filter, etc.).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="options">Options for the file System Provider</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, FileSystemScriptOptions options)
+    {
+        return WithScripts(builder, new FileSystemScriptProvider(path, options));
     }
 
     /// <summary>
@@ -284,7 +333,7 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The Sql Script filter (only affects embdeeded scripts, does not filter IScript files). Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
     /// <returns>
     /// The same builder
     /// </returns>
@@ -292,7 +341,37 @@ public static class StandardExtensions
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
     }
-
+    
+    /// <summary>
+    /// Adds a sorter that sorts the scripts before filtering and execution
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="sorter">The sorter.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithSorter(this UpgradeEngineBuilder builder, IScriptSorter sorter)
+    {
+        builder.Configure(b => b.ScriptSorter = sorter);
+        return builder;
+    }
+    
+    /// <summary>
+    /// Adds a filter that filters the sorted lists of script prior to execution. This allows
+    /// scripts to be excluded based on which scripts have already been run. This can be used to
+    /// make the filtering case-insensitive, or support re-named scripts
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="filter">The filter.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithFilter(this UpgradeEngineBuilder builder, IScriptFilter filter)
+    {
+        builder.Configure(b => b.ScriptFilter = filter);
+        return builder;
+    }
+    
     /// <summary>
     /// Adds a preprocessor that can replace portions of a script.
     /// </summary>

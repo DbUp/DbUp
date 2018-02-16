@@ -1,5 +1,4 @@
-﻿#if !NETCORE
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -14,38 +13,71 @@ using Shouldly;
 
 namespace DbUp.Tests.ScriptProvider
 {
-    public class EmbeddedScriptAndCodeProviderTests : SpecificationFor<EmbeddedScriptAndCodeProvider>
+    public class EmbeddedScriptAndCodeProviderTests
     {
-        private SqlScript[] scriptsToExecute;
-
-        public override EmbeddedScriptAndCodeProvider Given()
+        public class when_no_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
         {
-            var assembly = Assembly.GetExecutingAssembly();
+            private SqlScript[] scriptsToExecute;
 
-            return new EmbeddedScriptAndCodeProvider(assembly, s=>true);
+            public override EmbeddedScriptAndCodeProvider Given()
+            {
+                var assembly = typeof(EmbeddedScriptAndCodeProviderTests).GetTypeInfo().Assembly;
+
+                return new EmbeddedScriptAndCodeProvider(assembly, s => true);
+            }
+
+            protected override void When()
+            {
+                var testConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
+                testConnectionManager.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+                scriptsToExecute = Subject.GetScripts(testConnectionManager).ToArray();
+            }
+
+            [Then]
+            public void it_should_return_all_sql_files()
+            {
+                scriptsToExecute.Length.ShouldBe(10);
+            }
+
+            [Then]
+            public void should_provide_content_for_code_script()
+            {
+                scriptsToExecute
+                    .Single(s => s.Name.EndsWith("Script20120723_1_Test4.cs"))
+                    .Contents
+                    .ShouldBe("test4");
+            }
         }
 
-        public override void When()
+        public class when_a_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
         {
-            var testConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
-            testConnectionManager.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
-            scriptsToExecute = Subject.GetScripts(testConnectionManager).ToArray();
-        }
+            private SqlScript[] scriptsToExecute;
 
-        [Then]
-        public void it_should_return_all_sql_files()
-        {
-            scriptsToExecute.Length.ShouldBe(6);
-        }
+            public override EmbeddedScriptAndCodeProvider Given()
+            {
+                var assembly = Assembly.GetExecutingAssembly();
 
-        [Then]
-        public void should_provide_content_for_code_script()
-        {
-            scriptsToExecute
-                .Single(s => s.Name.EndsWith("Script20120723_1_Test4.cs"))
-                .Contents
-                .ShouldBe("test4");
+                return new EmbeddedScriptAndCodeProvider(assembly, s => !s.Contains("Test4"));
+            }
+
+            protected override void When()
+            {
+                var testConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>());
+                testConnectionManager.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+                scriptsToExecute = Subject.GetScripts(testConnectionManager).ToArray();
+            }
+
+            [Then]
+            public void should_not_return_the_code_based_script()
+            {
+                scriptsToExecute.ShouldNotContain(x => x.Name.Contains("Test4"));
+            }
+
+            [Then]
+            public void it_should_only_return_the_sql_scripts()
+            {
+                scriptsToExecute.Length.ShouldBe(9);
+            }
         }
     }
 }
-#endif

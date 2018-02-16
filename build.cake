@@ -4,14 +4,6 @@
 var target = Argument("target", "Default");
 var outputDir = "./artifacts/";
 
-void UpdateProjectJsonVersion(string projectName) {
-    var proj = string.Format("./src/{0}/project.json", projectName);
-    var updatedProjectJson = System.IO.File.ReadAllText(proj)
-        .Replace("1.0.0-*", versionInfo.NuGetVersion);
-
-    System.IO.File.WriteAllText(proj, updatedProjectJson);
-}
-
 Task("Clean")
     .Does(() => {
         if (DirectoryExists(outputDir))
@@ -20,27 +12,24 @@ Task("Clean")
         }
     });
 
-Task("Restore")
-    .Does(() => {
-        DotNetCoreRestore();
-    });
+
 
 GitVersion versionInfo = null;
 Task("Version")
     .Does(() => {
         GitVersion(new GitVersionSettings{
-            UpdateAssemblyInfo = true,
+            UpdateAssemblyInfo = false,
             OutputType = GitVersionOutput.BuildServer
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
-        UpdateProjectJsonVersion("dbup-core");
-        UpdateProjectJsonVersion("dbup-firebird");
-        UpdateProjectJsonVersion("dbup-mysql");
-        UpdateProjectJsonVersion("dbup-postgresql");
-        UpdateProjectJsonVersion("dbup-sqlce");
-        UpdateProjectJsonVersion("dbup-sqlite");
-        UpdateProjectJsonVersion("dbup-sqlite-mono");
-        UpdateProjectJsonVersion("dbup-sqlserver");
+    });
+
+Task("Restore")
+    .IsDependentOn("Version")
+    .Does(() => {
+        DotNetCoreRestore("src", new DotNetCoreRestoreSettings() {
+            ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.NuGetVersion)
+        });
     });
 
 Task("Build")
@@ -48,36 +37,39 @@ Task("Build")
     .IsDependentOn("Version")
     .IsDependentOn("Restore")
     .Does(() => {
-        MSBuild("./src/DbUp.sln");
+        var settings =  new MSBuildSettings()
+            .SetConfiguration("Release")
+            .UseToolVersion(MSBuildToolVersion.VS2017)
+            .WithProperty("Version", versionInfo.NuGetVersion)
+            .WithProperty("PackageOutputPath", System.IO.Path.GetFullPath(outputDir))
+            .WithTarget("Build")
+            .WithTarget("Pack");
+
+        MSBuild("./src/DbUp.sln", settings);
     });
 
 Task("Test")
     .IsDependentOn("Build")
     .Does(() => {
-        DotNetCoreTest("./src/dbup-tests");
+         DotNetCoreTest("./src/dbup-tests/dbup-tests.csproj", new DotNetCoreTestSettings
+        {
+            Configuration = "Release",
+            NoBuild = true
+        });
     });
 
 Task("Package")
     .IsDependentOn("Test")
     .Does(() => {
-        var settings = new DotNetCorePackSettings
-        {
-            OutputDirectory = outputDir,
-            NoBuild = true
-        };
 
-        DotNetCorePack("./src/dbup-core/project.json", settings);
-        DotNetCorePack("./src/dbup-firebird/project.json", settings);
-        DotNetCorePack("./src/dbup-mysql/project.json", settings);
-        DotNetCorePack("./src/dbup-postgresql/project.json", settings);
-        DotNetCorePack("./src/dbup-sqlce/project.json", settings);
-        DotNetCorePack("./src/dbup-sqlite/project.json", settings);
-        DotNetCorePack("./src/dbup-sqlite-mono/project.json", settings);
-        DotNetCorePack("./src/dbup-sqlserver/project.json", settings);
+        NuGetPack("./src/dbup/dbup.nuspec", new NuGetPackSettings() {
+            OutputDirectory = System.IO.Path.GetFullPath(outputDir),
+            Version = versionInfo.NuGetVersion
+        });
 
 	    var githubToken = Argument<string>("githubToken");
         var releaseNotesExitCode = StartProcess(
-            @"tools\GitReleaseNotes\tools\gitreleasenotes.exe", 
+            @"tools\GitReleaseNotes\tools\gitreleasenotes.exe",
             new ProcessSettings { Arguments = ". /o artifacts/releasenotes.md /repoToken " + githubToken });
         if (string.IsNullOrEmpty(System.IO.File.ReadAllText("./artifacts/releasenotes.md")))
             System.IO.File.WriteAllText("./artifacts/releasenotes.md", "No issues closed since last release");
