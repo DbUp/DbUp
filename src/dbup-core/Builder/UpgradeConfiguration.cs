@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Filters;
 using DbUp.Engine.Output;
-using DbUp.Engine.Sorters;
 using DbUp.Engine.Transactions;
+using DbUp.Support;
 
 namespace DbUp.Builder
 {
@@ -75,9 +75,12 @@ namespace DbUp.Builder
         public IScriptExecutor ScriptExecutor { get; set; }
 
         /// <summary>
-        /// Gets or sets the script sorter, which defines the order the scripts execute in
+        /// Gets or sets the comparer used to sort scripts and match script names against the log of already run scripts.
+        /// The default comparer is StringComparer.Ordinal.
+        /// By implementing your own comparer you can make make the matching and ordering case insensitive,
+        /// change how numbers are handled or support the renaming of scripts
         /// </summary>
-        public IScriptSorter ScriptSorter { get; set; } = new AlphabeticalScriptSorter();
+        public ScriptNameComparer ScriptNameComparer { get; set; } = new ScriptNameComparer(StringComparer.Ordinal);
 
         /// <summary>
         /// Gets or sets the script filter, which filters the scripts before execution

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
+using DbUp.Engine.Filters;
 
 namespace DbUp.Engine
 {
@@ -102,8 +103,8 @@ namespace DbUp.Engine
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
             var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
-            var sorted = configuration.ScriptSorter.Sort(allScripts);
-            var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames);
+            var sorted = allScripts.OrderBy(s => s.Name, configuration.ScriptNameComparer);
+            var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames, configuration.ScriptNameComparer);
             return filtered.ToList();
         }
 

@@ -5,9 +5,11 @@ using System.Text;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine;
+using DbUp.Engine.Filters;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
+using DbUp.Support;
 
 /// <summary>
 /// Configuration extensions for the standard stuff.
@@ -343,23 +345,25 @@ public static class StandardExtensions
     }
     
     /// <summary>
-    /// Adds a sorter that sorts the scripts before filtering and execution
+    /// Sets the comparer used to sort scripts and match script names against the log of already run scripts.
+    /// The default comparer is StringComparer.Ordinal.
+    /// By implementing your own comparer you can make make the matching and ordering case insensitive,
+    /// change how numbers are handled or support the renaming of scripts
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <param name="sorter">The sorter.</param>
+    /// <param name="comparer">The sorter.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithSorter(this UpgradeEngineBuilder builder, IScriptSorter sorter)
+    public static UpgradeEngineBuilder WithScriptNameComparer(this UpgradeEngineBuilder builder, IComparer<string> comparer)
     {
-        builder.Configure(b => b.ScriptSorter = sorter);
+        builder.Configure(b => b.ScriptNameComparer = new ScriptNameComparer(comparer));
         return builder;
     }
     
     /// <summary>
-    /// Adds a filter that filters the sorted lists of script prior to execution. This allows
-    /// scripts to be excluded based on which scripts have already been run. This can be used to
-    /// make the filtering case-insensitive, or support re-named scripts
+    /// Sets the filter that filters the sorted lists of script prior to execution. This allows
+    /// scripts to be excluded based on which scripts have already been run.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="filter">The filter.</param>
