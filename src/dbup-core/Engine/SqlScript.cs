@@ -56,12 +56,31 @@ namespace DbUp.Engine
         /// <param name="encoding"></param>
         /// <returns></returns>
         public static SqlScript FromFile(string path, Encoding encoding)
+            => FromFile(Path.GetDirectoryName(path), path, encoding);
+        
+        /// <summary>
+        /// Create a SqlScript from a file using specified encoding
+        /// </summary>
+        /// <param name="basePath">Root path that was searched</param>
+        /// <param name="path">Path to the file</param>
+        /// <param name="encoding"></param>
+        /// <returns></returns>
+        public static SqlScript FromFile(string basePath, string path, Encoding encoding)
         {
+            var fullPath = Path.GetFullPath(path);
+            var fullBasePath = Path.GetFullPath(basePath);
+            
+            if(!fullPath.StartsWith(fullBasePath, StringComparison.OrdinalIgnoreCase))
+                throw new Exception("The basePath must be a parent of path");
+                
+            var filename = fullPath
+                .Substring(fullBasePath.Length)
+                .Replace(Path.DirectorySeparatorChar, '.')
+                .Replace(Path.AltDirectorySeparatorChar, '.')
+                .Trim('.');
+            
             using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
-            {
-                var fileName = new FileInfo(path).Name;
-                return FromStream(fileName, fileStream, encoding);
-            }
+                return FromStream(filename, fileStream, encoding);
         }
 
         /// <summary>
