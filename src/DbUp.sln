@@ -33,6 +33,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-tests", "dbup-tests\db
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite-mono", "dbup-sqlite-mono\dbup-sqlite-mono.csproj", "{CD122205-EEC4-4DB9-9EFA-976EADF80323}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SampleApplication", "Samples\SampleApplication\SampleApplication.csproj", "{397F41BC-1076-4D1B-9620-C6051E8104F4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -75,6 +79,10 @@ Global
 		{CD122205-EEC4-4DB9-9EFA-976EADF80323}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD122205-EEC4-4DB9-9EFA-976EADF80323}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD122205-EEC4-4DB9-9EFA-976EADF80323}.Release|Any CPU.Build.0 = Release|Any CPU
+		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -84,5 +92,8 @@ Global
 	EndGlobalSection
 	GlobalSection(MonoDevelopProperties) = preSolution
 		StartupItem = DbUp\DbUp.csproj
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{397F41BC-1076-4D1B-9620-C6051E8104F4} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
 	EndGlobalSection
 EndGlobal
