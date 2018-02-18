@@ -54,6 +54,10 @@ namespace DbUp
     {
         public static DbUp.Builder.SupportedDatabases To { get; }
     }
+    public static class DropDatabase
+    {
+        public static DbUp.SupportedDatabasesForDropDatabase For { get; }
+    }
     public static class EnsureDatabase
     {
         public static DbUp.SupportedDatabasesForEnsureDatabase For { get; }
@@ -64,6 +68,10 @@ namespace DbUp
         public static System.Func<string, bool> ExcludeScripts(params string[] scriptNames) { }
         public static System.Func<string, bool> OnlyIncludeScriptNamesInFile(string fileName) { }
         public static System.Func<string, bool> OnlyIncludeScripts(params string[] scriptNames) { }
+    }
+    public class SupportedDatabasesForDropDatabase
+    {
+        public SupportedDatabasesForDropDatabase() { }
     }
     public class SupportedDatabasesForEnsureDatabase
     {
