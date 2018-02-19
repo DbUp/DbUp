@@ -159,8 +159,16 @@ namespace DbUp.Tests.ScriptProvider
                     sqlScript.Contents.Length.ShouldBeGreaterThan(0);
                 }
             }
+            
+            [Then]
+            public void the_files_should_contain_the_subfolder_name()
+            {
+                filesToExecute
+                        .Select(f => f.Name)
+                        .ShouldContain("Folder1.dbup-tests.TestScripts.Test1__9.sql");
+            }
 
-            [Then(Skip = "The script names should include the folder")]
+            [Then()]
             public void the_files_should_be_correctly_ordered_with_subdirectory_order()
             {
                 filesToExecute.ElementAt(0).Name.ShouldEndWith("Script20110301_1_Test1.sql");

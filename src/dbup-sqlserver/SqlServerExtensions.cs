@@ -11,8 +11,7 @@ using DbUp.SqlServer;
 /// Configuration extension methods for SQL Server.
 /// </summary>
 // NOTE: DO NOT MOVE THIS TO A NAMESPACE
-// Since the class just contains extension methods, we leave it in the root so that it is always discovered
-// and people don't have to manually add using statements.
+// Since the class just contains extension methods, we leave it in the global:: namespace so that it is always available
 // ReSharper disable CheckNamespace
 public static class SqlServerExtensions
 // ReSharper restore CheckNamespace
@@ -101,6 +100,20 @@ public static class SqlServerExtensions
         return builder;
     }
 
+#if SUPPORTS_SQL_CONTEXT
+    /// <summary>
+    /// Logs to SqlContext.Pipe, for use with "context connection=true".
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
+    {
+        return builder.LogTo(new SqlContextUpgradeLog());
+    }
+#endif
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -136,20 +149,6 @@ public static class SqlServerExtensions
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
     }
 
-#if SUPPORTS_SQL_CONTEXT
-    /// <summary>
-    /// Logs to SqlContext.Pipe, for use with "context connection=true".
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToSqlContext(this UpgradeEngineBuilder builder)
-    {
-        return builder.LogTo(new SqlContextUpgradeLog());
-    }
-#endif
-
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -174,34 +173,11 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1, AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None)
     {
-        if (supported == null) throw new ArgumentNullException("supported");
+        string databaseName;
+        string masterConnectionString;
+        GetMasterConnectionStringBuilder(connectionString, logger, out masterConnectionString, out databaseName);
 
-        if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
-        {
-            throw new ArgumentNullException("connectionString");
-        }
-
-        if (logger == null) throw new ArgumentNullException("logger");
-
-        var masterConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
-
-        var databaseName = masterConnectionStringBuilder.InitialCatalog;
-
-        if (string.IsNullOrEmpty(databaseName) || databaseName.Trim() == string.Empty)
-        {
-            throw new InvalidOperationException("The connection string does not specify a database name.");
-        }
-
-        masterConnectionStringBuilder.InitialCatalog = "master";
-
-        var logMasterConnectionStringBuilder = new SqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString)
-        {
-            Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*')
-        };
-
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
-
-        using (var connection = new SqlConnection(masterConnectionStringBuilder.ConnectionString))
+        using (var connection = new SqlConnection(masterConnectionString))
         {
             connection.Open();
 
@@ -265,5 +241,90 @@ public static class SqlServerExtensions
 
             logger.WriteInformation(@"Created database {0}", databaseName);
         }
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString)
+    {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, int commandTimeout)
+    {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="timeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
+    {
+        string databaseName;
+        string masterConnectionString;
+        GetMasterConnectionStringBuilder(connectionString, logger, out masterConnectionString, out databaseName);
+
+        using (var connection = new SqlConnection(masterConnectionString))
+        {
+            connection.Open();
+            var databaseExistCommand = new SqlCommand($"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{databaseName}';", connection)
+            {
+                CommandType = CommandType.Text
+            };
+            using (var command = databaseExistCommand)
+            {
+                var exists = (int?)command.ExecuteScalar();
+                if (!exists.HasValue)
+                    return;
+            }
+
+            var dropDatabaseCommand = new SqlCommand($"ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
+            using (var command = dropDatabaseCommand)
+            {
+                command.ExecuteNonQuery();
+            }
+
+            logger.WriteInformation("Dropped database {0}", databaseName);
+        }
+    }
+
+    private static void GetMasterConnectionStringBuilder(string connectionString, IUpgradeLog logger, out string masterConnectionString, out string databaseName)
+    {
+        if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
+            throw new ArgumentNullException("connectionString");
+
+        if (logger == null)
+            throw new ArgumentNullException("logger");
+
+        var masterConnectionStringBuilder = new SqlConnectionStringBuilder(connectionString);
+        databaseName = masterConnectionStringBuilder.InitialCatalog;
+
+        if (string.IsNullOrEmpty(databaseName) || databaseName.Trim() == string.Empty)
+            throw new InvalidOperationException("The connection string does not specify a database name.");
+
+        masterConnectionStringBuilder.InitialCatalog = "master";
+        var logMasterConnectionStringBuilder = new SqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString)
+        {
+            Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*')
+        };
+
+        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
+        masterConnectionString = masterConnectionStringBuilder.ConnectionString;
     }
 }

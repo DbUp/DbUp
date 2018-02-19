@@ -80,7 +80,7 @@ namespace DbUp.ScriptProviders
             {
                 files = files.Where(filter);
             }
-            return files.Select(x => SqlScript.FromFile(x, encoding))
+            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding))
                 .OrderBy(x => x.Name)
                 .ToList();
         }
