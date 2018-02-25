@@ -358,6 +358,11 @@ namespace DbUp.Support
             ReadCharacter(CharacterType.QuotedString, CurrentChar);
             while (Read() != FailedRead)
             {
+                if (IsCustomStatement)
+                {
+                    ReadCustomStatement();
+                    Read();
+                }
                 ReadCharacter(CharacterType.QuotedString, CurrentChar);
                 if (IsQuote)
                 {
@@ -374,6 +379,11 @@ namespace DbUp.Support
             ReadCharacter(CharacterType.BracketedText, CurrentChar);
             while (Read() != FailedRead)
             {
+                if (IsCustomStatement)
+                {
+                    ReadCustomStatement();
+                    Read();
+                }
                 ReadCharacter(CharacterType.BracketedText, CurrentChar);
                 if (IsEndOfBracketedText)
                 {

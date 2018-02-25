@@ -36,7 +36,7 @@ namespace DbUp.Tests.Engine
         }
 
         [Fact]
-        public void ignores_variables_in_quoted_text()
+        public void substitutes_variables_in_quoted_text()
         {
             var journal = Substitute.For<IJournal>();
             var connection = Substitute.For<IDbConnection>();
@@ -52,7 +52,7 @@ namespace DbUp.Tests.Engine
 
             upgradeEngine.PerformUpgrade();
 
-            command.CommandText.ShouldBe("'$somevar$'");
+            command.CommandText.ShouldBe("'coriander'");
         }
 
         [Fact]
@@ -74,6 +74,7 @@ namespace DbUp.Tests.Engine
 
             command.CommandText.ShouldBe("/*$somevar$*/");
         }
+        
         [Fact]
         public void ignores_undefined_variables_in_complex_comments()
         {
@@ -134,6 +135,47 @@ namespace DbUp.Tests.Engine
 
             result.Successful.ShouldBeFalse();
             result.Error.ShouldBeOfType<InvalidOperationException>();
+        }
+        
+        [Fact]
+        public void ignores_if_whitespace_between_dollars()
+        {
+            var journal = Substitute.For<IJournal>();
+            var connection = Substitute.For<IDbConnection>();
+            var command = Substitute.For<IDbCommand>();
+            connection.CreateCommand().Returns(command);
+
+            var upgradeEngine = DeployChanges.To
+                .SqlDatabase(() => connection, "Db")
+                .WithScript("testscript", "$some var$")
+                .JournalTo(journal)
+                .WithVariable("some var", "coriander")
+                .Build();
+
+            var result = upgradeEngine.PerformUpgrade();
+
+            result.Successful.ShouldBeTrue();
+            command.CommandText.ShouldBe("$some var$");
+        }
+        
+        [Fact]
+        public void ignores_if_newline_between_dollars()
+        {
+            var journal = Substitute.For<IJournal>();
+            var connection = Substitute.For<IDbConnection>();
+            var command = Substitute.For<IDbCommand>();
+            connection.CreateCommand().Returns(command);
+
+            var upgradeEngine = DeployChanges.To
+                .SqlDatabase(() => connection, "Db")
+                .WithScript("testscript", "$some\nvar$")
+                .JournalTo(journal)
+                .WithVariable("somevar", "coriander")
+                .Build();
+
+            var result = upgradeEngine.PerformUpgrade();
+
+            result.Successful.ShouldBeTrue();
         }
     }
 }
