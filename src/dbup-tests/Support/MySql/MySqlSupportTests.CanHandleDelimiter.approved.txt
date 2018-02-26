@@ -24,6 +24,9 @@ BEGIN
 
 END
 DB Operation: Dispose command
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
+DB Operation: Dispose command
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: scriptName=Script0003
 DB Operation: Create parameter

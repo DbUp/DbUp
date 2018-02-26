@@ -3,6 +3,13 @@ Info:         Beginning database upgrade
 Info:         Checking whether journal table exists..
 DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
 DB Operation: Dispose command
+Info:         Journal table does not exist
+Info:         Executing Database Server script 'Script0001.sql'
+DB Operation: Execute non query command: script1contents
+DB Operation: Dispose command
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
+DB Operation: Dispose command
 Info:         Creating the [test].[TestSchemaVersions] table
 DB Operation: Execute non query command: create table [test].[TestSchemaVersions] (
     [Id] int identity(1,1) not null constraint [PK_TestSchemaVersions_Id] primary key,
@@ -11,12 +18,6 @@ DB Operation: Execute non query command: create table [test].[TestSchemaVersions
 )
 DB Operation: Dispose command
 Info:         The [test].[TestSchemaVersions] table has been created
-Info:         Fetching list of already executed scripts.
-DB Operation: Execute reader command: select [ScriptName] from [test].[TestSchemaVersions] order by [ScriptName]
-DB Operation: Dispose command
-Info:         Executing Database Server script 'Script0001.sql'
-DB Operation: Execute non query command: script1contents
-DB Operation: Dispose command
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
 DB Operation: Create parameter

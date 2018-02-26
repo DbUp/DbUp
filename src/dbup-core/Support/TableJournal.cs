@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
@@ -56,29 +57,32 @@ namespace DbUp.Support
 
         protected Func<IUpgradeLog> Log { get; private set; }
 
-        /// <summary>
-        /// Recalls the version number of the database.
-        /// </summary>
-        /// <returns>All executed scripts.</returns>
         public string[] GetExecutedScripts()
         {
-            EnsureTableIsLatestVersion();
-            Log().WriteInformation("Fetching list of already executed scripts.");
-
-            var scripts = new List<string>();
-            ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            if (journalExists || DoesTableExist())
             {
-                using (var command = GetJournalEntriesCommand(dbCommandFactory))
-                {
-                    using (var reader = command.ExecuteReader())
-                    {
-                        while (reader.Read())
-                            scripts.Add((string)reader[0]);
-                    }
-                }
-            });
+                Log().WriteInformation("Fetching list of already executed scripts.");
 
-            return scripts.ToArray();
+                var scripts = new List<string>();
+                ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                {
+                    using (var command = GetJournalEntriesCommand(dbCommandFactory))
+                    {
+                        using (var reader = command.ExecuteReader())
+                        {
+                            while (reader.Read())
+                                scripts.Add((string) reader[0]);
+                        }
+                    }
+                });
+
+                return scripts.ToArray();
+            }
+            else
+            {
+                Log().WriteInformation("Journal table does not exist");
+                return new string[0];
+            }
         }
 
         /// <summary>
