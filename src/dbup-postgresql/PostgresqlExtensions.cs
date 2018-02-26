@@ -22,10 +22,20 @@ public static class PostgresqlExtensions
     /// <returns>
     /// A builder for a database upgrader designed for PostgreSQL databases.
     /// </returns>
-    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString)
-    {
-        return PostgresqlDatabase(new PostgresqlConnectionManager(connectionString));
-    }
+    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString) 
+        => PostgresqlDatabase(supported, connectionString, null);
+
+    /// <summary>
+    /// Creates an upgrader for PostgreSQL databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">PostgreSQL database connection string.</param>
+    /// <param name="schema">The schema in which to check for changes</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for PostgreSQL databases.
+    /// </returns>
+    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString, string schema) 
+        => PostgresqlDatabase(new PostgresqlConnectionManager(connectionString), schema);
 
     /// <summary>
     /// Creates an upgrader for PostgreSQL databases.
@@ -35,11 +45,22 @@ public static class PostgresqlExtensions
     /// A builder for a database upgrader designed for PostgreSQL databases.
     /// </returns>
     public static UpgradeEngineBuilder PostgresqlDatabase(IConnectionManager connectionManager)
+        => PostgresqlDatabase(connectionManager, null);
+    
+    /// <summary>
+    /// Creates an upgrader for PostgreSQL databases.
+    /// </summary>
+    /// <param name="connectionManager">The <see cref="PostgresqlConnectionManager"/> to be used during a database upgrade.</param>
+    /// <param name="schema">The schema in which to check for changes</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for PostgreSQL databases.
+    /// </returns>
+    public static UpgradeEngineBuilder PostgresqlDatabase(IConnectionManager connectionManager, string schema)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
-        builder.Configure(c => c.ScriptExecutor = new PostgresqlScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, null, "schemaversions"));
+        builder.Configure(c => c.ScriptExecutor = new PostgresqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
+        builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, "schemaversions"));
         builder.WithPreprocessor(new PostgresqlPreprocessor());
         return builder;
     }
@@ -136,5 +157,18 @@ public static class PostgresqlExtensions
 
             logger.WriteInformation(@"Created database {0}", databaseName);
         }
+    }
+    
+    /// <summary>
+    /// Tracks the list of executed scripts in a SQL Server table.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="schema">The schema.</param>
+    /// <param name="table">The table.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder JournalToPostgresqlTable(this UpgradeEngineBuilder builder, string schema, string table)
+    {
+        builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
+        return builder;
     }
 }
