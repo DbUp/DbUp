@@ -1,5 +1,4 @@
-﻿#tool "nuget:?package=GitReleaseNotes"
-#tool "nuget:?package=GitVersion.CommandLine"
+﻿#tool "nuget:?package=GitVersion.CommandLine"
 
 var target = Argument("target", "Default");
 var outputDir = "./artifacts/";
@@ -67,15 +66,6 @@ Task("Package")
             Version = versionInfo.NuGetVersion
         });
 
-	    var githubToken = Argument<string>("githubToken");
-        var releaseNotesExitCode = StartProcess(
-            @"tools\GitReleaseNotes\tools\gitreleasenotes.exe",
-            new ProcessSettings { Arguments = ". /o artifacts/releasenotes.md /repoToken " + githubToken });
-        if (string.IsNullOrEmpty(System.IO.File.ReadAllText("./artifacts/releasenotes.md")))
-            System.IO.File.WriteAllText("./artifacts/releasenotes.md", "No issues closed since last release");
-
-        if (releaseNotesExitCode != 0) throw new Exception("Failed to generate release notes");
-
         System.IO.File.WriteAllLines(outputDir + "artifacts", new[]
         {
             "core:dbup-core." + versionInfo.NuGetVersion + ".nupkg",
@@ -85,8 +75,7 @@ Task("Package")
             "sqlce:dbup-sqlce." + versionInfo.NuGetVersion + ".nupkg",
             "sqlite:dbup-sqlite." + versionInfo.NuGetVersion + ".nupkg",
             "sqlite-mono:dbup-sqlite-mono." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg",
-            "releaseNotes:releasenotes.md"
+            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg"
         });
 
         if (AppVeyor.IsRunningOnAppVeyor)
