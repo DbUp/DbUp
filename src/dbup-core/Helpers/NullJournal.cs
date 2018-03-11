@@ -26,7 +26,7 @@ namespace DbUp.Helpers
         public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         { }
 
-        public void EnsureTableExistsAndIsLatestVersion()
+        public void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)
         { }
     }
 }

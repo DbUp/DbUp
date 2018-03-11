@@ -1,4 +1,5 @@
-﻿using Assent;
+﻿using System.IO;
+using Assent;
 using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -22,6 +23,9 @@ namespace DbUp.Tests
         public TransactionScenarios()
         {
             logger = new CaptureLogsLogger();
+            
+            // Automatically approve the change, make sure to check the result before commiting 
+            // assentConfig = assentConfig.UsingReporter((recieved, approved) => File.Copy(recieved, approved, true));
         }
 
         [Fact]

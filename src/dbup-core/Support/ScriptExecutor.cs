@@ -120,7 +120,7 @@ namespace DbUp.Support
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
                     var journal = journalFactory();
-                    journal.EnsureTableExistsAndIsLatestVersion();
+                    journal.EnsureTableExistsAndIsLatestVersion(dbCommandFactory);
 
                     foreach (var statement in scriptStatements)
                     {

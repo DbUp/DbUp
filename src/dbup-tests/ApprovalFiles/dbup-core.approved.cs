@@ -119,7 +119,7 @@ namespace DbUp.Engine
     }
     public interface IJournal
     {
-        void EnsureTableExistsAndIsLatestVersion();
+        void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory);
         string[] GetExecutedScripts();
         void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory);
     }
@@ -328,7 +328,7 @@ namespace DbUp.Helpers
     public class NullJournal : DbUp.Engine.IJournal
     {
         public NullJournal() { }
-        public void EnsureTableExistsAndIsLatestVersion() { }
+        public void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public string[] GetExecutedScripts() { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
     }
@@ -472,9 +472,9 @@ namespace DbUp.Support
         protected string SchemaTableSchema { get; }
         protected string UnquotedSchemaTableName { get; }
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
-        protected bool DoesTableExist() { }
+        protected bool DoesTableExist(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected virtual string DoesTableExistSql() { }
-        public void EnsureTableExistsAndIsLatestVersion() { }
+        public void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public string[] GetExecutedScripts() { }
         protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);

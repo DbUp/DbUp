@@ -25,6 +25,6 @@ namespace DbUp.Engine
         /// Creates the journal if it does not exist, and if it does exist makes sure it is in the latest format
         /// This is called just before a script is executed
         /// </summary>
-        void EnsureTableExistsAndIsLatestVersion();
+        void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory);
     }
 }

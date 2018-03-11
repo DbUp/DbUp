@@ -59,13 +59,14 @@ namespace DbUp.Support
 
         public string[] GetExecutedScripts()
         {
-            if (journalExists || DoesTableExist())
+            return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
             {
-                Log().WriteInformation("Fetching list of already executed scripts.");
-
-                var scripts = new List<string>();
-                ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                if (journalExists || DoesTableExist(dbCommandFactory))
                 {
+                    Log().WriteInformation("Fetching list of already executed scripts.");
+
+                    var scripts = new List<string>();
+
                     using (var command = GetJournalEntriesCommand(dbCommandFactory))
                     {
                         using (var reader = command.ExecuteReader())
@@ -74,15 +75,15 @@ namespace DbUp.Support
                                 scripts.Add((string) reader[0]);
                         }
                     }
-                });
 
-                return scripts.ToArray();
-            }
-            else
-            {
-                Log().WriteInformation("Journal table does not exist");
-                return new string[0];
-            }
+                    return scripts.ToArray();
+                }
+                else
+                {
+                    Log().WriteInformation("Journal table does not exist");
+                    return new string[0];
+                }
+            });
         }
 
         /// <summary>
@@ -92,7 +93,7 @@ namespace DbUp.Support
         /// <param name="dbCommandFactory"></param>
         public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         {
-            EnsureTableExistsAndIsLatestVersion();
+            EnsureTableExistsAndIsLatestVersion(dbCommandFactory);
             using (var command = GetInsertScriptCommand(dbCommandFactory, script))
             {
                 command.ExecuteNonQuery();
@@ -157,7 +158,7 @@ namespace DbUp.Support
         /// <summary>
         /// Unquotes a quoted identifier.
         /// </summary>
-        /// <param name="objectName">identifier to unquote.</param>
+        /// <param name="quotedIdentifier">identifier to unquote.</param>
         protected string UnquoteSqlObjectName(string quotedIdentifier)
         {
             return sqlObjectParser.UnquoteIdentifier(quotedIdentifier);
@@ -166,47 +167,41 @@ namespace DbUp.Support
         protected virtual void OnTableCreated(Func<IDbCommand> dbCommandFactory)
         {
             // TODO: Now we could run any migration scripts on it using some mechanism to make sure the table is ready for use.
-            
         }
 
-        public void EnsureTableExistsAndIsLatestVersion()
+        public void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)
         {
-            if (!journalExists && !DoesTableExist())
+            if (!journalExists && !DoesTableExist(dbCommandFactory))
             {
                 Log().WriteInformation(string.Format("Creating the {0} table", FqSchemaTableName));
-                ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                // We will never change the schema of the initial table create.
+                using (var command = GetCreateTableCommand(dbCommandFactory))
                 {
-                    // We will never change the schema of the initial table create.
-                    using (var command = GetCreateTableCommand(dbCommandFactory))
-                    {
-                        command.ExecuteNonQuery();
-                    }
-                    Log().WriteInformation(string.Format("The {0} table has been created", FqSchemaTableName));
+                    command.ExecuteNonQuery();
+                }
 
-                    OnTableCreated(dbCommandFactory);
-                });
+                Log().WriteInformation(string.Format("The {0} table has been created", FqSchemaTableName));
+
+                OnTableCreated(dbCommandFactory);
             }
 
             journalExists = true;
         }
 
-        protected bool DoesTableExist()
+        protected bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
         {
             Log().WriteInformation("Checking whether journal table exists..");
-            return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            using (var command = dbCommandFactory())
             {
-                using (var command = dbCommandFactory())
-                {
-                    command.CommandText = DoesTableExistSql();
-                    command.CommandType = CommandType.Text;
-                    var executeScalar = command.ExecuteScalar();
-                    if (executeScalar == null)
-                        return false;
-                    if (executeScalar is long)
-                        return (long)executeScalar == 1;
-                    return (int)executeScalar == 1;
-                }
-            });
+                command.CommandText = DoesTableExistSql();
+                command.CommandType = CommandType.Text;
+                var executeScalar = command.ExecuteScalar();
+                if (executeScalar == null)
+                    return false;
+                if (executeScalar is long)
+                    return (long) executeScalar == 1;
+                return (int) executeScalar == 1;
+            }
         }
 
         /// <summary>Verify, using database-specific queries, if the table exists in the database.</summary>
@@ -214,8 +209,8 @@ namespace DbUp.Support
         protected virtual string DoesTableExistSql()
         {
             return string.IsNullOrEmpty(SchemaTableSchema)
-                            ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", UnquotedSchemaTableName)
-                            : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", UnquotedSchemaTableName, SchemaTableSchema);
+                ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", UnquotedSchemaTableName)
+                : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", UnquotedSchemaTableName, SchemaTableSchema);
         }
     }
 }
