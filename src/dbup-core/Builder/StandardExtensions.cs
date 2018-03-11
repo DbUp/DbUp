@@ -113,7 +113,7 @@ public static class StandardExtensions
     /// Uses a custom journal for recording which scripts were executed.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <param name="journal">The custom journal.</param>
+    /// <param name="journalFactory">The custom journal.</param>
     /// <returns>
     /// The same builder
     /// </returns>

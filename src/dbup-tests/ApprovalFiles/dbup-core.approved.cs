@@ -119,6 +119,7 @@ namespace DbUp.Engine
     }
     public interface IJournal
     {
+        void EnsureTableExistsAndIsLatestVersion();
         string[] GetExecutedScripts();
         void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory);
     }
@@ -327,6 +328,7 @@ namespace DbUp.Helpers
     public class NullJournal : DbUp.Engine.IJournal
     {
         public NullJournal() { }
+        public void EnsureTableExistsAndIsLatestVersion() { }
         public string[] GetExecutedScripts() { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
     }
@@ -382,7 +384,7 @@ namespace DbUp.Support
     }
     public abstract class ScriptExecutor : DbUp.Engine.IScriptExecutor
     {
-        public ScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors, System.Func<DbUp.Engine.IJournal> journal) { }
+        public ScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, DbUp.Engine.ISqlObjectParser sqlObjectParser, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors, System.Func<DbUp.Engine.IJournal> journalFactory) { }
         public System.Nullable<int> ExecutionTimeoutSeconds { get; set; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         public string Schema { get; set; }
@@ -472,7 +474,7 @@ namespace DbUp.Support
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
         protected bool DoesTableExist() { }
         protected virtual string DoesTableExistSql() { }
-        protected void EnsureTableIsLatestVersion() { }
+        public void EnsureTableExistsAndIsLatestVersion() { }
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public string[] GetExecutedScripts() { }
         protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);

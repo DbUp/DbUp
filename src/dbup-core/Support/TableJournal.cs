@@ -92,7 +92,7 @@ namespace DbUp.Support
         /// <param name="dbCommandFactory"></param>
         public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         {
-            EnsureTableIsLatestVersion();
+            EnsureTableExistsAndIsLatestVersion();
             using (var command = GetInsertScriptCommand(dbCommandFactory, script))
             {
                 command.ExecuteNonQuery();
@@ -169,7 +169,7 @@ namespace DbUp.Support
             
         }
 
-        protected void EnsureTableIsLatestVersion()
+        public void EnsureTableExistsAndIsLatestVersion()
         {
             if (!journalExists && !DoesTableExist())
             {

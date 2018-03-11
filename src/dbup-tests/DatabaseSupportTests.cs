@@ -13,6 +13,7 @@ using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
+
 #if !NETCORE
 using DbUp.Firebird;
 using DbUp.MySql;
@@ -30,7 +31,6 @@ namespace DbUp.Tests
         DatabaseUpgradeResult result;
         Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
         CaptureLogsLogger logger;
-
 
         [Fact]
         public void VerifyBasicSupport()
@@ -66,7 +66,6 @@ namespace DbUp.Tests
         [Fact]
         public void VerifyJournalCreationIfNameChanged()
         {
-
             ExampleAction deployTo = null;
             this
                 .Given(() => deployTo)
@@ -86,8 +85,16 @@ namespace DbUp.Tests
             {
                 return new ExampleTable("Deploy to")
                 {
-                    new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
-                    new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SQLiteTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
+                    new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) =>
+                    {
+                        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, tableName));
+                        return builder;
+                    })),
+                    new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) =>
+                    {
+                        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, tableName));
+                        return builder;
+                    })),
 #if !NETCORE
                     new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
                     new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
@@ -110,15 +117,15 @@ namespace DbUp.Tests
 
         void CommandLogReflectsScript(ExampleAction target, string testName)
         {
-            this.Assent(
-                logger.Log,
-                    new Configuration()
-                        .UsingSanitiser(Scrubbers.ScrubDates)
-                        .UsingNamer(new Namer(target, testName))
-                );
+            var configuration = new Configuration()
+                .UsingSanitiser(Scrubbers.ScrubDates)
+                .UsingNamer(new Namer(target, testName));
+
+            // Automatically approve the change, make sure to check the result before commiting 
+            // configuration = configuration.UsingReporter((recieved, approved) => File.Copy(recieved, approved, true));
+            
+            this.Assent(logger.Log, configuration);
         }
-
-
 
         void UpgradeIsSuccessful()
         {

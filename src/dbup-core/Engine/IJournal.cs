@@ -20,5 +20,11 @@ namespace DbUp.Engine
         /// <param name="script">The script.</param>
         /// <param name="dbCommandFactory"></param>
         void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory);
+
+        /// <summary>
+        /// Creates the journal if it does not exist, and if it does exist makes sure it is in the latest format
+        /// This is called just before a script is executed
+        /// </summary>
+        void EnsureTableExistsAndIsLatestVersion();
     }
 }

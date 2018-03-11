@@ -19,7 +19,7 @@ namespace DbUp.Support
     {
         readonly Func<IConnectionManager> connectionManagerFactory;
         readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
-        readonly Func<IJournal> journal;
+        readonly Func<IJournal> journalFactory;
         readonly Func<bool> variablesEnabled;
         readonly ISqlObjectParser sqlObjectParser;
 
@@ -36,18 +36,18 @@ namespace DbUp.Support
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
-        /// <param name="journal">Database journal</param>
+        /// <param name="journalFactory">Database journal</param>
         public ScriptExecutor(
             Func<IConnectionManager> connectionManagerFactory, ISqlObjectParser sqlObjectParser,
             Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors,
-            Func<IJournal> journal)
+            Func<IJournal> journalFactory)
         {
             Schema = schema;
             Log = log;
             this.variablesEnabled = variablesEnabled;
             this.scriptPreprocessors = scriptPreprocessors;
-            this.journal = journal;
+            this.journalFactory = journalFactory;
             this.connectionManagerFactory = connectionManagerFactory;
             this.sqlObjectParser = sqlObjectParser;
         }
@@ -119,6 +119,9 @@ namespace DbUp.Support
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
+                    var journal = journalFactory();
+                    journal.EnsureTableExistsAndIsLatestVersion();
+
                     foreach (var statement in scriptStatements)
                     {
                         index++;
@@ -145,7 +148,7 @@ namespace DbUp.Support
                         }
                     }
 
-                    journal().StoreExecutedScript(script, dbCommandFactory);
+                    journal.StoreExecutedScript(script, dbCommandFactory);
                 });
             }
             catch (DbException sqlException)

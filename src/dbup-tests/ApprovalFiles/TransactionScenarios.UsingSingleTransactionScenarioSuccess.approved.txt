@@ -7,8 +7,6 @@ DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES wh
 DB Operation: Dispose command
 Info:         Journal table does not exist
 Info:         Executing Database Server script 'Script0001.sql'
-DB Operation: Execute non query command: print 'script1'
-DB Operation: Dispose command
 Info:         Checking whether journal table exists..
 DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions' and TABLE_SCHEMA = 'dbo'
 DB Operation: Dispose command
@@ -20,6 +18,8 @@ DB Operation: Execute non query command: create table [dbo].[SchemaVersions] (
 )
 DB Operation: Dispose command
 Info:         The [dbo].[SchemaVersions] table has been created
+DB Operation: Execute non query command: print 'script1'
+DB Operation: Dispose command
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
 DB Operation: Create parameter
