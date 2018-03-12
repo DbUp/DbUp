@@ -91,7 +91,7 @@ namespace DbUp.Support
         /// </summary>
         /// <param name="script">The script.</param>
         /// <param name="dbCommandFactory"></param>
-        public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
+        public virtual void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
         {
             EnsureTableExistsAndIsLatestVersion(dbCommandFactory);
             using (var command = GetInsertScriptCommand(dbCommandFactory, script))
