@@ -73,12 +73,15 @@ public static class SqlServerExtensions
     }
 
     /// <summary>
-    /// 
+    /// Creates an upgrader for SQL Server databases.
     /// </summary>
-    /// <param name="connectionManager"></param>
-    /// <param name="schema"></param>
-    /// <returns></returns>
-    private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema)
+    /// <param name="connectionManager">The <see cref="IConnectionManager"/> to be used during a database
+    /// upgrade. See <see cref="SqlConnectionManager"/> for an example implementation</param>
+    /// <param name="schema">The SQL schema name to use. Defaults to 'dbo'.</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for SQL Server databases.
+    /// </returns>
+    public static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema = null)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);

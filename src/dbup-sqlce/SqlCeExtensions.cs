@@ -42,7 +42,7 @@ public static class SqlCeExtensions
         return SqlCeDatabase(new SqlCeConnectionManager(connectionString));
     }
 
-    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
+    public static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
