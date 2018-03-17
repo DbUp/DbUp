@@ -110,16 +110,30 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Uses a custom journal for recording which scripts were executed.
+    /// Uses a custom journal for recording which scripts were executed. A journal provided via this method
+    /// does not participate in transactions
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <param name="journalFactory">The custom journal.</param>
+    /// <param name="journal">The custom journal.</param>
     /// <returns>
     /// The same builder
     /// </returns>
     public static UpgradeEngineBuilder JournalTo(this UpgradeEngineBuilder builder, IJournal journal)
     {
         builder.Configure(c => c.Journal = journal);
+        return builder;
+    }
+    
+    /// <summary>
+    /// Uses a custom journal for recording which scripts were executed. This journal can participate in transactions
+    /// if the provided IConnectionManager is used
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="createJournal">A function that takes a IConnectionManager factory and IUpgradeLog factory and returns the Journal to use</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder JournalTo(this UpgradeEngineBuilder builder, Func<Func<IConnectionManager>, Func<IUpgradeLog>, IJournal> createJournal)
+    {
+        builder.Configure(c => c.Journal = createJournal(() => c.ConnectionManager, () => c.Log));
         return builder;
     }
 
