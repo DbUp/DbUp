@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SqlCe support. It works with SQL CE 4.0 SP1, which can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=30709</Description>
-    <AssemblyTitle>DbUp SQL CE Support</AssemblyTitle>
+    <Title>DbUp SQL CE Support</Title>
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
     <TargetFrameworks>net40;net45</TargetFrameworks>
     <AssemblyName>dbup-sqlce</AssemblyName>

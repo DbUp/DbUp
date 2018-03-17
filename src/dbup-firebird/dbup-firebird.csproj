@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds Firebird support.</Description>
-    <AssemblyTitle>DbUp Firebird Support</AssemblyTitle>
+    <Title>DbUp Firebird Support</Title>
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
     <TargetFrameworks>net40;net45</TargetFrameworks>
     <AssemblyName>dbup-firebird</AssemblyName>
