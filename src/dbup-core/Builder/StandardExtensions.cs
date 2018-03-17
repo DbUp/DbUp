@@ -97,7 +97,7 @@ public static class StandardExtensions
     {
         return LogTo(builder, new TraceUpgradeLog());
     }
-    
+
     /// <summary>
     /// Resets any loggers configured with 
     /// </summary>
@@ -123,7 +123,7 @@ public static class StandardExtensions
         builder.Configure(c => c.Journal = journal);
         return builder;
     }
-    
+
     /// <summary>
     /// Uses a custom journal for recording which scripts were executed. This journal can participate in transactions
     /// if the provided IConnectionManager is used
@@ -174,7 +174,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params SqlScript[] scripts)
     {
-        return WithScripts(builder, (IEnumerable<SqlScript>)scripts);
+        return WithScripts(builder, (IEnumerable<SqlScript>) scripts);
     }
 
     /// <summary>
@@ -204,6 +204,41 @@ public static class StandardExtensions
         var script = new SqlScript(name, contents);
         return WithScripts(builder, script);
     }
+    
+    /// <summary>
+    /// Adds a single IScript instance to the upgrader.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="name">The name of the script</param>
+    /// <param name="script">The script instance</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script)
+        => WithScripts(builder, new ScriptInstanceProvider(_ => name, script));
+
+    /// <summary>
+    /// Adds IScript instances to the upgrader.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="scripts">The script instances.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params IScript[] scripts)
+        => WithScripts(builder, new ScriptInstanceProvider(scripts));
+
+    /// <summary>
+    /// Adds IScript instances to the upgrader.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="namer">A function that returns the name of the script</param>
+    /// <param name="scripts">The script instances.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, params IScript[] scripts)
+        => WithScripts(builder, new ScriptInstanceProvider(namer, scripts));
 
     /// <summary>
     /// Adds all scripts from a folder on the file system.
@@ -229,7 +264,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter}));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() {Filter = filter}));
     }
 
     /// <summary>
@@ -243,7 +278,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding}));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() {Encoding = encoding}));
     }
 
     /// <summary>
@@ -357,7 +392,7 @@ public static class StandardExtensions
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
     }
-    
+
     /// <summary>
     /// Sets the comparer used to sort scripts and match script names against the log of already run scripts.
     /// The default comparer is StringComparer.Ordinal.
@@ -374,7 +409,7 @@ public static class StandardExtensions
         builder.Configure(b => b.ScriptNameComparer = new ScriptNameComparer(comparer));
         return builder;
     }
-    
+
     /// <summary>
     /// Sets the filter that filters the sorted lists of script prior to execution. This allows
     /// scripts to be excluded based on which scripts have already been run.
@@ -389,7 +424,7 @@ public static class StandardExtensions
         builder.Configure(b => b.ScriptFilter = filter);
         return builder;
     }
-    
+
     /// <summary>
     /// Adds a preprocessor that can replace portions of a script.
     /// </summary>
@@ -427,7 +462,7 @@ public static class StandardExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder WithVariable(this UpgradeEngineBuilder builder, string variableName, string value)
     {
-        return WithVariables(builder, new Dictionary<string, string> { { variableName, value } });
+        return WithVariables(builder, new Dictionary<string, string> {{variableName, value}});
     }
 
     /// <summary>
