@@ -5,6 +5,7 @@
 public static class StandardExtensions
 {
     public static DbUp.Builder.UpgradeEngineBuilder JournalTo(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IJournal journal) { }
+    public static DbUp.Builder.UpgradeEngineBuilder JournalTo(this DbUp.Builder.UpgradeEngineBuilder builder, System.Func<System.Func<DbUp.Engine.Transactions.IConnectionManager>, System.Func<DbUp.Engine.Output.IUpgradeLog>, DbUp.Engine.IJournal> createJournal) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogScriptOutput(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogTo(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.Output.IUpgradeLog log) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToAutodetectedLog(this DbUp.Builder.UpgradeEngineBuilder builder) { }
@@ -68,6 +69,10 @@ namespace DbUp
         public static System.Func<string, bool> ExcludeScripts(params string[] scriptNames) { }
         public static System.Func<string, bool> OnlyIncludeScriptNamesInFile(string fileName) { }
         public static System.Func<string, bool> OnlyIncludeScripts(params string[] scriptNames) { }
+    }
+    public static class OctopusDeployExtensions
+    {
+        public static void WriteExecutedScriptsToOctopusTaskSummary(this DbUp.Engine.DatabaseUpgradeResult result) { }
     }
     public class SupportedDatabasesForDropDatabase
     {
@@ -295,17 +300,6 @@ namespace DbUp.Engine.Transactions
         T Execute<T>(Func<System.Func<System.Data.IDbCommand>, T> actionWithResult);
         void Initialise(System.Data.IDbConnection dbConnection, DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts);
     }
-    public class LegacySqlConnectionManager : DbUp.Engine.Transactions.IConnectionManager
-    {
-        public LegacySqlConnectionManager(System.Func<System.Data.IDbConnection> connectionFactory) { }
-        public bool IsScriptOutputLogged { get; set; }
-        public DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
-        public void ExecuteCommandsWithManagedConnection(System.Action<System.Func<System.Data.IDbCommand>> action) { }
-        public T ExecuteCommandsWithManagedConnection<T>(Func<System.Func<System.Data.IDbCommand>, T> actionWithResult) { }
-        public System.IDisposable OperationStarting(DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts) { }
-        public System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
-        public bool TryConnect(DbUp.Engine.Output.IUpgradeLog upgradeLog, out string errorMessage) { }
-    }
     public enum TransactionMode : int
     {
         NoTransaction = 0
@@ -360,12 +354,6 @@ namespace DbUp.ScriptProviders
     public class FileSystemScriptProvider : DbUp.Engine.IScriptProvider
     {
         public FileSystemScriptProvider(string directoryPath) { }
-        [System.ObsoleteAttribute("Use the constructor with Options argument instead")]
-        public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter) { }
-        [System.ObsoleteAttribute("Use the constructor with Options argument instead")]
-        public FileSystemScriptProvider(string directoryPath, System.Text.Encoding encoding) { }
-        [System.ObsoleteAttribute("Use the constructor with Options argument instead")]
-        public FileSystemScriptProvider(string directoryPath, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
         public FileSystemScriptProvider(string directoryPath, DbUp.ScriptProviders.FileSystemScriptOptions options) { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
     }
@@ -482,7 +470,7 @@ namespace DbUp.Support
         protected System.Data.IDbCommand GetJournalEntriesCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected abstract string GetJournalEntriesSql();
         protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
-        public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        public virtual void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected string UnquoteSqlObjectName(string quotedIdentifier) { }
     }
 }

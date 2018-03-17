@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data;
 using DbUp.Engine;
+using DbUp.Engine.Output;
+using DbUp.SqlServer;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -19,7 +21,7 @@ namespace DbUp.Tests
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "$schema$Up $somevar$")
                 .JournalTo(journal)
                 .WithVariable("somevar", "is awesome")
@@ -39,7 +41,7 @@ namespace DbUp.Tests
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection)
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection))
                 .WithScript("testscript", "test")
                 .JournalTo(journal)
                 .WithExecutionTimeout(TimeSpan.FromSeconds(45))
@@ -59,7 +61,7 @@ namespace DbUp.Tests
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection)
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection))
                 .WithScript("testscript", "test")
                 .JournalTo(journal)
                 .WithExecutionTimeout(null)
@@ -82,7 +84,7 @@ namespace DbUp.Tests
             Should.Throw<ArgumentOutOfRangeException>(() =>
             {
                 var upgradeEngine = DeployChanges.To
-                    .SqlDatabase(() => connection)
+                    .SqlDatabase(new SubstitutedConnectionConnectionManager(connection))
                     .WithScript("testscript", "test")
                     .JournalTo(journal)
                     .WithExecutionTimeout(TimeSpan.FromSeconds(-5))

@@ -40,6 +40,17 @@ public static class PostgresqlExtensions
     /// <summary>
     /// Creates an upgrader for PostgreSQL databases.
     /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionManager">The <see cref="PostgresqlConnectionManager"/> to be used during a database upgrade.</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for PostgreSQL databases.
+    /// </returns>
+    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
+        => PostgresqlDatabase(connectionManager);
+    
+    /// <summary>
+    /// Creates an upgrader for PostgreSQL databases.
+    /// </summary>
     /// <param name="connectionManager">The <see cref="PostgresqlConnectionManager"/> to be used during a database upgrade.</param>
     /// <returns>
     /// A builder for a database upgrader designed for PostgreSQL databases.

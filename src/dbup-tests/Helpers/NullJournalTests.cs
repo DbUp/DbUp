@@ -19,7 +19,7 @@ namespace DbUp.Tests.Helpers
             connection.CreateCommand().Returns(command);
             
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "SELECT * FROM BLAH")
                 .JournalTo(journal)
                 .Build();

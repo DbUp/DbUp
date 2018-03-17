@@ -24,7 +24,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "something $somevar$ something")
                 .JournalTo(journal)
                 .WithVariable("somevar", "coriander")
@@ -44,7 +44,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "'$somevar$'")
                 .JournalTo(journal)
                 .WithVariable("somevar", "coriander")
@@ -64,7 +64,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "/*$somevar$*/")
                 .JournalTo(journal)
                 .WithVariable("beansprouts", "coriander")
@@ -84,7 +84,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "/*/**/$somevar$*/")
                 .JournalTo(journal)
                 .WithVariable("beansprouts", "coriander")
@@ -104,7 +104,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "--$somevar$")
                 .JournalTo(journal)
                 .WithVariable("beansprouts", "coriander")
@@ -125,7 +125,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "$somevar$")
                 .JournalTo(journal)
                 .WithVariable("beansprouts", "coriander")
@@ -146,7 +146,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "$some var$")
                 .JournalTo(journal)
                 .WithVariable("some var", "coriander")
@@ -167,7 +167,7 @@ namespace DbUp.Tests.Engine
             connection.CreateCommand().Returns(command);
 
             var upgradeEngine = DeployChanges.To
-                .SqlDatabase(() => connection, "Db")
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "$some\nvar$")
                 .JournalTo(journal)
                 .WithVariable("somevar", "coriander")

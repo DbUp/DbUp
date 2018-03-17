@@ -4,9 +4,8 @@
 
 public static class SqlCeExtensions
 {
-    [System.ObsoleteAttribute("Pass connection string instead, then use .WithTransaction() and .WithTransactionPerScript() to manage connection behaviour")]
-    public static DbUp.Builder.UpgradeEngineBuilder SqlCeDatabase(this DbUp.Builder.SupportedDatabases supported, System.Func<System.Data.SqlServerCe.SqlCeConnection> connectionFactory) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlCeDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
+    public static DbUp.Builder.UpgradeEngineBuilder SqlCeDatabase(this DbUp.Builder.SupportedDatabases supported, DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
 }
 namespace DbUp.SqlCe
 {

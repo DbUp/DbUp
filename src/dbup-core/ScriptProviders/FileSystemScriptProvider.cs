@@ -28,37 +28,6 @@ namespace DbUp.ScriptProviders
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        ///<param name="filter">The filter.</param>
-        [Obsolete("Use the constructor with Options argument instead")]
-        public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter) : 
-            this(directoryPath, new FileSystemScriptOptions() {Filter = filter})
-        {
-        }
-
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        ///<param name="encoding">The encoding.</param>
-        [Obsolete("Use the constructor with Options argument instead")]
-        public FileSystemScriptProvider(string directoryPath, Encoding encoding) :
-            this(directoryPath, new FileSystemScriptOptions() { Encoding = encoding })
-        {
-        }
-
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        ///<param name="filter">The filter.</param>
-        ///<param name="encoding">The encoding.</param>
-        [Obsolete("Use the constructor with Options argument instead")]
-        public FileSystemScriptProvider(string directoryPath, Func<string, bool> filter, Encoding encoding) :
-            this(directoryPath, new FileSystemScriptOptions() { Encoding = encoding, Filter = filter })
-        {
-        }
-
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         ///<param name="options">Different options for the file system script provider</param>
         public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options)
         {

@@ -40,6 +40,17 @@ public static class MySqlExtensions
     {
         return MySqlDatabase(new MySqlConnectionManager(connectionString), schema);
     }
+    
+    /// <summary>
+    /// Creates an upgrader for MySql databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionManager">The <see cref="MySqlConnectionManager"/> to be used during a database upgrade.</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for MySql databases.
+    /// </returns>
+    public static UpgradeEngineBuilder MySqlDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
+        => MySqlDatabase(connectionManager);
 
     /// <summary>
     /// Creates an upgrader for MySql databases.

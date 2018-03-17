@@ -19,20 +19,6 @@ public static class SqlCeExtensions
     /// Creates an upgrader for SQL CE databases.
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionFactory">The connection factory.</param>
-    /// <returns>
-    /// A builder for a database upgrader designed for SQL Server databases.
-    /// </returns>
-    [Obsolete("Pass connection string instead, then use .WithTransaction() and .WithTransactionPerScript() to manage connection behaviour")]
-    public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, Func<SqlCeConnection> connectionFactory)
-    {
-        return SqlCeDatabase(new LegacySqlConnectionManager(connectionFactory));        
-    }
-
-    /// <summary>
-    /// Creates an upgrader for SQL CE databases.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
@@ -42,7 +28,18 @@ public static class SqlCeExtensions
         return SqlCeDatabase(new SqlCeConnectionManager(connectionString));
     }
 
-    public static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
+    /// <summary>
+    /// Creates an upgrader for SQL CE databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionManager">The <see cref="IConnectionManager"/> to be used during a database upgrade.</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for SQL Server databases.
+    /// </returns>
+    public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
+        => SqlCeDatabase(connectionManager);
+    
+    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);

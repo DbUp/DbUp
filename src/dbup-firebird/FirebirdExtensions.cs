@@ -21,6 +21,17 @@ public static class FirebirdExtensions
     {
         return FirebirdDatabase(new FirebirdConnectionManager(connectionString));
     }
+    
+    /// <summary>
+    /// Creates an upgrader for Firebird databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionManager">The <see cref="FirebirdConnectionManager"/> to be used during a database upgrade.</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for Firebird databases.
+    /// </returns>
+    public static UpgradeEngineBuilder FirebirdDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
+        => FirebirdDatabase(connectionManager);
 
     /// <summary>
     /// Creates an upgrader for Firebird databases.
