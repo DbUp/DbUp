@@ -13,6 +13,7 @@ using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
+using DbUp.Oracle;
 
 #if !NETCORE
 using DbUp.Firebird;
@@ -95,11 +96,13 @@ namespace DbUp.Tests
                         builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, tableName));
                         return builder;
                     })),
+                    new ExampleAction("Oracle", Deploy(to => to.OracleDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new OracleTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+
 #if !NETCORE
                     new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
                     new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
-                    new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))
+                    new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))                    
 #endif
                 };
             }

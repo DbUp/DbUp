@@ -124,21 +124,5 @@ namespace DbUp.Oracle
 
             journalExists = true;
         }
-
-        protected new bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
-        {
-            Log().WriteInformation("Checking whether journal table exists..");
-            using (var command = dbCommandFactory())
-            {
-                command.CommandText = DoesTableExistSql();
-                command.CommandType = CommandType.Text;
-                var executeScalar = command.ExecuteScalar();
-                if (executeScalar == null)
-                    return false;
-                if (executeScalar is long)
-                    return (long)executeScalar == 1;
-                return (decimal)executeScalar == 1;
-            }
-        }
     }
 }
