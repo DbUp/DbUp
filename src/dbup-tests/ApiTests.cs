@@ -13,6 +13,7 @@ using Assent.Namers;
 using Castle.Core.Internal;
 using DbUp.Builder;
 using DbUp.Engine;
+using DbUp.Oracle;
 using NSubstitute.Core;
 using Shouldly;
 using Xunit;
@@ -25,6 +26,7 @@ namespace DbUp.Tests
         [InlineData(typeof(UpgradeEngine))]
         [InlineData(typeof(SQLiteExtensions))]
         [InlineData(typeof(MySqlExtensions))]
+        [InlineData(typeof(OracleExtensions))]
         [InlineData(typeof(PostgresqlExtensions))]
 #if !NETCORE
         [InlineData(typeof(FirebirdExtensions))]

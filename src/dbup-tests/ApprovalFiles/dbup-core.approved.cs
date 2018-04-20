@@ -465,7 +465,7 @@ namespace DbUp.Support
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
         protected bool DoesTableExist(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected virtual string DoesTableExistSql() { }
-        public void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        public virtual void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public string[] GetExecutedScripts() { }
         protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);
