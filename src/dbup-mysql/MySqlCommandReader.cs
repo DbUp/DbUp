@@ -26,8 +26,8 @@ namespace DbUp.MySql
             get
             {
                 string statement;
-                return TryPeek(DelimiterKeyword.Length, out statement) &&
-                       string.Equals(DelimiterKeyword, statement, StringComparison.OrdinalIgnoreCase);
+                return TryPeek(DelimiterKeyword.Length - 1, out statement) &&
+                       string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase);
             }
         }
 

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using DbUp.MySql;
 using NUnit.Framework;
 using Shouldly;
@@ -54,6 +55,25 @@ namespace DbUp.Tests.Support.MySql
             enumerable[1].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
             enumerable[2].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
             enumerable[3].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
+        }
+
+        [Fact]
+        public void ParsesOutBeginningDelimiter()
+        {
+            var multiCommand = new StringBuilder()
+                .AppendLine("DELIMITER $$")
+                .AppendLine("CREATE TABLE 'ZIP'$$")
+                .Append("CREATE TABLE IF NOT EXISTS 'BAR';");
+
+            var connectionManager = new MySqlConnectionManager("connectionstring");
+            var result = connectionManager.SplitScriptIntoCommands(multiCommand.ToString())
+                .ToArray();
+
+            result.ShouldBe(new[]
+            {
+                "CREATE TABLE 'ZIP'",
+                "CREATE TABLE IF NOT EXISTS 'BAR';"
+            });
         }
     }
 }
