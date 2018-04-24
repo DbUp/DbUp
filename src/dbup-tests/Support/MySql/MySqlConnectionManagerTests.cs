@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using DbUp.MySql;
 using NUnit.Framework;
 using Shouldly;
@@ -56,22 +57,23 @@ namespace DbUp.Tests.Support.MySql
             enumerable[3].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
         }
 
-		[Fact]
-		public void ParsesOutBeginningDelimiter()
-		{
-			var multiCommand = "DELIMITER $$";
-			multiCommand += Environment.NewLine;
-			multiCommand += "CREATE TABLE 'ZIP'$$";
-			multiCommand += Environment.NewLine;
-			multiCommand += "CREATE TABLE IF NOT EXISTS 'BAR';";
+        [Fact]
+        public void ParsesOutBeginningDelimiter()
+        {
+            var multiCommand = new StringBuilder()
+                .AppendLine("DELIMITER $$")
+                .AppendLine("CREATE TABLE 'ZIP'$$")
+                .Append("CREATE TABLE IF NOT EXISTS 'BAR';");
 
-			var connectionManager = new MySqlConnectionManager("connectionstring");
-			var result = connectionManager.SplitScriptIntoCommands(multiCommand);
+            var connectionManager = new MySqlConnectionManager("connectionstring");
+            var result = connectionManager.SplitScriptIntoCommands(multiCommand.ToString())
+                .ToArray();
 
-			var enumerable = result as string[] ?? result.ToArray();
-			enumerable.Length.ShouldBe(2);
-			enumerable[0].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
-			enumerable[1].IndexOf("DELIMITER", StringComparison.Ordinal).ShouldBe(-1);
-		}
-	}
+            result.ShouldBe(new[]
+            {
+                "CREATE TABLE 'ZIP'",
+                "CREATE TABLE IF NOT EXISTS 'BAR';"
+            });
+        }
+    }
 }

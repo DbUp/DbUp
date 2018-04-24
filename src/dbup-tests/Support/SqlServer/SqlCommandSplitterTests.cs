@@ -41,20 +41,20 @@ SELECT AccountId,
         }
 
         [Theory]
-        [InlineData("GO", 0)]
-        [InlineData(" GO", 0)]
-        [InlineData("GO ", 0)]
-        [InlineData("GO\n", 0)]
-        [InlineData("GO\nGO--Dummy comment", 1)]
-        [InlineData("\nGO", 0)]
-        [InlineData("--Dummy comment\nGO", 1)]
-        [InlineData("GO--Dummy comment", 1)]
-        public void should_correctly_recognize_go_statements(string SqlText, int expectedNumberOfCommands)
+        [InlineData("GO")]
+        [InlineData(" GO")]
+        [InlineData("GO ")]
+        [InlineData("GO\n")]
+        [InlineData("GO\nGO--Dummy comment", "GO--Dummy comment")]
+        [InlineData("\nGO")]
+        [InlineData("--Dummy comment\nGO", "--Dummy comment")]
+        [InlineData("GO--Dummy comment", "GO--Dummy comment")]
+        public void should_correctly_recognize_go_statements(string SqlText, params string[] expectedCommands)
         {
             var commands = sut.SplitScriptIntoCommands(SqlText).ToArray();
 
             commands.ShouldNotBeNull();
-            commands.Count().ShouldBe(expectedNumberOfCommands);
+            commands.ShouldBe(expectedCommands);
         }
 
         [Fact]
