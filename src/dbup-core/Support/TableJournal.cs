@@ -169,7 +169,7 @@ namespace DbUp.Support
             // TODO: Now we could run any migration scripts on it using some mechanism to make sure the table is ready for use.
         }
 
-        public void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)
+        public virtual void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)
         {
             if (!journalExists && !DoesTableExist(dbCommandFactory))
             {
@@ -200,6 +200,8 @@ namespace DbUp.Support
                     return false;
                 if (executeScalar is long)
                     return (long) executeScalar == 1;
+                if (executeScalar is decimal)
+                    return (decimal)executeScalar == 1;
                 return (int) executeScalar == 1;
             }
         }
