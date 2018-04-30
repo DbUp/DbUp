@@ -4,6 +4,7 @@ repo_url: https://github.com/DbUp/DbUp
 
 pages:
 - Home: index.md
+- Breaking Changes: breaking-changes.md
 - History: history.md
 - Philosophy Behind DbUp: philosophy-behind-dbup.md
 - Usage: usage.md
