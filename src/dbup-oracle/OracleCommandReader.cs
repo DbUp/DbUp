@@ -13,7 +13,7 @@ namespace DbUp.Oracle
         /// <summary>
         /// Creates an instance of MySqlCommandReader
         /// </summary>
-        public OracleCommandReader(string sqlText) : base(sqlText, ";", delimiterRequiresWhitespace: false)
+        public OracleCommandReader(string sqlText) : base(sqlText, "/", delimiterRequiresWhitespace: false)
         {
         }
 
@@ -25,8 +25,8 @@ namespace DbUp.Oracle
             get
             {
                 string statement;
-                return TryPeek(DelimiterKeyword.Length, out statement) &&
-                       string.Equals(DelimiterKeyword, statement, StringComparison.OrdinalIgnoreCase);
+                return TryPeek(DelimiterKeyword.Length - 1, out statement) &&
+                       string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase);
             }
         }
 
