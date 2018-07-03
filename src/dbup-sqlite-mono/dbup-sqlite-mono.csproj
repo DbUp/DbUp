@@ -1,0 +1,42 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SQLite support for Mono.</Description>
+    <Title>DbUp SQLite Support targeting Mono</Title>
+    <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
+    <TargetFrameworks>net40;net45</TargetFrameworks>
+    <AssemblyName>dbup-sqlite-mono</AssemblyName>
+    <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>dbup-sqlite-mono</PackageId>
+    <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</PackageIconUrl>
+    <PackageProjectUrl>http://dbup.github.com</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+    <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
+    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+  </PropertyGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
+    <DefineConstants>$(DefineConstants);MONO</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="Mono.Data.Sqlite.Portable" Version="1.0.3.5" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs" />
+    <Compile Include="..\dbup-sqlite\**\*.cs" Exclude="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs;bin\**;obj\**;**\*.xproj;packages\**" />
+  </ItemGroup>
+
+</Project>

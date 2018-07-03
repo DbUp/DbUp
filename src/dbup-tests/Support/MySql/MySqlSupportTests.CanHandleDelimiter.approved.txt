@@ -1,0 +1,37 @@
+﻿DB Operation: Open connection
+Info:         Beginning database upgrade
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
+DB Operation: Dispose command
+Info:         Fetching list of already executed scripts.
+DB Operation: Execute reader command: select scriptname from `schemaversions` order by scriptname
+DB Operation: Dispose command
+Info:         Executing Database Server script 'Script0003'
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'schemaversions'
+DB Operation: Dispose command
+DB Operation: Execute non query command: USE `test`
+DB Operation: Dispose command
+DB Operation: Execute non query command: DROP procedure IF EXISTS `testSproc`
+DB Operation: Dispose command
+DB Operation: Execute non query command: USE `test`
+DB Operation: Dispose command
+DB Operation: Execute non query command: CREATE PROCEDURE `testSproc`(
+        IN   ssn                    VARCHAR(32)
+     )
+BEGIN 
+
+    SELECT id      
+    FROM   customer as c
+    WHERE  c.ssn = ssn ; 
+
+END
+DB Operation: Dispose command
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: scriptName=Script0003
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Execute non query command: insert into `schemaversions` (ScriptName, Applied) values (@scriptName, @applied)
+DB Operation: Dispose command
+Info:         Upgrade successful
+DB Operation: Dispose connection

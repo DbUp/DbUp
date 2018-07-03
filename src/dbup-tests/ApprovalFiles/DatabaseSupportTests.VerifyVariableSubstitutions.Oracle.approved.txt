@@ -1,0 +1,42 @@
+DB Operation: Open connection
+Info:         Beginning database upgrade
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from user_tables where table_name = 'SCHEMAVERSIONS'
+DB Operation: Dispose command
+Info:         Journal table does not exist
+Info:         Executing Database Server script 'Script0001.sql'
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from user_tables where table_name = 'SCHEMAVERSIONS'
+DB Operation: Dispose command
+Info:         Creating the "schemaversions" table
+DB Operation: Execute non query command:  CREATE SEQUENCE schemaversions_sequence
+DB Operation: Dispose command
+DB Operation: Execute non query command:  CREATE TABLE schemaversions 
+                (
+                    schemaversionid NUMBER(10),
+                    scriptname VARCHAR2(255) NOT NULL,
+                    applied TIMESTAMP NOT NULL,
+                    CONSTRAINT PK_schemaversions PRIMARY KEY (schemaversionid) 
+                )
+DB Operation: Dispose command
+DB Operation: Execute non query command:  CREATE OR REPLACE TRIGGER schemaversions_on_insert
+                    BEFORE INSERT ON schemaversions
+                    FOR EACH ROW
+                    BEGIN
+                        SELECT schemaversions_sequence.nextval
+                        INTO :new.schemaversionid
+                        FROM dual;
+                    END;
+                
+DB Operation: Dispose command
+Info:         The "schemaversions" table has been created
+DB Operation: Execute non query command: print SubstitutedValue
+DB Operation: Dispose command
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Execute non query command: insert into SCHEMAVERSIONS (ScriptName, Applied) values (:scriptName,:applied)
+DB Operation: Dispose command
+Info:         Upgrade successful
+DB Operation: Dispose connection

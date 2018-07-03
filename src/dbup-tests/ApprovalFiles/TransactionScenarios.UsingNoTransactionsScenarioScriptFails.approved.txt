@@ -1,0 +1,14 @@
+﻿DB Operation: Open connection
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions' and TABLE_SCHEMA = 'dbo'
+DB Operation: Dispose command
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions' and TABLE_SCHEMA = 'dbo'
+DB Operation: Dispose command
+DB Operation: Execute non query command: create table [dbo].[SchemaVersions] (
+    [Id] int identity(1,1) not null constraint [PK_SchemaVersions_Id] primary key,
+    [ScriptName] nvarchar(255) not null,
+    [Applied] datetime not null
+)
+DB Operation: Dispose command
+DB Operation: Execute non query command: error
+DB Operation: Dispose command
+DB Operation: Dispose connection

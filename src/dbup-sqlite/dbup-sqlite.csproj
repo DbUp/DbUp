@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SQLite support.</Description>
+    <Title>DbUp SQLite Support</Title>
+    <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
+    <TargetFrameworks>netstandard1.3;net40;net45</TargetFrameworks>
+    <AssemblyName>dbup-sqlite</AssemblyName>
+    <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
+    <SignAssembly>true</SignAssembly>
+    <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+    <PackageId>dbup-sqlite</PackageId>
+    <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
+    <PackageIconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</PackageIconUrl>
+    <PackageProjectUrl>http://dbup.github.com</PackageProjectUrl>
+    <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+    <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+    <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+    <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="1.0.1" />
+  </ItemGroup>
+
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+    <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
+  </PropertyGroup>
+
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
+    <PackageReference Include="System.Data.SQLite.Core" Version="1.0.98.1" />
+    <Reference Include="System" />
+    <Reference Include="Microsoft.CSharp" />
+  </ItemGroup>
+
+</Project>

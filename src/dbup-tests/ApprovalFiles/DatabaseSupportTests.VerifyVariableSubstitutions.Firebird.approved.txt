@@ -1,0 +1,38 @@
+DB Operation: Open connection
+Info:         Beginning database upgrade
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'schemaversions'
+DB Operation: Dispose command
+Info:         Journal table does not exist
+Info:         Executing Database Server script 'Script0001.sql'
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'schemaversions'
+DB Operation: Dispose command
+Info:         Creating the "schemaversions" table
+DB Operation: Execute non query command: CREATE TABLE "schemaversions"
+(
+    schemaversionsid INTEGER NOT NULL,
+    scriptname VARCHAR(255) NOT NULL,
+    applied TIMESTAMP NOT NULL,
+    CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
+)
+DB Operation: Dispose command
+Info:         The "schemaversions" table has been created
+DB Operation: Execute non query command: CREATE SEQUENCE GEN_schemaversionsID
+DB Operation: Dispose command
+Info:         The GEN_schemaversionsID generator has been created
+DB Operation: Execute non query command: CREATE TRIGGER BI_schemaversionsID FOR schemaversions ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
+    if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id(GEN_schemaversionsID,1);
+END;
+DB Operation: Dispose command
+Info:         The BI_schemaversionsID trigger has been created
+DB Operation: Execute non query command: print SubstitutedValue
+DB Operation: Dispose command
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Execute non query command: insert into "schemaversions" (ScriptName, Applied) values (@scriptName, @applied)
+DB Operation: Dispose command
+Info:         Upgrade successful
+DB Operation: Dispose connection

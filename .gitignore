@@ -85,3 +85,12 @@ src/packages/
 *.received.txt
 src/_NCrunch_DbUp
 *.received.cs
+dbup*.nupkg
+.idea
+
+src/.vs/
+project.lock.json
+project.lock.json
+project.lock.json
+tools/*/
+artifacts/

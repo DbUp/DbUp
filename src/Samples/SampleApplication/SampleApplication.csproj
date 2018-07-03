@@ -1,72 +1,14 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProductVersion>8.0.30703</ProductVersion>
-    <SchemaVersion>2.0</SchemaVersion>
-    <ProjectGuid>{83042F56-9FAD-4827-B542-6873F93D7940}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
     <RootNamespace>SampleApplication</RootNamespace>
-    <AssemblyName>SampleApplication</AssemblyName>
-    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-  </PropertyGroup>
-  <PropertyGroup>
-    <StartupObject>SampleApplication.Program</StartupObject>
+    <AssemblyName>SampleApplication</AssemblyName> 
+    <OutputType>Exe</OutputType>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
+    <ProjectReference Include="..\..\dbup-sqlserver\dbup-sqlserver.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Scripts\*.sql" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\DbUp\DbUp.csproj">
-      <Project>{2D2C117A-7841-4285-A4CE-E7C4FC64AD9B}</Project>
-      <Name>DbUp</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\Script0001 - Create tables.sql" />
-    <EmbeddedResource Include="Scripts\Script0002 - Default feed.sql" />
-    <EmbeddedResource Include="Scripts\Script0003 - Settings.sql" />
-    <EmbeddedResource Include="Scripts\Script0004 - Redirects.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Include="Scripts\Script0005 - ComplexUpdate.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Scripts\Script0006 - Transactions.sql" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
 </Project>

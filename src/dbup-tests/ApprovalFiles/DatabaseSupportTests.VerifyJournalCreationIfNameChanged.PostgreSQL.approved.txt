@@ -1,0 +1,30 @@
+DB Operation: Open connection
+Info:         Beginning database upgrade
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
+DB Operation: Dispose command
+Info:         Journal table does not exist
+Info:         Executing Database Server script 'Script0001.sql'
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
+DB Operation: Dispose command
+Info:         Creating the "test"."TestSchemaVersions" table
+DB Operation: Execute non query command: CREATE TABLE "test"."TestSchemaVersions"
+(
+    schemaversionsid serial NOT NULL,
+    scriptname character varying(255) NOT NULL,
+    applied timestamp without time zone NOT NULL,
+    CONSTRAINT "PK_TestSchemaVersions_Id" PRIMARY KEY (schemaversionsid)
+)
+DB Operation: Dispose command
+Info:         The "test"."TestSchemaVersions" table has been created
+DB Operation: Execute non query command: script1contents
+DB Operation: Dispose command
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Execute non query command: insert into "test"."TestSchemaVersions" (ScriptName, Applied) values (@scriptName, @applied)
+DB Operation: Dispose command
+Info:         Upgrade successful
+DB Operation: Dispose connection
