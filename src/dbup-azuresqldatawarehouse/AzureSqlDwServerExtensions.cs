@@ -151,7 +151,10 @@ public static class AzureSqlDwServerExtensions
                 }
             }
 
-            sqlCommandText = $"CREATE DATABASE {databaseName} (EDITION = 'DataWarehouse', SERVICE_OBJECTIVE = 'DW100', MAXSIZE = 5 GB);";
+            var parser = new AzureSqlDwServerObjectParser();
+            databaseName = parser.QuoteIdentifier(databaseName);
+
+            sqlCommandText = $"CREATE DATABASE {databaseName} (EDITION = 'DataWarehouse', SERVICE_OBJECTIVE = 'DW100', MAXSIZE = 250 GB);";
 
             // Create the database...
             using (var command = new SqlCommand(sqlCommandText, connection)
@@ -223,7 +226,10 @@ public static class AzureSqlDwServerExtensions
                     return;
             }
 
-            var dropDatabaseCommand = new SqlCommand($"ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
+            var parser = new AzureSqlDwServerObjectParser();
+            databaseName = parser.QuoteIdentifier(databaseName);
+
+            var dropDatabaseCommand = new SqlCommand($"ALTER DATABASE {databaseName} SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE {databaseName};", connection) { CommandType = CommandType.Text };
             using (var command = dropDatabaseCommand)
             {
                 command.ExecuteNonQuery();
