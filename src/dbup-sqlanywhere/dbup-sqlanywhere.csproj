@@ -6,13 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
+    <PackageReference Include="Sap.Data.SQLAnywhere" Version="17.0.7.3399" />
   </ItemGroup>
 
   <ItemGroup>
-    <Reference Include="Sap.Data.SQLAnywhere.v4.5">
-      <HintPath>..\..\..\..\..\_dev\SQL Anywhere 17\Assembly\V4.5\Sap.Data.SQLAnywhere.v4.5.dll</HintPath>
-    </Reference>
+    <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
   </ItemGroup>
 
 </Project>
