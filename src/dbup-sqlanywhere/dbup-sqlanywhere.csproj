@@ -1,8 +1,16 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
-    <RootNamespace>dbup_sqlanywhere</RootNamespace>
+    <TargetFrameworks>netstandard2.0;net40;net45</TargetFrameworks>
+    <RootNamespace>dbup-sqlanywhere</RootNamespace>
+    <Authors>Alexandre Furlaneto</Authors>
+    <Company>Dillistone Systems</Company>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <DocumentationFile></DocumentationFile>
   </PropertyGroup>
 
   <ItemGroup>
