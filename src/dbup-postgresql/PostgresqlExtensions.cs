@@ -6,6 +6,7 @@ using DbUp.Engine.Output;
 using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
 using Npgsql;
+using System.Security.Cryptography.X509Certificates;
 
 // ReSharper disable once CheckNamespace
 
@@ -81,10 +82,11 @@ public static class PostgresqlExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
+    /// <param name="certificateFile">Optional SSL client pfx certificate for db.</param>
     /// <returns></returns>
-    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
+    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, string certificateFile = null)
     {
-        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
+        PostgresqlDatabase(supported, connectionString, certificateFile, new ConsoleUpgradeLog());
     }
 
     /// <summary>
@@ -92,47 +94,33 @@ public static class PostgresqlExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
+    /// <param name="certificateFile">Optional SSL client pfx certificate for db.</param>
     /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
     /// <returns></returns>
-    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger)
+    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, string certificateFile, IUpgradeLog logger)
     {
-        if (supported == null) throw new ArgumentNullException("supported");
 
-        if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
+        if (string.IsNullOrWhiteSpace(connectionString))
         {
-            throw new ArgumentNullException("connectionString");
+            throw new ArgumentNullException(nameof(connectionString));
         }
 
-        if (logger == null) throw new ArgumentNullException("logger");
+        if (logger == null) throw new ArgumentNullException(nameof(logger));
 
-        var masterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+        GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
 
-        var databaseName = masterConnectionStringBuilder.Database;
-
-        if (string.IsNullOrEmpty(databaseName) || databaseName.Trim() == string.Empty)
+        using (var connection = new NpgsqlConnection(masterConnectionString))
         {
-            throw new InvalidOperationException("The connection string does not specify a database name.");
-        }
+            if (!string.IsNullOrWhiteSpace(certificateFile))
+                connection.ProvideClientCertificatesCallback += certs => certs.Add(new X509Certificate2(certificateFile));
 
-        masterConnectionStringBuilder.Database = "postgres";
-
-        var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
-        if (!string.IsNullOrEmpty(logMasterConnectionStringBuilder.Password))
-        {
-            logMasterConnectionStringBuilder.Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
-        }
-
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
-
-        using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
-        {
             connection.Open();
 
             var sqlCommandText = string.Format
-                (
-                    @"SELECT case WHEN oid IS NOT NULL THEN 1 ELSE 0 end FROM pg_database WHERE datname = '{0}' limit 1;",
-                    databaseName
-                );
+            (
+                @"SELECT case WHEN oid IS NOT NULL THEN 1 ELSE 0 end FROM pg_database WHERE datname = '{0}' limit 1;",
+                databaseName
+            );
 
 
             // check to see if the database already exists..
@@ -151,10 +139,10 @@ public static class PostgresqlExtensions
             }
 
             sqlCommandText = string.Format
-                (
-                    "create database \"{0}\";",
-                    databaseName
-                );
+            (
+                "create database \"{0}\";",
+                databaseName
+            );
 
             // Create the database...
             using (var command = new NpgsqlCommand(sqlCommandText, connection)
@@ -181,5 +169,75 @@ public static class PostgresqlExtensions
     {
         builder.Configure(c => c.Journal = new PostgresqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
         return builder;
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="certificateFile">Optional SSL client pfx certificate for db.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, string certificateFile = null)
+    {
+        PostgresqlDatabase(supported, connectionString, certificateFile, new ConsoleUpgradeLog());
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="certificateFile">Client certificate for db.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="timeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, string certificateFile, IUpgradeLog logger, int timeout = -1)
+    {
+        GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
+
+        using (var connection = new NpgsqlConnection(masterConnectionString))
+        {
+            if (!string.IsNullOrWhiteSpace(certificateFile))
+                connection.ProvideClientCertificatesCallback += certs => certs.Add(new X509Certificate2(certificateFile));
+
+            connection.Open();
+            using (var command = new NpgsqlCommand($"SELECT pg_terminate_backend(pg_stat_activity.pid) FROM pg_stat_activity WHERE pg_stat_activity.datname = \'{databaseName}\'; DROP DATABASE IF EXISTS \"{databaseName}\";", connection))
+            {
+                command.ExecuteNonQuery();
+            }
+
+            logger.WriteInformation("Dropped database {0}", databaseName);
+        }
+    }
+
+    private static void GetMasterConnectionStringBuilder(string connectionString, IUpgradeLog logger, out string masterConnectionString, out string databaseName)
+    {
+        if (string.IsNullOrWhiteSpace(connectionString))
+            throw new ArgumentNullException(nameof(connectionString));
+
+        if (logger == null)
+            throw new ArgumentNullException(nameof(logger));
+
+        var masterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+
+        databaseName = masterConnectionStringBuilder.Database;
+
+        if (string.IsNullOrWhiteSpace(databaseName))
+        {
+            throw new InvalidOperationException("The connection string does not specify a database name.");
+        }
+
+        masterConnectionStringBuilder.Database = "postgres";
+
+        var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
+        if (!string.IsNullOrEmpty(masterConnectionStringBuilder.Password))
+        {
+            logMasterConnectionStringBuilder.Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
+        }
+
+        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
+
+        masterConnectionString = masterConnectionStringBuilder.ConnectionString;
     }
 }
