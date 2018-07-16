@@ -99,8 +99,7 @@ public static class PostgresqlExtensions
     /// <returns></returns>
     public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, string certificateFile, IUpgradeLog logger)
     {
-
-        if (string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
         {
             throw new ArgumentNullException(nameof(connectionString));
         }
@@ -111,7 +110,7 @@ public static class PostgresqlExtensions
 
         using (var connection = new NpgsqlConnection(masterConnectionString))
         {
-            if (!string.IsNullOrWhiteSpace(certificateFile))
+            if (!string.IsNullOrEmpty(certificateFile) && certificateFile.Trim() != string.Empty)
                 connection.ProvideClientCertificatesCallback += certs => certs.Add(new X509Certificate2(certificateFile));
 
             connection.Open();
@@ -198,7 +197,7 @@ public static class PostgresqlExtensions
 
         using (var connection = new NpgsqlConnection(masterConnectionString))
         {
-            if (!string.IsNullOrWhiteSpace(certificateFile))
+            if (!string.IsNullOrEmpty(certificateFile) && certificateFile.Trim() != string.Empty)
                 connection.ProvideClientCertificatesCallback += certs => certs.Add(new X509Certificate2(certificateFile));
 
             connection.Open();
@@ -213,7 +212,7 @@ public static class PostgresqlExtensions
 
     private static void GetMasterConnectionStringBuilder(string connectionString, IUpgradeLog logger, out string masterConnectionString, out string databaseName)
     {
-        if (string.IsNullOrWhiteSpace(connectionString))
+        if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
             throw new ArgumentNullException(nameof(connectionString));
 
         if (logger == null)
@@ -223,7 +222,7 @@ public static class PostgresqlExtensions
 
         databaseName = masterConnectionStringBuilder.Database;
 
-        if (string.IsNullOrWhiteSpace(databaseName))
+        if (string.IsNullOrEmpty(databaseName) || databaseName.Trim() == string.Empty)
         {
             throw new InvalidOperationException("The connection string does not specify a database name.");
         }
