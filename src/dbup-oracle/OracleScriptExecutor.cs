@@ -54,7 +54,7 @@ namespace DbUp.Oracle
 #else
                 var code = exception.ErrorCode;
 #endif
-                Log().WriteInformation("Oracle exception has occured in script: '{0}'", script.Name);
+                Log().WriteInformation("Oracle exception has occurred in script: '{0}'", script.Name);
                 Log().WriteError("Oracle error code: {0}; Number {1}; Message: {2}", index, code, exception.Number, exception.Message);
                 Log().WriteError(exception.ToString());
                 throw;
