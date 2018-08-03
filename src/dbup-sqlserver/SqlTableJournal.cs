@@ -38,19 +38,12 @@ namespace DbUp.SqlServer
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            var query = "";
-
-            if (!string.IsNullOrEmpty(SchemaTableSchema))
-                query += $@"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = '{SchemaTableSchema}') 
-                                EXEC('CREATE SCHEMA {SqlObjectParser.QuoteIdentifier(SchemaTableSchema)}')
-";
-                
-            query += $@"create table {FqSchemaTableName} (
+            return 
+$@"create table {FqSchemaTableName} (
     [Id] int identity(1,1) not null constraint {quotedPrimaryKeyName} primary key,
     [ScriptName] nvarchar(255) not null,
     [Applied] datetime not null
 )";
-            return query;
         }
     }
 }

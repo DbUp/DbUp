@@ -14,6 +14,7 @@ namespace DbUp.Support
     /// </summary>
     public abstract class TableJournal : IJournal
     {
+        readonly ISqlObjectParser sqlObjectParser;
         bool journalExists;
 
         /// <summary>
@@ -30,7 +31,7 @@ namespace DbUp.Support
             ISqlObjectParser sqlObjectParser,
             string schema, string table)
         {
-            this.SqlObjectParser = sqlObjectParser;
+            this.sqlObjectParser = sqlObjectParser;
             ConnectionManager = connectionManager;
             Log = logger;
             UnquotedSchemaTableName = table;
@@ -41,7 +42,6 @@ namespace DbUp.Support
         }
 
         protected string SchemaTableSchema { get; private set; }
-        protected ISqlObjectParser SqlObjectParser { get; }
 
         /// <summary>
         /// Schema table name, no schema and unquoted
@@ -130,7 +130,7 @@ namespace DbUp.Support
         protected IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory)
         {
             var command = dbCommandFactory();
-            var primaryKeyName = SqlObjectParser.QuoteIdentifier("PK_" + UnquotedSchemaTableName + "_Id");
+            var primaryKeyName = sqlObjectParser.QuoteIdentifier("PK_" + UnquotedSchemaTableName + "_Id");
             command.CommandText = CreateSchemaTableSql(primaryKeyName);
             command.CommandType = CommandType.Text;
             return command;
@@ -161,7 +161,7 @@ namespace DbUp.Support
         /// <param name="quotedIdentifier">identifier to unquote.</param>
         protected string UnquoteSqlObjectName(string quotedIdentifier)
         {
-            return SqlObjectParser.UnquoteIdentifier(quotedIdentifier);
+            return sqlObjectParser.UnquoteIdentifier(quotedIdentifier);
         }
 
         protected virtual void OnTableCreated(Func<IDbCommand> dbCommandFactory)
