@@ -461,6 +461,7 @@ namespace DbUp.Support
         protected string FqSchemaTableName { get; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         protected string SchemaTableSchema { get; }
+        protected DbUp.Engine.ISqlObjectParser SqlObjectParser { get; }
         protected string UnquotedSchemaTableName { get; }
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
         protected bool DoesTableExist(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
