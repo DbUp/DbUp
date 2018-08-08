@@ -31,7 +31,7 @@ namespace DbUp.Console
                 { "cs|connectionString=", "Full connection string", cs => connectionString = cs},
                 { "h|help",  "show this message and exit", v => show_help = v != null },
                 {"mark", "Mark scripts as executed but take no action", m => mark = true},
-                {"et=|executionTimeout", "Execution Timeout (sec) | defaults to 30", et => executionTimeout = int.Parse(et)},
+                {"et|executionTimeout=", "Execution Timeout (sec) | defaults to 30", et => executionTimeout = int.Parse(et)},
             };
 
             optionSet.Parse(args);
