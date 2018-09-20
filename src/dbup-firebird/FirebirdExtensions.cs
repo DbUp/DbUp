@@ -1,6 +1,10 @@
 ﻿using DbUp.Builder;
 using DbUp.Firebird;
 using DbUp.Engine.Transactions;
+using DbUp;
+using DbUp.Engine.Output;
+using FirebirdSql.Data.FirebirdClient;
+using System.IO;
 
 // ReSharper disable once CheckNamespace
 
@@ -48,5 +52,65 @@ public static class FirebirdExtensions
         builder.Configure(c => c.Journal = new FirebirdTableJournal(() => c.ConnectionManager, () => c.Log, "schemaversions"));
         builder.WithPreprocessor(new FirebirdPreprocessor());
         return builder;
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void FirebirdDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
+    {
+        FirebirdDatabase(supported, connectionString, new ConsoleUpgradeLog());
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void FirebirdDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout)
+    {
+        FirebirdDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void FirebirdDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
+    {
+        var builder = new FbConnectionStringBuilder(connectionString);
+
+        if (builder.ServerType == FbServerType.Embedded)
+        {
+            if (!File.Exists(builder.Database))
+                FbConnection.CreateDatabase(builder.ToString(), false);
+        }
+        else
+        {
+            using (var conn = new FbConnection(builder.ToString()))
+            {
+                try
+                {
+                    //No way to check if the database exists on the server...
+                    conn.Open();
+                    conn.Close();
+                }
+                catch
+                {
+                    // ... assume the connect failed because the database doesn't exist yet
+                    FbConnection.CreateDatabase(builder.ToString(), false);
+                }
+            }
+        }
+        
     }
 }
