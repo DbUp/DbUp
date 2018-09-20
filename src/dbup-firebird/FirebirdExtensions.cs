@@ -92,7 +92,12 @@ public static class FirebirdExtensions
         if (builder.ServerType == FbServerType.Embedded)
         {
             if (!File.Exists(builder.Database))
+            {
                 FbConnection.CreateDatabase(builder.ToString(), false);
+                logger.WriteInformation("Created database {0}", builder.Database);
+            } else
+                logger.WriteInformation("Database {0} already exists", builder.Database);
+
         }
         else
         {
@@ -102,15 +107,73 @@ public static class FirebirdExtensions
                 {
                     //No way to check if the database exists on the server...
                     conn.Open();
+                    logger.WriteInformation("Database {0} already exists", builder.Database);
                     conn.Close();
                 }
                 catch
                 {
                     // ... assume the connect failed because the database doesn't exist yet
                     FbConnection.CreateDatabase(builder.ToString(), false);
+                    logger.WriteInformation("Created database {0}", builder.Database);
                 }
             }
         }
-        
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void FirebirdDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString)
+    {
+        FirebirdDatabase(supported, connectionString, new ConsoleUpgradeLog());
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void FirebirdDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, int commandTimeout)
+    {
+        FirebirdDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="timeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void FirebirdDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
+    {
+        var builder = new FbConnectionStringBuilder(connectionString);
+
+        if (builder.ServerType == FbServerType.Embedded)
+        {
+            if (File.Exists(builder.Database))
+            {
+                FbConnection.DropDatabase(builder.ToString());
+                logger.WriteInformation("Dropped database {0}", builder.Database);
+            }    
+        }
+        else
+        {
+            try
+            {
+                FbConnection.DropDatabase(builder.ToString());
+                logger.WriteInformation("Dropped database {0}", builder.Database);
+            }
+            catch
+            {
+                // ... assume the connect failed because the database doesn't exist yet, no action
+            }
+        }
     }
 }
