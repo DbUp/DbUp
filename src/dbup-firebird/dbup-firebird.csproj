@@ -27,7 +27,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
-    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="4.5.2.0" />
+    <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="5.0.0" />
   </ItemGroup>
 
 
