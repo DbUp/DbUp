@@ -5,6 +5,7 @@ using DbUp;
 using DbUp.Engine.Output;
 using FirebirdSql.Data.FirebirdClient;
 using System.IO;
+using System;
 
 // ReSharper disable once CheckNamespace
 
@@ -106,9 +107,10 @@ public static class FirebirdExtensions
                 try
                 {
                     //No way to check if the database exists on the server...
-                    conn.Open();
-                    logger.WriteInformation("Database {0} already exists", builder.Database);
+                    conn.Open(); 
                     conn.Close();
+
+                    logger.WriteInformation("Database {0} already exists", builder.Database);
                 }
                 catch
                 {
@@ -170,8 +172,19 @@ public static class FirebirdExtensions
                 FbConnection.DropDatabase(builder.ToString());
                 logger.WriteInformation("Dropped database {0}", builder.Database);
             }
-            catch
+            catch (FbException ex)
             {
+                switch (ex.ErrorCode)
+                {
+                    case 335544344:
+                        logger.WriteInformation("Can't drop database - no database found.");
+                        break;
+                    case 335544510:
+                        logger.WriteError("Can't drop database. Is there still an active connection?");
+                        break;
+                    default:
+                        break;
+                }
                 // ... assume the connect failed because the database doesn't exist yet, no action
             }
         }
