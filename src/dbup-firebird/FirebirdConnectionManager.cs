@@ -26,11 +26,18 @@ namespace DbUp.Firebird
         {
             var statements = new List<string>();
 
-            var script = new FbScript(scriptContents);
-            script.Parse();
-            
-            foreach (FbStatement stmt in script.Results)
-                statements.Add(stmt.Text);
+            try
+            {
+                FbScript script = new FbScript(scriptContents);
+                script.Parse();
+
+                foreach (FbStatement stmt in script.Results)
+                    statements.Add(stmt.Text);
+            }
+            catch
+            {
+                statements.Add(scriptContents);
+            }
 
             return statements.ToArray();
         }
