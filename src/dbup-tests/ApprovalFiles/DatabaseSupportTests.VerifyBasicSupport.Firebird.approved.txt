@@ -18,7 +18,7 @@ DB Operation: Execute non query command:
                     SchemaVersionsId    INTEGER         NOT NULL,
                     ScriptName          VARCHAR(255)    NOT NULL,
                     Applied             TIMESTAMP       NOT NULL,
-                    CONSTRAINT pk_SchemaVersions_id PRIMARY KEY (schemaversionsid)
+                    CONSTRAINT pk_SchemaVersions_id PRIMARY KEY (SchemaVersionsId)
                 )
 DB Operation: Dispose command
 Info:         The "SchemaVersions" table has been created
