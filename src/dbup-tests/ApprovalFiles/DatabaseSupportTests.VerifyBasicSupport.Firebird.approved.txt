@@ -1,38 +1,49 @@
 DB Operation: Open connection
 Info:         Beginning database upgrade
 Info:         Checking whether journal table exists..
-DB Operation: Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'schemaversions'
+DB Operation: Execute scalar command: 
+                SELECT 1 FROM RDB$RELATIONS WHERE RDB$SYSTEM_FLAG = 0 AND RDB$RELATION_NAME = UPPER('SchemaVersions')
+                
 DB Operation: Dispose command
 Info:         Journal table does not exist
 Info:         Executing Database Server script 'Script0001.sql'
 Info:         Checking whether journal table exists..
-DB Operation: Execute scalar command: select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = 'schemaversions'
+DB Operation: Execute scalar command: 
+                SELECT 1 FROM RDB$RELATIONS WHERE RDB$SYSTEM_FLAG = 0 AND RDB$RELATION_NAME = UPPER('SchemaVersions')
+                
 DB Operation: Dispose command
-Info:         Creating the "schemaversions" table
-DB Operation: Execute non query command: CREATE TABLE "schemaversions"
-(
-    schemaversionsid INTEGER NOT NULL,
-    scriptname VARCHAR(255) NOT NULL,
-    applied TIMESTAMP NOT NULL,
-    CONSTRAINT pk_schemaversions_id PRIMARY KEY (schemaversionsid)
-)
+Info:         Creating the "SchemaVersions" table
+DB Operation: Execute non query command: 
+                CREATE TABLE SchemaVersions (
+                    SchemaVersionsId    INTEGER         NOT NULL,
+                    ScriptName          VARCHAR(255)    NOT NULL,
+                    Applied             TIMESTAMP       NOT NULL,
+                    CONSTRAINT pk_SchemaVersions_id PRIMARY KEY (schemaversionsid)
+                )
 DB Operation: Dispose command
-Info:         The "schemaversions" table has been created
-DB Operation: Execute non query command: CREATE SEQUENCE GEN_schemaversionsID
+Info:         The "SchemaVersions" table has been created
+DB Operation: Execute non query command: 
+                CREATE SEQUENCE GEN_SchemaVersionsID
+                
 DB Operation: Dispose command
-Info:         The GEN_schemaversionsID generator has been created
-DB Operation: Execute non query command: CREATE TRIGGER BI_schemaversionsID FOR schemaversions ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
-    if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id(GEN_schemaversionsID,1);
-END;
+Info:         The GEN_SchemaVersionsID generator has been created
+DB Operation: Execute non query command: 
+                CREATE TRIGGER BI_SchemaVersionsID FOR SchemaVersions ACTIVE BEFORE INSERT POSITION 0 
+                AS BEGIN
+                    IF (new.SchemaVersionsId IS NULL OR (new.SchemaVersionsId = 0)) 
+                    THEN new.SchemaVersionsId = GEN_ID(GEN_SchemaVersionsID,1);
+                END;
 DB Operation: Dispose command
-Info:         The BI_schemaversionsID trigger has been created
+Info:         The BI_SchemaVersionsID trigger has been created
 DB Operation: Execute non query command: script1contents
 DB Operation: Dispose command
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: applied=<date>
-DB Operation: Execute non query command: insert into "schemaversions" (ScriptName, Applied) values (@scriptName, @applied)
+DB Operation: Execute non query command:  
+                INSERT INTO SchemaVersions (ScriptName, Applied) VALUES (@scriptName, @applied)
+                
 DB Operation: Dispose command
 Info:         Upgrade successful
 DB Operation: Dispose connection
