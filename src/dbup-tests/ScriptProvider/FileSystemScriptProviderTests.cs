@@ -187,5 +187,12 @@ namespace DbUp.Tests.ScriptProvider
                 Directory.Delete(testPath, true);
             }
         }
+
+        [Fact]
+        public void options_should_include_sql()
+        {
+            var options = new FileSystemScriptOptions();
+            options.Extensions.ShouldContain("*.sql");
+        }
     }
 }
