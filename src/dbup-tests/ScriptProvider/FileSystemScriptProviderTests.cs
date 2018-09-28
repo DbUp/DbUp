@@ -72,6 +72,12 @@ namespace DbUp.Tests.ScriptProvider
                     .ShouldBe("é");
             }
 
+            [Then]
+            public void files_should_include_metadata()
+            {
+                filesToExecute.ShouldAllBe(x => !string.IsNullOrEmpty(x.MetaData.ToString()));
+            }
+
             public void Dispose()
             {
                 Directory.Delete(testPath, true);
