@@ -44,10 +44,14 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var files = Directory.GetFiles(directoryPath, "*.sql", ShouldSearchSubDirectories()).AsEnumerable();
+            var files = new List<string>();
+            foreach (string scriptExtension in options.Extensions)
+            {
+                files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
+            }
             if (filter != null)
             {
-                files = files.Where(filter);
+                files = files.Where(filter).ToList();
             }
             return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding))
                 .OrderBy(x => x.Name)
