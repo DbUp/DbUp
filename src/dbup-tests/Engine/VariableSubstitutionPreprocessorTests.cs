@@ -32,6 +32,27 @@ namespace DbUp.Tests.Engine
         }
 
         [Fact]
+        public void substitutes_variables_when_quoted_text_contains_comment_sequence()
+        {
+            // This is a specific use case from GitHub issue #351
+            var journal = Substitute.For<IJournal>();
+            var connection = Substitute.For<IDbConnection>();
+            var command = Substitute.For<IDbCommand>();
+            connection.CreateCommand().Returns(command);
+
+            var upgradeEngine = DeployChanges.To
+                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
+                .WithScript("testscript", "SELECT 'Test' AS \"/*\"\r\nGO\r\n$somevar$")
+                .JournalTo(journal)
+                .WithVariable("somevar", "coriander")
+                .Build();
+
+            upgradeEngine.PerformUpgrade();
+
+            command.CommandText.ShouldBe("SELECT 'Test' AS \"/*\"\r\nGO\r\ncoriander");
+        }
+
+        [Fact]
         public void substitutes_variables_in_quoted_text()
         {
             var journal = Substitute.For<IJournal>();
