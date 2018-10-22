@@ -15,16 +15,31 @@ namespace DbUp.ScriptProviders
         private readonly EmbeddedScriptProvider embeddedScriptProvider;
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
+        private readonly ScriptType scriptType;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter)
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, ScriptType.RunOnce)
         {
             this.assembly = assembly;
             this.filter = filter;
+            embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="filter">The embedded script filter.</param>
+        /// <param name="scriptType">The script type.</param>
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, ScriptType scriptType)
+        {
+            this.assembly = assembly;
+            this.filter = filter;
+            this.scriptType = scriptType;
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 

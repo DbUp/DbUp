@@ -10,7 +10,7 @@ namespace SampleApplication
     {
         public static void Main(string[] args)
         {
-            string instanceName = @"(local)";
+            string instanceName = @"(local)\SqlExpress";
             // Uncomment the following line to run against sql local db instance.
             // string instanceName = @"(localdb)\Projects";
 
