@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Text;
 
-namespace DbUp.Engine
+namespace DbUp.Support
 {
     public enum ScriptType
     {

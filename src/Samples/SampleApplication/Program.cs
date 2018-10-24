@@ -2,7 +2,9 @@
 using System.Linq;
 using System.Reflection;
 using DbUp;
+using DbUp.Helpers;
 using DbUp.SqlServer.Helpers;
+using DbUp.Support;
 
 namespace SampleApplication
 {
@@ -28,16 +30,26 @@ namespace SampleApplication
                     if (script.EndsWith("Script0006 - Transactions.sql"))
                         return !args.Any(a => "--noError".Equals(a, StringComparison.InvariantCultureIgnoreCase));
 
-                    return true;
+                    return script.StartsWith("SampleApplication.Scripts.");
                 })
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), ScriptType.RunAlways, runOrder: DbUpDefaults.DefaultRunOrder + 1)
                 .LogToConsole();
 
             if (args.Any(a => "--withTransaction".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
+            {
                 upgradeEngineBuilder = upgradeEngineBuilder.WithTransaction();
+            }
             else if (args.Any(a => "--withTransactionPerScript".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
+            {
                 upgradeEngineBuilder = upgradeEngineBuilder.WithTransactionPerScript();
+            }
 
             var upgrader = upgradeEngineBuilder.Build();
+
+            if (args.Any(a => "--generateReport".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
+            {
+                upgrader.GenerateUpgradeHtmlReport("UpgradeReport.html", instanceName, "SampleApplication");
+            }
 
             Console.WriteLine("Is upgrade required: " + upgrader.IsUpgradeRequired());
 

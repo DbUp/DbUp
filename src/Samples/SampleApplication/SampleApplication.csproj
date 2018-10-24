@@ -11,4 +11,10 @@
   <ItemGroup>
     <EmbeddedResource Include="Scripts\*.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <None Remove="RunAlways\RunAlwaysScript0001 - CreateRole.sql" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="RunAlways\RunAlwaysScript0001 - CreateRole.sql" />
+  </ItemGroup>
 </Project>

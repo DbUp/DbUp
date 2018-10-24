@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "SampleApplication": {
+      "commandName": "Project",
+      "commandLineArgs": "--generateReport"
+    }
+  }
+}

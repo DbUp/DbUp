@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -16,17 +17,15 @@ namespace DbUp.ScriptProviders
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
         private readonly ScriptType scriptType;
+        private readonly int runOrder;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, ScriptType.RunOnce)
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder)
         {
-            this.assembly = assembly;
-            this.filter = filter;
-            embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
         /// <summary>
@@ -35,11 +34,23 @@ namespace DbUp.ScriptProviders
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
         /// <param name="scriptType">The script type.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, ScriptType scriptType)
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, ScriptType scriptType) : this(assembly, filter, scriptType, DbUpDefaults.DefaultRunOrder)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="filter">The embedded script filter.</param>
+        /// <param name="scriptType">The script type.</param>
+        /// <param name="runOrder">The run group order.</param>
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, ScriptType scriptType, int runOrder)
         {
             this.assembly = assembly;
             this.filter = filter;
             this.scriptType = scriptType;
+            this.runOrder = runOrder;
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
@@ -57,7 +68,7 @@ namespace DbUp.ScriptProviders
                         type.IsClass;
 #endif
                 })
-                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
+                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", scriptType, runOrder, () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
                 .ToList());
         }
 

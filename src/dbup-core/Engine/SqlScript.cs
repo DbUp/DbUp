@@ -2,6 +2,7 @@
 using System;
 using System.IO;
 using System.Text;
+using DbUp.Support;
 
 namespace DbUp.Engine
 {
@@ -11,15 +12,13 @@ namespace DbUp.Engine
     [System.Diagnostics.DebuggerDisplay("{Name}")]
     public class SqlScript
     {
-        private readonly string contents;        
-
         /// <summary>
         /// Initializes a new instance of the <see cref="SqlScript"/> class.
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="contents">The contents.</param>
         public SqlScript(string name, string contents) : this(name, contents, ScriptType.RunOnce)
-        {            
+        {
         }
 
         /// <summary>
@@ -28,23 +27,40 @@ namespace DbUp.Engine
         /// <param name="name">The name.</param>
         /// <param name="contents">The contents.</param>
         /// <param name="scriptType">The script type.</param>
-        public SqlScript(string name, string contents, ScriptType scriptType)
+        public SqlScript(string name, string contents, ScriptType scriptType) : this(name, contents, scriptType, DbUpDefaults.DefaultRunOrder)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="SqlScript"/> class with a specific script type and a specific order
+        /// </summary>
+        /// <param name="name">The name.</param>
+        /// <param name="contents">The contents.</param>
+        /// <param name="scriptType">The script type.</param>
+        /// <param name="runOrder">The run group order</param>
+        public SqlScript(string name, string contents, ScriptType scriptType, int runOrder)
         {
             Name = name;
-            this.contents = contents;
-            this.ScriptType = ScriptType;
+            this.Contents = contents;
+            this.ScriptType = scriptType;
+            this.runOrder = runOrder;
         }
 
         /// <summary>
         /// Gets the contents of the script.
         /// </summary>
         /// <value></value>
-        public virtual string Contents
-        {
-            get { return contents; }
-        }
+        public virtual string Contents { get; }
 
+        /// <summary>
+        /// Gets the type of script this is.
+        /// </summary>
         public ScriptType ScriptType { get; }
+
+        /// <summary>
+        /// Gets run group order, by default all scripts run in alphabetical order, use this when you want to specify a group of scripts to run first or last
+        /// </summary>
+        public int runOrder { get; set; }
 
         /// <summary>
         /// Gets the name of the script.
@@ -68,9 +84,8 @@ namespace DbUp.Engine
         /// <param name="path"></param>
         /// <param name="encoding"></param>
         /// <returns></returns>
-        public static SqlScript FromFile(string path, Encoding encoding)
-            => FromFile(Path.GetDirectoryName(path), path, encoding);
-        
+        public static SqlScript FromFile(string path, Encoding encoding) => FromFile(Path.GetDirectoryName(path), path, encoding, ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder);
+
         /// <summary>
         /// Create a SqlScript from a file using specified encoding
         /// </summary>
@@ -80,7 +95,7 @@ namespace DbUp.Engine
         /// <returns></returns>
         public static SqlScript FromFile(string basePath, string path, Encoding encoding)
         {
-            return FromFile(basePath, path, encoding, ScriptType.RunOnce);
+            return FromFile(basePath, path, encoding, ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder);
         }
 
         /// <summary>
@@ -92,6 +107,20 @@ namespace DbUp.Engine
         /// <param name="scriptType">The script type</param>
         /// <returns></returns>
         public static SqlScript FromFile(string basePath, string path, Encoding encoding, ScriptType scriptType)
+        {
+            return FromFile(basePath, path, encoding, scriptType, DbUpDefaults.DefaultRunOrder);
+        }
+
+        /// <summary>
+        /// Create a SqlScript from a file using specified encoding and script type and run order
+        /// </summary>
+        /// <param name="basePath">Root path that was searched</param>
+        /// <param name="path">Path to the file</param>
+        /// <param name="encoding"></param>        
+        /// <param name="scriptType">The script type</param>
+        /// <param name="runOrder">The run group order</param>
+        /// <returns></returns>
+        public static SqlScript FromFile(string basePath, string path, Encoding encoding, ScriptType scriptType, int runOrder)
         {
             var fullPath = Path.GetFullPath(path);
             var fullBasePath = Path.GetFullPath(basePath);
@@ -105,8 +134,10 @@ namespace DbUp.Engine
                 .Replace(Path.AltDirectorySeparatorChar, '.')
                 .Trim('.');
 
-            using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
-                return FromStream(filename, fileStream, encoding, scriptType);
+            using (var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
+            {
+                return FromStream(filename, fileStream, encoding, scriptType, runOrder);
+            }
         }
 
         /// <summary>
@@ -142,10 +173,24 @@ namespace DbUp.Engine
         /// <returns></returns>
         public static SqlScript FromStream(string scriptName, Stream stream, Encoding encoding, ScriptType scriptType)
         {
+            return FromStream(scriptName, stream, encoding, scriptType, DbUpDefaults.DefaultRunOrder);
+        }
+
+        /// <summary>
+        /// Create a SqlScript from a stream using specified encoding and script type and run group order
+        /// </summary>
+        /// <param name="scriptName"></param>
+        /// <param name="stream"></param>
+        /// <param name="encoding"></param>  
+        /// <param name="scriptType">The script type</param>
+        /// <param name="runOrder">The run order</param>
+        /// <returns></returns>
+        public static SqlScript FromStream(string scriptName, Stream stream, Encoding encoding, ScriptType scriptType, int runOrder)
+        {
             using (var resourceStreamReader = new StreamReader(stream, encoding, true))
             {
                 string c = resourceStreamReader.ReadToEnd();
-                return new SqlScript(scriptName, c, scriptType);
+                return new SqlScript(scriptName, c, scriptType, runOrder);
             }
         }
     }
