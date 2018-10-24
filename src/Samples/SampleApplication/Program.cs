@@ -46,27 +46,30 @@ namespace SampleApplication
 
             var upgrader = upgradeEngineBuilder.Build();
 
-            if (args.Any(a => "--generateReport".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
-            {
-                upgrader.GenerateUpgradeHtmlReport("UpgradeReport.html", instanceName, "SampleApplication");
-            }
-
             Console.WriteLine("Is upgrade required: " + upgrader.IsUpgradeRequired());
 
-            var result = upgrader.PerformUpgrade();
-
-            // Display the result
-            if (result.Successful)
+            if (args.Any(a => "--generateReport".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Success!");
+                upgrader.GenerateUpgradeHtmlReport("UpgradeReport.html");
             }
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(result.Error);
-                Console.WriteLine("Failed!");
+            {                
+                var result = upgrader.PerformUpgrade();
+
+                // Display the result
+                if (result.Successful)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Success!");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(result.Error);
+                    Console.WriteLine("Failed!");
+                }
             }
+
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
