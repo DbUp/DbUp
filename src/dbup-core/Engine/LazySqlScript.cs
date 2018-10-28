@@ -17,7 +17,7 @@ namespace DbUp.Engine
         /// <param name="name">The name.</param>
         /// <param name="contentProvider">The delegate which creates the content at execution time.</param>
         public LazySqlScript(string name, Func<string> contentProvider)
-            : this(name, new SqlScriptOptions(), null)
+            : this(name, new SqlScriptOptions(), contentProvider)
         {            
         }
 
