@@ -1,4 +1,4 @@
-It is important to build trust in any automated process.  Typically, deployment tools have the ability to have approvers who will verify changes prior to being deployed.  A great to build trust with the approver is to have the ability to see which scripts are going to be run.  Some of these deployment systems have the ability to publish artifacts for approvers to review them.
+It is important to build trust in any automated process.  Typically, deployment tools have the ability to have approvers who will verify changes prior to being deployed.  A great way to build trust with the approver is to have the ability to see which scripts are going to be run.  Some of these deployment systems have the ability to publish artifacts for approvers to review them.
 
 The ability to generate an HTML report containing all the changes has been added in version 4.2.  This report can then be uploaded as an artifact to the deployment tool of your choice.
 

@@ -50,10 +50,10 @@ If you want to organize your scripts into multiple folders so the RunOnce script
 
 ```csharp
 var upgradeEngineBuilder = DeployChanges.To
-                            .SqlDatabase(connectionString, null) //null or "" for default schema for user
-                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.Scripts."), new SqlScriptOptions { ScriptType = ScriptType.RunOnce })
-                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways })
-                            .LogToConsole();
+    .SqlDatabase(connectionString, null) //null or "" for default schema for user
+    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.Scripts."), new SqlScriptOptions { ScriptType = ScriptType.RunOnce })
+    .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways })
+    .LogToConsole();
 
 var upgrader = upgradeEngineBuilder.Build();
 
