@@ -62,7 +62,7 @@ namespace DbUp.Helpers
 </head>
 <body>
     <noscript>
-            <div ""alert alert-danger"">& nbsp;JavaScript execution is currently disabled. Enable JavaScript on your browser to view the change report.</div>
+            <div class=""alert alert-danger"">& nbsp;JavaScript execution is currently disabled. Enable JavaScript on your browser to view the change report.</div>
     </noscript>
 	<nav class=""navbar navbar-expand-lg navbar-light bg-light"">
 		<a class=""navbar-brand"" href=""#"">DBUp Delta Report Generated {DateTime.Now.ToString()}{(string.IsNullOrEmpty(serverName) == false ? " to upgrade " + serverName + "." + databaseName : string.Empty )}</a>
