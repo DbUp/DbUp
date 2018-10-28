@@ -17,4 +17,7 @@
   <ItemGroup>
     <EmbeddedResource Include="RunAlways\RunAlwaysScript0001 - CreateRole.sql" />
   </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Properties\" />
+  </ItemGroup>
 </Project>
