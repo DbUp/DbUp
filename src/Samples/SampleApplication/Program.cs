@@ -2,6 +2,7 @@
 using System.Linq;
 using System.Reflection;
 using DbUp;
+using DbUp.Engine;
 using DbUp.Helpers;
 using DbUp.SqlServer.Helpers;
 using DbUp.Support;
@@ -32,7 +33,7 @@ namespace SampleApplication
 
                     return script.StartsWith("SampleApplication.Scripts.");
                 })
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), ScriptType.RunAlways, runOrder: DbUpDefaults.DefaultRunOrder + 1)
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1})
                 .LogToConsole();
 
             if (args.Any(a => "--withTransaction".Equals(a, StringComparison.InvariantCultureIgnoreCase)))

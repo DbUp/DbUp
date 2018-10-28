@@ -211,46 +211,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="name">The name of the script. This should never change once executed.</param>
     /// <param name="contents">The script body.</param>
-    /// <param name="scriptType">The script type.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>    
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents, SqlScriptOptions sqlScriptOptions)
     {
-        var script = new SqlScript(name, contents, scriptType);
-        return WithScripts(builder, script);
-    }
-
-    /// <summary>
-    /// Adds a single static script to the upgrader.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="name">The name of the script. This should never change once executed.</param>
-    /// <param name="contents">The script body.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents, int runOrder)
-    {
-        var script = new SqlScript(name, contents, ScriptType.RunOnce, runOrder);
-        return WithScripts(builder, script);
-    }
-
-    /// <summary>
-    /// Adds a single static script to the upgrader.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="name">The name of the script. This should never change once executed.</param>
-    /// <param name="contents">The script body.</param>
-    /// <param name="scriptType">The script type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents, ScriptType scriptType, int runOrder)
-    {
-        var script = new SqlScript(name, contents, scriptType, runOrder);
+        var script = new SqlScript(name, contents, sqlScriptOptions);
         return WithScripts(builder, script);
     }
 
@@ -272,39 +239,12 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="name">The name of the script</param>
     /// <param name="script">The script instance</param>
-    /// <param name="scriptType">The script type.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>    
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script, ScriptType scriptType)
-        => WithScripts(builder, new ScriptInstanceProvider(_ => name, scriptType, script));
-
-    /// <summary>
-    /// Adds a single IScript instance to the upgrader.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="name">The name of the script</param>
-    /// <param name="script">The script instance</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script, int runOrder)
-        => WithScripts(builder, new ScriptInstanceProvider(_ => name, ScriptType.RunOnce, runOrder, script));
-
-    /// <summary>
-    /// Adds a single IScript instance to the upgrader.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="name">The name of the script</param>
-    /// <param name="script">The script instance</param>
-    /// <param name="scriptType">The script type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script, ScriptType scriptType, int runOrder)
-        => WithScripts(builder, new ScriptInstanceProvider(_ => name, ScriptType.RunOnce, runOrder, script));
+    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script, SqlScriptOptions sqlScriptOptions)
+        => WithScripts(builder, new ScriptInstanceProvider(_ => name, sqlScriptOptions, script));
 
     /// <summary>
     /// Adds IScript instances to the upgrader.
@@ -328,46 +268,19 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, params IScript[] scripts)
         => WithScripts(builder, new ScriptInstanceProvider(namer, scripts));
-
+    
     /// <summary>
     /// Adds IScript instances to the upgrader.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="namer">A function that returns the name of the script</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <param name="scripts">The script instances.</param>    
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, int runOrder, params IScript[] scripts)
-        => WithScripts(builder, new ScriptInstanceProvider(namer, ScriptType.RunOnce, runOrder, scripts));
-
-    /// <summary>
-    /// Adds IScript instances to the upgrader.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="namer">A function that returns the name of the script</param>    
     /// <param name="scripts">The script instances.</param>
-    /// <param name="scriptType">The script type.</param>
+    /// <param name="sqlScriptOptions">The script sql script options.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, ScriptType scriptType, params IScript[] scripts)
-        => WithScripts(builder, new ScriptInstanceProvider(namer, scriptType, scripts));
-
-    /// <summary>
-    /// Adds IScript instances to the upgrader.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="namer">A function that returns the name of the script</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <param name="scripts">The script instances.</param>
-    /// <param name="scriptType">The script type.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, ScriptType scriptType, int runOrder, params IScript[] scripts)
-        => WithScripts(builder, new ScriptInstanceProvider(namer, scriptType, runOrder, scripts));
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, SqlScriptOptions sqlScriptOptions, params IScript[] scripts)
+        => WithScripts(builder, new ScriptInstanceProvider(namer, sqlScriptOptions, scripts));
 
     /// <summary>
     /// Adds all scripts from a folder on the file system.
@@ -387,42 +300,13 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>    
-    /// <param name="scriptType">The script type</param>    
+    /// <param name="sqlScriptOptions">The sql script options</param>    
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions(), scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>    
-    /// <param name="scriptType">The script type</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions(), scriptType, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>        
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions(), ScriptType.RunOnce, runOrder));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions(), sqlScriptOptions));
     }
 
     /// <summary>
@@ -445,44 +329,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
     /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
+    /// <param name="sqlScriptOptions">The sql script options</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, int runOrder)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter }, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with a custom filter and custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>    
-    /// <param name="scriptType">The script type</param>    
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, ScriptType scriptType)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter }, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with a custom filter and custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>    
-    /// <param name="scriptType">The script type</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter }, scriptType, runOrder));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter }, sqlScriptOptions));
     }
 
     /// <summary>
@@ -504,45 +357,14 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
-    /// <param name="encoding">The encoding.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding }, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
     /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">The script type</param>    
+    /// <param name="sqlScriptOptions">The sql script options</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding }, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">The script type</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding }, scriptType, runOrder));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding }, sqlScriptOptions));
     }
 
     /// <summary>
@@ -566,47 +388,14 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
     /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
-    /// <param name="encoding">The encoding.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter, Encoding = encoding }, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with a custom filter and custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
     /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">The script type</param>    
+    /// <param name="sqlScriptOptions">The sql script options</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter, Encoding = encoding }, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with a custom filter and custom encoding.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
-    /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">The script type</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter, Encoding = encoding }, scriptType, runOrder));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter, Encoding = encoding }, sqlScriptOptions));
     }
 
     /// <summary>
@@ -624,52 +413,6 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Adds all scripts from a folder on the file system, with custom options (Encoding, filter, etc.).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="options">Options for the file System Provider</param>
-    /// <param name="scriptType">The script type</param>    
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, FileSystemScriptOptions options, ScriptType scriptType)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, options, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with custom options (Encoding, filter, etc.).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="options">Options for the file System Provider</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, FileSystemScriptOptions options, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, options, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts from a folder on the file system, with custom options (Encoding, filter, etc.).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>
-    /// <param name="options">Options for the file System Provider</param>
-    /// <param name="scriptType">The script type</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, FileSystemScriptOptions options, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new FileSystemScriptProvider(path, options, scriptType, runOrder));
-    }
-
-    /// <summary>
     /// Adds all scripts found as embedded resources in the given assembly.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -683,17 +426,17 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly and assigns them a script type.
+    /// Adds all scripts found as embedded resources in the given assembly and assigns them the script options.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
-    /// <param name="scriptType">The script type.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), scriptType));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), DbUpDefaults.DefaultEncoding, sqlScriptOptions));
     }
 
     /// <summary>
@@ -716,13 +459,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">The script type.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Encoding encoding, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Encoding encoding, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding, scriptType));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding, sqlScriptOptions));
     }
 
     /// <summary>
@@ -747,46 +490,13 @@ public static class StandardExtensions
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">Script Type.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, with custom encoding and with a custom filter (you'll need to exclude non- .SQL files yourself) and where you specify the script type.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="encoding">The encoding.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, with custom encoding and with a custom filter (you'll need to exclude non- .SQL files yourself) and where you specify the script type.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">Script Type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding, scriptType, runOrder));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding, sqlScriptOptions));
     }
 
     /// <summary>
@@ -809,44 +519,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="scriptType">The script type.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, with a custom filter (you'll need to exclude non- .SQL files yourself) and where you specify the script type.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, with a custom filter (you'll need to exclude non- .SQL files yourself) and where you specify the script type.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="scriptType">The script type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, scriptType, runOrder));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions));
     }
 
     /// <summary>
@@ -867,42 +546,13 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
-    /// <param name="scriptType">The script type.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="scriptType">The script type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), scriptType, runOrder));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), sqlScriptOptions));
     }
 
     /// <summary>
@@ -924,45 +574,14 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="scriptType">The script type.</param>    
+    /// <param name="sqlScriptOptions">The sql script options.</param>    
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="scriptType">The script type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, scriptType, runOrder));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, sqlScriptOptions));
     }
 
     /// <summary>
@@ -1151,45 +770,14 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assemblies">The assemblies.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>        
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, DbUpDefaults.DefaultEncoding, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assemblies, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assemblies">The assemblies.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>    
-    /// <param name="scriptType">The script type.</param>    
+    /// <param name="sqlScriptOptions">The sql script options.</param>    
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, DbUpDefaults.DefaultEncoding, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assemblies, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assemblies">The assemblies.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>    
-    /// <param name="scriptType">The script type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, DbUpDefaults.DefaultEncoding, scriptType, runOrder));
+        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions));
     }
 
     /// <summary>
@@ -1227,46 +815,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assemblies">The assemblies.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="encoding">The encoding.</param>    
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, ScriptType.RunOnce, runOrder));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assemblies, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assemblies">The assemblies.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">The script type.</param>    
+    /// <param name="sqlScriptOptions">The sql script options.</param>    
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, ScriptType scriptType)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
     {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, scriptType));
-    }
-
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assemblies, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assemblies">The assemblies.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="encoding">The encoding.</param>
-    /// <param name="scriptType">The script type.</param>
-    /// <param name="runOrder">This allows you to specify a run order for this script group.  By default all scripts are run alphabetically, this allows you to group batches of scripts together and run that batch in alphabetical order</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, ScriptType scriptType, int runOrder)
-    {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, scriptType, runOrder));
-    }
+        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, sqlScriptOptions));
+    }    
 }

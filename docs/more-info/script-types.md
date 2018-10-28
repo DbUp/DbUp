@@ -25,7 +25,7 @@ You specify the script type when adding the scripts.
 ```csharp
 var upgradeEngineBuilder = DeployChanges.To
                             .SqlDatabase(connectionString, null) //null or "" for default schema for user               
-                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), ScriptType.RunAlways)
+                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), new SqlScriptOptions { ScriptType = ScriptType.RunAlways })
                             .LogToConsole();
                             
 var upgrader = upgradeEngineBuilder.Build();
@@ -51,8 +51,8 @@ If you want to organize your scripts into multiple folders so the RunOnce script
 ```csharp
 var upgradeEngineBuilder = DeployChanges.To
                             .SqlDatabase(connectionString, null) //null or "" for default schema for user
-                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.Scripts."), ScriptType.RunOnce)
-                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), ScriptType.RunAlways)
+                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.Scripts."), new SqlScriptOptions { ScriptType = ScriptType.RunOnce })
+                            .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways })
                             .LogToConsole();
 
 var upgrader = upgradeEngineBuilder.Build();

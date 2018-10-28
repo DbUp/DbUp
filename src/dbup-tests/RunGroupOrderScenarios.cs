@@ -16,7 +16,7 @@ namespace DbUp.Tests
          AsA = "As a DbUp User",
          IWant = "I want to DbUp to upgrade my database to the latest version using my own sort order",
          SoThat = "So that my application's database is up to date")]
-    public class runOrderScenarios
+    public class RunGroupOrderScenarios
     {
         readonly List<SqlScript> scripts;
         readonly UpgradeEngineBuilder upgradeEngineBuilder;
@@ -26,14 +26,14 @@ namespace DbUp.Tests
         DatabaseUpgradeResult upgradeResult;
         UpgradeEngine upgradeEngine;        
 
-        public runOrderScenarios()
+        public RunGroupOrderScenarios()
         {
             upgradeResult = null;
             scripts = new List<SqlScript>
             {
-                new SqlScript("ZZZScript1.sql", "create table Foo (Id int identity)", ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder),
-                new SqlScript("ZZZScript2.sql", "alter table Foo add column Name varchar(255)", ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder),
-                new SqlScript("AAAScript3.sql", "insert into Foo (Name) values ('test')", ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder + 1)
+                new SqlScript("ZZZScript1.sql", "create table Foo (Id int identity)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder}),
+                new SqlScript("ZZZScript2.sql", "alter table Foo add column Name varchar(255)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder}),
+                new SqlScript("AAAScript3.sql", "insert into Foo (Name) values ('test')", new SqlScriptOptions { ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1})
             };
 
             logger = new CaptureLogsLogger();

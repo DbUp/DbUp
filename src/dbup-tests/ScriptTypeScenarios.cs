@@ -32,9 +32,9 @@ namespace DbUp.Tests
             upgradeResult = null;
             scripts = new List<SqlScript>
             {
-                new SqlScript("Script1.sql", "create table Foo (Id int identity)", ScriptType.RunOnce),
-                new SqlScript("Script2.sql", "alter table Foo add column Name varchar(255)", ScriptType.RunOnce),
-                new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')", ScriptType.RunAlways)
+                new SqlScript("Script1.sql", "create table Foo (Id int identity)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce}),
+                new SqlScript("Script2.sql", "alter table Foo add column Name varchar(255)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce}),
+                new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')", new SqlScriptOptions { ScriptType = ScriptType.RunAlways})
             };
 
             logger = new CaptureLogsLogger();

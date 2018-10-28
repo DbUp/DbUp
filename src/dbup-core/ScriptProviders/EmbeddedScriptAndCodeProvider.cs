@@ -16,15 +16,14 @@ namespace DbUp.ScriptProviders
         private readonly EmbeddedScriptProvider embeddedScriptProvider;
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
-        private readonly ScriptType scriptType;
-        private readonly int runOrder;
+        private readonly SqlScriptOptions sqlScriptOptions;        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder)
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, new SqlScriptOptions())
         {
         }
 
@@ -33,24 +32,12 @@ namespace DbUp.ScriptProviders
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
-        /// <param name="scriptType">The script type.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, ScriptType scriptType) : this(assembly, filter, scriptType, DbUpDefaults.DefaultRunOrder)
-        {
-        }
-
-        /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
-        /// </summary>
-        /// <param name="assembly">The assembly.</param>
-        /// <param name="filter">The embedded script filter.</param>
-        /// <param name="scriptType">The script type.</param>
-        /// <param name="runOrder">The run group order.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, ScriptType scriptType, int runOrder)
+        /// <param name="sqlScriptOptions">The sql script options.</param>        
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
         {
             this.assembly = assembly;
             this.filter = filter;
-            this.scriptType = scriptType;
-            this.runOrder = runOrder;
+            this.sqlScriptOptions = sqlScriptOptions;
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
@@ -68,7 +55,7 @@ namespace DbUp.ScriptProviders
                         type.IsClass;
 #endif
                 })
-                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", scriptType, runOrder, () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
+                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", this.sqlScriptOptions, () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
                 .ToList());
         }
 

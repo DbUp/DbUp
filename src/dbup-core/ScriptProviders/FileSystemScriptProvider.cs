@@ -18,13 +18,12 @@ namespace DbUp.ScriptProviders
         private readonly Func<string, bool> filter;
         private readonly Encoding encoding;
         private readonly FileSystemScriptOptions options;
-        private readonly ScriptType scriptType;
-        private readonly int runOrder;
+        private readonly SqlScriptOptions sqlScriptOptions;
 
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        public FileSystemScriptProvider(string directoryPath) : this(directoryPath, new FileSystemScriptOptions(), ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder)
+        public FileSystemScriptProvider(string directoryPath) : this(directoryPath, new FileSystemScriptOptions(), new SqlScriptOptions())
         {
         }
 
@@ -32,26 +31,16 @@ namespace DbUp.ScriptProviders
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         ///<param name="options">Different options for the file system script provider</param>
-        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, ScriptType.RunOnce, DbUpDefaults.DefaultRunOrder)
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, new SqlScriptOptions())
         {
-        }
+        }        
 
         /// <summary>
         /// </summary>
         /// <param name="directoryPath">Path to SQL upgrade scripts</param>
         /// <param name="options">Different options for the file system script provider</param>
-        /// <param name="scriptType">The script type</param>
-        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, ScriptType scriptType) : this(directoryPath, options, scriptType, DbUpDefaults.DefaultRunOrder)
-        {
-        }
-
-        /// <summary>
-        /// </summary>
-        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
-        /// <param name="options">Different options for the file system script provider</param>
-        /// <param name="scriptType">The script type</param>
-        /// <param name="runOrder">The order group this script will run in</param>
-        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, ScriptType scriptType, int runOrder)
+        /// <param name="sqlScriptOptions">The sql script options</param>        
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, SqlScriptOptions sqlScriptOptions)
         {
             if (options == null)
                 throw new ArgumentNullException("options");
@@ -59,8 +48,7 @@ namespace DbUp.ScriptProviders
             this.filter = options.Filter;
             this.encoding = options.Encoding;
             this.options = options;
-            this.scriptType = scriptType;
-            this.runOrder = runOrder;
+            this.sqlScriptOptions = sqlScriptOptions;
         }
 
         /// <summary>
@@ -73,7 +61,7 @@ namespace DbUp.ScriptProviders
             {
                 files = files.Where(filter);
             }
-            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, scriptType, runOrder))
+            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
                 .OrderBy(x => x.Name)
                 .ToList();
         }
