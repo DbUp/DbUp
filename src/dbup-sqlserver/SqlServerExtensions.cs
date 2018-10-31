@@ -250,7 +250,7 @@ public static class SqlServerExtensions
                 }
             }
 
-            string collationString = String.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
+            string collationString = string.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
             sqlCommandText = string.Format
                     (
                         @"create database [{0}]{1};",
