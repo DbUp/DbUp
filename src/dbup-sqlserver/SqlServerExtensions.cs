@@ -167,7 +167,7 @@ public static class SqlServerExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
-    /// <param name="collation">The collation of the database to create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, string collation)
     {
@@ -180,7 +180,7 @@ public static class SqlServerExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <param name="azureDatabaseEdition">Azure edition to Create</param>
-    /// <param name="collation">The collation of the database to create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition, string collation)
     {
@@ -194,7 +194,7 @@ public static class SqlServerExtensions
     /// <param name="connectionString">The connection string.</param>
     /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <param name="azureDatabaseEdition">Azure edition to Create</param>
-    /// <param name="collation">The collation of the database to create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, AzureDatabaseEdition azureDatabaseEdition, string collation)
     {
@@ -209,7 +209,7 @@ public static class SqlServerExtensions
     /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
     /// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <param name="azureDatabaseEdition">Use to indicate that the SQL server database is in Azure</param>
-    /// <param name="collation">The collation of the database to create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
     public static void SqlDatabase(
         this SupportedDatabasesForEnsureDatabase supported, 
