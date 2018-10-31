@@ -141,7 +141,7 @@ public static class SqlServerExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
-    /// <param name="collation">The collation of the database to create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, string collation)
     {
