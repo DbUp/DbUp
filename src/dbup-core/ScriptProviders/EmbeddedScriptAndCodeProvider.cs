@@ -20,11 +20,22 @@ namespace DbUp.ScriptProviders
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
-        /// <param name="filter">The embedded script filter.</param>
+        /// <param name="filter">The embedded script and code file filter.</param>
         public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter)
+            : this(assembly, filter, filter)
+        {
+        }
+        
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="filter">The embedded script filter.</param>
+        /// <param name="codeScriptFilter">The embedded script filter. If null, filter is used.</param>
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter)
         {
             this.assembly = assembly;
-            this.filter = filter;
+            this.filter = codeScriptFilter;
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
