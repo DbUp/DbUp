@@ -33,7 +33,7 @@ namespace DbUp.Engine.Transactions
             transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
             {
                 {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},
-                {TransactionMode.SingleTransaction, ()=>new SingleTrasactionStrategy()},
+                {TransactionMode.SingleTransaction, ()=>new SingleTransactionStrategy()},
                 {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy()}
             };
         }
