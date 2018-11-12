@@ -54,6 +54,13 @@ namespace DbUp.Tests.Builder
             config.Log.ShouldBe(defaultLog);
 
         }
+
+        [Fact]
+        public void WhenNoScriptOrdererIsSetThenTheDefaultScriptOrdererIsReturned()
+        {
+            new UpgradeConfiguration()
+                .ScriptOrderer.ShouldNotBeNull();
+        }
         
         class TestLog : IUpgradeLog
         {
