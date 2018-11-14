@@ -4,6 +4,7 @@ using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -15,6 +16,7 @@ namespace DbUp.ScriptProviders
         private readonly EmbeddedScriptProvider embeddedScriptProvider;
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
+        private readonly SqlScriptOptions sqlScriptOptions;        
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
@@ -22,7 +24,7 @@ namespace DbUp.ScriptProviders
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script and code file filter.</param>
         public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter)
-            : this(assembly, filter, filter)
+            : this(assembly, filter, filter, new SqlScriptOptions())
         {
         }
         
@@ -32,10 +34,33 @@ namespace DbUp.ScriptProviders
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
         /// <param name="codeScriptFilter">The embedded script filter. If null, filter is used.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter)
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter) : this (assembly, filter, codeScriptFilter, new SqlScriptOptions())
+        {
+        }
+		
+		/// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="filter">The embedded script and code file filter.</param>
+        /// <param name="sqlScriptOptions">The sql script options.</param>  
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
+            : this(assembly, filter, filter, sqlScriptOptions)
+        {
+        }
+		
+		/// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="filter">The embedded script filter.</param>
+        /// <param name="codeScriptFilter">The embedded script filter. If null, filter is used.</param>
+        /// <param name="sqlScriptOptions">The sql script options.</param>        
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, SqlScriptOptions sqlScriptOptions)
         {
             this.assembly = assembly;
-            this.filter = codeScriptFilter;
+            this.filter = codeScriptFilter ?? filter;
+            this.sqlScriptOptions = sqlScriptOptions;
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
@@ -53,7 +78,7 @@ namespace DbUp.ScriptProviders
                         type.IsClass;
 #endif
                 })
-                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
+                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", this.sqlScriptOptions, () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
                 .ToList());
         }
 
