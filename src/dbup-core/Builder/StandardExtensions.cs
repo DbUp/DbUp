@@ -538,7 +538,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase)));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), s => true));
     }
 
     /// <summary>
@@ -567,6 +567,37 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
+    }
+    
+    /// <summary>
+    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assembly">The assembly.</param>
+    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="codeScriptFilter">The embedded script filter.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter)
+    {
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter));
+    }
+
+    /// <summary>
+    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assembly">The assembly.</param>
+    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="codeScriptFilter">The embedded script filter.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>    
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, SqlScriptOptions sqlScriptOptions)
+    {
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter, sqlScriptOptions));
     }
 
     /// <summary>
