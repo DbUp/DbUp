@@ -50,7 +50,7 @@ namespace DbUp.SQLite
             }
             catch (SQLiteException exception)
             {
-                Log().WriteInformation("SQLite exception has occured in script: '{0}'", script.Name);
+                Log().WriteInformation("SQLite exception has occurred in script: '{0}'", script.Name);
 #if NETCORE
                 Log().WriteError("Script block number: {0}; Error Code: {1}; Message: {2}", index, exception.SqliteErrorCode, exception.Message);
 #else

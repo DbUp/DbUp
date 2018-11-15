@@ -20,6 +20,7 @@
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
     <ProjectReference Include="..\dbup-mysql\dbup-mysql.csproj" />
     <ProjectReference Include="..\dbup-postgresql\dbup-postgresql.csproj" />
+    <ProjectReference Include="..\dbup-azuresqldatawarehouse\dbup-azuresqldatawarehouse.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
     <PackageReference Include="xunit" Version="2.3.1" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />

@@ -14,6 +14,7 @@ using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
 using DbUp.Oracle;
+using DbUp.AzureSqlDataWarehouse;
 
 #if !NETCORE
 using DbUp.Firebird;
@@ -86,6 +87,11 @@ namespace DbUp.Tests
             {
                 return new ExampleTable("Deploy to")
                 {
+                    new ExampleAction("Azure SQL Data Warehouse", Deploy(to => to.AzureSqlDataWarehouse(string.Empty), (builder, schema, tableName) =>
+                    {
+                        builder.Configure(c => c.Journal = new AzureSqlDwTableJournal(() => c.ConnectionManager, () => c.Log, schema, tableName));
+                        return builder;
+                    })),
                     new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) =>
                     {
                         builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, tableName));
@@ -97,6 +103,7 @@ namespace DbUp.Tests
                         return builder;
                     })),
                     new ExampleAction("Oracle", Deploy(to => to.OracleDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new OracleTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+
 
 #if !NETCORE
                     new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
@@ -124,8 +131,8 @@ namespace DbUp.Tests
                 .UsingSanitiser(Scrubbers.ScrubDates)
                 .UsingNamer(new Namer(target, testName));
 
-            // Automatically approve the change, make sure to check the result before commiting 
-            // configuration = configuration.UsingReporter((recieved, approved) => File.Copy(recieved, approved, true));
+            // Automatically approve the change, make sure to check the result before committing 
+            // configuration = configuration.UsingReporter((received, approved) => File.Copy(received, approved, true));
             
             this.Assent(logger.Log, configuration);
         }

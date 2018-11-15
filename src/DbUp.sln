@@ -30,6 +30,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite", "dbup-sqlite\dbup-sqlite.csproj", "{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-tests", "dbup-tests\dbup-tests.csproj", "{854B6565-B423-4E2C-938B-406C6EAC9C0E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{5765D1C8-89B6-4782-BD9F-EC2E8ECEA117} = {5765D1C8-89B6-4782-BD9F-EC2E8ECEA117}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite-mono", "dbup-sqlite-mono\dbup-sqlite-mono.csproj", "{CD122205-EEC4-4DB9-9EFA-976EADF80323}"
 EndProject
@@ -38,6 +41,8 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApplication", "Samples\SampleApplication\SampleApplication.csproj", "{397F41BC-1076-4D1B-9620-C6051E8104F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-oracle", "dbup-oracle\dbup-oracle.csproj", "{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "dbup-azuresqldatawarehouse", "dbup-azuresqldatawarehouse\dbup-azuresqldatawarehouse.csproj", "{5765D1C8-89B6-4782-BD9F-EC2E8ECEA117}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +94,10 @@ Global
 		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5765D1C8-89B6-4782-BD9F-EC2E8ECEA117}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5765D1C8-89B6-4782-BD9F-EC2E8ECEA117}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5765D1C8-89B6-4782-BD9F-EC2E8ECEA117}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5765D1C8-89B6-4782-BD9F-EC2E8ECEA117}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -42,7 +42,7 @@ namespace DbUp.Firebird
             }
             catch (FbException fbException)
             {
-                Log().WriteInformation("Firebird exception has occured in script: '{0}'", script.Name);
+                Log().WriteInformation("Firebird exception has occurred in script: '{0}'", script.Name);
                 Log().WriteError("Firebird error code: {0}; SQLSTATE {1}; Message: {2}", index, fbException.ErrorCode, fbException.SQLSTATE, fbException.Message);
                 Log().WriteError(fbException.ToString());
                 throw;

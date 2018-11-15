@@ -6,14 +6,13 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 
-namespace DbUp.SqlServer
+namespace DbUp.AzureSqlDataWarehouse
 {
     /// <summary>
-    /// An implementation of ScriptExecutor that executes against a SQL Server database.
+    /// An implementation of ScriptExecutor that executes against an Azure SQL Data Warehouse database.
     /// </summary>
-    public class SqlScriptExecutor : ScriptExecutor
+    public class AzureSqlDwScriptExecutor : ScriptExecutor
     {
-
         /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
@@ -23,9 +22,9 @@ namespace DbUp.SqlServer
         /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
         /// <param name="scriptPreprocessors">Script Preprocessors in addition to variable substitution</param>
         /// <param name="journalFactory">Database journal</param>
-        public SqlScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
+        public AzureSqlDwScriptExecutor(Func<IConnectionManager> connectionManagerFactory, Func<IUpgradeLog> log, string schema, Func<bool> variablesEnabled,
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journalFactory)
-            : base(connectionManagerFactory, new SqlServerObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journalFactory)
+            : base(connectionManagerFactory, new AzureSqlDwServerObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journalFactory)
         {
 
         }

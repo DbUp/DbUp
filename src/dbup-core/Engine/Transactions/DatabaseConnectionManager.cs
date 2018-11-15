@@ -91,7 +91,7 @@ namespace DbUp.Engine.Transactions
         }
 
         /// <summary>
-        /// Executes an action using the specfied transaction mode 
+        /// Executes an action using the specified transaction mode 
         /// </summary>
         /// <param name="action">The action to execute</param>
         public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
@@ -100,7 +100,7 @@ namespace DbUp.Engine.Transactions
         }
 
         /// <summary>
-        /// Executes an action which has a result using the specfied transaction mode 
+        /// Executes an action which has a result using the specified transaction mode 
         /// </summary>
         /// <param name="actionWithResult">The action to execute</param>
         /// <typeparam name="T">The result type</typeparam>

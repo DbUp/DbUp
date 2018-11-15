@@ -9,15 +9,15 @@ namespace DbUp.Engine.Transactions
     {
         private IDbConnection connection;
         private IDbTransaction transaction;
-        private bool errorOccured;
+        private bool errorOccurred;
         private IUpgradeLog log;
         private SqlScript[] executedScriptsListBeforeExecution;
         private List<SqlScript> executedScriptsCollection;
 
         public void Execute(Action<Func<IDbCommand>> action)
         {
-            if (errorOccured)
-                throw new InvalidOperationException("Error occured on previous script execution");
+            if (errorOccurred)
+                throw new InvalidOperationException("Error occurred on previous script execution");
 
             try
             {
@@ -30,15 +30,15 @@ namespace DbUp.Engine.Transactions
             }
             catch (Exception)
             {
-                errorOccured = true;
+                errorOccurred = true;
                 throw;
             }
         }
 
         public T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult)
         {
-            if (errorOccured)
-                throw new InvalidOperationException("Error occured on previous script execution");
+            if (errorOccurred)
+                throw new InvalidOperationException("Error occurred on previous script execution");
 
             try
             {
@@ -51,7 +51,7 @@ namespace DbUp.Engine.Transactions
             }
             catch (Exception)
             {
-                errorOccured = true;
+                errorOccurred = true;
                 throw;
             }
         }
@@ -68,11 +68,11 @@ namespace DbUp.Engine.Transactions
 
         public void Dispose()
         {
-            if (!errorOccured)
+            if (!errorOccurred)
                 transaction.Commit();
             else
             {
-                log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
+                log.WriteWarning("Error occurred when executing scripts, transaction will be rolled back");
                 //Restore the executed scripts collection
                 executedScriptsCollection.Clear();
                 executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);
