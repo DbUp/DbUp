@@ -75,7 +75,8 @@ Task("Package")
             "sqlce:dbup-sqlce." + versionInfo.NuGetVersion + ".nupkg",
             "sqlite:dbup-sqlite." + versionInfo.NuGetVersion + ".nupkg",
             "sqlite-mono:dbup-sqlite-mono." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg"
+            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg",
+			"sqlanywhere:dbup-sqlanywhere." + versionInfo.NuGetVersion + ".nupkg"
         });
 
         if (AppVeyor.IsRunningOnAppVeyor)

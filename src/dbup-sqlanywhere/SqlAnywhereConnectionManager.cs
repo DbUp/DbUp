@@ -23,7 +23,6 @@ namespace DbUp.SqlAnywhere
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             string[] stringSeparators = new string[] { "GO" };
-            //var parts = splitOnCommaOrGoRegEx.Split(scriptContents);
             var parts = scriptContents.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries).ToList();
             return parts.Select(x => x.Trim()).Where(x => x.Length > 0).ToArray();
         }
