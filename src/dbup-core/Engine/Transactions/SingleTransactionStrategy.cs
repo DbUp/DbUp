@@ -5,7 +5,7 @@ using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
-    internal class SingleTrasactionStrategy : ITransactionStrategy
+    internal class SingleTransactionStrategy : ITransactionStrategy
     {
         private IDbConnection connection;
         private IDbTransaction transaction;
