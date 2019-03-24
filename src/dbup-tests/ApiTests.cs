@@ -182,7 +182,7 @@ namespace DbUp.Tests
             else if (type.IsInterface)
                 sb.Append("interface");
             else
-                throw new ArgumentException("Could not determine type type for " + type);
+                throw new ArgumentException("Could not determine type for " + type);
 
             sb.Append(" ")
                 .Append(type.Name);

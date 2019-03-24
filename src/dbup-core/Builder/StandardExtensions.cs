@@ -36,7 +36,7 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Logs to the console using pretty colours.
+    /// Logs to the console using pretty colors.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <returns>
@@ -74,7 +74,7 @@ public static class StandardExtensions
 #endif
 
     /// <summary>
-    /// Logs to the console using pretty colours.
+    /// Logs to the console using pretty colors.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <returns>
@@ -618,7 +618,7 @@ public static class StandardExtensions
     /// <summary>
     /// Sets the comparer used to sort scripts and match script names against the log of already run scripts.
     /// The default comparer is StringComparer.Ordinal.
-    /// By implementing your own comparer you can make make the matching and ordering case insensitive,
+    /// By implementing your own comparer you can make the matching and ordering case insensitive,
     /// change how numbers are handled or support the renaming of scripts
     /// </summary>
     /// <param name="builder">The builder.</param>

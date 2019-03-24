@@ -6,7 +6,7 @@ using DbUp.Engine.Transactions;
 namespace DbUp.ScriptProviders
 {
     /// <summary>
-    /// Allows you to easily programatically supply scripts from code.
+    /// Allows you to easily programmatically supply scripts from code.
     /// </summary>
     public sealed class StaticScriptProvider : IScriptProvider
     {

@@ -77,7 +77,7 @@ namespace DbUp.Builder
         /// <summary>
         /// Gets or sets the comparer used to sort scripts and match script names against the log of already run scripts.
         /// The default comparer is StringComparer.Ordinal.
-        /// By implementing your own comparer you can make make the matching and ordering case insensitive,
+        /// By implementing your own comparer you can make the matching and ordering case insensitive,
         /// change how numbers are handled or support the renaming of scripts
         /// </summary>
         public ScriptNameComparer ScriptNameComparer { get; set; } = new ScriptNameComparer(StringComparer.Ordinal);

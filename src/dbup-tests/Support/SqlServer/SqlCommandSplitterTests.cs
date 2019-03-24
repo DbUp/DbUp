@@ -117,7 +117,7 @@ SELECT AccountId,
             var strangeInsert = sqlBuilder.ToString();
             sqlBuilder.Clear();
 
-            // Combine into one SQL statement seperated with GO.          
+            // Combine into one SQL statement separated with GO.          
             sqlBuilder.AppendLine(sqlCommandWithMultiLineComment);
             sqlBuilder.AppendLine(sqlGo);
             sqlBuilder.AppendLine(sqlCommandWithSingleLineComment);
