@@ -253,13 +253,16 @@ public static class SqlServerExtensions
             string collationString = string.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
             sqlCommandText = string.Format
                     (
-                        @"create database [{0}]{1};",
+                        @"create database [{0}]{1}",
                         databaseName,
                         collationString
                     );
 
             switch (azureDatabaseEdition)
             {
+                case AzureDatabaseEdition.None:
+                    sqlCommandText += ";";
+                    break;
                 case AzureDatabaseEdition.Basic:
                     sqlCommandText += " ( EDITION = ''basic'' );";
                     break;
