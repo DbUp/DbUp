@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 
 namespace DbUp.Engine.Output
 {
@@ -19,7 +18,7 @@ namespace DbUp.Engine.Output
 
         public void WriteInformation(string format, params object[] args)
         {
-            foreach(var log in upgradeLogs)
+            foreach (var log in upgradeLogs)
                 log.WriteInformation(format, args);
         }
 

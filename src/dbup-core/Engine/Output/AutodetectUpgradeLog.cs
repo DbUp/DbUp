@@ -31,9 +31,16 @@ namespace DbUp.Engine.Output
                 }
             }
 
+            var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = GetColor();
-            Console.WriteLine(format(), args);
-            Console.ResetColor();
+            try
+            {
+                Console.WriteLine(format(), args);
+            }
+            finally
+            {
+                Console.ForegroundColor = oldColor;
+            }
             return true;
         }
     }
