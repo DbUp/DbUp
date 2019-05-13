@@ -12,6 +12,7 @@ namespace DbUp.Support
         private const char EndOfLineChar = '\n';
         private const char CarriageReturn = '\r';
         private const char SingleQuoteChar = (char)39;
+        private const char DoubleQuoteChar = '"';
         private const char DashChar = '-';
         private const char SlashChar = '/';
         private const char StarChar = '*';
@@ -66,7 +67,7 @@ namespace DbUp.Support
                 {
                     ReadCustomStatement();
                 }
-                else if (IsQuote)
+                else if (IsQuote || IsDoubleQuote)
                 {
                     ReadQuotedString();
                 }
@@ -290,6 +291,14 @@ namespace DbUp.Support
             return true;
         }
 
+        private bool IsDoubleQuote
+        {
+            get
+            {
+                return CurrentChar == DoubleQuoteChar;
+            }
+        }
+
         private bool IsBeginningOfBracketedText
         {
             get
@@ -355,6 +364,7 @@ namespace DbUp.Support
         /// </summary>
         private void ReadQuotedString()
         {
+            var quoteChar = CurrentChar;
             ReadCharacter(CharacterType.QuotedString, CurrentChar);
             while (Read() != FailedRead)
             {
@@ -364,7 +374,7 @@ namespace DbUp.Support
                     Read();
                 }
                 ReadCharacter(CharacterType.QuotedString, CurrentChar);
-                if (IsQuote)
+                if (CurrentChar == quoteChar)
                 {
                     return;
                 }
@@ -514,7 +524,7 @@ namespace DbUp.Support
             Delimiter,
             /// <summary>Character is a custom statement (open for new implementation)</summary>
             CustomStatement,
-            
+
         }
     }
 }
