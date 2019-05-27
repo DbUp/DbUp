@@ -27,7 +27,7 @@ namespace DbUp.Firebird
     public class FirebirdScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
     {
         public FirebirdScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors, System.Func<DbUp.Engine.IJournal> journal) { }
-        protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action excuteCommand) { }
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action executeCommand) { }
         protected override string GetVerifySchemaSql(string schema) { }
     }
     public class FirebirdTableJournal : DbUp.Support.TableJournal, DbUp.Engine.IJournal
