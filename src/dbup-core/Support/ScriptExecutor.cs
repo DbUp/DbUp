@@ -166,7 +166,7 @@ namespace DbUp.Support
             }
         }
 
-        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCallback);
+        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCallback);
 
         protected virtual void ExecuteNonQuery(IDbCommand command)
         {
