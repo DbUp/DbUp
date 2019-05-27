@@ -1,9 +1,8 @@
-﻿using System;
+﻿using DbUp.Engine;
+using DbUp.Engine.Transactions;
+using System;
 using System.Collections.Generic;
 using System.Linq;
-using DbUp.Engine;
-using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -40,7 +39,7 @@ namespace DbUp.ScriptProviders
         public ScriptInstanceProvider(Func<IScript, string> namer, SqlScriptOptions sqlScriptOptions, params IScript[] scripts)
         {
             this.scripts = scripts;
-            this.namer = namer;
+            this.namer = namer ?? throw new ArgumentNullException(nameof(namer));
             this.sqlScriptOptions = sqlScriptOptions;            
         }
 

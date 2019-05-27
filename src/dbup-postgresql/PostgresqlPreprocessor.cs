@@ -1,5 +1,4 @@
 ﻿using DbUp.Engine;
-using System;
 
 namespace DbUp.Postgresql
 {
@@ -11,9 +10,6 @@ namespace DbUp.Postgresql
         /// <summary>
         /// Performs some proprocessing step on a PostgreSQL script.
         /// </summary>
-        public string Process(string contents)
-        {
-            return contents;
-        }
+        public string Process(string contents) => contents;
     }
 }

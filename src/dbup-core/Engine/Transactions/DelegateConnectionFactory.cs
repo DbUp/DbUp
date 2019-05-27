@@ -1,6 +1,6 @@
+using DbUp.Engine.Output;
 using System;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
@@ -15,7 +15,7 @@ namespace DbUp.Engine.Transactions
 
         public DelegateConnectionFactory(Func<IUpgradeLog, DatabaseConnectionManager, IDbConnection> createConnection)
         {
-            this.createConnection = createConnection;
+            this.createConnection = createConnection ?? throw new ArgumentNullException(nameof(createConnection));
         }
         
         public IDbConnection CreateConnection(IUpgradeLog upgradeLog, DatabaseConnectionManager databaseConnectionManager)

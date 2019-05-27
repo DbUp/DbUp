@@ -1,5 +1,5 @@
-﻿using System.Text.RegularExpressions;
-using DbUp.Engine;
+﻿using DbUp.Engine;
+using System.Text.RegularExpressions;
 
 namespace DbUp.SQLite
 {
@@ -11,9 +11,6 @@ namespace DbUp.SQLite
         /// <summary>
         /// Performs some proprocessing step on a SQLite script
         /// </summary>
-        public string Process(string contents)
-        {
-            return Regex.Replace(contents, @"n?varchar\s?\(max\)", "text", RegexOptions.IgnoreCase);
-        }
+        public string Process(string contents) => Regex.Replace(contents, @"n?varchar\s?\(max\)", "text", RegexOptions.IgnoreCase);
     }
 }

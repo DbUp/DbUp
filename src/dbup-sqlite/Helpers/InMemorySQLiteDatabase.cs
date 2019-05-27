@@ -21,7 +21,6 @@ namespace DbUp.SQLite.Helpers
     public class InMemorySQLiteDatabase : IDisposable
     {
         private readonly SQLiteConnectionManager connectionManager;
-        private readonly AdHocSqlRunner sqlRunner;
         private readonly SQLiteConnection sharedConnection;
 
         /// <summary>
@@ -48,7 +47,7 @@ namespace DbUp.SQLite.Helpers
             connectionManager = new SQLiteConnectionManager(connectionStringBuilder.ConnectionString);
             sharedConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sharedConnection.Open();
-            sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), new SQLiteObjectParser(),  null, () => true);
+            SqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), new SQLiteObjectParser(), null, () => true);
         }
 
         public string ConnectionString { get; set; }
@@ -56,25 +55,16 @@ namespace DbUp.SQLite.Helpers
         /// <summary>
         /// Gets the connection factory of in-memory database.
         /// </summary>
-        public IConnectionManager GetConnectionManager()
-        {
-            return connectionManager;
-        }
+        public IConnectionManager GetConnectionManager() => connectionManager;
 
         /// <summary>
-        /// An ahoc sql runner against the in-memory database
+        /// An ahoc sql runner against the in-memory database.
         /// </summary>
-        public AdHocSqlRunner SqlRunner
-        {
-            get { return sqlRunner; }
-        }
+        public AdHocSqlRunner SqlRunner { get; }
 
         /// <summary>
-        /// remove the database from memory
+        /// Remove the database from memory.
         /// </summary>
-        public void Dispose()
-        {
-            sharedConnection.Dispose();
-        }
+        public void Dispose() => sharedConnection.Dispose();
     }
 }

@@ -17,7 +17,8 @@ namespace DbUp.SQLite
         /// </summary>
         public SQLiteTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string table) :
             base(connectionManager, logger, new SQLiteObjectParser(), null, table)
-        { }
+        {
+        }
 
         protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {

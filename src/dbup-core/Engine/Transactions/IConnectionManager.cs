@@ -1,8 +1,8 @@
-﻿using System;
+﻿using DbUp.Engine.Output;
+using JetBrains.Annotations;
+using System;
 using System.Collections.Generic;
 using System.Data;
-using DbUp.Engine.Output;
-using JetBrains.Annotations;
 
 namespace DbUp.Engine.Transactions
 {
@@ -40,7 +40,6 @@ namespace DbUp.Engine.Transactions
 
         /// <summary>
         /// Scripts often have multiple statements which have to be executed in their own commands.
-        /// 
         /// For example, MSSQL splits on GO, SQLite splits on ; etc.
         /// </summary>
         IEnumerable<string> SplitScriptIntoCommands(string scriptContents);

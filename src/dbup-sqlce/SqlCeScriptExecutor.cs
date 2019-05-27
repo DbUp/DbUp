@@ -9,11 +9,10 @@ using DbUp.Support;
 namespace DbUp.SqlCe
 {
     /// <summary>
-    /// An implementation of ScriptExecutor that executes against a SqlCe database.
+    /// An implementation of <see cref="ScriptExecutor"/> that executes against a SqlCe database.
     /// </summary>
     public class SqlCeScriptExecutor : ScriptExecutor
     {
-
         /// <summary>
         /// Initializes an instance of the <see cref="SqlCeScriptExecutor"/> class.
         /// </summary>
@@ -27,7 +26,6 @@ namespace DbUp.SqlCe
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
             : base(connectionManagerFactory, new SqlCeObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
         {
-
         }
 
         protected override string GetVerifySchemaSql(string schema)
@@ -35,11 +33,11 @@ namespace DbUp.SqlCe
             throw new NotSupportedException();
         }     
 
-        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCommand)
         {
             try
             {
-                excuteCommand();
+                executeCommand();
             }
             catch (SqlCeException exception)
             {
@@ -49,6 +47,5 @@ namespace DbUp.SqlCe
                 throw;
             }
         }
-
     }
 }

@@ -14,7 +14,7 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class SharedConnection : IDbConnection
     {
-        private readonly bool connectionAlreadyOpenned;
+        private readonly bool connectionAlreadyOpened;
         private readonly IDbConnection connection;
 
         /// <summary>
@@ -22,56 +22,33 @@ namespace DbUp.SQLite.Helpers
         /// </summary>
         public SharedConnection(IDbConnection dbConnection)
         {
-            if (dbConnection == null)
-                throw new NullReferenceException("database connection is null");
-            connection = dbConnection;
+            connection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection), "database connection is null");
 
             if (connection.State == ConnectionState.Open)
-                connectionAlreadyOpenned = true;
+                connectionAlreadyOpened = true;
             else
                 connection.Open();
         }
 
-        public IDbTransaction BeginTransaction(IsolationLevel il)
-        {
-            return connection.BeginTransaction(il);
-        }
+        public IDbTransaction BeginTransaction(IsolationLevel il) => connection.BeginTransaction(il);
 
-        public IDbTransaction BeginTransaction()
-        {
-            return connection.BeginTransaction();
-        }
+        public IDbTransaction BeginTransaction() => connection.BeginTransaction();
 
-        public void ChangeDatabase(string databaseName)
-        {
-            connection.ChangeDatabase(databaseName);
-        }
+        public void ChangeDatabase(string databaseName) => connection.ChangeDatabase(databaseName);
 
-        public void Close()
-        {
-            // shared underlying connection is not closed 
-        }
+        public void Close() { } // shared underlying connection is not closed 
 
         public string ConnectionString
         {
-            get { return connection.ConnectionString; }
-            set { connection.ConnectionString = value; }
+            get => connection.ConnectionString;
+            set => connection.ConnectionString = value;
         }
 
-        public int ConnectionTimeout
-        {
-            get { return connection.ConnectionTimeout; }
-        }
+        public int ConnectionTimeout => connection.ConnectionTimeout;
 
-        public IDbCommand CreateCommand()
-        {
-            return connection.CreateCommand();
-        }
+        public IDbCommand CreateCommand() => connection.CreateCommand();
 
-        public string Database
-        {
-            get { return connection.Database; }
-        }
+        public string Database => connection.Database;
 
         public void Open()
         {
@@ -79,22 +56,15 @@ namespace DbUp.SQLite.Helpers
                 connection.Open();
         }
 
-        public ConnectionState State
-        {
-            get { return connection.State; }
-        }
+        public ConnectionState State => connection.State;
 
-        public void Dispose()
-        {
-            // shared underlying connection is not disposed
-        }
+        public void Dispose() { } // shared underlying connection is not disposed
 
         public void DoClose()
         {
             // if shared underlying connection is openned by this object
             // it will be closed here, otherwise the connection is not closed 
-            if (!connectionAlreadyOpenned &&
-                connection.State == ConnectionState.Open)
+            if (!connectionAlreadyOpened && connection.State == ConnectionState.Open)
             {
                 connection.Close();
             }

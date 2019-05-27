@@ -9,7 +9,7 @@ using DbUp.Support;
 namespace DbUp.Firebird
 {
     /// <summary>
-    /// An implementation of ScriptExecutor that executes against a Firebird database.
+    /// An implementation of <see cref="ScriptExecutor"/> that executes against a Firebird database.
     /// </summary>
     public class FirebirdScriptExecutor : ScriptExecutor
     {
@@ -26,7 +26,6 @@ namespace DbUp.Firebird
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journal)
             : base(connectionManagerFactory, new FirebirdObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journal)
         {
-
         }
 
         protected override string GetVerifySchemaSql(string schema)
@@ -34,20 +33,19 @@ namespace DbUp.Firebird
             throw new NotSupportedException();
         }   
 
-        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCommand)
         {
             try
             {
-                excuteCommand();
+                executeCommand();
             }
             catch (FbException fbException)
             {
                 Log().WriteInformation("Firebird exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Firebird error code: {0}; SQLSTATE {1}; Message: {2}", index, fbException.ErrorCode, fbException.SQLSTATE, fbException.Message);
+                Log().WriteError("Script block number: {0}; Firebird error code: {1}; SQLSTATE {2}; Message: {3}", index, fbException.ErrorCode, fbException.SQLSTATE, fbException.Message);
                 Log().WriteError(fbException.ToString());
                 throw;
             }
         }
-
     }
 }

@@ -52,10 +52,9 @@ namespace DbUp.Tests.Builder
             
             config.Log = null;
             config.Log.ShouldBe(defaultLog);
-
         }
         
-        class TestLog : IUpgradeLog
+        private class TestLog : IUpgradeLog
         {
             public bool WasWritten { get; private set; }
             public void WriteInformation(string format, params object[] args)

@@ -36,9 +36,6 @@ namespace DbUp.Tests.ScriptProvider
                 return new FileSystemScriptProvider(testPath);
             }
 
-
-
-
             protected override void When()
             {
                 filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
@@ -100,7 +97,6 @@ namespace DbUp.Tests.ScriptProvider
                 return new FileSystemScriptProvider(testPath, options);
             }
 
-
             protected override void When()
             {
                 filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
@@ -125,7 +121,6 @@ namespace DbUp.Tests.ScriptProvider
             }
         }
 
-
         public class when_returning_scripts_from_a_directory_and_using_subdirectories_option : SpecificationFor<FileSystemScriptProvider>, IDisposable
         {
             private string testPath;
@@ -138,12 +133,10 @@ namespace DbUp.Tests.ScriptProvider
                 return new FileSystemScriptProvider(testPath, options);
             }
 
-
             protected override void When()
             {
                 filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
             }
-
 
             [Then]
             public void it_should_return_all_sql_files()
@@ -168,7 +161,7 @@ namespace DbUp.Tests.ScriptProvider
                         .ShouldContain("Folder1.dbup-tests.TestScripts.Test1__9.sql");
             }
 
-            [Then()]
+            [Then]
             public void the_files_should_be_correctly_ordered_with_subdirectory_order()
             {
                 filesToExecute.ElementAt(0).Name.ShouldEndWith("Script20110301_1_Test1.sql");

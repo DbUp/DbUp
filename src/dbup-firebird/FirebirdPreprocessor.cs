@@ -1,5 +1,4 @@
 ﻿using DbUp.Engine;
-using System;
 
 namespace DbUp.Firebird
 {
@@ -11,9 +10,6 @@ namespace DbUp.Firebird
         /// <summary>
         /// Performs some proprocessing step on a Firebird script.
         /// </summary>
-        public string Process(string contents)
-        {
-            return contents;
-        }
+        public string Process(string contents) => contents;
     }
 }

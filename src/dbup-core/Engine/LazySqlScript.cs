@@ -1,10 +1,9 @@
 ﻿using System;
-using DbUp.Support;
 
 namespace DbUp.Engine
 {
     /// <summary>
-    /// Represents a SQL Server script that is fetched at execution time, rather than discovery time
+    /// Represents a SQL script that is fetched at execution time, rather than discovery time
     /// </summary>
     public class LazySqlScript : SqlScript
     {
@@ -37,9 +36,6 @@ namespace DbUp.Engine
         /// Gets the contents of the script.
         /// </summary>
         /// <value></value>
-        public override string Contents
-        {
-            get { return content ?? (content = contentProvider()); }
-        }
+        public override string Contents => content ?? (content = contentProvider());
     }
 }

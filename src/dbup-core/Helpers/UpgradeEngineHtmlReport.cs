@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using DbUp.Engine;
+using System;
 using System.IO;
 using System.Text;
-using DbUp.Engine;
 
 namespace DbUp.Helpers
 {

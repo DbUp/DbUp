@@ -1,19 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using DbUp.Engine;
+﻿using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using Npgsql;
 using DbUp.Support;
+using Npgsql;
+using System;
+using System.Collections.Generic;
 
 namespace DbUp.Postgresql
 {
     /// <summary>
-    /// An implementation of ScriptExecutor that executes against a Postgresql database.
+    /// An implementation of <see cref="ScriptExecutor"/> that executes against a PostgreSQL database.
     /// </summary>
     public class PostgresqlScriptExecutor : ScriptExecutor
     {
-
         /// <summary>
         /// Initializes an instance of the <see cref="PostgresqlScriptExecutor"/> class.
         /// </summary>
@@ -27,18 +26,15 @@ namespace DbUp.Postgresql
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journalFactory)
             : base(connectionManagerFactory, new PostgresqlObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journalFactory)
         {
-
         }
 
-        protected override string GetVerifySchemaSql(string schema)
-           => $@"CREATE SCHEMA IF NOT EXISTS {schema}";
+        protected override string GetVerifySchemaSql(string schema) => $"CREATE SCHEMA IF NOT EXISTS {schema}";
 
-
-        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCommand)
         {
             try
             {
-                excuteCommand();
+                executeCommand();
             }
 #if NPGSQLv2
             catch (NpgsqlException exception)
@@ -52,6 +48,5 @@ namespace DbUp.Postgresql
                 throw;
             }
         }
-
     }
 }

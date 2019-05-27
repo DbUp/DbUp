@@ -1,6 +1,5 @@
-﻿using System.Collections.Generic;
-using DbUp.Engine.Filters;
-using DbUp.Support;
+﻿using DbUp.Support;
+using System.Collections.Generic;
 
 namespace DbUp.Engine
 {

@@ -1,14 +1,12 @@
-using DbUp.Support;
-
 namespace DbUp.ScriptProviders
 {
+    using Engine;
+    using Engine.Transactions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Text;
-    using Engine;
-    using Engine.Transactions;
 
     /// <summary>
     /// An <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts embedded in assemblies.
@@ -39,9 +37,9 @@ namespace DbUp.ScriptProviders
         /// <param name="sqlScriptOptions">The sql script options.</param>        
         public EmbeddedScriptsProvider(Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
         {
-            this.assemblies = assemblies;
-            this.filter = filter;
-            this.encoding = encoding;
+            this.assemblies = assemblies ?? throw new ArgumentNullException(nameof(assemblies));
+            this.filter = filter ?? throw new ArgumentNullException(nameof(filter));
+            this.encoding = encoding ?? throw new ArgumentNullException(nameof(encoding));
             this.sqlScriptOptions = sqlScriptOptions;
         }
 
@@ -51,7 +49,7 @@ namespace DbUp.ScriptProviders
         /// <returns></returns>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var sqlScripts = assemblies
+            return assemblies
                 .Select(assembly => new
                 {
                     Assembly = assembly,
@@ -60,8 +58,6 @@ namespace DbUp.ScriptProviders
                 .SelectMany(x => x.ResourceNames.Select(resourceName => SqlScript.FromStream(resourceName, x.Assembly.GetManifestResourceStream(resourceName), encoding, sqlScriptOptions)))
                 .OrderBy(sqlScript => sqlScript.Name)
                 .ToList();
-
-            return sqlScripts;
         }
     }
 }

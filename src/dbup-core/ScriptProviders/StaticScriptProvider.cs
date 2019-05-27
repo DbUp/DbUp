@@ -1,7 +1,7 @@
-using System;
-using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using System;
+using System.Collections.Generic;
 
 namespace DbUp.ScriptProviders
 {
@@ -18,15 +18,12 @@ namespace DbUp.ScriptProviders
         /// <param name="scripts">The scripts.</param>
         public StaticScriptProvider(IEnumerable<SqlScript> scripts)
         {
-            this.scripts = scripts;
+            this.scripts = scripts ?? throw new ArgumentNullException(nameof(scripts));
         }
 
         /// <summary>
         /// Gets all scripts that should be executed.
         /// </summary>
-        public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
-        {
-            return scripts;
-        }
+        public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager) => scripts;
     }
 }

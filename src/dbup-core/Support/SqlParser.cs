@@ -21,14 +21,14 @@ namespace DbUp.Support
         protected const int FailedRead = -1;
 
         /// <summary>
-        /// Creates an instance of SqlParser
+        /// Creates a new instance of <see cref="SqlParser"/>.
         /// </summary>
         /// <param name="sqlText">The texto to be read</param>
         /// <param name="delimiter">The command delimiter</param>
         /// <param name="delimiterRequiresWhitespace">Whether it requires whitespace</param>
         public SqlParser(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true) : base(sqlText)
         {
-            this.sqlText = sqlText;
+            this.sqlText = sqlText ?? throw new ArgumentNullException(nameof(sqlText));
             Delimiter = delimiter;
             DelimiterRequiresWhitespace = delimiterRequiresWhitespace;
             currentIndex = -1;
@@ -92,8 +92,7 @@ namespace DbUp.Support
                     ReadCharacter(CharacterType.Command, CurrentChar);
                 }
             }
-            if (CommandEnded != null)
-                CommandEnded();
+            CommandEnded?.Invoke();
         }
 
         #region Events to be subscribed to by consuming or deriving classes
@@ -118,14 +117,10 @@ namespace DbUp.Support
         /// <param name="c">The character that was read</param>
         protected void OnReadCharacter(CharacterType type, char c)
         {
-            if (ReadCharacter != null)
-            {
-                ReadCharacter(type, c);
-            }
-
+            ReadCharacter?.Invoke(type, c);
         }
-        #endregion
 
+        #endregion
 
         /// <summary>
         /// Read a custom statement until it's end is detected
@@ -135,7 +130,7 @@ namespace DbUp.Support
         /// <summary>
         /// Hook to support custom statements
         /// </summary>
-        protected virtual bool IsCustomStatement { get { return false; } }
+        protected virtual bool IsCustomStatement => false;
 
         public override int Read()
         {
@@ -196,24 +191,12 @@ namespace DbUp.Support
         /// <summary>
         /// Has the Command Reader reached the end of the file
         /// </summary>
-        protected bool HasReachedEnd
-        {
-            get
-            {
-                return Peek() == -1;
-            }
-        }
+        protected bool HasReachedEnd => Peek() == -1;
 
         /// <summary>
         /// Is the current character end and of line character
         /// </summary>
-        protected bool IsEndOfLine
-        {
-            get
-            {
-                return CurrentChar == EndOfLineChar;
-            }
-        }
+        protected bool IsEndOfLine => CurrentChar == EndOfLineChar;
 
         /// <summary>
         /// Does current character match the character argument
@@ -242,37 +225,17 @@ namespace DbUp.Support
         /// <summary>
         /// Is character a single quote
         /// </summary>
-        protected bool IsQuote
-        {
-            get
-            {
-                // TODO should match double?
-                return CurrentChar == SingleQuoteChar;
-            }
-        }
+        protected bool IsQuote => CurrentChar == SingleQuoteChar; // TODO should match double?
 
         /// <summary>
         /// Is current character WhiteSpace
         /// </summary>
-        protected bool IsWhiteSpace
-        {
-            get
-            {
-                return char.IsWhiteSpace(CurrentChar);
-            }
-        }
+        protected bool IsWhiteSpace => char.IsWhiteSpace(CurrentChar);
 
         /// <summary>
         /// Peek at the next character
         /// </summary>
-        protected char PeekChar()
-        {
-            if (HasReachedEnd)
-            {
-                return NullChar;
-            }
-            return (char)Peek();
-        }
+        protected char PeekChar() => HasReachedEnd ? NullChar : (char)Peek();
 
         /// <summary>
         /// Peek at the next character
@@ -290,41 +253,13 @@ namespace DbUp.Support
             return true;
         }
 
-        private bool IsBeginningOfBracketedText
-        {
-            get
-            {
-                return CurrentChar == OpenBracketChar;
-            }
-        }
+        private bool IsBeginningOfBracketedText => CurrentChar == OpenBracketChar;
 
-        private bool IsEndOfBracketedText
-        {
-            get
-            {
-                return CurrentChar == CloseBracketChar;
-            }
-        }
+        private bool IsEndOfBracketedText => CurrentChar == CloseBracketChar;
 
-        private bool IsBeginningOfDashDashComment
-        {
-            get
-            {
-                if (CurrentChar != DashChar)
-                {
-                    return false;
-                }
-                return Peek() == DashChar;
-            }
-        }
+        private bool IsBeginningOfDashDashComment => CurrentChar != DashChar ? false : Peek() == DashChar;
 
-        private bool IsBeginningOfSlashStarComment
-        {
-            get
-            {
-                return CurrentChar == SlashChar && Peek() == StarChar;
-            }
-        }
+        private bool IsBeginningOfSlashStarComment => CurrentChar == SlashChar && Peek() == StarChar;
 
         private bool IsBeginningOfDelimiter
         {
@@ -332,23 +267,15 @@ namespace DbUp.Support
             {
                 var lastCharIsNullOrEmpty = char.IsWhiteSpace(LastChar) || LastChar == NullChar || !DelimiterRequiresWhitespace;
                 var isCurrentCharacterStartOfDelimiter = IsCurrentCharEqualTo(Delimiter[0]);
-                string result;
                 return
                     lastCharIsNullOrEmpty &&
                     isCurrentCharacterStartOfDelimiter &&
-                    TryPeek(Delimiter.Length - 1, out result) &&
+                    TryPeek(Delimiter.Length - 1, out string result) &&
                     string.Equals(result, Delimiter.Substring(1), StringComparison.OrdinalIgnoreCase);
             }
         }
 
-        private bool IsEndOfSlashStarComment
-        {
-            get
-            {
-                return LastChar == StarChar && CurrentChar == SlashChar;
-            }
-        }
-
+        private bool IsEndOfSlashStarComment => LastChar == StarChar && CurrentChar == SlashChar;
 
         /// <summary>
         /// Reads a quoted string to the end, including quotes
@@ -514,7 +441,6 @@ namespace DbUp.Support
             Delimiter,
             /// <summary>Character is a custom statement (open for new implementation)</summary>
             CustomStatement,
-            
         }
     }
 }

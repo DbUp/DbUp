@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DbUp.Engine;
+﻿using DbUp.Engine;
 
 namespace DbUp.Oracle
 {
     public class OraclePreprocessor : IScriptPreprocessor
     {
-        public string Process(string contents)
-        {
-            return contents;
-        }
+        public string Process(string contents) => contents;
     }
 }

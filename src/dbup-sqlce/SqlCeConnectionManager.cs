@@ -1,8 +1,7 @@
-﻿using System;
+﻿using DbUp.Engine.Transactions;
+using DbUp.Support;
 using System.Collections.Generic;
 using System.Data.SqlServerCe;
-using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.SqlCe
 {
