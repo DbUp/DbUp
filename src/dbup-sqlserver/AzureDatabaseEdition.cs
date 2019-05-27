@@ -7,24 +7,24 @@ using System.Text;
 namespace DbUp.SqlServer
 {
     /// <summary>
-    /// Azure SQL Insance Edition for Database Creation
+    /// Azure SQL Instance Edition for Database Creation
     /// </summary>
     public enum AzureDatabaseEdition
     {
         /// <summary>
-        /// Not an Azure SQL Insance
+        /// Not an Azure SQL Instance
         /// </summary>
         None = 0,
         /// <summary>
-        /// Basic Azure SQL Insance
+        /// Basic Azure SQL Instance
         /// </summary>
         Basic,
         /// <summary>
-        /// Standard Azure SQL Insance
+        /// Standard Azure SQL Instance
         /// </summary>
         Standard,
         /// <summary>
-        /// Premium Azure SQL Insance
+        /// Premium Azure SQL Instance
         /// </summary>
         Premium
     }

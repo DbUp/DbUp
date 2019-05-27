@@ -25,7 +25,7 @@ namespace DbUp.Engine.Transactions
         T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult);
 
         /// <summary>
-        /// Initialises the transaction strategy with the upgrade log
+        /// Initializes the transaction strategy with the upgrade log
         /// </summary>
         void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts);
     }

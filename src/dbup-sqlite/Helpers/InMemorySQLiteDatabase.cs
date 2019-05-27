@@ -62,7 +62,7 @@ namespace DbUp.SQLite.Helpers
         }
 
         /// <summary>
-        /// An ahoc sql runner against the in-memory database
+        /// An adhoc sql runner against the in-memory database
         /// </summary>
         public AdHocSqlRunner SqlRunner
         {

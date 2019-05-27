@@ -124,8 +124,8 @@ namespace DbUp.Tests
                 .UsingSanitiser(Scrubbers.ScrubDates)
                 .UsingNamer(new Namer(target, testName));
 
-            // Automatically approve the change, make sure to check the result before commiting 
-            // configuration = configuration.UsingReporter((recieved, approved) => File.Copy(recieved, approved, true));
+            // Automatically approve the change, make sure to check the result before committing 
+            // configuration = configuration.UsingReporter((received, approved) => File.Copy(received, approved, true));
             
             this.Assent(logger.Log, configuration);
         }

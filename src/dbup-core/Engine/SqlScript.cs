@@ -41,7 +41,7 @@ namespace DbUp.Engine
         public virtual string Contents { get; }
 
         /// <summary>
-        /// Gests the SQL Script Options
+        /// Gets the SQL Script Options
         /// </summary>
         public SqlScriptOptions SqlScriptOptions { get; }
 
