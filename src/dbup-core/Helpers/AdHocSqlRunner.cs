@@ -100,7 +100,8 @@ namespace DbUp.Helpers
         }
 
         /// <summary>
-        /// Executes a select query or procedure.
+        /// Executes a select query or procedure. Note: does not support queries returning multiple columns with the same name, for example:
+        /// select 1 as mycolumn, 2 as mycolumn
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="parameters">The parameters.</param>
