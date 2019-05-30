@@ -390,6 +390,7 @@ namespace DbUp.ScriptProviders
     {
         public FileSystemScriptOptions() { }
         public System.Text.Encoding Encoding { get; set; }
+        public string[] Extensions { get; set; }
         public System.Func<string, bool> Filter { get; set; }
         public bool IncludeSubDirectories { get; set; }
     }
