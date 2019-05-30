@@ -36,7 +36,17 @@ namespace DbUp.Tests.ScriptProvider
             [Then]
             public void it_should_return_all_sql_files()
             {
-                scriptsToExecute.Length.ShouldBe(10);
+                scriptsToExecute
+                    .Count(s => s.Name.EndsWith(".sql"))
+                    .ShouldBe(9);
+            }
+
+            [Then]
+            public void should_ignore_abstract_implementations()
+            {
+                scriptsToExecute
+                    .Where(s => s.Name.EndsWith("Script20120723_1_Test4_Base.cs"))
+                    .ShouldBeEmpty();
             }
 
             [Then]
