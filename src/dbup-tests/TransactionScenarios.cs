@@ -24,8 +24,8 @@ namespace DbUp.Tests
         {
             logger = new CaptureLogsLogger();
             
-            // Automatically approve the change, make sure to check the result before commiting 
-            // assentConfig = assentConfig.UsingReporter((recieved, approved) => File.Copy(recieved, approved, true));
+            // Automatically approve the change, make sure to check the result before committing 
+            // assentConfig = assentConfig.UsingReporter((received, approved) => File.Copy(received, approved, true));
         }
 
         [Fact]

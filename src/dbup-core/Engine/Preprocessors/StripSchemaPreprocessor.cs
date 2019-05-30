@@ -8,7 +8,7 @@ namespace DbUp.Engine.Preprocessors
     public class StripSchemaPreprocessor : IScriptPreprocessor
     {
         /// <summary>
-        /// Performs some proprocessing step on a script
+        /// Performs some preprocessing step on a script
         /// </summary>
         public string Process(string contents) => Regex.Replace(contents, @"\$schema\$\.", string.Empty, RegexOptions.IgnoreCase);
     }

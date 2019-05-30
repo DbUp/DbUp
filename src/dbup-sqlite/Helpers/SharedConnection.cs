@@ -7,8 +7,8 @@ namespace DbUp.SQLite.Helpers
     /// A database connection wrapper to manage underlying connection as a shared connection
     /// during database upgrade. 
     /// <remarks>
-    /// if underlying connection is already openned then it will be kept as opened and will not be closed 
-    /// otherwise it will be openned when object is created and closed when object is disposed
+    /// if underlying connection is already opened then it will be kept as opened and will not be closed 
+    /// otherwise it will be opened when object is created and closed when object is disposed
     /// however it will not be disposed
     /// </remarks>
     /// </summary>
@@ -62,7 +62,7 @@ namespace DbUp.SQLite.Helpers
 
         public void DoClose()
         {
-            // if shared underlying connection is openned by this object
+            // if shared underlying connection is opened by this object
             // it will be closed here, otherwise the connection is not closed 
             if (!connectionAlreadyOpened && connection.State == ConnectionState.Open)
             {

@@ -58,7 +58,7 @@ namespace DbUp.SQLite.Helpers
         public IConnectionManager GetConnectionManager() => connectionManager;
 
         /// <summary>
-        /// An ahoc sql runner against the in-memory database.
+        /// An adhoc sql runner against the in-memory database
         /// </summary>
         public AdHocSqlRunner SqlRunner { get; }
 

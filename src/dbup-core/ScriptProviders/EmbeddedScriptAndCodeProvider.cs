@@ -73,9 +73,11 @@ namespace DbUp.ScriptProviders
                 {
                     return script.IsAssignableFrom(type) &&
 #if USE_TYPE_INFO
-                        type.GetTypeInfo().IsClass;
+                        type.GetTypeInfo().IsClass &&
+                       !type.GetTypeInfo().IsAbstract;
 #else
-                        type.IsClass;
+                        type.IsClass &&
+                       !type.IsAbstract;
 #endif
                 })
                 .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", this.sqlScriptOptions, () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))

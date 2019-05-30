@@ -53,7 +53,7 @@ namespace DbUp.SQLite.Helpers
         }
 
         /// <summary>
-        /// An ahoc sql runner against the temporary database.
+        /// An adhoc sql runner against the temporary database
         /// </summary>
         public AdHocSqlRunner SqlRunner { get; }
 

@@ -23,7 +23,7 @@ namespace DbUp.Support
         /// <summary>
         /// Creates a new instance of <see cref="SqlParser"/>.
         /// </summary>
-        /// <param name="sqlText">The texto to be read</param>
+        /// <param name="sqlText">The text to be read</param>
         /// <param name="delimiter">The command delimiter</param>
         /// <param name="delimiterRequiresWhitespace">Whether it requires whitespace</param>
         public SqlParser(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true) : base(sqlText)
@@ -427,7 +427,7 @@ namespace DbUp.Support
         /// </summary>
         public enum CharacterType
         {
-            /// <summary>Character belongs to a commment</summary>
+            /// <summary>Character belongs to a command</summary>
             Command,
             /// <summary>Character belongs to a /* comment</summary>
             SlashStarComment,

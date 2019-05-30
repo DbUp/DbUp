@@ -223,43 +223,39 @@ public static class SqlServerExtensions
         string masterConnectionString;
         GetMasterConnectionStringBuilder(connectionString, logger, out masterConnectionString, out databaseName);
 
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                if (DatabaseExists(connection, databaseName))
+                    return;
+            }
+        }
+        catch (Exception e)
+        {
+            logger.WriteInformation(@"Database not found on server with connection string in settings: {0}", e.Message);
+        }
+
         using (var connection = new SqlConnection(masterConnectionString))
         {
             connection.Open();
-
-            var sqlCommandText = string.Format
-                (
-                    @"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{0}';",
-                    databaseName
-                );
-
-
-            // check to see if the database already exists..
-            using (var command = new SqlCommand(sqlCommandText, connection)
-            {
-                CommandType = CommandType.Text
-            })
-
-            {
-                var results = (int?) command.ExecuteScalar();
-
-                // if the database exists, we're done here...
-                if (results.HasValue && results.Value == 1)
-                {
-                    return;
-                }
-            }
+            if (DatabaseExists(connection, databaseName))
+                return;
 
             string collationString = string.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
-            sqlCommandText = string.Format
+            var sqlCommandText = string.Format
                     (
-                        @"create database [{0}]{1};",
+                        @"create database [{0}]{1}",
                         databaseName,
                         collationString
                     );
 
             switch (azureDatabaseEdition)
             {
+                case AzureDatabaseEdition.None:
+                    sqlCommandText += ";";
+                    break;
                 case AzureDatabaseEdition.Basic:
                     sqlCommandText += " ( EDITION = ''basic'' );";
                     break;
@@ -284,7 +280,6 @@ public static class SqlServerExtensions
                 }
 
                 command.ExecuteNonQuery();
-
             }
 
             logger.WriteInformation(@"Created database {0}", databaseName);
@@ -331,16 +326,8 @@ public static class SqlServerExtensions
         using (var connection = new SqlConnection(masterConnectionString))
         {
             connection.Open();
-            var databaseExistCommand = new SqlCommand($"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{databaseName}';", connection)
-            {
-                CommandType = CommandType.Text
-            };
-            using (var command = databaseExistCommand)
-            {
-                var exists = (int?)command.ExecuteScalar();
-                if (!exists.HasValue)
-                    return;
-            }
+            if (!DatabaseExists(connection, databaseName))
+                return;
 
             var dropDatabaseCommand = new SqlCommand($"ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
             using (var command = dropDatabaseCommand)
@@ -374,5 +361,29 @@ public static class SqlServerExtensions
 
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
         masterConnectionString = masterConnectionStringBuilder.ConnectionString;
+    }
+
+    private static bool DatabaseExists(SqlConnection connection, string databaseName)
+    {
+        var sqlCommandText = string.Format
+        (
+            @"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{0}';",
+            databaseName
+        );
+
+        // check to see if the database already exists..
+        using (var command = new SqlCommand(sqlCommandText, connection)
+        {
+            CommandType = CommandType.Text
+        })
+
+        {
+            var results = (int?)command.ExecuteScalar();
+
+            if (results.HasValue && results.Value == 1)
+                return true;
+            else
+                return false;
+        }
     }
 }

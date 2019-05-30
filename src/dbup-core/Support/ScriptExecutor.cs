@@ -140,7 +140,7 @@ namespace DbUp.Support
                             {
                                 executeAction = ExecuteNonQuery;
                             }
-                            // Execute within a wrapper that allows a provider specific derived class to handle provider speicfic exception.
+                            // Execute within a wrapper that allows a provider specific derived class to handle provider specific exception.
                             ExecuteCommandsWithinExceptionHandler(index, script, () =>
                             {
                                 executeAction(command);
