@@ -194,14 +194,18 @@ namespace DbUp.Support
         {
             do
             {
+                if (reader.FieldCount == 0)
+                {
+                    if (reader.RecordsAffected >= 0)
+                        Log().WriteInformation("RecordsAffected: {0}", reader.RecordsAffected);
+                    return;
+                }
+
                 var names = new List<string>();
                 for (int i = 0; i < reader.FieldCount; i++)
                 {
                     names.Add(reader.GetName(i));
                 }
-
-                if (names.Count == 0)
-                    return;
 
                 var lines = new List<List<string>>();
                 while (reader.Read())
