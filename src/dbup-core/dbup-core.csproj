@@ -4,7 +4,7 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts. This is the core library and should be used in conjunction with the database specific package (eg dbup-sqlserver, dbup-mysql)</Description>
     <Title>DbUp Core library</Title>
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
-    <TargetFrameworks>netstandard1.3;net35;net45;netstandard2.0</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;net45;netstandard2.0</TargetFrameworks>
     <AssemblyName>dbup-core</AssemblyName>
     <RootNamespace>DbUp</RootNamespace>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
