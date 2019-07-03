@@ -7,8 +7,7 @@
     <authors>Paul Stovell, Jim Burger, Jake Ginnivan, Damian Maclennan</authors>
     <description> (ORIGINAL) https://github.com/dbup/DbUp -- This package exists to allow easy upgrades from pre-4.0 version This package was split into two packages dbup-core and dbup-sqlserver so that non SQL Server packages did not need to also
     reference the SQL Server code. Uninstall this package and install dbup-sqlserver, or the package for the server(s) you are targeting instead!</description>
-    <language>en-US</language>
-    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <language>en-US</language>    
     <releaseNotes>https://github.com/Steveiwonder/DbUp/releases</releaseNotes>
     <projectUrl>https://github.com/Steveiwonder/DbUp</projectUrl>
     <iconUrl>https://raw.github.com/Steveiwonder/DbUp/master/src/Information/dbup-icon.png</iconUrl>
