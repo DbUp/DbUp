@@ -12,14 +12,15 @@ namespace DbUp.Engine
         /// Recalls the version number of the database.
         /// </summary>
         /// <returns></returns>
-        string[] GetExecutedScripts();
+        ExecutedSqlScript[] GetExecutedScripts();
 
         /// <summary>
         /// Records an upgrade script for a database.
         /// </summary>
         /// <param name="script">The script.</param>
-        /// <param name="dbCommandFactory"></param>
-        void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory);
+        /// <param name="processedContents">The processed contents.</param>
+        /// <param name="dbCommandFactory">The database command factory.</param>
+        void StoreExecutedScript(SqlScript script,string processedContents, Func<IDbCommand> dbCommandFactory);
 
         /// <summary>
         /// Creates the journal if it does not exist, and if it does exist makes sure it is in the latest format

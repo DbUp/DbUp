@@ -13,5 +13,7 @@ namespace DbUp.Engine
         /// Gets all scripts that should be executed.
         /// </summary>
         IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager);
+
+
     }
 }

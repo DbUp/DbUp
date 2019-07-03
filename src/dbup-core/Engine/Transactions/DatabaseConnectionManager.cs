@@ -8,6 +8,7 @@ namespace DbUp.Engine.Transactions
     /// <summary>
     /// Manages Sql Database Connections
     /// </summary>
+    /// <seealso cref="DbUp.Engine.Transactions.IConnectionManager" />
     public abstract class DatabaseConnectionManager : IConnectionManager
     {
         readonly IConnectionFactory connectionFactory;
@@ -29,7 +30,6 @@ namespace DbUp.Engine.Transactions
         protected DatabaseConnectionManager(IConnectionFactory connectionFactory)
         {
             this.connectionFactory = connectionFactory;
-            TransactionMode = TransactionMode.NoTransaction;
             transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
             {
                 {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},
@@ -41,15 +41,15 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tells the connection manager is starting
         /// </summary>
-        public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts, TransactionMode transactionMode)
         {
             upgradeConnection = CreateConnection(upgradeLog);
             if (upgradeConnection.State == ConnectionState.Closed)
                 upgradeConnection.Open();
-            if (transactionStrategy != null)
-                throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
-            transactionStrategy = transactionStrategyFactory[TransactionMode]();
-            transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts);
+
+
+            transactionStrategy = transactionStrategyFactory[transactionMode]();
+            transactionStrategy.Initialise(upgradeConnection, upgradeLog);
 
             return new DelegateDisposable(() =>
             {
@@ -72,7 +72,7 @@ namespace DbUp.Engine.Transactions
                 if (upgradeConnection.State == ConnectionState.Closed)
                     upgradeConnection.Open();
                 var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
-                strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
+                strategy.Initialise(upgradeConnection, upgradeLog);
                 strategy.Execute(dbCommandFactory =>
                 {
                     using (var command = dbCommandFactory())
@@ -91,7 +91,7 @@ namespace DbUp.Engine.Transactions
         }
 
         /// <summary>
-        /// Executes an action using the specified transaction mode 
+        /// Executes an action using the specified transaction mode
         /// </summary>
         /// <param name="action">The action to execute</param>
         public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
@@ -100,11 +100,13 @@ namespace DbUp.Engine.Transactions
         }
 
         /// <summary>
-        /// Executes an action which has a result using the specified transaction mode 
+        /// Executes an action which has a result using the specified transaction mode
         /// </summary>
-        /// <param name="actionWithResult">The action to execute</param>
         /// <typeparam name="T">The result type</typeparam>
-        /// <returns>The result of the command</returns>
+        /// <param name="actionWithResult">The action to execute</param>
+        /// <returns>
+        /// The result of the command
+        /// </returns>
         public T ExecuteCommandsWithManagedConnection<T>(Func<Func<IDbCommand>, T> actionWithResult)
         {
             return transactionStrategy.Execute(actionWithResult);
@@ -113,7 +115,6 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// The transaction strategy that DbUp should use
         /// </summary>
-        public TransactionMode TransactionMode { get; set; }
 
         /// <summary>
         /// Specifies whether the db script output should be logged

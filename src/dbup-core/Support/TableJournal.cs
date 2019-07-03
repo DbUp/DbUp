@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
+using System.Linq;
+
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
@@ -18,24 +20,27 @@ namespace DbUp.Support
         bool journalExists;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="TableJournal"/> class.
+        /// Initializes a new instance of the <see cref="TableJournal" /> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
         /// <param name="logger">The log.</param>
-        /// <param name="sqlObjectParser"></param>
+        /// <param name="sqlObjectParser">The SQL object parser.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
+        /// <param name="deploymentId">The deployment identifier.</param>
         protected TableJournal(
             Func<IConnectionManager> connectionManager,
             Func<IUpgradeLog> logger,
             ISqlObjectParser sqlObjectParser,
-            string schema, string table)
+            string schema, string table, Guid deploymentId)
         {
             this.sqlObjectParser = sqlObjectParser;
             ConnectionManager = connectionManager;
             Log = logger;
             UnquotedSchemaTableName = table;
+            DeploymentId = deploymentId;
             SchemaTableSchema = schema;
+            DeploymentId = deploymentId;
             FqSchemaTableName = string.IsNullOrEmpty(schema)
                 ? sqlObjectParser.QuoteIdentifier(table)
                 : sqlObjectParser.QuoteIdentifier(schema) + "." + sqlObjectParser.QuoteIdentifier(table);
@@ -49,6 +54,14 @@ namespace DbUp.Support
         protected string UnquotedSchemaTableName { get; private set; }
 
         /// <summary>
+        /// Gets the deployment identifier.
+        /// </summary>
+        /// <value>
+        /// The deployment identifier.
+        /// </value>
+        protected Guid DeploymentId { get; private set; }
+
+        /// <summary>
         /// Fully qualified schema table name, includes schema and is quoted.
         /// </summary>
         protected string FqSchemaTableName { get; private set; }
@@ -57,50 +70,63 @@ namespace DbUp.Support
 
         protected Func<IUpgradeLog> Log { get; private set; }
 
-        public string[] GetExecutedScripts()
+        public ExecutedSqlScript[] GetExecutedScripts()
         {
-            return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+            IConnectionManager connectionManager = ConnectionManager();
+            using (connectionManager.OperationStarting(Log(), new List<SqlScript>(), TransactionMode.SingleTransaction))
             {
-                if (journalExists || DoesTableExist(dbCommandFactory))
+                return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
-                    Log().WriteInformation("Fetching list of already executed scripts.");
-
-                    var scripts = new List<string>();
-
-                    using (var command = GetJournalEntriesCommand(dbCommandFactory))
+                    if (journalExists || DoesTableExist(dbCommandFactory))
                     {
-                        using (var reader = command.ExecuteReader())
-                        {
-                            while (reader.Read())
-                                scripts.Add((string) reader[0]);
-                        }
-                    }
+                        Log().WriteInformation("Fetching list of already executed scripts.");
 
-                    return scripts.ToArray();
-                }
-                else
-                {
-                    Log().WriteInformation("Journal table does not exist");
-                    return new string[0];
-                }
-            });
+                        IDbCommand command = dbCommandFactory();
+                        command.CommandText = GetJournalEntriesSql();
+                        List<ExecutedSqlScript> executedSqlScripts = new List<ExecutedSqlScript>();
+                        using (IDataReader dataReader = command.ExecuteReader())
+                        {
+
+                            while (dataReader.Read())
+                            {
+                                ExecutedSqlScript executedSqlScript = new ExecutedSqlScript();
+
+                                executedSqlScript.Hash = dataReader.GetString(dataReader.GetOrdinal("Hash"));
+                                executedSqlScript.Applied = dataReader.GetDateTime(dataReader.GetOrdinal("Applied"));
+                                executedSqlScript.Contents = dataReader.GetString(dataReader.GetOrdinal("Contents"));
+                                executedSqlScript.Name = dataReader.GetString(dataReader.GetOrdinal("ScriptName"));
+
+                                executedSqlScripts.Add(executedSqlScript);
+                            }
+                        }
+                        return executedSqlScripts.ToArray();
+                    }
+                    else
+                    {
+                        Log().WriteInformation("Journal table does not exist");
+                        return new ExecutedSqlScript[0];
+                    }
+                });
+            }
         }
 
         /// <summary>
         /// Records a database upgrade for a database specified in a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        /// <param name="dbCommandFactory"></param>
-        public virtual void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
+        /// <param name="processedContents">The processed contents.</param>
+        /// <param name="dbCommandFactory">The database command factory.</param>
+        public virtual void StoreExecutedScript(SqlScript script, string processedContents, Func<IDbCommand> dbCommandFactory)
         {
             EnsureTableExistsAndIsLatestVersion(dbCommandFactory);
-            using (var command = GetInsertScriptCommand(dbCommandFactory, script))
+
+            using (var command = GetInsertScriptCommand(dbCommandFactory, script, processedContents, DeploymentId))
             {
                 command.ExecuteNonQuery();
             }
         }
 
-        protected IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        protected IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script, string processedContents, Guid deploymentId)
         {
             var command = dbCommandFactory();
 
@@ -111,21 +137,34 @@ namespace DbUp.Support
 
             var appliedParam = command.CreateParameter();
             appliedParam.ParameterName = "applied";
-            appliedParam.Value = DateTime.Now;
+            appliedParam.Value = DateTime.UtcNow;
             command.Parameters.Add(appliedParam);
 
-            command.CommandText = GetInsertJournalEntrySql("@scriptName", "@applied");
+            var hashParam = command.CreateParameter();
+            hashParam.ParameterName = "hash";
+            hashParam.Value = script.Hash;
+            command.Parameters.Add(hashParam);
+
+            var contentsParam = command.CreateParameter();
+            contentsParam.ParameterName = "contents";
+            contentsParam.Value = processedContents;
+            command.Parameters.Add(contentsParam);
+
+            var deploymentIdParam = command.CreateParameter();
+            deploymentIdParam.ParameterName = "deploymentId";
+            deploymentIdParam.Value = deploymentId;
+            command.Parameters.Add(deploymentIdParam);
+
+            var groupParam = command.CreateParameter();
+            groupParam.ParameterName = "group";
+            groupParam.Value = script.SqlScriptOptions.Group;
+            command.Parameters.Add(groupParam);
+
+            command.CommandText = GetInsertJournalEntrySql("@scriptName", "@applied", "@hash", "@contents", "@deploymentId", "@group");
             command.CommandType = CommandType.Text;
             return command;
         }
 
-        protected IDbCommand GetJournalEntriesCommand(Func<IDbCommand> dbCommandFactory)
-        {
-            var command = dbCommandFactory();
-            command.CommandText = GetJournalEntriesSql();
-            command.CommandType = CommandType.Text;
-            return command;
-        }
 
         protected IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory)
         {
@@ -141,8 +180,12 @@ namespace DbUp.Support
         /// </summary>
         /// <param name="scriptName">Name of the script name param (i.e @scriptName)</param>
         /// <param name="applied">Name of the applied param (i.e @applied)</param>
+        /// <param name="hash">The hash.</param>
+        /// <param name="contents">The contents.</param>
+        /// <param name="deploymentId">The deployment identifier.</param>
+        /// <param name="group">The group.</param>
         /// <returns></returns>
-        protected abstract string GetInsertJournalEntrySql(string @scriptName, string @applied);
+        protected abstract string GetInsertJournalEntrySql(string @scriptName, string @applied, string @hash, string @contents, string @deploymentId, string @group);
 
         /// <summary>
         /// Sql for getting the journal entries
@@ -199,10 +242,10 @@ namespace DbUp.Support
                 if (executeScalar == null)
                     return false;
                 if (executeScalar is long)
-                    return (long) executeScalar == 1;
+                    return (long)executeScalar == 1;
                 if (executeScalar is decimal)
                     return (decimal)executeScalar == 1;
-                return (int) executeScalar == 1;
+                return (int)executeScalar == 1;
             }
         }
 

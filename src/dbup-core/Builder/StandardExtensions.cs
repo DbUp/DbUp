@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine;
-using DbUp.Engine.Filters;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
@@ -151,6 +151,11 @@ public static class StandardExtensions
         return builder;
     }
 
+    public static UpgradeEngineBuilder WithHasher(this UpgradeEngineBuilder builder, IHasher hasher)
+    {
+        builder.Configure(c => c.Hasher = hasher);
+        return builder;
+    }
     /// <summary>
     /// Adds a static set of scripts to the upgrader.
     /// </summary>
@@ -174,7 +179,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params SqlScript[] scripts)
     {
-        return WithScripts(builder, (IEnumerable<SqlScript>) scripts);
+        return WithScripts(builder, (IEnumerable<SqlScript>)scripts);
     }
 
     /// <summary>
@@ -196,12 +201,14 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="name">The name of the script. This should never change once executed.</param>
     /// <param name="contents">The script body.</param>
+    /// <param name="hasher">The hasher.</param>
+    /// <param name="hash"></param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents)
+    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents, string hash)
     {
-        var script = new SqlScript(name, contents);
+        var script = new SqlScript(name, contents, hash);
         return WithScripts(builder, script);
     }
 
@@ -211,13 +218,14 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="name">The name of the script. This should never change once executed.</param>
     /// <param name="contents">The script body.</param>
-    /// <param name="sqlScriptOptions">The sql script options.</param>    
+    /// <param name="hash">The hash.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, string contents, string hash, SqlScriptOptions sqlScriptOptions)
     {
-        var script = new SqlScript(name, contents, sqlScriptOptions);
+        var script = new SqlScript(name, contents, hash, sqlScriptOptions);
         return WithScripts(builder, script);
     }
 
@@ -227,11 +235,12 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="name">The name of the script</param>
     /// <param name="script">The script instance</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script)
-        => WithScripts(builder, new ScriptInstanceProvider(_ => name, script));
+    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script, IHasher hasher)
+        => WithScripts(builder, new ScriptInstanceProvider(_ => name, hasher ?? new Hasher(), script));
 
     /// <summary>
     /// Adds a single IScript instance to the upgrader.
@@ -239,74 +248,80 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="name">The name of the script</param>
     /// <param name="script">The script instance</param>
-    /// <param name="sqlScriptOptions">The sql script options.</param>    
+    /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script, SqlScriptOptions sqlScriptOptions)
-        => WithScripts(builder, new ScriptInstanceProvider(_ => name, sqlScriptOptions, script));
+    public static UpgradeEngineBuilder WithScript(this UpgradeEngineBuilder builder, string name, IScript script, SqlScriptOptions sqlScriptOptions, IHasher hasher)
+        => WithScripts(builder, new ScriptInstanceProvider(_ => name, sqlScriptOptions, hasher ?? new Hasher(), script));
 
     /// <summary>
     /// Adds IScript instances to the upgrader.
     /// </summary>
     /// <param name="builder">The builder.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <param name="scripts">The script instances.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, params IScript[] scripts)
-        => WithScripts(builder, new ScriptInstanceProvider(scripts));
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, IHasher hasher, params IScript[] scripts)
+        => WithScripts(builder, new ScriptInstanceProvider(hasher ?? new Hasher(), scripts));
 
     /// <summary>
     /// Adds IScript instances to the upgrader.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="namer">A function that returns the name of the script</param>
+    /// <param name="hasher">The hasher.</param>
     /// <param name="scripts">The script instances.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, params IScript[] scripts)
-        => WithScripts(builder, new ScriptInstanceProvider(namer, scripts));
-    
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, IHasher hasher, params IScript[] scripts)
+        => WithScripts(builder, new ScriptInstanceProvider(namer, hasher ?? new Hasher(), scripts));
+
     /// <summary>
     /// Adds IScript instances to the upgrader.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="namer">A function that returns the name of the script</param>
-    /// <param name="scripts">The script instances.</param>
     /// <param name="sqlScriptOptions">The script sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
+    /// <param name="scripts">The script instances.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, SqlScriptOptions sqlScriptOptions, params IScript[] scripts)
-        => WithScripts(builder, new ScriptInstanceProvider(namer, sqlScriptOptions, scripts));
+    public static UpgradeEngineBuilder WithScripts(this UpgradeEngineBuilder builder, Func<IScript, string> namer, SqlScriptOptions sqlScriptOptions, IHasher hasher, params IScript[] scripts)
+        => WithScripts(builder, new ScriptInstanceProvider(namer, sqlScriptOptions, hasher ?? new Hasher(), scripts));
 
     /// <summary>
     /// Adds all scripts from a folder on the file system.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path));
+        return WithScripts(builder, new FileSystemScriptProvider(path, hasher ?? new Hasher()));
     }
 
     /// <summary>
     /// Adds all scripts from a folder on the file system, with custom encoding.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <param name="path">The directory path.</param>    
-    /// <param name="sqlScriptOptions">The sql script options</param>    
+    /// <param name="path">The directory path.</param>
+    /// <param name="sqlScriptOptions">The sql script options</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions(), sqlScriptOptions));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions(), sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -314,13 +329,14 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters" /> class to get some pre-defined filters.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() {Filter = filter}));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter }, hasher));
     }
 
     /// <summary>
@@ -328,14 +344,15 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>    
+    /// <param name="filter">The filter. Use the static <see cref="Filters" /> class to get some pre-defined filters.</param>
     /// <param name="sqlScriptOptions">The sql script options</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter }, sqlScriptOptions));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter }, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -344,12 +361,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
     /// <param name="encoding">The encoding.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() {Encoding = encoding}));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding }, hasher));
     }
 
     /// <summary>
@@ -359,12 +377,13 @@ public static class StandardExtensions
     /// <param name="path">The directory path.</param>
     /// <param name="encoding">The encoding.</param>
     /// <param name="sqlScriptOptions">The sql script options</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Encoding encoding, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding }, sqlScriptOptions));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Encoding = encoding }, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -372,14 +391,15 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters" /> class to get some pre-defined filters.</param>
     /// <param name="encoding">The encoding.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() {Filter = filter, Encoding = encoding}));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter, Encoding = encoding }, hasher));
     }
 
     /// <summary>
@@ -387,15 +407,16 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
-    /// <param name="filter">The filter. Use the static <see cref="Filters"/> class to get some pre-defined filters.</param>
+    /// <param name="filter">The filter. Use the static <see cref="Filters" /> class to get some pre-defined filters.</param>
     /// <param name="encoding">The encoding.</param>
     /// <param name="sqlScriptOptions">The sql script options</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter, Encoding = encoding }, sqlScriptOptions));
+        return WithScripts(builder, new FileSystemScriptProvider(path, new FileSystemScriptOptions() { Filter = filter, Encoding = encoding }, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -404,12 +425,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="path">The directory path.</param>
     /// <param name="options">Options for the file System Provider</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, FileSystemScriptOptions options)
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, FileSystemScriptOptions options, IHasher hasher)
     {
-        return WithScripts(builder, new FileSystemScriptProvider(path, options));
+        return WithScripts(builder, new FileSystemScriptProvider(path, options, new Hasher()));
     }
 
     /// <summary>
@@ -417,12 +439,13 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase)));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), hasher));
     }
 
     /// <summary>
@@ -431,12 +454,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), DbUpDefaults.DefaultEncoding, sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), DbUpDefaults.DefaultEncoding, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -448,9 +472,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Encoding encoding)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Encoding encoding, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding, hasher));
     }
 
     /// <summary>
@@ -460,12 +484,13 @@ public static class StandardExtensions
     /// <param name="assembly">The assembly.</param>
     /// <param name="encoding">The encoding.</param>
     /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Encoding encoding, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Encoding encoding, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding, sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -475,12 +500,13 @@ public static class StandardExtensions
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="encoding">The encoding.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding, hasher));
     }
 
     /// <summary>
@@ -491,12 +517,13 @@ public static class StandardExtensions
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="encoding">The encoding.</param>
     /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding, sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, encoding, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -505,12 +532,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, hasher));
     }
 
     /// <summary>
@@ -520,12 +548,13 @@ public static class StandardExtensions
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -533,12 +562,15 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), s => true));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly,
+            s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase),
+            s => true, hasher));
     }
 
     /// <summary>
@@ -547,12 +579,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -561,27 +594,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
-    }
-    
-    /// <summary>
-    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <param name="assembly">The assembly.</param>
-    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="codeScriptFilter">The embedded script filter.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter)
-    {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, hasher));
     }
 
     /// <summary>
@@ -591,13 +610,13 @@ public static class StandardExtensions
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="codeScriptFilter">The embedded script filter.</param>
-    /// <param name="sqlScriptOptions">The sql script options.</param>    
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter, sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter, hasher));
     }
 
     /// <summary>
@@ -606,13 +625,31 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assembly">The assembly.</param>
     /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
-    /// <param name="sqlScriptOptions">The sql script options.</param>    
+    /// <param name="codeScriptFilter">The embedded script filter.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter, sqlScriptOptions, hasher));
+    }
+
+    /// <summary>
+    /// Adds all scripts found as embedded resources in the given assembly, or classes which inherit from IScript, with a custom filter (you'll need to exclude non- .SQL files yourself).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assembly">The assembly.</param>
+    /// <param name="filter">The script filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions, IHasher hasher)
+    {
+        return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -684,7 +721,7 @@ public static class StandardExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder WithVariable(this UpgradeEngineBuilder builder, string variableName, string value)
     {
-        return WithVariables(builder, new Dictionary<string, string> {{variableName, value}});
+        return WithVariables(builder, new Dictionary<string, string> { { variableName, value } });
     }
 
     /// <summary>
@@ -733,53 +770,21 @@ public static class StandardExtensions
         return builder;
     }
 
-    /// <summary>
-    /// Run creates a new connection for each script, without a transaction
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
-    public static UpgradeEngineBuilder WithoutTransaction(this UpgradeEngineBuilder builder)
-    {
-        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.NoTransaction);
 
-        return builder;
-    }
 
-    /// <summary>
-    /// Run DbUp in a single transaction
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
-    public static UpgradeEngineBuilder WithTransaction(this UpgradeEngineBuilder builder)
-    {
-        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.SingleTransaction);
-
-        return builder;
-    }
-
-    /// <summary>
-    /// Run each script in it's own transaction
-    /// </summary>
-    /// <param name="builder"></param>
-    /// <returns></returns>
-    public static UpgradeEngineBuilder WithTransactionPerScript(this UpgradeEngineBuilder builder)
-    {
-        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.TransactionPerScript);
-
-        return builder;
-    }
 
     /// <summary>
     /// Adds all scripts ending in '.sql' found as embedded resources in the given assemblies, using the default <see cref="Encoding" />.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assemblies">The assemblies.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, IHasher hasher)
     {
-        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase));
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), hasher);
     }
 
     /// <summary>
@@ -788,12 +793,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assemblies">The assemblies.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, IHasher hasher)
     {
-        return WithScriptsEmbeddedInAssemblies(builder, assemblies, filter, DbUpDefaults.DefaultEncoding);
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, filter, DbUpDefaults.DefaultEncoding, hasher);
     }
 
     /// <summary>
@@ -801,14 +807,15 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="assemblies">The assemblies.</param>
-    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>    
-    /// <param name="sqlScriptOptions">The sql script options.</param>    
+    /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
+    /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions));
+        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions, hasher));
     }
 
     /// <summary>
@@ -817,12 +824,13 @@ public static class StandardExtensions
     /// <param name="builder">The builder.</param>
     /// <param name="assemblies">The assemblies.</param>
     /// <param name="encoding">The encoding.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Encoding encoding)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Encoding encoding, IHasher hasher)
     {
-        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding);
+        return WithScriptsEmbeddedInAssemblies(builder, assemblies, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), encoding, hasher);
     }
 
     /// <summary>
@@ -832,12 +840,13 @@ public static class StandardExtensions
     /// <param name="assemblies">The assemblies.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="encoding">The encoding.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding));
+        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, hasher));
     }
 
     /// <summary>
@@ -847,12 +856,13 @@ public static class StandardExtensions
     /// <param name="assemblies">The assemblies.</param>
     /// <param name="filter">The filter. Don't forget to ignore any non- .SQL files.</param>
     /// <param name="encoding">The encoding.</param>
-    /// <param name="sqlScriptOptions">The sql script options.</param>    
+    /// <param name="sqlScriptOptions">The sql script options.</param>
+    /// <param name="hasher">The hasher.</param>
     /// <returns>
     /// The same builder
     /// </returns>
-    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions, IHasher hasher)
     {
-        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, sqlScriptOptions));
-    }    
+        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, sqlScriptOptions, hasher));
+    }
 }

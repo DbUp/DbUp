@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
-using DbUp.Engine.Filters;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Engine
 {
@@ -38,7 +38,7 @@ namespace DbUp.Engine
         public bool TryConnect(out string errorMessage)
         {
             return configuration.ConnectionManager.TryConnect(configuration.Log, out errorMessage);
-        }        
+        }
 
         /// <summary>
         /// Performs the database upgrade.
@@ -46,37 +46,58 @@ namespace DbUp.Engine
         public DatabaseUpgradeResult PerformUpgrade()
         {
             var executed = new List<SqlScript>();
+            configuration.Log.WriteInformation("Beginning database upgrade");
+
+
 
             string executedScriptName = null;
             try
             {
-                using (configuration.ConnectionManager.OperationStarting(configuration.Log, executed))
+                List<SqlScript> scriptsToExecute = GetScriptsToExecuteInsideOperation();
+
+                if (scriptsToExecute.Count == 0)
                 {
-
-                    configuration.Log.WriteInformation("Beginning database upgrade");
-
-                    var scriptsToExecute = GetScriptsToExecuteInsideOperation();
-
-                    if (scriptsToExecute.Count == 0)
-                    {
-                        configuration.Log.WriteInformation("No new scripts need to be executed - completing.");
-                        return new DatabaseUpgradeResult(executed, true, null);
-                    }
-
-                    configuration.ScriptExecutor.VerifySchema();
-
-                    foreach (var script in scriptsToExecute)
-                    {
-                        executedScriptName = script.Name;
-
-                        configuration.ScriptExecutor.Execute(script, configuration.Variables);
-
-                        executed.Add(script);
-                    }
-
-                    configuration.Log.WriteInformation("Upgrade successful");
+                    configuration.Log.WriteInformation("No new scripts need to be executed - completing.");
                     return new DatabaseUpgradeResult(executed, true, null);
                 }
+
+                configuration.ScriptExecutor.VerifySchema();
+
+
+                foreach (IGrouping<string, SqlScript> sqlScripts in scriptsToExecute.GroupBy(x => x.SqlScriptOptions.Group))
+                {
+                    TransactionMode transactionMode = sqlScripts.First().SqlScriptOptions.TransactionMode;
+                    Func<SqlScript, int> sort = sqlScripts.First().SqlScriptOptions.Sort;
+
+                    var sorted = sort == null ? sqlScripts.ToList() : sqlScripts.OrderBy(sort).ToList();
+
+                    configuration.Log.WriteInformation("");
+                    configuration.Log.WriteInformation($"Begin executing script group [{sqlScripts.Key}]");
+                    if (sqlScripts.Any(x => x.SqlScriptOptions.TransactionMode != transactionMode))
+                    {
+                        throw new Exception($"Not all scripts in group [{sqlScripts.Key}] share the same TransactionMode");
+                    }
+                    using (configuration.ConnectionManager.OperationStarting(configuration.Log, executed, transactionMode))
+                    {
+
+                        foreach (SqlScript script in sorted)
+                        {
+                            executedScriptName = script.Name;
+
+                            configuration.ScriptExecutor.Execute(script, transactionMode, configuration.Variables, configuration.DeploymentId);
+
+                            executed.Add(script);
+                        }
+                    }
+
+                    
+                    configuration.Log.WriteInformation($"End executing script group [{sqlScripts.Key}]");
+                    configuration.Log.WriteInformation("");
+                }
+
+                configuration.Log.WriteInformation("Upgrade successful");
+                return new DatabaseUpgradeResult(executed, true, null);
+
             }
             catch (Exception ex)
             {
@@ -92,7 +113,7 @@ namespace DbUp.Engine
         /// <returns>The scripts to be executed</returns>
         public List<SqlScript> GetScriptsToExecute()
         {
-            using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
+            using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>(), TransactionMode.SingleTransaction))
             {
                 return GetScriptsToExecuteInsideOperation();
             }
@@ -100,17 +121,27 @@ namespace DbUp.Engine
 
         private List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
-            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
-            var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
+            var allScripts = configuration.ScriptProviders
+                .SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
 
-            var sorted = allScripts.OrderBy(s => s.SqlScriptOptions.RunGroupOrder).ThenBy(s => s.Name, configuration.ScriptNameComparer);
+            var executedScriptNames = new HashSet<ExecutedSqlScript>(configuration.Journal.GetExecutedScripts());
+
+            var sorted = allScripts.OrderBy(s => s.SqlScriptOptions.RunGroupOrder)
+                .ThenBy(s => s.Name, configuration.ScriptNameComparer);
+
+                
             var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames, configuration.ScriptNameComparer);
             return filtered.ToList();
         }
 
-        public List<string> GetExecutedScripts()
+        private TKey SortFunc<TKey>(SqlScript arg)
         {
-            using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
+            throw new NotImplementedException();
+        }
+
+        public List<ExecutedSqlScript> GetExecutedScripts()
+        {
+            using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>(), TransactionMode.SingleTransaction))
             {
                 return configuration.Journal.GetExecutedScripts()
                     .ToList();
@@ -125,7 +156,7 @@ namespace DbUp.Engine
         public DatabaseUpgradeResult MarkAsExecuted()
         {
             var marked = new List<SqlScript>();
-            using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked))
+            using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked, TransactionMode.SingleTransaction))
             {
                 try
                 {
@@ -134,7 +165,7 @@ namespace DbUp.Engine
                     foreach (var script in scriptsToExecute)
                     {
                         configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(
-                            connectionFactory => configuration.Journal.StoreExecutedScript(script, connectionFactory));
+                            connectionFactory => configuration.Journal.StoreExecutedScript(script, null, connectionFactory));
                         configuration.Log.WriteInformation("Marking script {0} as executed", script.Name);
                         marked.Add(script);
                     }
@@ -153,7 +184,7 @@ namespace DbUp.Engine
         public DatabaseUpgradeResult MarkAsExecuted(string latestScript)
         {
             var marked = new List<SqlScript>();
-            using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked))
+            using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked, TransactionMode.SingleTransaction))
             {
                 try
                 {
@@ -162,7 +193,7 @@ namespace DbUp.Engine
                     foreach (var script in scriptsToExecute)
                     {
                         configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(
-                            commandFactory => configuration.Journal.StoreExecutedScript(script, commandFactory));
+                            commandFactory => configuration.Journal.StoreExecutedScript(script,null, commandFactory));
                         configuration.Log.WriteInformation("Marking script {0} as executed", script.Name);
                         marked.Add(script);
                         if (script.Name.Equals(latestScript))

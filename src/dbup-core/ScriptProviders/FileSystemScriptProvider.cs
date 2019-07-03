@@ -19,28 +19,36 @@ namespace DbUp.ScriptProviders
         private readonly Encoding encoding;
         private readonly FileSystemScriptOptions options;
         private readonly SqlScriptOptions sqlScriptOptions;
+        private IHasher hasher;
 
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        public FileSystemScriptProvider(string directoryPath) : this(directoryPath, new FileSystemScriptOptions(), new SqlScriptOptions())
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemScriptProvider"/> class.
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="hasher">The hasher.</param>
+        public FileSystemScriptProvider(string directoryPath, IHasher hasher) : this(directoryPath, new FileSystemScriptOptions(), new SqlScriptOptions(), hasher)
         {
         }
 
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        ///<param name="options">Different options for the file system script provider</param>
-        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, new SqlScriptOptions())
-        {
-        }        
-
         /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemScriptProvider"/> class.
         /// </summary>
         /// <param name="directoryPath">Path to SQL upgrade scripts</param>
         /// <param name="options">Different options for the file system script provider</param>
-        /// <param name="sqlScriptOptions">The sql script options</param>        
-        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, SqlScriptOptions sqlScriptOptions)
+        /// <param name="hasher">The hasher.</param>
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, IHasher hasher) : this(directoryPath, options, new SqlScriptOptions(), hasher)
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="FileSystemScriptProvider" /> class.
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="options">Different options for the file system script provider</param>
+        /// <param name="sqlScriptOptions">The sql script options</param>
+        /// <param name="hasher">The hasher.</param>
+        /// <exception cref="ArgumentNullException">options</exception>
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, SqlScriptOptions sqlScriptOptions, IHasher hasher)
         {
             if (options == null)
                 throw new ArgumentNullException("options");
@@ -49,6 +57,7 @@ namespace DbUp.ScriptProviders
             this.encoding = options.Encoding;
             this.options = options;
             this.sqlScriptOptions = sqlScriptOptions;
+            this.hasher = hasher;
         }
 
         /// <summary>
@@ -65,7 +74,7 @@ namespace DbUp.ScriptProviders
             {
                 files = files.Where(filter).ToList();
             }
-            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
+            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions, hasher))
                 .OrderBy(x => x.Name)
                 .ToList();
         }

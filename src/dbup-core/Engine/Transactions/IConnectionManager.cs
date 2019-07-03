@@ -14,24 +14,28 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// Tells the connection manager it is starting an operation
         /// </summary>
-        IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts);
+        /// <param name="upgradeLog">The upgrade log.</param>
+        /// <param name="executedScripts">The executed scripts.</param>
+        /// <param name="transactionMode">The transaction mode.</param>
+        /// <returns></returns>
+        IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts, TransactionMode transactionMode);
 
         /// <summary>
         /// Execute a lambda with the connection managed by the connection manager (i.e transactions, reusing connections etc)
         /// </summary>
+        /// <param name="transactionMode">The transaction mode.</param>
         /// <param name="action">Action to execute</param>
         void ExecuteCommandsWithManagedConnection([InstantHandle] Action<Func<IDbCommand>> action);
 
         /// <summary>
         /// Execute a lambda with the connection managed by the connection manager (i.e transactions, reusing connections etc)
         /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="transactionMode">The transaction mode.</param>
         /// <param name="actionWithResult">Action to execute</param>
+        /// <returns></returns>
         T ExecuteCommandsWithManagedConnection<T>(Func<Func<IDbCommand>, T> actionWithResult);
 
-        /// <summary>
-        /// Specifies the transaction strategy
-        /// </summary>
-        TransactionMode TransactionMode { get; set; }
 
         /// <summary>
         /// Specifies whether the db script output should be logged

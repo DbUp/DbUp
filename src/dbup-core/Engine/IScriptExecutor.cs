@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Engine
 {
@@ -11,14 +13,18 @@ namespace DbUp.Engine
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        void Execute(SqlScript script);
+        /// <param name="transactionMode">The transaction mode.</param>
+        /// <param name="deploymentId">The deployment identifier.</param>
+        void Execute(SqlScript script, TransactionMode transactionMode, Guid deploymentId);
 
         /// <summary>
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
+        /// <param name="transactionMode">The transaction mode.</param>
         /// <param name="variables">Variables to replace in the script</param>
-        void Execute(SqlScript script, IDictionary<string, string> variables);
+        /// <param name="deploymentId">The deployment identifier.</param>
+        void Execute(SqlScript script, TransactionMode transactionMode, IDictionary<string, string> variables, Guid deploymentId);
 
         /// <summary>
         /// Verifies the specified schema exists and is valid

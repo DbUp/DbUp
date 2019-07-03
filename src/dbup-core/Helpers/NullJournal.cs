@@ -13,17 +13,18 @@ namespace DbUp.Helpers
         /// Returns an empty array of length 0
         /// </summary>
         /// <returns></returns>
-        public string[] GetExecutedScripts()
+        public ExecutedSqlScript[] GetExecutedScripts()
         {
-            return new string[0];
+            return new ExecutedSqlScript[0];
         }
 
         /// <summary>
         /// Does not store the script, simply returns
         /// </summary>
-        /// <param name="script"></param>
-        /// <param name="dbCommandFactory"></param>
-        public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory)
+        /// <param name="script">The script.</param>
+        /// <param name="processedContents">The processed contents.</param>
+        /// <param name="dbCommandFactory">The database command factory.</param>
+        public void StoreExecutedScript(SqlScript script,string processedContents, Func<IDbCommand> dbCommandFactory)
         { }
 
         public void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)

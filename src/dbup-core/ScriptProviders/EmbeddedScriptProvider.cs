@@ -12,32 +12,35 @@ namespace DbUp.ScriptProviders
     public class EmbeddedScriptProvider : EmbeddedScriptsProvider
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider" /> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, DbUpDefaults.DefaultEncoding, new SqlScriptOptions())
+        /// <param name="hasher">The hasher.</param>
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, IHasher hasher) : this(assembly, filter, DbUpDefaults.DefaultEncoding, new SqlScriptOptions(), hasher)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider" /> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
         /// <param name="encoding">The encoding.</param>
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding) : this(assembly, filter, encoding, new SqlScriptOptions())
+        /// <param name="hasher">The hasher.</param>
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding, IHasher hasher) : this(assembly, filter, encoding, new SqlScriptOptions(), hasher)
         {
         }
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider" /> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
         /// <param name="encoding">The encoding.</param>
-        /// <param name="sqlScriptOptions">The sql script options</param>        
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions) : base(new[] { assembly }, filter, encoding, sqlScriptOptions)
+        /// <param name="sqlScriptOptions">The sql script options</param>
+        /// <param name="hasher">The hasher.</param>
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions, IHasher hasher) : base(new[] { assembly }, filter, encoding, sqlScriptOptions, hasher)
         {
         }
     }

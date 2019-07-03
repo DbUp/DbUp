@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DbUp.Engine;
-using DbUp.Engine.Filters;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
@@ -99,6 +98,22 @@ namespace DbUp.Builder
         /// Determines if variables should be replaced in scripts before they are run.
         /// </summary>
         public bool VariablesEnabled { get; set; }
+
+        /// <summary>
+        /// Gets or sets the hasher.
+        /// </summary>
+        /// <value>
+        /// The hasher.
+        /// </value>
+        public IHasher Hasher { get; set; } = new Hasher();
+
+        /// <summary>
+        /// Gets or sets the deployment identifier.
+        /// </summary>
+        /// <value>
+        /// The deployment identifier.
+        /// </value>
+        public Guid DeploymentId { get; set; } = Guid.NewGuid();
 
         /// <summary>
         /// Ensures all expectations have been met regarding this configuration.

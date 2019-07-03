@@ -11,6 +11,8 @@ namespace DbUp.SqlServer
     /// </summary>
     public class SqlConnectionManager : DatabaseConnectionManager
     {
+
+
         /// <summary>
         /// Manages Sql Database Connections
         /// </summary>

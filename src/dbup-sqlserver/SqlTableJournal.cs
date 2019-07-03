@@ -12,28 +12,29 @@ namespace DbUp.SqlServer
     public class SqlTableJournal : TableJournal
     {
         /// <summary>
-        /// Initializes a new instance of the <see cref="SqlTableJournal"/> class.
+        /// Initializes a new instance of the <see cref="SqlTableJournal" /> class.
         /// </summary>
         /// <param name="connectionManager">The connection manager.</param>
         /// <param name="logger">The log.</param>
         /// <param name="schema">The schema that contains the table.</param>
         /// <param name="table">The table name.</param>
+        /// <param name="deploymentId">The deployment identifier.</param>
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
-        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, new SqlServerObjectParser(), schema, table)
+        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table, Guid deploymentId)
+            : base(connectionManager, logger, new SqlServerObjectParser(), schema, table, deploymentId)
         {
         }
 
-        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied, string @hash, string @contents, string @deploymentId, string @group)
         {
-            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied, Hash, Contents, DeploymentId, [Group]) values ({@scriptName}, {@applied}, {@hash}, {@contents}, {@deploymentId}, {@group})";
         }
 
         protected override string GetJournalEntriesSql()
         {
-            return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
+            return $"select [ScriptName], [Applied], [Hash], [Contents] FROM {FqSchemaTableName} order by [ScriptName]";
         }
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
@@ -42,7 +43,12 @@ namespace DbUp.SqlServer
 $@"create table {FqSchemaTableName} (
     [Id] int identity(1,1) not null constraint {quotedPrimaryKeyName} primary key,
     [ScriptName] nvarchar(255) not null,
-    [Applied] datetime not null
+    [Group] nvarchar(255) null,
+    [Hash] nvarchar(max) not null,  
+    [DeploymentId] uniqueidentifier not null,
+    [Applied] datetime not null,    
+    [Contents] nvarchar(max) not null,
+
 )";
         }
     }

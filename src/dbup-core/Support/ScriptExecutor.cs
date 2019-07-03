@@ -61,9 +61,11 @@ namespace DbUp.Support
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
-        public virtual void Execute(SqlScript script)
+        /// <param name="transactionMode">The transaction mode.</param>
+        /// <param name="deploymentId">The deployment identifier.</param>
+        public virtual void Execute(SqlScript script, TransactionMode transactionMode, Guid deploymentId)
         {
-            Execute(script, null);
+            Execute(script, transactionMode, null, deploymentId);
         }
 
         /// <summary>
@@ -74,11 +76,11 @@ namespace DbUp.Support
             if (string.IsNullOrEmpty(Schema)) return;
 
             connectionManagerFactory().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-            {
-                var sqlRunner = new AdHocSqlRunner(dbCommandFactory, sqlObjectParser, Schema, () => true);
-                var sql = GetVerifySchemaSql(Schema);
-                sqlRunner.ExecuteNonQuery(sql);
-            });
+             {
+                 var sqlRunner = new AdHocSqlRunner(dbCommandFactory, sqlObjectParser, Schema, () => true);
+                 var sql = GetVerifySchemaSql(Schema);
+                 sqlRunner.ExecuteNonQuery(sql);
+             });
         }
 
         protected abstract string GetVerifySchemaSql(string schema);
@@ -105,8 +107,10 @@ namespace DbUp.Support
         /// Executes the specified script against a database at a given connection string.
         /// </summary>
         /// <param name="script">The script.</param>
+        /// <param name="transactionMode">The transaction mode.</param>
         /// <param name="variables">Variables to replace in the script</param>
-        public virtual void Execute(SqlScript script, IDictionary<string, string> variables)
+        /// <param name="deploymentId">The deployment identifier.</param>
+        public virtual void Execute(SqlScript script, TransactionMode transactionMode, IDictionary<string, string> variables, Guid deploymentId)
         {
             var contents = PreprocessScriptContents(script, variables);
             Log().WriteInformation("Executing Database Server script '{0}'", script.Name);
@@ -118,38 +122,38 @@ namespace DbUp.Support
             try
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
-                {
-                    var journal = journalFactory();
-                    journal.EnsureTableExistsAndIsLatestVersion(dbCommandFactory);
+                 {
+                     var journal = journalFactory();
+                     journal.EnsureTableExistsAndIsLatestVersion(dbCommandFactory);
 
-                    foreach (var statement in scriptStatements)
-                    {
-                        index++;
-                        using (var command = dbCommandFactory())
-                        {
-                            command.CommandText = statement;
-                            if (ExecutionTimeoutSeconds != null)
-                                command.CommandTimeout = ExecutionTimeoutSeconds.Value;
+                     foreach (var statement in scriptStatements)
+                     {
+                         index++;
+                         using (var command = dbCommandFactory())
+                         {
+                             command.CommandText = statement;
+                             if (ExecutionTimeoutSeconds != null)
+                                 command.CommandTimeout = ExecutionTimeoutSeconds.Value;
 
-                            Action<IDbCommand> executeAction;
-                            if (connectionManager.IsScriptOutputLogged)
-                            {
-                                executeAction = ExecuteAndLogOutput;
-                            }
-                            else
-                            {
-                                executeAction = ExecuteNonQuery;
-                            }
+                             Action<IDbCommand> executeAction;
+                             if (connectionManager.IsScriptOutputLogged)
+                             {
+                                 executeAction = ExecuteAndLogOutput;
+                             }
+                             else
+                             {
+                                 executeAction = ExecuteNonQuery;
+                             }
                             // Execute within a wrapper that allows a provider specific derived class to handle provider specific exception.
                             ExecuteCommandsWithinExceptionHandler(index, script, () =>
-                            {
-                                executeAction(command);
-                            });
-                        }
-                    }
+                             {
+                                 executeAction(command);
+                             });
+                         }
+                     }
 
-                    journal.StoreExecutedScript(script, dbCommandFactory);
-                });
+                     journal.StoreExecutedScript(script,contents, dbCommandFactory);
+                 });
             }
             catch (DbException sqlException)
             {
@@ -166,7 +170,7 @@ namespace DbUp.Support
             }
         }
 
-        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCallback);
+        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCallback);
 
         protected virtual void ExecuteNonQuery(IDbCommand command)
         {

@@ -11,8 +11,7 @@ namespace DbUp.Engine.Transactions
         private IDbTransaction transaction;
         private bool errorOccured;
         private IUpgradeLog log;
-        private SqlScript[] executedScriptsListBeforeExecution;
-        private List<SqlScript> executedScriptsCollection;
+
 
         public void Execute(Action<Func<IDbCommand>> action)
         {
@@ -56,10 +55,9 @@ namespace DbUp.Engine.Transactions
             }
         }
 
-        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog)
         {
-            executedScriptsCollection = executedScripts;
-            executedScriptsListBeforeExecution = executedScripts.ToArray();
+         
             connection = dbConnection;
             log = upgradeLog;
             upgradeLog.WriteInformation("Beginning transaction");
@@ -74,8 +72,7 @@ namespace DbUp.Engine.Transactions
             {
                 log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
                 //Restore the executed scripts collection
-                executedScriptsCollection.Clear();
-                executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);
+          
             }
 
             transaction.Dispose();

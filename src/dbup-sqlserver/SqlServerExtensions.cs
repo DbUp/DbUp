@@ -1,6 +1,7 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.Threading;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Output;
@@ -70,7 +71,7 @@ public static class SqlServerExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
         builder.Configure(c => c.ScriptExecutor = new SqlScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, "SchemaVersions"));
+        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, "__MigrationLog", c.DeploymentId));
         return builder;
     }
 
@@ -83,7 +84,7 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToSqlTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
+        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, table, c.DeploymentId));
         return builder;
     }
 
@@ -257,13 +258,13 @@ public static class SqlServerExtensions
                     sqlCommandText += ";";
                     break;
                 case AzureDatabaseEdition.Basic:
-                    sqlCommandText += " ( EDITION = ''basic'' );";
+                    sqlCommandText += " ( EDITION = 'basic' );";
                     break;
                 case AzureDatabaseEdition.Standard:
-                    sqlCommandText += " ( EDITION = ''standard'' );";
+                    sqlCommandText += " ( EDITION = 'standard' );";
                     break;
                 case AzureDatabaseEdition.Premium:
-                    sqlCommandText += " ( EDITION = ''premium'' );";
+                    sqlCommandText += " ( EDITION = 'premium' );";
                     break;
             }
         
@@ -283,7 +284,10 @@ public static class SqlServerExtensions
             }
 
             logger.WriteInformation(@"Created database {0}", databaseName);
+            connection.Close();
+            
         }
+        SqlConnection.ClearAllPools();
     }
 
     /// <summary>

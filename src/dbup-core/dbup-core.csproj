@@ -8,7 +8,7 @@
     <AssemblyName>dbup-core</AssemblyName>
     <RootNamespace>DbUp</RootNamespace>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
-    <SignAssembly>true</SignAssembly>
+    <SignAssembly>false</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>dbup-core</PackageId>
     <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
@@ -48,5 +48,7 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net45' ">
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
+ 
 
 </Project>
