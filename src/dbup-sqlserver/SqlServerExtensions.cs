@@ -1,12 +1,17 @@
 using System;
 using System.Data;
 using System.Data.SqlClient;
+using System.IO;
+using System.Text.RegularExpressions;
 using System.Threading;
 using DbUp;
 using DbUp.Builder;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.ScriptProviders;
 using DbUp.SqlServer;
+using DbUp.Support;
 
 /// <summary>
 /// Configuration extension methods for SQL Server.
@@ -122,7 +127,7 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition)
     {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(),-1, azureDatabaseEdition);
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), -1, azureDatabaseEdition);
     }
 
     /// <summary>
@@ -136,7 +141,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -161,7 +166,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -174,7 +179,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, collation: collation);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -187,7 +192,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), azureDatabaseEdition: azureDatabaseEdition, collation: collation);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -213,11 +218,11 @@ public static class SqlServerExtensions
     /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
     public static void SqlDatabase(
-        this SupportedDatabasesForEnsureDatabase supported, 
-        string connectionString, 
-        IUpgradeLog logger, 
-        int timeout = -1, 
-        AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None, 
+        this SupportedDatabasesForEnsureDatabase supported,
+        string connectionString,
+        IUpgradeLog logger,
+        int timeout = -1,
+        AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None,
         string collation = null)
     {
         string databaseName;
@@ -267,9 +272,9 @@ public static class SqlServerExtensions
                     sqlCommandText += " ( EDITION = 'premium' );";
                     break;
             }
-        
 
-        // Create the database...
+
+            // Create the database...
             using (var command = new SqlCommand(sqlCommandText, connection)
             {
                 CommandType = CommandType.Text
@@ -285,7 +290,7 @@ public static class SqlServerExtensions
 
             logger.WriteInformation(@"Created database {0}", databaseName);
             connection.Close();
-            
+
         }
         SqlConnection.ClearAllPools();
     }
@@ -390,4 +395,136 @@ public static class SqlServerExtensions
                 return false;
         }
     }
+
+    private static IHasher _defaultHasher = new Hasher();
+    /// <summary>
+    /// Any scripts inside the <paramref name="scriptsFolder"/>\<paramref name="folderName"/>
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="scriptsFolder">The scripts folder.</param>
+    /// <param name="folderName">The folder name</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithPreDeploymentScriptsFileSystem(this UpgradeEngineBuilder builder,
+        string scriptsFolder, string folderName = "Pre-Deployment")
+    {
+        string folder = Path.Combine(scriptsFolder, "Scripts", folderName);
+        return builder
+            .WithScripts(new FileSystemScriptProvider(scriptsFolder, new FileSystemScriptOptions()
+            {
+                IncludeSubDirectories = true,
+                Filter = s => s.StartsWith(folder, StringComparison.OrdinalIgnoreCase)
+            },
+            new SqlScriptOptions()
+            {
+                ScriptType = ScriptType.RunAlways,
+                RunGroupOrder = 0,
+                Group = "Pre-Deployment",
+                TransactionMode = TransactionMode.NoTransaction
+            },
+            _defaultHasher));
+    }
+
+    public static UpgradeEngineBuilder WithStaticDataScriptsFileSystem(this UpgradeEngineBuilder builder,
+        string scriptsFolder, string folderName = "StaticData")
+    {
+        string folder = Path.Combine(scriptsFolder, "Scripts", folderName);
+        return builder
+            .WithScripts(new FileSystemScriptProvider(scriptsFolder, new FileSystemScriptOptions()
+            {
+                IncludeSubDirectories = true,
+                Filter = s => s.StartsWith(folder, StringComparison.OrdinalIgnoreCase)
+            },
+                new SqlScriptOptions()
+                {
+                    ScriptType = ScriptType.RunHash,
+                    RunGroupOrder = 20,
+                    Group = "StaticData",
+                    TransactionMode = TransactionMode.SingleTransaction
+                },
+                _defaultHasher));
+    }
+
+    public static UpgradeEngineBuilder WithMigrationScriptsFileSystem(this UpgradeEngineBuilder builder,
+        string scriptsFolder)
+    {
+        string folder = Path.Combine(scriptsFolder, "Scripts", "Migrations");
+        return builder
+            .WithScripts(new FileSystemScriptProvider(scriptsFolder, new FileSystemScriptOptions()
+            {
+                IncludeSubDirectories = true,
+                Filter = s => s.StartsWith(folder, StringComparison.OrdinalIgnoreCase)
+            },
+                new SqlScriptOptions()
+                {
+                    ScriptType = ScriptType.RunOnce,
+                    RunGroupOrder = 10,
+                    Group = "Migration",
+                    TransactionMode = TransactionMode.SingleTransaction
+                },
+                _defaultHasher));
+    }
+
+    public static UpgradeEngineBuilder WithDatabaseProjectProgrammableObjects(this UpgradeEngineBuilder builder,
+        string scriptsFolder)
+    {
+        string ignoreScriptsFolder = Path.Combine(scriptsFolder, "scripts");
+        //script path must contain one of the following
+        Regex regex = new Regex("\\\\(stored procedures|views|functions)", RegexOptions.IgnoreCase);
+
+        return builder
+            .WithScripts(new FileSystemScriptProvider(Path.Combine(scriptsFolder),
+                new FileSystemScriptOptions()
+                {
+                    IncludeSubDirectories = true,
+                    Filter = s => !s.StartsWith(ignoreScriptsFolder) && regex.IsMatch(s)
+                },
+                new SqlScriptOptions()
+                {
+                    ScriptType = ScriptType.RunHash,
+                    RunGroupOrder = 30,
+                    TransactionMode = TransactionMode.SingleTransaction,
+                    Group = "Programmable Objects",
+                    Sort = script =>
+                    {
+                        if (script.Name.Contains("\\Views\\", StringComparison.OrdinalIgnoreCase))
+                            return 0;
+                        if (script.Name.Contains("\\User Defined Types\\", StringComparison.OrdinalIgnoreCase))
+                            return 1;
+                        if (script.Name.Contains("\\Functions\\", StringComparison.OrdinalIgnoreCase))
+                            return 2;
+                        if (script.Name.Contains("\\Stored Procedures\\", StringComparison.OrdinalIgnoreCase))
+                            return 3;
+                        throw new Exception($"Cannot sort [{script.Name}]");
+                    }
+
+                }, _defaultHasher));
+    }
+
+    /// <summary>
+    /// Any scripts inside the <paramref name="scriptsFolder"/>\<paramref name="folderName"/>
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="scriptsFolder">The scripts folder.</param>
+    /// <param name="folderName">The folder name</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithPostDeploymentScriptsFileSystem(this UpgradeEngineBuilder builder,
+    string scriptsFolder, string folderName = "Post-Deployment")
+    {
+        string folder = Path.Combine(scriptsFolder, "Scripts", folderName);
+        return builder
+        .WithScripts(new FileSystemScriptProvider(scriptsFolder, new FileSystemScriptOptions()
+        {
+            IncludeSubDirectories = true,
+            Filter = s => s.StartsWith(folder, StringComparison.OrdinalIgnoreCase)
+        },
+        new SqlScriptOptions()
+        {
+            ScriptType = ScriptType.RunAlways,
+            RunGroupOrder = 40,
+            Group = "Post-Deployment",
+            TransactionMode = TransactionMode.NoTransaction
+        }, _defaultHasher));
+    }
+
+
 }
