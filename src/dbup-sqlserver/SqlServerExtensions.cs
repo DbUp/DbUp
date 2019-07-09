@@ -469,7 +469,7 @@ public static class SqlServerExtensions
     {
         string ignoreScriptsFolder = Path.Combine(scriptsFolder, "scripts");
         //script path must contain one of the following
-        Regex regex = new Regex("\\\\(stored procedures|views|functions)", RegexOptions.IgnoreCase);
+        Regex regex = new Regex("\\\\(stored procedures|views|functions|triggers)", RegexOptions.IgnoreCase);
 
         return builder
             .WithScripts(new FileSystemScriptProvider(Path.Combine(scriptsFolder),
@@ -494,6 +494,9 @@ public static class SqlServerExtensions
                             return 2;
                         if (script.Name.Contains("\\Stored Procedures\\", StringComparison.OrdinalIgnoreCase))
                             return 3;
+                        if (script.Name.Contains("\\Triggers\\", StringComparison.OrdinalIgnoreCase))
+                            return 4;
+
                         throw new Exception($"Cannot sort [{script.Name}]");
                     }
 

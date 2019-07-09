@@ -13,7 +13,10 @@ namespace DbUp.Engine
             {
                 ExecutedSqlScript executedSqlScript = executedScripts
                     .FirstOrDefault(s => s.Name.Equals(x.Name, StringComparison.OrdinalIgnoreCase));
+                if (x.Name.Contains("prAddAuctionListing"))
+                {
 
+                }
                 //if it's a run always script
                 //if the script has not been run (executedSqlScript ==null)
                 //if the script's hashes do not match
