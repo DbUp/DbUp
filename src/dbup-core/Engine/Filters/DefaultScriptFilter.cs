@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using DbUp.Support;
 
-namespace DbUp.Engine
+namespace DbUp.Engine.Filters
 {
     public class DefaultScriptFilter : IScriptFilter
     {
@@ -11,16 +11,15 @@ namespace DbUp.Engine
         {
             return sorted.Where(x =>
             {
-                ExecutedSqlScript executedSqlScript = executedScripts
-                    .FirstOrDefault(s => s.Name.Equals(x.Name, StringComparison.OrdinalIgnoreCase));
-                if (x.Name.Contains("prAddAuctionListing"))
-                {
-
-                }
+                var executedScriptsOrdered = executedScripts
+                    .OrderByDescending(d=>d.Applied);//order them by most recently applied first, grab the latest one applied.
+                IEnumerable<ExecutedSqlScript> executedSqlScripts =  executedScriptsOrdered.Where(s => s.Name.Equals(x.Name, StringComparison.OrdinalIgnoreCase));
+             
+                ExecutedSqlScript executedSqlScript = executedSqlScripts.FirstOrDefault();
                 //if it's a run always script
                 //if the script has not been run (executedSqlScript ==null)
                 //if the script's hashes do not match
-                var willRun =  
+                bool willRun =  
                     x.SqlScriptOptions.ScriptType == ScriptType.RunAlways 
                     || executedSqlScript == null ||// ScriptType.RunOnce
                     (x.SqlScriptOptions.ScriptType == ScriptType.RunHash && executedSqlScript.Hash != x.Hash);
