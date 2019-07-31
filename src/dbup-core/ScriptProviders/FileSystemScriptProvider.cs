@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
+using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -17,11 +18,12 @@ namespace DbUp.ScriptProviders
         private readonly Func<string, bool> filter;
         private readonly Encoding encoding;
         private readonly FileSystemScriptOptions options;
+        private readonly SqlScriptOptions sqlScriptOptions;
 
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        public FileSystemScriptProvider(string directoryPath):this(directoryPath, new FileSystemScriptOptions())
+        public FileSystemScriptProvider(string directoryPath) : this(directoryPath, new FileSystemScriptOptions(), new SqlScriptOptions())
         {
         }
 
@@ -29,14 +31,24 @@ namespace DbUp.ScriptProviders
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         ///<param name="options">Different options for the file system script provider</param>
-        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options)
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, new SqlScriptOptions())
         {
-            if (options==null)
+        }        
+
+        /// <summary>
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="options">Different options for the file system script provider</param>
+        /// <param name="sqlScriptOptions">The sql script options</param>        
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, SqlScriptOptions sqlScriptOptions)
+        {
+            if (options == null)
                 throw new ArgumentNullException("options");
             this.directoryPath = directoryPath;
             this.filter = options.Filter;
             this.encoding = options.Encoding;
             this.options = options;
+            this.sqlScriptOptions = sqlScriptOptions;
         }
 
         /// <summary>
@@ -44,10 +56,14 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var files = Directory.GetFiles(directoryPath, "*.sql", ShouldSearchSubDirectories()).AsEnumerable();
+            var files = new List<string>();
+            foreach (string scriptExtension in options.Extensions)
+            {
+                files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
+            }
             if (filter != null)
             {
-                files = files.Where(filter);
+                files = files.Where(filter).ToList();
             }
 
             var scripts = options.IncludeFullPath

@@ -9,7 +9,7 @@ namespace DbUp.Firebird
     public class FirebirdPreprocessor : IScriptPreprocessor
     {
         /// <summary>
-        /// Performs some proprocessing step on a Firebird script.
+        /// Performs some preprocessing step on a Firebird script.
         /// </summary>
         public string Process(string contents)
         {

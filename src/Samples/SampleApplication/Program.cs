@@ -2,7 +2,10 @@
 using System.Linq;
 using System.Reflection;
 using DbUp;
+using DbUp.Engine;
+using DbUp.Helpers;
 using DbUp.SqlServer.Helpers;
+using DbUp.Support;
 
 namespace SampleApplication
 {
@@ -10,7 +13,7 @@ namespace SampleApplication
     {
         public static void Main(string[] args)
         {
-            string instanceName = @"(local)";
+            string instanceName = @"(local)\SqlExpress";
             // Uncomment the following line to run against sql local db instance.
             // string instanceName = @"(localdb)\Projects";
 
@@ -28,33 +31,46 @@ namespace SampleApplication
                     if (script.EndsWith("Script0006 - Transactions.sql"))
                         return !args.Any(a => "--noError".Equals(a, StringComparison.InvariantCultureIgnoreCase));
 
-                    return true;
+                    return script.StartsWith("SampleApplication.Scripts.");
                 })
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1})
                 .LogToConsole();
 
             if (args.Any(a => "--withTransaction".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
+            {
                 upgradeEngineBuilder = upgradeEngineBuilder.WithTransaction();
+            }
             else if (args.Any(a => "--withTransactionPerScript".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
+            {
                 upgradeEngineBuilder = upgradeEngineBuilder.WithTransactionPerScript();
+            }
 
             var upgrader = upgradeEngineBuilder.Build();
 
             Console.WriteLine("Is upgrade required: " + upgrader.IsUpgradeRequired());
 
-            var result = upgrader.PerformUpgrade();
-
-            // Display the result
-            if (result.Successful)
+            if (args.Any(a => "--generateReport".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
             {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("Success!");
+                upgrader.GenerateUpgradeHtmlReport("UpgradeReport.html");
             }
             else
-            {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(result.Error);
-                Console.WriteLine("Failed!");
+            {                
+                var result = upgrader.PerformUpgrade();
+
+                // Display the result
+                if (result.Successful)
+                {
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Success!");
+                }
+                else
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine(result.Error);
+                    Console.WriteLine("Failed!");
+                }
             }
+
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();

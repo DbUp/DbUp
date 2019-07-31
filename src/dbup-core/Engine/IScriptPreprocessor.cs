@@ -6,7 +6,7 @@ namespace DbUp.Engine
     public interface IScriptPreprocessor
     {
         /// <summary>
-        /// Performs some proprocessing step on a script
+        /// Performs some preprocessing step on a script
         /// </summary>
         string Process(string contents);
     }

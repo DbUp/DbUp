@@ -2,6 +2,7 @@
 using System.Reflection;
 using System.Text;
 using DbUp.Engine;
+using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -15,8 +16,7 @@ namespace DbUp.ScriptProviders
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter) :
-            this(assembly, filter, DbUpDefaults.DefaultEncoding)
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter) : this(assembly, filter, DbUpDefaults.DefaultEncoding, new SqlScriptOptions())
         {
         }
 
@@ -26,7 +26,18 @@ namespace DbUp.ScriptProviders
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
         /// <param name="encoding">The encoding.</param>
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding) : base(new[] { assembly }, filter, encoding)
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding) : this(assembly, filter, encoding, new SqlScriptOptions())
+        {
+        }
+
+        /// <summary>
+        /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
+        /// </summary>
+        /// <param name="assembly">The assembly.</param>
+        /// <param name="filter">The filter.</param>
+        /// <param name="encoding">The encoding.</param>
+        /// <param name="sqlScriptOptions">The sql script options</param>        
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions) : base(new[] { assembly }, filter, encoding, sqlScriptOptions)
         {
         }
     }

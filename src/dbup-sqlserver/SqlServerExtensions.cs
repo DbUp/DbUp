@@ -135,6 +135,18 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
     }
+    
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, string collation)
+    {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), collation: collation);
+    }
 
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
@@ -148,6 +160,46 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition);
     }
+    
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, string collation)
+    {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, collation: collation);
+    }
+    
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="azureDatabaseEdition">Azure edition to Create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition, string collation)
+    {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), azureDatabaseEdition: azureDatabaseEdition, collation: collation);
+    }
+    
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <param name="azureDatabaseEdition">Azure edition to Create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <returns></returns>
+    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, AzureDatabaseEdition azureDatabaseEdition, string collation)
+    {
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition, collation);
+    }
 
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
@@ -157,48 +209,53 @@ public static class SqlServerExtensions
     /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
     /// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <param name="azureDatabaseEdition">Use to indicate that the SQL server database is in Azure</param>
+    /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1, AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None)
+    public static void SqlDatabase(
+        this SupportedDatabasesForEnsureDatabase supported, 
+        string connectionString, 
+        IUpgradeLog logger, 
+        int timeout = -1, 
+        AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None, 
+        string collation = null)
     {
         string databaseName;
         string masterConnectionString;
         GetMasterConnectionStringBuilder(connectionString, logger, out masterConnectionString, out databaseName);
 
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                if (DatabaseExists(connection, databaseName))
+                    return;
+            }
+        }
+        catch (Exception e)
+        {
+            logger.WriteInformation(@"Database not found on server with connection string in settings: {0}", e.Message);
+        }
+
         using (var connection = new SqlConnection(masterConnectionString))
         {
             connection.Open();
+            if (DatabaseExists(connection, databaseName))
+                return;
 
+            string collationString = string.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
             var sqlCommandText = string.Format
-                (
-                    @"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{0}';",
-                    databaseName
-                );
-
-
-            // check to see if the database already exists..
-            using (var command = new SqlCommand(sqlCommandText, connection)
-            {
-                CommandType = CommandType.Text
-            })
-
-            {
-                var results = (int?) command.ExecuteScalar();
-
-                // if the database exists, we're done here...
-                if (results.HasValue && results.Value == 1)
-                {
-                    return;
-                }
-            }
-
-            sqlCommandText = string.Format
                     (
-                        @"create database [{0}];",
-                        databaseName
+                        @"create database [{0}]{1}",
+                        databaseName,
+                        collationString
                     );
 
             switch (azureDatabaseEdition)
             {
+                case AzureDatabaseEdition.None:
+                    sqlCommandText += ";";
+                    break;
                 case AzureDatabaseEdition.Basic:
                     sqlCommandText += " ( EDITION = ''basic'' );";
                     break;
@@ -223,7 +280,6 @@ public static class SqlServerExtensions
                 }
 
                 command.ExecuteNonQuery();
-
             }
 
             logger.WriteInformation(@"Created database {0}", databaseName);
@@ -270,16 +326,8 @@ public static class SqlServerExtensions
         using (var connection = new SqlConnection(masterConnectionString))
         {
             connection.Open();
-            var databaseExistCommand = new SqlCommand($"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{databaseName}';", connection)
-            {
-                CommandType = CommandType.Text
-            };
-            using (var command = databaseExistCommand)
-            {
-                var exists = (int?)command.ExecuteScalar();
-                if (!exists.HasValue)
-                    return;
-            }
+            if (!DatabaseExists(connection, databaseName))
+                return;
 
             var dropDatabaseCommand = new SqlCommand($"ALTER DATABASE [{databaseName}] SET SINGLE_USER WITH ROLLBACK IMMEDIATE; DROP DATABASE [{databaseName}];", connection) { CommandType = CommandType.Text };
             using (var command = dropDatabaseCommand)
@@ -313,5 +361,29 @@ public static class SqlServerExtensions
 
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
         masterConnectionString = masterConnectionStringBuilder.ConnectionString;
+    }
+
+    private static bool DatabaseExists(SqlConnection connection, string databaseName)
+    {
+        var sqlCommandText = string.Format
+        (
+            @"SELECT TOP 1 case WHEN dbid IS NOT NULL THEN 1 ELSE 0 end FROM sys.sysdatabases WHERE name = '{0}';",
+            databaseName
+        );
+
+        // check to see if the database already exists..
+        using (var command = new SqlCommand(sqlCommandText, connection)
+        {
+            CommandType = CommandType.Text
+        })
+
+        {
+            var results = (int?)command.ExecuteScalar();
+
+            if (results.HasValue && results.Value == 1)
+                return true;
+            else
+                return false;
+        }
     }
 }

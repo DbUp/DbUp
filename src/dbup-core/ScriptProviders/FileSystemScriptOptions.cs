@@ -14,6 +14,7 @@ namespace DbUp.ScriptProviders
         public FileSystemScriptOptions()
         {
             Encoding = DbUpDefaults.DefaultEncoding;
+            Extensions = new[] { "*.sql" };
         }
         /// <summary>
         /// The provider will look in subdirectories for scripts files.
@@ -35,5 +36,10 @@ namespace DbUp.ScriptProviders
         /// The encoding to be used for reading files 
         /// </summary>
         public Encoding Encoding { get; set; }
+
+        /// <summary>
+        /// The SQL upgrade script extensions
+        /// </summary>
+        public string[] Extensions { get; set; }
     }
 }

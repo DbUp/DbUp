@@ -8,7 +8,7 @@ namespace DbUp.Support
     public class SqlCommandSplitter
     {
         /// <summary>
-        /// Returns the seperate executable SQL commands within the SQL script.
+        /// Returns the separate executable SQL commands within the SQL script.
         /// </summary>
         /// <param name="scriptContents"></param>
         /// <returns></returns>
