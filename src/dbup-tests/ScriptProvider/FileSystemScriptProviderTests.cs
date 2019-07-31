@@ -199,7 +199,7 @@ namespace DbUp.Tests.ScriptProvider
             {
                 TestScripts.Create(out testPath);
                 // Given a filter is provided..
-                options = new FileSystemScriptOptions() { IncludeFullPath = true };
+                options = new FileSystemScriptOptions() {IncludeFullPath = true};
                 return new FileSystemScriptProvider(testPath, options);
             }
 
@@ -220,6 +220,7 @@ namespace DbUp.Tests.ScriptProvider
             {
                 Directory.Delete(testPath, true);
             }
+        }
 
         [Fact]
         public void options_should_include_sql()
