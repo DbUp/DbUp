@@ -16,7 +16,7 @@ namespace DbUp.ScriptProviders
         private readonly string directoryPath;
         private readonly Func<string, bool> filter;
         private readonly Encoding encoding;
-        private FileSystemScriptOptions options;
+        private readonly FileSystemScriptOptions options;
 
         ///<summary>
         ///</summary>
@@ -49,8 +49,12 @@ namespace DbUp.ScriptProviders
             {
                 files = files.Where(filter);
             }
-            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding))
-                .OrderBy(x => x.Name)
+
+            var scripts = options.IncludeFullPath
+                ? files.Select(x => SqlScriptWithFullPath.FromFileWithFullPath(directoryPath, x, encoding))
+                : files.Select(x => SqlScript.FromFile(directoryPath, x, encoding));
+
+            return scripts.OrderBy(x => x.Name)
                 .ToList();
         }
 

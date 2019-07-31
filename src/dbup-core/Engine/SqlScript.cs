@@ -1,5 +1,4 @@
-﻿
-using System;
+﻿using System;
 using System.IO;
 using System.Text;
 
@@ -18,12 +17,10 @@ namespace DbUp.Engine
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="contents">The contents.</param>
-        /// <param name="metaData">The metadata.</param>
-        public SqlScript(string name, string contents, object metaData = null)
+        public SqlScript(string name, string contents)
         {
             Name = name;
             this.contents = contents;
-            this.MetaData = metaData;
         }
 
         /// <summary>
@@ -34,8 +31,6 @@ namespace DbUp.Engine
         {
             get { return contents; }
         }
-
-        public virtual object MetaData { get; }
 
         /// <summary>
         /// Gets the name of the script.
@@ -84,7 +79,7 @@ namespace DbUp.Engine
                 .Trim('.');
             
             using (FileStream fileStream = new FileStream(path, FileMode.Open, FileAccess.Read))
-                return FromStream(filename, fileStream, encoding, fullPath);
+                return FromStream(filename, fileStream, encoding);
         }
 
         /// <summary>
@@ -92,11 +87,10 @@ namespace DbUp.Engine
         /// </summary>
         /// <param name="scriptName"></param>
         /// <param name="stream"></param>
-        /// <param name="metaData"></param>
         /// <returns></returns>
-        public static SqlScript FromStream(string scriptName, Stream stream, object metaData = null)
+        public static SqlScript FromStream(string scriptName, Stream stream)
         {
-            return FromStream(scriptName, stream, DbUpDefaults.DefaultEncoding, metaData);
+            return FromStream(scriptName, stream, DbUpDefaults.DefaultEncoding);
         }
 
         /// <summary>
@@ -105,14 +99,13 @@ namespace DbUp.Engine
         /// <param name="scriptName"></param>
         /// <param name="stream"></param>
         /// <param name="encoding"></param>
-        /// <param name="metaData"></param>
         /// <returns></returns>
-        public static SqlScript FromStream(string scriptName, Stream stream, Encoding encoding, object metaData = null)
+        public static SqlScript FromStream(string scriptName, Stream stream, Encoding encoding)
         {
             using (var resourceStreamReader = new StreamReader(stream, encoding, true))
             {
                 string c = resourceStreamReader.ReadToEnd();
-                return new SqlScript(scriptName, c, metaData);
+                return new SqlScript(scriptName, c);
             }
         }
     }

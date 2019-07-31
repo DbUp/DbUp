@@ -72,12 +72,6 @@ namespace DbUp.Tests.ScriptProvider
                     .ShouldBe("é");
             }
 
-            [Then]
-            public void files_should_include_metadata()
-            {
-                filesToExecute.ShouldAllBe(x => !string.IsNullOrEmpty(x.MetaData.ToString()));
-            }
-
             public void Dispose()
             {
                 Directory.Delete(testPath, true);
@@ -186,6 +180,40 @@ namespace DbUp.Tests.ScriptProvider
                 filesToExecute.ElementAt(6).Name.ShouldEndWith("Test2__9.sql");
                 filesToExecute.ElementAt(7).Name.ShouldEndWith("Test1__1.sql");
                 filesToExecute.ElementAt(8).Name.ShouldEndWith("Test2__1.sql");
+            }
+
+            public void Dispose()
+            {
+                Directory.Delete(testPath, true);
+            }
+        }
+
+        public class when_returning_scripts_from_a_directory_and_using_fullpath_option : SpecificationFor<FileSystemScriptProvider>,
+            IDisposable
+        {
+            string testPath;
+            IEnumerable<SqlScript> filesToExecute;
+            private FileSystemScriptOptions options;
+
+            public override FileSystemScriptProvider Given()
+            {
+                TestScripts.Create(out testPath);
+                // Given a filter is provided..
+                options = new FileSystemScriptOptions() { IncludeFullPath = true };
+                return new FileSystemScriptProvider(testPath, options);
+            }
+
+
+            protected override void When()
+            {
+                filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
+            }
+
+            [Then]
+            public void files_should_include_fullpath()
+            {
+                filesToExecute.ShouldAllBe(x => x is SqlScriptWithFullPath);
+                filesToExecute.ShouldAllBe(x => !string.IsNullOrEmpty((x as SqlScriptWithFullPath).FullPath));
             }
 
             public void Dispose()
