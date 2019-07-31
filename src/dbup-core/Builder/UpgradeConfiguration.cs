@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Filters;
 using DbUp.Engine.Output;
@@ -81,6 +82,12 @@ namespace DbUp.Builder
         /// change how numbers are handled or support the renaming of scripts
         /// </summary>
         public ScriptNameComparer ScriptNameComparer { get; set; } = new ScriptNameComparer(StringComparer.Ordinal);
+
+        /// <summary>
+        /// Gets or sets the orderer by which scripts are ordered before execution.
+        /// By implementing your own orderer you can perform complex scenarios where the metadata of a SqlScript is taken into account.
+        /// </summary>
+        public Func<IEnumerable<SqlScript>, ScriptNameComparer, IOrderedEnumerable<SqlScript>> ScriptOrderer { get; set; } = (scripts, comparer) => scripts.OrderBy(script => script.Name, comparer);
 
         /// <summary>
         /// Gets or sets the script filter, which filters the scripts before execution
