@@ -6,17 +6,31 @@ DeployChanges.To
   .WithVariable("TestVariable", "Value")
 ```
 
-Then in your database script:
+For more than one variable, use a Dictionary:
+``` csharp
+var myVariables = new Dictionary<string, string>
+{
+  {"Variable1", "Value1"},
+  {"Variable2", "Value2"},
+  {"Variable3", "Value3"},
+  ...
+};
+
+DeployChanges.To
+  .SqlDatabase(..)
+  .WithVariables(myVariables)
+```
+
+Then in your database script, you need to enclose all variables in ```$``` signs, for example ```$variable$```:
 
 ```
 -- $TestVariable$ $AnotherVariable$
 print '$TestVariable$'
-SELECT * FROM dbo.$TestVariable
+SELECT * FROM dbo.$TestVariable$
 ```
 
-Will execute:
+Will result in:
 ```
--- Value $AnotherVariable$
 print 'Value'
 SELECT * FROM dbo.Value
 ```
