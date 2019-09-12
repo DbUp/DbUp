@@ -31,6 +31,7 @@ namespace DbUp.Tests
 #if !NETCORE
         [InlineData(typeof(FirebirdExtensions))]
         [InlineData(typeof(SqlCeExtensions))]
+        [InlineData(typeof(SqlAnywhereExtensions))]
 #endif
         public void NoPublicApiChanges(Type type)
         {

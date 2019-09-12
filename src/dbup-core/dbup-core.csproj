@@ -27,7 +27,7 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>TRACE;LIBLOG_PORTABLE;LIBLOG_PROVIDERS_ONLY;SUPPORTS_LIBLOG;USE_TYPE_INFO;RELEASE;NETSTANDARD;NETSTANDARD1_3;RELEASE;NETSTANDARD;NETSTANDARD1_3</DefineConstants>
+    <DefineConstants>$(DefineConstants);USE_TYPE_INFO</DefineConstants>
   </PropertyGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3'">
