@@ -65,8 +65,12 @@ namespace DbUp.ScriptProviders
             {
                 files = files.Where(filter).ToList();
             }
-            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
-                .OrderBy(x => x.Name)
+
+            var scripts = options.IncludeFullPath
+                ? files.Select(x => SqlScriptWithFullPath.FromFileWithFullPath(directoryPath, x, encoding))
+                : files.Select(x => SqlScript.FromFile(directoryPath, x, encoding));
+
+            return scripts.OrderBy(x => x.Name)
                 .ToList();
         }
 

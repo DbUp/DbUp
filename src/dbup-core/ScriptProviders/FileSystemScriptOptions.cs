@@ -22,6 +22,11 @@ namespace DbUp.ScriptProviders
         public bool IncludeSubDirectories { get; set; }
 
         /// <summary>
+        /// The provider will keep the full path.
+        /// </summary>
+        public bool IncludeFullPath { get; set; }
+
+        /// <summary>
         /// The filter to be used for filtering files 
         /// <remarks> Files which does not end by .sql are never considered </remarks>
         /// </summary>

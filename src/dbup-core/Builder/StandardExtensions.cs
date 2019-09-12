@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using System.Text;
 using DbUp;
@@ -629,6 +630,12 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder WithScriptNameComparer(this UpgradeEngineBuilder builder, IComparer<string> comparer)
     {
         builder.Configure(b => b.ScriptNameComparer = new ScriptNameComparer(comparer));
+        return builder;
+    }
+
+    public static UpgradeEngineBuilder WithScriptOrderer(this UpgradeEngineBuilder builder, Func<IEnumerable<SqlScript>, ScriptNameComparer, IOrderedEnumerable<SqlScript>> orderer)
+    {
+        builder.Configure(b => b.ScriptOrderer = orderer);
         return builder;
     }
 
