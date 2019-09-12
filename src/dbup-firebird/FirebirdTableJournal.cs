@@ -26,26 +26,23 @@ namespace DbUp.Firebird
 
         static string CreateGeneratorSql(string tableName)
         {
-            return $@"CREATE SEQUENCE {GeneratorName(tableName)}";
+            return $@"
+                CREATE SEQUENCE GEN_{tableName}ID
+                ";
         }
 
         static string CreateTriggerSql(string tableName)
         {
-            return 
-$@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
-    if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({GeneratorName(tableName)},1);
-END;";
+            return $@"
+                CREATE TRIGGER BI_{tableName}ID FOR {tableName} ACTIVE BEFORE INSERT POSITION 0 
+                AS BEGIN
+                    IF (new.SchemaVersionsId IS NULL OR (new.SchemaVersionsId = 0)) 
+                    THEN new.SchemaVersionsId = GEN_ID(GEN_{tableName}ID,1);
+                END;";
         }
 
-        static string GeneratorName(string tableName)
-        {
-            return $"GEN_{tableName}ID";
-        }
-
-        static string TriggerName(string tableName)
-        {
-            return $"BI_{tableName}ID";
-        }
+        static string GeneratorName(string tableName) { return ""; }
+        static string TriggerName(string tableName) { return ""; }
 
         void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
         {
@@ -60,37 +57,44 @@ END;";
         protected override void OnTableCreated(Func<IDbCommand> dbCommandFactory)
         {
             var unqotedTableName = UnquoteSqlObjectName(FqSchemaTableName);
+
             ExecuteCommand(dbCommandFactory, CreateGeneratorSql(unqotedTableName));
-            Log().WriteInformation($"The {GeneratorName(unqotedTableName)} generator has been created");
+            Log().WriteInformation($"The GEN_{unqotedTableName}ID generator has been created");
+
             ExecuteCommand(dbCommandFactory, CreateTriggerSql(unqotedTableName));
-            Log().WriteInformation($"The {TriggerName(unqotedTableName)} trigger has been created");
+            Log().WriteInformation($"The BI_{unqotedTableName}ID trigger has been created");
         }
 
         protected override string DoesTableExistSql()
         {
-            return $"select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = '{UnquotedSchemaTableName}'";
+            return $@"
+                SELECT 1 FROM RDB$RELATIONS WHERE RDB$SYSTEM_FLAG = 0 AND RDB$RELATION_NAME = UPPER('{UnquotedSchemaTableName}')
+                ";
         }
 
         protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
         {
-            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({scriptName}, {applied})";
+            return $@" 
+                INSERT INTO {UnquotedSchemaTableName} (ScriptName, Applied) VALUES ({scriptName}, {applied})
+                ";
         }
 
         protected override string GetJournalEntriesSql()
         {
-            return $"select ScriptName from {FqSchemaTableName} order by ScriptName";
+            return $@"
+                SELECT ScriptName FROM {UnquotedSchemaTableName} ORDER BY ScriptName
+                ";
         }
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            return 
-$@"CREATE TABLE {FqSchemaTableName}
-(
-    schemaversionsid INTEGER NOT NULL,
-    scriptname VARCHAR(255) NOT NULL,
-    applied TIMESTAMP NOT NULL,
-    CONSTRAINT pk_{UnquotedSchemaTableName}_id PRIMARY KEY (schemaversionsid)
-)";
+            return $@"
+                CREATE TABLE {UnquotedSchemaTableName} (
+                    SchemaVersionsId    INTEGER         NOT NULL,
+                    ScriptName          VARCHAR(255)    NOT NULL,
+                    Applied             TIMESTAMP       NOT NULL,
+                    CONSTRAINT pk_{UnquotedSchemaTableName}_id PRIMARY KEY (SchemaVersionsId)
+                )";
         }
     }
 }

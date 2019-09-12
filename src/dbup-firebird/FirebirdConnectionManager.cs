@@ -1,8 +1,7 @@
 ﻿using DbUp.Engine.Transactions;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text.RegularExpressions;
 using FirebirdSql.Data.FirebirdClient;
+using FirebirdSql.Data.Isql;
+using System.Collections.Generic;
 
 namespace DbUp.Firebird
 {
@@ -25,14 +24,22 @@ namespace DbUp.Firebird
         /// <param name="scriptContents">The contents of the script to split.</param>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            //TODO: Possible Change - this is the PostGres version
-            var scriptStatements =
-                Regex.Split(scriptContents, "^\\s*;\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
-                    .Select(x => x.Trim())
-                    .Where(x => x.Length > 0)
-                    .ToArray();
+            var statements = new List<string>();
 
-            return scriptStatements;
+            try
+            {
+                FbScript script = new FbScript(scriptContents);
+                script.Parse();
+
+                foreach (FbStatement stmt in script.Results)
+                    statements.Add(stmt.Text);
+            }
+            catch
+            {
+                statements.Add(scriptContents);
+            }
+
+            return statements.ToArray();
         }
     }
 }
