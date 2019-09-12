@@ -16,7 +16,21 @@ namespace DbUp.Postgresql
         /// Creates a new PostgreSQL database connection.
         /// </summary>
         /// <param name="connectionString">The PostgreSQL connection string.</param>
-        public PostgresqlConnectionManager(string connectionString) : base(new DelegateConnectionFactory(l => new NpgsqlConnection(connectionString)))
+        public PostgresqlConnectionManager(string connectionString) : base(new DelegateConnectionFactory((log, dbManager) =>
+        {
+            var conn = new NpgsqlConnection(connectionString);
+            if (dbManager.IsScriptOutputLogged)
+            {
+                conn.Notice += (sender, e) =>
+                {
+                    if (e?.Notice?.Severity == "NOTICE")
+                    {
+                        log.WriteInformation("{0}\r\n", e.Notice.MessageText);
+                    }
+                };
+            }
+            return conn;
+        }))
         {
         }
 
