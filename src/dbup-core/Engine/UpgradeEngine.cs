@@ -23,6 +23,20 @@ namespace DbUp.Engine
         }
 
         /// <summary>
+        /// An event that is raised after each script is executed.
+        /// </summary>
+        public event EventHandler ScriptExecuted;
+
+        /// <summary>
+        /// Invokes the <see cref="ScriptExecuted"/> event; called whenever a script is executed.
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnScriptExecuted(ScriptExecutedEventArgs e)
+        {
+            ScriptExecuted?.Invoke(this, e);
+        }
+
+        /// <summary>
         /// Determines whether the database is out of date and can be upgraded.
         /// </summary>
         public bool IsUpgradeRequired()
@@ -70,6 +84,8 @@ namespace DbUp.Engine
                         executedScriptName = script.Name;
 
                         configuration.ScriptExecutor.Execute(script, configuration.Variables);
+
+                        OnScriptExecuted(new ScriptExecutedEventArgs(script, configuration.ConnectionManager));
 
                         executed.Add(script);
                     }
