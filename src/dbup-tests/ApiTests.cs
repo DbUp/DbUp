@@ -39,7 +39,7 @@ namespace DbUp.Tests
             this.Assent(result, config);
         }
 
-        private string GetPublicApi(Assembly assembly)
+        string GetPublicApi(Assembly assembly)
         {
             var sb = new StringBuilder();
 
@@ -71,7 +71,7 @@ namespace DbUp.Tests
             return sb.ToString();
         }
 
-        private static void AppendAttributes(StringBuilder sb, int indent, IList<CustomAttributeData> customAttributes, bool isAssembly)
+        static void AppendAttributes(StringBuilder sb, int indent, IList<CustomAttributeData> customAttributes, bool isAssembly)
         {
             var c = customAttributes.Where(a => a.AttributeType.Namespace != "System.Reflection")
                 .Where(a => a.AttributeType.Namespace != "System.Diagnostics")
@@ -96,7 +96,7 @@ namespace DbUp.Tests
             }
         }
 
-        private static void AppendAttributeArguments(StringBuilder sb, CustomAttributeData attribute)
+        static void AppendAttributeArguments(StringBuilder sb, CustomAttributeData attribute)
         {
             var isFirst = true;
             sb.Append("(");
@@ -122,7 +122,7 @@ namespace DbUp.Tests
             sb.Append(")");
         }
 
-        private void AppendTypes(StringBuilder sb, int indent, IEnumerable<Type> types)
+        void AppendTypes(StringBuilder sb, int indent, IEnumerable<Type> types)
         {
             foreach (var type in types)
             {
@@ -135,7 +135,7 @@ namespace DbUp.Tests
             }
         }
 
-        private void AppendEnum(StringBuilder sb, int indent, Type type)
+        void AppendEnum(StringBuilder sb, int indent, Type type)
         {
             sb.Append(' ', indent)
                 .Append(type.IsNestedFamily ? "protected" : "public")
@@ -158,7 +158,7 @@ namespace DbUp.Tests
                 .AppendLine("}");
         }
 
-        private void AppendClassOrInterface(StringBuilder sb, int indent, Type type)
+        void AppendClassOrInterface(StringBuilder sb, int indent, Type type)
         {
             sb.Append(' ', indent)
                 .Append(type.IsNestedFamily ? "protected " : "public ");
@@ -203,7 +203,7 @@ namespace DbUp.Tests
             sb.Append(' ', indent).AppendLine("}");
         }
 
-        private void AppendMembers(StringBuilder sb, Type type, int indent)
+        void AppendMembers(StringBuilder sb, Type type, int indent)
         {
             var bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
@@ -229,7 +229,7 @@ namespace DbUp.Tests
             AppendTypes(sb, indent, nested);
         }
 
-        private void AppendConstructors(StringBuilder sb, int indent, ConstructorInfo ctor)
+        void AppendConstructors(StringBuilder sb, int indent, ConstructorInfo ctor)
         {
             AppendAttributes(sb, indent, ctor.GetCustomAttributesData(), false);
 
@@ -242,7 +242,7 @@ namespace DbUp.Tests
             sb.AppendLine(" { }");
         }
 
-        private static void AppendField(StringBuilder sb, int indent, FieldInfo field)
+        static void AppendField(StringBuilder sb, int indent, FieldInfo field)
         {
             AppendAttributes(sb, indent, field.GetCustomAttributesData(), false);
 
@@ -272,7 +272,7 @@ namespace DbUp.Tests
             sb.AppendLine(";");
         }
 
-        private static void AppendEvent(StringBuilder sb, int indent, EventInfo evt)
+        static void AppendEvent(StringBuilder sb, int indent, EventInfo evt)
         {
             AppendAttributes(sb, indent, evt.GetCustomAttributesData(), false);
 
@@ -297,7 +297,7 @@ namespace DbUp.Tests
                 .AppendLine(";");
         }
 
-        private static void AppendProperty(StringBuilder sb, Type type, int indent, PropertyInfo property)
+        static void AppendProperty(StringBuilder sb, Type type, int indent, PropertyInfo property)
         {
             AppendAttributes(sb, indent, property.GetCustomAttributesData(), false);
 
@@ -342,7 +342,7 @@ namespace DbUp.Tests
             }
         }
 
-        private void AppendMethod(StringBuilder sb, int indent, MethodInfo method)
+        void AppendMethod(StringBuilder sb, int indent, MethodInfo method)
         {
             AppendAttributes(sb, indent, method.GetCustomAttributesData(), false);
 
@@ -371,22 +371,24 @@ namespace DbUp.Tests
                 sb.AppendLine(";");
         }
 
-        private void AppendGenericArguments(StringBuilder sb, Type[] genericArguments)
+        void AppendGenericArguments(StringBuilder sb, Type[] genericArguments)
         {
             sb.Append("<")
                 .Append(GetTypeList(genericArguments))
                 .Append(">");
         }
 
-        private static string GetTypeList(IReadOnlyList<Type> genericArguments) => string.Join(", ", genericArguments.Select(GetTypeName));
+        static string GetTypeList(IReadOnlyList<Type> genericArguments) => string.Join(", ", genericArguments.Select(GetTypeName));
 
-        private static void AppendModifiers(StringBuilder sb, MethodInfo method)
+        static void AppendModifiers(StringBuilder sb, MethodInfo method)
         {
             if (method.IsStatic)
                 sb.Append("static ");
 
             if (method.IsAbstract)
+            {
                 sb.Append("abstract ");
+            }
             else if (method.IsVirtual && !method.IsFinal)
             {
                 if (method.Attributes.HasFlag(MethodAttributes.VtableLayoutMask))
@@ -396,7 +398,7 @@ namespace DbUp.Tests
             }
         }
 
-        private void AppendParameters(StringBuilder sb, MethodInfo method, ParameterInfo[] parameters)
+        void AppendParameters(StringBuilder sb, MethodInfo method, ParameterInfo[] parameters)
         {
             sb.Append("(");
             if (method?.GetCustomAttribute<ExtensionAttribute>() != null)
@@ -430,7 +432,7 @@ namespace DbUp.Tests
             sb.Append(")");
         }
 
-        private static string FormatValue(object value)
+        static string FormatValue(object value)
         {
             if (value == null)
                 return "null";
@@ -444,7 +446,7 @@ namespace DbUp.Tests
             return asString ? $"\"{value}\"" : "" + value;
         }
 
-        private static string GetTypeName(Type type)
+        static string GetTypeName(Type type)
         {
             if (type.IsArray)
                 return GetTypeName(type.GetElementType()) + "[]";

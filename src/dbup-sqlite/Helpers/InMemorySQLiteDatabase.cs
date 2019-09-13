@@ -20,9 +20,9 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class InMemorySQLiteDatabase : IDisposable
     {
-        private readonly SQLiteConnectionManager connectionManager;
-        private readonly AdHocSqlRunner sqlRunner;
-        private readonly SQLiteConnection sharedConnection;
+        readonly SQLiteConnectionManager connectionManager;
+        readonly AdHocSqlRunner sqlRunner;
+        readonly SQLiteConnection sharedConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="InMemorySQLiteDatabase"/> class.

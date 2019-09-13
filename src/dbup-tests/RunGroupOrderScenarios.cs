@@ -17,13 +17,13 @@ namespace DbUp.Tests
          SoThat = "So that my application's database is up to date")]
     public class RunGroupOrderScenarios
     {
-        private readonly List<SqlScript> scripts;
-        private readonly UpgradeEngineBuilder upgradeEngineBuilder;
-        private readonly CaptureLogsLogger logger;
-        private readonly DelegateConnectionFactory testConnectionFactory;
-        private readonly RecordingDbConnection recordingConnection;
-        private DatabaseUpgradeResult upgradeResult;
-        private UpgradeEngine upgradeEngine;
+        readonly List<SqlScript> scripts;
+        readonly UpgradeEngineBuilder upgradeEngineBuilder;
+        readonly CaptureLogsLogger logger;
+        readonly DelegateConnectionFactory testConnectionFactory;
+        readonly RecordingDbConnection recordingConnection;
+        DatabaseUpgradeResult upgradeResult;
+        UpgradeEngine upgradeEngine;
 
         public RunGroupOrderScenarios()
         {
@@ -57,13 +57,13 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void AndShouldLogInformation()
+        void AndShouldLogInformation()
         {
             logger.InfoMessages.ShouldContain("Beginning database upgrade");
             logger.InfoMessages.ShouldContain("Upgrade successful");
         }
 
-        private void AndShouldHaveRunAllScriptsInOrder()
+        void AndShouldHaveRunAllScriptsInOrder()
         {
             // Check both results and journal
             upgradeResult.Scripts
@@ -71,16 +71,16 @@ namespace DbUp.Tests
                 .ShouldBe(new[] { "ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql" });
         }
 
-        private void ThenShouldHaveSuccessfulResult()
+        void ThenShouldHaveSuccessfulResult()
         {
             upgradeResult.Successful.ShouldBeTrue();
         }
 
-        private void GivenAnOutOfDateDatabase()
+        void GivenAnOutOfDateDatabase()
         {
         }
 
-        private void WhenDatabaseIsUpgraded()
+        void WhenDatabaseIsUpgraded()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             upgradeResult = upgradeEngine.PerformUpgrade();
@@ -88,7 +88,7 @@ namespace DbUp.Tests
 
         public class TestScriptProvider : IScriptProvider
         {
-            private readonly List<SqlScript> sqlScripts;
+            readonly List<SqlScript> sqlScripts;
 
             public TestScriptProvider(List<SqlScript> sqlScripts)
             {

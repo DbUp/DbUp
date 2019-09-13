@@ -6,7 +6,7 @@ namespace DbUp.Engine.Output
 {
     public class AutodetectUpgradeLog : IUpgradeLog
     {
-        private readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
+        readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
                                       ?? LogToConsoleInstead;
 
         public void WriteInformation(string format, params object[] args) => log(LogLevel.Info, () => format, null, args);
@@ -15,7 +15,7 @@ namespace DbUp.Engine.Output
 
         public void WriteWarning(string format, params object[] args) => log(LogLevel.Warn, () => format, null, args);
 
-        private static bool LogToConsoleInstead(LogLevel level, Func<string> format, Exception exception, object[] args)
+        static bool LogToConsoleInstead(LogLevel level, Func<string> format, Exception exception, object[] args)
         {
             ConsoleColor GetColor()
             {

@@ -17,14 +17,14 @@ namespace DbUp.Tests
          SoThat = "So that run always scripts always run and the run once script only run once")]
     public class ScriptTypeScenarios
     {
-        private readonly List<SqlScript> scripts;
-        private readonly UpgradeEngineBuilder upgradeEngineBuilder;
-        private readonly CaptureLogsLogger logger;
-        private readonly DelegateConnectionFactory testConnectionFactory;
-        private readonly RecordingDbConnection recordingConnection;
-        private DatabaseUpgradeResult upgradeResult;
-        private UpgradeEngine upgradeEngine;
-        private bool isUpgradeRequired;
+        readonly List<SqlScript> scripts;
+        readonly UpgradeEngineBuilder upgradeEngineBuilder;
+        readonly CaptureLogsLogger logger;
+        readonly DelegateConnectionFactory testConnectionFactory;
+        readonly RecordingDbConnection recordingConnection;
+        DatabaseUpgradeResult upgradeResult;
+        UpgradeEngine upgradeEngine;
+        bool isUpgradeRequired;
 
         public ScriptTypeScenarios()
         {
@@ -86,13 +86,13 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void AndShouldLogInformation()
+        void AndShouldLogInformation()
         {
             logger.InfoMessages.ShouldContain("Beginning database upgrade");
             logger.InfoMessages.ShouldContain("Upgrade successful");
         }
 
-        private void AndShouldHaveRunAllScriptsInOrder()
+        void AndShouldHaveRunAllScriptsInOrder()
         {
             // Check both results and journal
             upgradeResult.Scripts
@@ -100,50 +100,50 @@ namespace DbUp.Tests
                 .ShouldBe(new[] { "Script1.sql", "Script2.sql", "Script3.sql" });
         }
 
-        private void ThenShouldHaveOnlyRunAlwaysScripts()
+        void ThenShouldHaveOnlyRunAlwaysScripts()
         {
             upgradeResult.Scripts.Select(s => s.Name).ShouldBe(new[] { "Script3.sql" });
         }
 
-        private void ThenShouldHaveSuccessfulResult()
+        void ThenShouldHaveSuccessfulResult()
         {
             upgradeResult.Successful.ShouldBeTrue();
         }
 
-        private void GivenAnOutOfDateDatabase()
+        void GivenAnOutOfDateDatabase()
         {
         }
 
-        private void GivenAnUpToDateDatabase()
+        void GivenAnUpToDateDatabase()
         {
             recordingConnection.SetupRunScripts(scripts[0], scripts[1], scripts[2]);
         }
 
-        private void WhenCheckIfDatabaseUpgradeIsRequired()
+        void WhenCheckIfDatabaseUpgradeIsRequired()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             isUpgradeRequired = upgradeEngine.IsUpgradeRequired();
         }
 
-        private void WhenDatabaseIsUpgraded()
+        void WhenDatabaseIsUpgraded()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             upgradeResult = upgradeEngine.PerformUpgrade();
         }
 
-        private void ThenUpgradeShouldNotBeRequired()
+        void ThenUpgradeShouldNotBeRequired()
         {
             isUpgradeRequired.ShouldBeFalse();
         }
 
-        private void ThenUpgradeShouldBeRequired()
+        void ThenUpgradeShouldBeRequired()
         {
             isUpgradeRequired.ShouldBeTrue();
         }
 
         public class TestScriptProvider : IScriptProvider
         {
-            private readonly List<SqlScript> sqlScripts;
+            readonly List<SqlScript> sqlScripts;
 
             public TestScriptProvider(List<SqlScript> sqlScripts)
             {

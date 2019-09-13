@@ -7,8 +7,8 @@ namespace DbUp.Engine
     /// </summary>
     public class LazySqlScript : SqlScript
     {
-        private readonly Func<string> contentProvider;
-        private string content;
+        readonly Func<string> contentProvider;
+        string content;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="LazySqlScript"/> class.

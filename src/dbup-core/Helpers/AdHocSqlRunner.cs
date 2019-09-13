@@ -13,11 +13,11 @@ namespace DbUp.Helpers
     /// </summary>
     public class AdHocSqlRunner
     {
-        private readonly IScriptPreprocessor[] additionalScriptPreprocessors;
-        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
-        private readonly Func<IDbCommand> commandFactory;
-        private readonly Func<bool> variablesEnabled;
-        private readonly ISqlObjectParser sqlObjectParser;
+        readonly IScriptPreprocessor[] additionalScriptPreprocessors;
+        readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+        readonly Func<IDbCommand> commandFactory;
+        readonly Func<bool> variablesEnabled;
+        readonly ISqlObjectParser sqlObjectParser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
@@ -132,7 +132,7 @@ namespace DbUp.Helpers
             return results;
         }
 
-        private void Execute(string commandText, IEnumerable<Expression<Func<string, object>>> parameters, Action<IDbCommand> executor)
+        void Execute(string commandText, IEnumerable<Expression<Func<string, object>>> parameters, Action<IDbCommand> executor)
         {
             commandText = Preprocess(commandText);
             using (var command = commandFactory())
@@ -153,7 +153,7 @@ namespace DbUp.Helpers
             }
         }
 
-        private string Preprocess(string query)
+        string Preprocess(string query)
         {
             if (string.IsNullOrEmpty(Schema))
                 query = new StripSchemaPreprocessor().Process(query);

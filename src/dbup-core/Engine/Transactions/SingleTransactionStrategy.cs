@@ -5,14 +5,14 @@ using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
-    internal class SingleTransactionStrategy : ITransactionStrategy
+    class SingleTransactionStrategy : ITransactionStrategy
     {
-        private IDbConnection connection;
-        private IDbTransaction transaction;
-        private bool errorOccured;
-        private IUpgradeLog log;
-        private SqlScript[] executedScriptsListBeforeExecution;
-        private List<SqlScript> executedScriptsCollection;
+        IDbConnection connection;
+        IDbTransaction transaction;
+        bool errorOccured;
+        IUpgradeLog log;
+        SqlScript[] executedScriptsListBeforeExecution;
+        List<SqlScript> executedScriptsCollection;
 
         public void Execute(Action<Func<IDbCommand>> action)
         {

@@ -6,9 +6,9 @@ namespace DbUp.Support
 {
     public abstract class SqlObjectParser : ISqlObjectParser
     {
-        private readonly string quotePrefix;
-        private readonly string quoteSuffix;
-        private readonly Regex matchQuotes;
+        readonly string quotePrefix;
+        readonly string quoteSuffix;
+        readonly Regex matchQuotes;
 
         protected SqlObjectParser(string quotePrefix, string quoteSuffix)
         {

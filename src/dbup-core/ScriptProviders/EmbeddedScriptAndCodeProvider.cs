@@ -12,10 +12,10 @@ namespace DbUp.ScriptProviders
     /// </summary>
     public class EmbeddedScriptAndCodeProvider : IScriptProvider
     {
-        private readonly EmbeddedScriptProvider embeddedScriptProvider;
-        private readonly Assembly assembly;
-        private readonly Func<string, bool> filter;
-        private readonly SqlScriptOptions sqlScriptOptions;
+        readonly EmbeddedScriptProvider embeddedScriptProvider;
+        readonly Assembly assembly;
+        readonly Func<string, bool> filter;
+        readonly SqlScriptOptions sqlScriptOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
@@ -63,7 +63,7 @@ namespace DbUp.ScriptProviders
             embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
         }
 
-        private IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)
+        IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)
         {
             var script = typeof(IScript);
             return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory => assembly

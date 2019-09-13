@@ -9,7 +9,7 @@ namespace DbUp.Oracle
 {
     public class OracleTableJournal : TableJournal
     {
-        private bool journalExists;
+        bool journalExists;
         /// <summary>
         /// Creates a new Oracle table journal.
         /// </summary>

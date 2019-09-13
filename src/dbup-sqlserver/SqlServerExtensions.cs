@@ -65,7 +65,7 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
-    private static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema)
+    static UpgradeEngineBuilder SqlDatabase(IConnectionManager connectionManager, string schema)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
@@ -335,7 +335,7 @@ public static class SqlServerExtensions
         }
     }
 
-    private static void GetMasterConnectionStringBuilder(string connectionString, IUpgradeLog logger, out string masterConnectionString, out string databaseName)
+    static void GetMasterConnectionStringBuilder(string connectionString, IUpgradeLog logger, out string masterConnectionString, out string databaseName)
     {
         if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
             throw new ArgumentNullException("connectionString");
@@ -359,7 +359,7 @@ public static class SqlServerExtensions
         masterConnectionString = masterConnectionStringBuilder.ConnectionString;
     }
 
-    private static bool DatabaseExists(SqlConnection connection, string databaseName)
+    static bool DatabaseExists(SqlConnection connection, string databaseName)
     {
         var sqlCommandText = string.Format
         (

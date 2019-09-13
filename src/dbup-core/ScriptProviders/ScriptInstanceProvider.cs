@@ -6,11 +6,11 @@ using DbUp.Engine.Transactions;
 
 namespace DbUp.ScriptProviders
 {
-    internal class ScriptInstanceProvider : IScriptProvider
+    class ScriptInstanceProvider : IScriptProvider
     {
-        private readonly IScript[] scripts;
-        private readonly Func<IScript, string> namer;
-        private readonly SqlScriptOptions sqlScriptOptions;
+        readonly IScript[] scripts;
+        readonly Func<IScript, string> namer;
+        readonly SqlScriptOptions sqlScriptOptions;
 
         /// <summary>
         /// Provider used to directly include an IScript instance during migrations

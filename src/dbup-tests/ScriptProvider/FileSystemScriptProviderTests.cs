@@ -25,8 +25,8 @@ namespace DbUp.Tests.ScriptProvider
 
         public class when_returning_scripts_from_a_directory : SpecificationFor<FileSystemScriptProvider>, IDisposable
         {
-            private string testPath;
-            private IEnumerable<SqlScript> filesToExecute;
+            string testPath;
+            IEnumerable<SqlScript> filesToExecute;
 
             public override FileSystemScriptProvider Given()
             {
@@ -80,10 +80,10 @@ namespace DbUp.Tests.ScriptProvider
         public class when_returning_scripts_from_a_directory_and_using_a_filter : SpecificationFor<FileSystemScriptProvider>,
              IDisposable
         {
-            private string testPath;
-            private IEnumerable<SqlScript> filesToExecute;
-            private bool filterExecuted;
-            private FileSystemScriptOptions options;
+            string testPath;
+            IEnumerable<SqlScript> filesToExecute;
+            bool filterExecuted;
+            FileSystemScriptOptions options;
 
             public override FileSystemScriptProvider Given()
             {
@@ -128,8 +128,8 @@ namespace DbUp.Tests.ScriptProvider
 
         public class when_returning_scripts_from_a_directory_and_using_subdirectories_option : SpecificationFor<FileSystemScriptProvider>, IDisposable
         {
-            private string testPath;
-            private IEnumerable<SqlScript> filesToExecute;
+            string testPath;
+            IEnumerable<SqlScript> filesToExecute;
 
             public override FileSystemScriptProvider Given()
             {

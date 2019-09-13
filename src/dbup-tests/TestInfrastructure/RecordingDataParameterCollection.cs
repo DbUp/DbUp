@@ -6,10 +6,10 @@ using DbUp.Engine.Output;
 
 namespace DbUp.Tests.TestInfrastructure
 {
-    internal class RecordingDataParameterCollection : IDataParameterCollection
+    class RecordingDataParameterCollection : IDataParameterCollection
     {
-        private readonly IUpgradeLog logger;
-        private readonly List<object> backingList;
+        readonly IUpgradeLog logger;
+        readonly List<object> backingList;
 
         public RecordingDataParameterCollection(IUpgradeLog logger)
         {

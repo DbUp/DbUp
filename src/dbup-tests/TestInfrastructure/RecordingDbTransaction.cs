@@ -3,9 +3,9 @@ using System.Data;
 
 namespace DbUp.Tests.TestInfrastructure
 {
-    internal class RecordingDbTransaction : IDbTransaction
+    class RecordingDbTransaction : IDbTransaction
     {
-        private readonly CaptureLogsLogger logger;
+        readonly CaptureLogsLogger logger;
 
         public RecordingDbTransaction(CaptureLogsLogger logger)
         {

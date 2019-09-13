@@ -45,7 +45,7 @@ go";
             parsedSql.ShouldBe(originalSql);
         }
 
-        private class TestSqlParser : SqlParser
+        class TestSqlParser : SqlParser
         {
             public TestSqlParser(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true) : base(sqlText, delimiter, delimiterRequiresWhitespace)
             {

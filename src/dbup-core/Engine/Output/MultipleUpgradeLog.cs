@@ -4,7 +4,7 @@ namespace DbUp.Engine.Output
 {
     public class MultipleUpgradeLog : IUpgradeLog
     {
-        private readonly IUpgradeLog[] upgradeLogs;
+        readonly IUpgradeLog[] upgradeLogs;
 
         public MultipleUpgradeLog(params IUpgradeLog[] upgradeLogs)
         {

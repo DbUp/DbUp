@@ -36,7 +36,7 @@ public static class SqlCeExtensions
     public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
         => SqlCeDatabase(connectionManager);
 
-    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
+    static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);

@@ -55,7 +55,7 @@ namespace DbUp.Tests.Builder
 
         }
 
-        private class TestLog : IUpgradeLog
+        class TestLog : IUpgradeLog
         {
             public bool WasWritten { get; private set; }
             public void WriteInformation(string format, params object[] args)

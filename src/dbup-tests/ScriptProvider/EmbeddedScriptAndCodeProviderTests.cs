@@ -15,7 +15,7 @@ namespace DbUp.Tests.ScriptProvider
     {
         public class when_no_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
         {
-            private SqlScript[] scriptsToExecute;
+            SqlScript[] scriptsToExecute;
 
             public override EmbeddedScriptAndCodeProvider Given()
             {
@@ -59,7 +59,7 @@ namespace DbUp.Tests.ScriptProvider
 
         public class when_a_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
         {
-            private SqlScript[] scriptsToExecute;
+            SqlScript[] scriptsToExecute;
 
             public override EmbeddedScriptAndCodeProvider Given()
             {

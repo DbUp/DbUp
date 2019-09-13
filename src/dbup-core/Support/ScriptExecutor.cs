@@ -17,11 +17,11 @@ namespace DbUp.Support
     /// </summary>
     public abstract class ScriptExecutor : IScriptExecutor
     {
-        private readonly Func<IConnectionManager> connectionManagerFactory;
-        private readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
-        private readonly Func<IJournal> journalFactory;
-        private readonly Func<bool> variablesEnabled;
-        private readonly ISqlObjectParser sqlObjectParser;
+        readonly Func<IConnectionManager> connectionManagerFactory;
+        readonly IEnumerable<IScriptPreprocessor> scriptPreprocessors;
+        readonly Func<IJournal> journalFactory;
+        readonly Func<bool> variablesEnabled;
+        readonly ISqlObjectParser sqlObjectParser;
 
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.

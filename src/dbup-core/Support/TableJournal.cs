@@ -13,8 +13,8 @@ namespace DbUp.Support
     /// </summary>
     public abstract class TableJournal : IJournal
     {
-        private readonly ISqlObjectParser sqlObjectParser;
-        private bool journalExists;
+        readonly ISqlObjectParser sqlObjectParser;
+        bool journalExists;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TableJournal"/> class.

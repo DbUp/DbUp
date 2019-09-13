@@ -24,12 +24,12 @@ namespace DbUp.Firebird
         {
         }
 
-        private static string CreateGeneratorSql(string tableName)
+        static string CreateGeneratorSql(string tableName)
         {
             return $@"CREATE SEQUENCE {GeneratorName(tableName)}";
         }
 
-        private static string CreateTriggerSql(string tableName)
+        static string CreateTriggerSql(string tableName)
         {
             return
 $@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
@@ -37,17 +37,17 @@ $@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT 
 END;";
         }
 
-        private static string GeneratorName(string tableName)
+        static string GeneratorName(string tableName)
         {
             return $"GEN_{tableName}ID";
         }
 
-        private static string TriggerName(string tableName)
+        static string TriggerName(string tableName)
         {
             return $"BI_{tableName}ID";
         }
 
-        private void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
+        void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
         {
             using (var command = dbCommandFactory())
             {

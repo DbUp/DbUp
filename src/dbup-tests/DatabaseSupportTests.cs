@@ -23,13 +23,13 @@ namespace DbUp.Tests
 {
     public class DatabaseSupportTests
     {
-        private IConnectionFactory testConnectionFactory;
-        private UpgradeEngineBuilder upgradeEngineBuilder;
-        private List<SqlScript> scripts;
-        private RecordingDbConnection recordingConnection;
-        private DatabaseUpgradeResult result;
-        private Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
-        private CaptureLogsLogger logger;
+        IConnectionFactory testConnectionFactory;
+        UpgradeEngineBuilder upgradeEngineBuilder;
+        List<SqlScript> scripts;
+        RecordingDbConnection recordingConnection;
+        DatabaseUpgradeResult result;
+        Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
+        CaptureLogsLogger logger;
 
         [Fact]
         public void VerifyBasicSupport()
@@ -78,7 +78,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private ExampleTable DatabaseExampleTable => new ExampleTable("Deploy to")
+        ExampleTable DatabaseExampleTable => new ExampleTable("Deploy to")
                 {
                     new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) =>
                     {
@@ -100,17 +100,17 @@ namespace DbUp.Tests
 #endif
                 };
 
-        private void VariableSubstitutionIsSetup()
+        void VariableSubstitutionIsSetup()
         {
             upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
         }
 
-        private void JournalTableNameIsCustomised()
+        void JournalTableNameIsCustomised()
         {
             upgradeEngineBuilder = addCustomNamedJournalToBuilder(upgradeEngineBuilder, "test", "TestSchemaVersions");
         }
 
-        private void CommandLogReflectsScript(ExampleAction target, string testName)
+        void CommandLogReflectsScript(ExampleAction target, string testName)
         {
             var configuration = new Configuration()
                 .UsingSanitiser(Scrubbers.ScrubDates)
@@ -122,31 +122,31 @@ namespace DbUp.Tests
             this.Assent(logger.Log, configuration);
         }
 
-        private void UpgradeIsSuccessful()
+        void UpgradeIsSuccessful()
         {
             result.Successful.ShouldBe(true);
         }
 
-        private void UpgradeIsPerformed()
+        void UpgradeIsPerformed()
         {
             result = upgradeEngineBuilder.Build().PerformUpgrade();
         }
 
-        private void SingleScriptExists()
+        void SingleScriptExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
         }
 
-        private void SingleScriptWithVariableUsageExists()
+        void SingleScriptWithVariableUsageExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "print $TestVariable$"));
         }
 
-        private void TargetDatabaseIsEmpty()
+        void TargetDatabaseIsEmpty()
         {
         }
 
-        private Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo, Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournal)
+        Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo, Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournal)
         {
             return () =>
             {
@@ -163,10 +163,10 @@ namespace DbUp.Tests
             };
         }
 
-        private class Namer : INamer
+        class Namer : INamer
         {
-            private readonly ExampleAction target;
-            private readonly string testName;
+            readonly ExampleAction target;
+            readonly string testName;
 
             public Namer(ExampleAction target, string testName)
             {

@@ -16,11 +16,11 @@ namespace DbUp.Tests.Engine
     {
         public class when_upgrading_a_database_with_variable_substitution : SpecificationFor<UpgradeEngine>
         {
-            private IJournal versionTracker;
-            private IScriptProvider scriptProvider;
-            private IScriptExecutor scriptExecutor;
-            private IDbConnection dbConnection;
-            private IDbCommand dbCommand;
+            IJournal versionTracker;
+            IScriptProvider scriptProvider;
+            IScriptExecutor scriptExecutor;
+            IDbConnection dbConnection;
+            IDbCommand dbCommand;
 
             public override UpgradeEngine Given()
             {
@@ -58,9 +58,9 @@ namespace DbUp.Tests.Engine
 
         public class when_marking_scripts_as_read : SpecificationFor<UpgradeEngine>
         {
-            private IJournal versionTracker;
-            private IScriptProvider scriptProvider;
-            private IScriptExecutor scriptExecutor;
+            IJournal versionTracker;
+            IScriptProvider scriptProvider;
+            IScriptExecutor scriptExecutor;
 
             public override UpgradeEngine Given()
             {

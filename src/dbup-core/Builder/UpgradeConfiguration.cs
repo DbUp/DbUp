@@ -13,12 +13,12 @@ namespace DbUp.Builder
     /// </summary>
     public class UpgradeConfiguration
     {
-        private readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
-        private readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
-        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+        readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
+        readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
+        readonly Dictionary<string, string> variables = new Dictionary<string, string>();
 
-        private readonly IUpgradeLog defaultLog;
-        private IUpgradeLog log;
+        readonly IUpgradeLog defaultLog;
+        IUpgradeLog log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.

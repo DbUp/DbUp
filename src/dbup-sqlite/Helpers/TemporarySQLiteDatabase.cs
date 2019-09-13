@@ -20,10 +20,10 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class TemporarySQLiteDatabase : IDisposable
     {
-        private readonly string dataSourcePath;
-        private readonly AdHocSqlRunner sqlRunner;
-        private readonly SQLiteConnection sqLiteConnection;
-        private readonly SharedConnection sharedConnection;
+        readonly string dataSourcePath;
+        readonly AdHocSqlRunner sqlRunner;
+        readonly SQLiteConnection sqLiteConnection;
+        readonly SharedConnection sharedConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemporarySQLiteDatabase"/> class.

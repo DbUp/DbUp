@@ -13,11 +13,11 @@ namespace DbUp.ScriptProviders
     ///</summary>
     public class FileSystemScriptProvider : IScriptProvider
     {
-        private readonly string directoryPath;
-        private readonly Func<string, bool> filter;
-        private readonly Encoding encoding;
-        private readonly FileSystemScriptOptions options;
-        private readonly SqlScriptOptions sqlScriptOptions;
+        readonly string directoryPath;
+        readonly Func<string, bool> filter;
+        readonly Encoding encoding;
+        readonly FileSystemScriptOptions options;
+        readonly SqlScriptOptions sqlScriptOptions;
 
         ///<summary>
         ///</summary>
@@ -69,7 +69,7 @@ namespace DbUp.ScriptProviders
                 .ToList();
         }
 
-        private SearchOption ShouldSearchSubDirectories()
+        SearchOption ShouldSearchSubDirectories()
         {
             return options.IncludeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         }

@@ -10,7 +10,7 @@ namespace DbUp.Builder
     /// </summary>
     public class UpgradeEngineBuilder
     {
-        private readonly List<Action<UpgradeConfiguration>> callbacks = new List<Action<UpgradeConfiguration>>();
+        readonly List<Action<UpgradeConfiguration>> callbacks = new List<Action<UpgradeConfiguration>>();
 
         /// <summary>
         /// Adds a callback that will be run to configure the upgrader when Build is called.

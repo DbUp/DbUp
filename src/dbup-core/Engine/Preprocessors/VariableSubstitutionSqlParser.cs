@@ -107,6 +107,6 @@ namespace DbUp.Engine.Preprocessors
             }
         }
 
-        private event Action<string> ReadVariableName;
+        event Action<string> ReadVariableName;
     }
 }

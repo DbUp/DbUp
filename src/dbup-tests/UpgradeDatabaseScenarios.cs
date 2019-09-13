@@ -16,14 +16,14 @@ namespace DbUp.Tests
          SoThat = "So that my application's database is up to date")]
     public class UpgradeDatabaseScenarios
     {
-        private readonly List<SqlScript> scripts;
-        private readonly UpgradeEngineBuilder upgradeEngineBuilder;
-        private readonly CaptureLogsLogger logger;
-        private readonly DelegateConnectionFactory testConnectionFactory;
-        private readonly RecordingDbConnection recordingConnection;
-        private DatabaseUpgradeResult upgradeResult;
-        private UpgradeEngine upgradeEngine;
-        private bool isUpgradeRequired;
+        readonly List<SqlScript> scripts;
+        readonly UpgradeEngineBuilder upgradeEngineBuilder;
+        readonly CaptureLogsLogger logger;
+        readonly DelegateConnectionFactory testConnectionFactory;
+        readonly RecordingDbConnection recordingConnection;
+        DatabaseUpgradeResult upgradeResult;
+        UpgradeEngine upgradeEngine;
+        bool isUpgradeRequired;
 
         public UpgradeDatabaseScenarios()
         {
@@ -110,41 +110,41 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void AndErrorMessageShouldBeLogged()
+        void AndErrorMessageShouldBeLogged()
         {
             logger.Log.ShouldContain("Upgrade failed due to an unexpected exception:");
         }
 
-        private void ConfiguredToUseTransaction()
+        void ConfiguredToUseTransaction()
         {
             upgradeEngineBuilder.WithTransaction();
         }
 
-        private void AndShouldHaveFailedResult()
+        void AndShouldHaveFailedResult()
         {
             upgradeResult.Successful.ShouldBeFalse("Upgrade should not be successful");
         }
 
-        private void AndTheFourthScriptToRunHasAnError()
+        void AndTheFourthScriptToRunHasAnError()
         {
             var errorSql = "slect * from Oops";
             recordingConnection.SetupNonQueryResult(errorSql, () => { throw new TestSqlException(); });
             scripts.Add(new SqlScript("ScriptWithError.sql", errorSql));
         }
 
-        private void AndTheScriptToRunHasAnError()
+        void AndTheScriptToRunHasAnError()
         {
             scripts.Clear();
             AndTheFourthScriptToRunHasAnError();
         }
 
-        private void AndShouldLogInformation()
+        void AndShouldLogInformation()
         {
             logger.InfoMessages.ShouldContain("Beginning database upgrade");
             logger.InfoMessages.ShouldContain("Upgrade successful");
         }
 
-        private void AndShouldHaveRunAllScriptsInOrder()
+        void AndShouldHaveRunAllScriptsInOrder()
         {
             // Check both results and journal
             upgradeResult.Scripts
@@ -152,50 +152,50 @@ namespace DbUp.Tests
                 .ShouldBe(new[] { "Script1.sql", "Script2.sql", "Script3.sql" });
         }
 
-        private void ThenShouldNotRunAnyScripts()
+        void ThenShouldNotRunAnyScripts()
         {
             upgradeResult.Scripts.ShouldBeEmpty();
         }
 
-        private void ThenShouldHaveSuccessfulResult()
+        void ThenShouldHaveSuccessfulResult()
         {
             upgradeResult.Successful.ShouldBeTrue();
         }
 
-        private void GivenAnOutOfDateDatabase()
+        void GivenAnOutOfDateDatabase()
         {
         }
 
-        private void GivenAnUpToDateDatabase()
+        void GivenAnUpToDateDatabase()
         {
             recordingConnection.SetupRunScripts(scripts[0], scripts[1], scripts[2]);
         }
 
-        private void WhenCheckIfDatabaseUpgradeIsRequired()
+        void WhenCheckIfDatabaseUpgradeIsRequired()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             isUpgradeRequired = upgradeEngine.IsUpgradeRequired();
         }
 
-        private void WhenDatabaseIsUpgraded()
+        void WhenDatabaseIsUpgraded()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             upgradeResult = upgradeEngine.PerformUpgrade();
         }
 
-        private void ThenUpgradeShouldNotBeRequired()
+        void ThenUpgradeShouldNotBeRequired()
         {
             isUpgradeRequired.ShouldBeFalse();
         }
 
-        private void ThenUpgradeShouldBeRequired()
+        void ThenUpgradeShouldBeRequired()
         {
             isUpgradeRequired.ShouldBeTrue();
         }
 
         public class TestScriptProvider : IScriptProvider
         {
-            private readonly List<SqlScript> sqlScripts;
+            readonly List<SqlScript> sqlScripts;
 
             public TestScriptProvider(List<SqlScript> sqlScripts)
             {

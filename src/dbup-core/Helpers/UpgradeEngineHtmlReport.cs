@@ -46,7 +46,7 @@ namespace DbUp.Helpers
             File.WriteAllText(fullPath, htmlReport.ToString(), DbUpDefaults.DefaultEncoding);
         }
 
-        private static string GetHtmlHeader(string serverName, string databaseName)
+        static string GetHtmlHeader(string serverName, string databaseName)
         {
             return $@"<!DOCTYPE html>
 <html>
@@ -77,7 +77,7 @@ namespace DbUp.Helpers
 ";
         }
 
-        private static string GetHtmlForScript(SqlScript sqlScript, int counter)
+        static string GetHtmlForScript(SqlScript sqlScript, int counter)
         {
             return $@"<div class=""card"">
 			<div class=""card-header"" id=""script{counter}"">
@@ -100,7 +100,7 @@ namespace DbUp.Helpers
 		</div>";
         }
 
-        private static string GetHtmlFooter()
+        static string GetHtmlFooter()
         {
             return @"
     </div>

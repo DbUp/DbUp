@@ -10,7 +10,7 @@ namespace DbUp.Tests.Support.SqlServer
 
     public class SqlCommandSplitterTests
     {
-        private readonly SqlCommandSplitter sut;
+        readonly SqlCommandSplitter sut;
 
         public SqlCommandSplitterTests()
         {

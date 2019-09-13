@@ -4,7 +4,7 @@ namespace DbUp.Support
 {
     public class ScriptNameComparer : IComparer<string>, IEqualityComparer<string>
     {
-        private readonly IComparer<string> comparer;
+        readonly IComparer<string> comparer;
 
         public ScriptNameComparer(IComparer<string> comparer)
         {

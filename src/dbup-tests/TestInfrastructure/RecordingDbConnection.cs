@@ -5,13 +5,13 @@ using DbUp.Engine;
 
 namespace DbUp.Tests.TestInfrastructure
 {
-    internal class RecordingDbConnection : IDbConnection
+    class RecordingDbConnection : IDbConnection
     {
-        private readonly Dictionary<string, Func<object>> scalarResults = new Dictionary<string, Func<object>>();
-        private readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();
-        private readonly CaptureLogsLogger logger;
-        private readonly string schemaTableName;
-        private SqlScript[] runScripts;
+        readonly Dictionary<string, Func<object>> scalarResults = new Dictionary<string, Func<object>>();
+        readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();
+        readonly CaptureLogsLogger logger;
+        readonly string schemaTableName;
+        SqlScript[] runScripts;
 
         public RecordingDbConnection(CaptureLogsLogger logger, string schemaTableName)
         {

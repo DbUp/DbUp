@@ -9,14 +9,14 @@ namespace DbUp.SqlServer.Helpers
     /// </summary>
     public class TemporarySqlDatabase : IDisposable
     {
-        private const string localSqlInstance = @"(local)";
+        const string localSqlInstance = @"(local)";
 
-        private readonly string connectionString;
-        private readonly AdHocSqlRunner database;
-        private readonly string databaseName;
-        private readonly AdHocSqlRunner master;
-        private readonly SqlConnection sqlConnection;
-        private readonly SqlConnection masterSqlConnection;
+        readonly string connectionString;
+        readonly AdHocSqlRunner database;
+        readonly string databaseName;
+        readonly AdHocSqlRunner master;
+        readonly SqlConnection sqlConnection;
+        readonly SqlConnection masterSqlConnection;
 
         /// <summary>
         /// Creates new TemporarySqlDatabase against (local)

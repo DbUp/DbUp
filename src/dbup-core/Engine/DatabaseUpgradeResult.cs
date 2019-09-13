@@ -8,9 +8,9 @@ namespace DbUp.Engine
     /// </summary>
     public sealed class DatabaseUpgradeResult
     {
-        private readonly List<SqlScript> scripts;
-        private readonly bool successful;
-        private readonly Exception error;
+        readonly List<SqlScript> scripts;
+        readonly bool successful;
+        readonly Exception error;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseUpgradeResult"/> class.

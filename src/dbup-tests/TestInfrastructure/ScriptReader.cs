@@ -4,10 +4,10 @@ using DbUp.Engine;
 
 namespace DbUp.Tests.TestInfrastructure
 {
-    internal class ScriptReader : IDataReader
+    class ScriptReader : IDataReader
     {
-        private readonly SqlScript[] runScripts;
-        private int currentIndex = -1;
+        readonly SqlScript[] runScripts;
+        int currentIndex = -1;
 
         public ScriptReader(SqlScript[] runScripts)
         {

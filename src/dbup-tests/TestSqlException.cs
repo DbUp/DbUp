@@ -2,7 +2,7 @@
 
 namespace DbUp.Tests
 {
-    internal class TestSqlException : Exception
+    class TestSqlException : Exception
     {
     }
 }

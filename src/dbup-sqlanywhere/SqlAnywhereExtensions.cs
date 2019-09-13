@@ -34,7 +34,7 @@ public static class SqlAnywhereExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SqlAnywhere databases.
     /// </returns>
-    private static UpgradeEngineBuilder SqlAnywhereDatabase(IConnectionManager connectionManager, string schema)
+    static UpgradeEngineBuilder SqlAnywhereDatabase(IConnectionManager connectionManager, string schema)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);

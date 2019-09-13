@@ -4,7 +4,7 @@ using DbUp.Engine.Transactions;
 
 namespace DbUp.Tests
 {
-    internal class SubstitutedConnectionConnectionManager : DatabaseConnectionManager
+    class SubstitutedConnectionConnectionManager : DatabaseConnectionManager
     {
         public SubstitutedConnectionConnectionManager(IDbConnection conn) : base(l => conn)
         {

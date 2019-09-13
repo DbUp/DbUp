@@ -9,7 +9,7 @@ namespace DbUp.Tests.Support.SQLite
 {
     public class SQLiteSupportTests
     {
-        private static readonly string dbFilePath = Path.Combine(Environment.CurrentDirectory, "test.db");
+        static readonly string dbFilePath = Path.Combine(Environment.CurrentDirectory, "test.db");
 
         [Fact]
         public void CanUseSQLite()

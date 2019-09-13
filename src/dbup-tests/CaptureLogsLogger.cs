@@ -7,7 +7,7 @@ namespace DbUp.Tests
 {
     public class CaptureLogsLogger : IUpgradeLog
     {
-        private readonly StringBuilder logBuilder = new StringBuilder();
+        readonly StringBuilder logBuilder = new StringBuilder();
         public List<string> InfoMessages { get; } = new List<string>();
         public List<string> WarnMessages { get; } = new List<string>();
         public List<string> ErrorMessages { get; } = new List<string>();

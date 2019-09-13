@@ -33,9 +33,9 @@ namespace DbUp.Tests.Engine
             connectionFactory.TransactionWasOpened.ShouldBeTrue("BeginTransaction was never called");
         }
 
-        private class TransactionCountingConnectionFactory : IConnectionFactory
+        class TransactionCountingConnectionFactory : IConnectionFactory
         {
-            private int transactionCount = 0;
+            int transactionCount = 0;
 
             public bool TransactionWasOpened { get; private set; }
 

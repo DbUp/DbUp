@@ -10,11 +10,11 @@ namespace DbUp.Tests
 {
     public class TransactionScenarios
     {
-        private UpgradeEngineBuilder upgradeEngineBuilder;
-        private RecordingDbConnection testConnection;
-        private SqlScript[] scripts;
-        private readonly CaptureLogsLogger logger;
-        private readonly Configuration assentConfig = new Configuration()
+        UpgradeEngineBuilder upgradeEngineBuilder;
+        RecordingDbConnection testConnection;
+        SqlScript[] scripts;
+        readonly CaptureLogsLogger logger;
+        readonly Configuration assentConfig = new Configuration()
             .UsingNamer(new SubdirectoryNamer("ApprovalFiles"))
             .UsingSanitiser(Scrubbers.ScrubDates);
 
@@ -86,7 +86,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        private void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
+        void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
         {
             scripts = new[]
             {
@@ -99,32 +99,32 @@ namespace DbUp.Tests
                 .PerformUpgrade();
         }
 
-        private void ShouldStopExecution(string testName)
+        void ShouldStopExecution(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        private void ShouldRollbackFailedScriptAndStopExecution(string testName)
+        void ShouldRollbackFailedScriptAndStopExecution(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        private void ShouldExecuteAllScriptsInASingleTransaction(string testName)
+        void ShouldExecuteAllScriptsInASingleTransaction(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        private void ShouldHaveExecutedEachScriptInATransaction(string testName)
+        void ShouldHaveExecutedEachScriptInATransaction(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        private void ShouldExecuteScriptsWithoutUsingATransaction(string testName)
+        void ShouldExecuteScriptsWithoutUsingATransaction(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        private void DbUpSetupToUseSingleTransaction()
+        void DbUpSetupToUseSingleTransaction()
         {
             testConnection = new RecordingDbConnection(logger, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
@@ -133,7 +133,7 @@ namespace DbUp.Tests
                 .WithTransaction();
         }
 
-        private void DbUpSetupToNotUseTransactions()
+        void DbUpSetupToNotUseTransactions()
         {
             testConnection = new RecordingDbConnection(logger, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
@@ -142,7 +142,7 @@ namespace DbUp.Tests
                 .WithoutTransaction();
         }
 
-        private void DbUpSetupToUseTransactionPerScript()
+        void DbUpSetupToUseTransactionPerScript()
         {
             testConnection = new RecordingDbConnection(logger, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
@@ -151,7 +151,7 @@ namespace DbUp.Tests
                 .WithTransactionPerScript();
         }
 
-        private void UpgradeIsPerformedExecutingTwoScripts()
+        void UpgradeIsPerformedExecutingTwoScripts()
         {
             scripts = new[]
             {
