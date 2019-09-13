@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -33,7 +32,7 @@ namespace DbUp.ScriptProviders
         ///<param name="options">Different options for the file system script provider</param>
         public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, new SqlScriptOptions())
         {
-        }        
+        }
 
         /// <summary>
         /// </summary>
@@ -45,8 +44,8 @@ namespace DbUp.ScriptProviders
             if (options == null)
                 throw new ArgumentNullException("options");
             this.directoryPath = directoryPath;
-            this.filter = options.Filter;
-            this.encoding = options.Encoding;
+            filter = options.Filter;
+            encoding = options.Encoding;
             this.options = options;
             this.sqlScriptOptions = sqlScriptOptions;
         }
@@ -57,7 +56,7 @@ namespace DbUp.ScriptProviders
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
             var files = new List<string>();
-            foreach (string scriptExtension in options.Extensions)
+            foreach (var scriptExtension in options.Extensions)
             {
                 files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
             }

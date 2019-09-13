@@ -117,12 +117,12 @@ namespace DbUp.Helpers
                         while (reader.Read())
                         {
                             var line = new Dictionary<string, string>();
-                            for (int i = 0; i < reader.FieldCount; i++)
+                            for (var i = 0; i < reader.FieldCount; i++)
                             {
                                 var name = reader.GetName(i);
                                 var value = reader.GetValue(i);
                                 value = value == DBNull.Value ? null : value.ToString();
-                                line.Add(name, (string) value);
+                                line.Add(name, (string)value);
                             }
                             results.Add(line);
                         }
@@ -132,7 +132,7 @@ namespace DbUp.Helpers
             return results;
         }
 
-        void Execute(string commandText, IEnumerable<Expression<Func<string, object>>> parameters, Action<IDbCommand> executor)
+        private void Execute(string commandText, IEnumerable<Expression<Func<string, object>>> parameters, Action<IDbCommand> executor)
         {
             commandText = Preprocess(commandText);
             using (var command = commandFactory())
@@ -153,7 +153,7 @@ namespace DbUp.Helpers
             }
         }
 
-        string Preprocess(string query)
+        private string Preprocess(string query)
         {
             if (string.IsNullOrEmpty(Schema))
                 query = new StripSchemaPreprocessor().Process(query);

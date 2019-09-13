@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
-using DbUp.Engine.Filters;
 
 namespace DbUp.Engine
 {
@@ -52,7 +51,7 @@ namespace DbUp.Engine
         public bool TryConnect(out string errorMessage)
         {
             return configuration.ConnectionManager.TryConnect(configuration.Log, out errorMessage);
-        }        
+        }
 
         /// <summary>
         /// Performs the database upgrade.

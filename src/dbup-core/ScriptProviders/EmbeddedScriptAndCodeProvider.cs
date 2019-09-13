@@ -4,7 +4,6 @@ using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -16,7 +15,7 @@ namespace DbUp.ScriptProviders
         private readonly EmbeddedScriptProvider embeddedScriptProvider;
         private readonly Assembly assembly;
         private readonly Func<string, bool> filter;
-        private readonly SqlScriptOptions sqlScriptOptions;        
+        private readonly SqlScriptOptions sqlScriptOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
@@ -27,18 +26,18 @@ namespace DbUp.ScriptProviders
             : this(assembly, filter, filter, new SqlScriptOptions())
         {
         }
-        
+
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
         /// <param name="codeScriptFilter">The embedded script filter. If null, filter is used.</param>
-        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter) : this (assembly, filter, codeScriptFilter, new SqlScriptOptions())
+        public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter) : this(assembly, filter, codeScriptFilter, new SqlScriptOptions())
         {
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
@@ -48,8 +47,8 @@ namespace DbUp.ScriptProviders
             : this(assembly, filter, filter, sqlScriptOptions)
         {
         }
-		
-		/// <summary>
+
+        /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptProvider"/> class.
         /// </summary>
         /// <param name="assembly">The assembly.</param>
@@ -80,7 +79,7 @@ namespace DbUp.ScriptProviders
                        !type.IsAbstract;
 #endif
                 })
-                .Select(s => (SqlScript) new LazySqlScript(s.FullName + ".cs", this.sqlScriptOptions, () => ((IScript) Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
+                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", sqlScriptOptions, () => ((IScript)Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
                 .ToList());
         }
 

@@ -7,7 +7,7 @@ namespace DbUp.Engine.Transactions
 {
     internal class TransactionPerScriptStrategy : ITransactionStrategy
     {
-        IDbConnection connection;
+        private IDbConnection connection;
 
         public void Execute(Action<Func<IDbCommand>> action)
         {

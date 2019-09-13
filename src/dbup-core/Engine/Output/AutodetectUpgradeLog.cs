@@ -15,7 +15,7 @@ namespace DbUp.Engine.Output
 
         public void WriteWarning(string format, params object[] args) => log(LogLevel.Warn, () => format, null, args);
 
-        static bool LogToConsoleInstead(LogLevel level, Func<string> format, Exception exception, object[] args)
+        private static bool LogToConsoleInstead(LogLevel level, Func<string> format, Exception exception, object[] args)
         {
             ConsoleColor GetColor()
             {

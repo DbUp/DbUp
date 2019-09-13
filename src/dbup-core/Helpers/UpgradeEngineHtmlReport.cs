@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using DbUp.Engine;
@@ -65,7 +64,7 @@ namespace DbUp.Helpers
             <div class=""alert alert-danger"">& nbsp;JavaScript execution is currently disabled. Enable JavaScript on your browser to view the change report.</div>
     </noscript>
 	<nav class=""navbar navbar-expand-lg navbar-light bg-light"">
-		<a class=""navbar-brand"" href=""#"">DBUp Delta Report Generated {DateTime.Now.ToString()}{(string.IsNullOrEmpty(serverName) == false ? " to upgrade " + serverName + "." + databaseName : string.Empty )}</a>
+		<a class=""navbar-brand"" href=""#"">DBUp Delta Report Generated {DateTime.Now.ToString()}{(string.IsNullOrEmpty(serverName) == false ? " to upgrade " + serverName + "." + databaseName : string.Empty)}</a>
 	</nav>
     <div class=""jumbotron"">
         <h2>DBUp Delta Report</h2>

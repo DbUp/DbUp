@@ -2,7 +2,6 @@
 using System.Reflection;
 using System.Text;
 using DbUp.Engine;
-using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {

@@ -9,7 +9,7 @@ namespace DbUp.Engine.Output
         public MultipleUpgradeLog(params IUpgradeLog[] upgradeLogs)
         {
             var otherMultipleLogs = upgradeLogs.OfType<MultipleUpgradeLog>().ToArray();
-            
+
             this.upgradeLogs = upgradeLogs
                 .Except(otherMultipleLogs)
                 .Concat(otherMultipleLogs.SelectMany(l => l.upgradeLogs))

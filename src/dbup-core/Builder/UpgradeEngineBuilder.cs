@@ -34,7 +34,7 @@ namespace DbUp.Builder
             }
 
             config.Validate();
-            
+
             return new UpgradeEngine(config);
         }
     }

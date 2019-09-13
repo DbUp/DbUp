@@ -29,25 +29,16 @@ namespace DbUp.Engine
         /// <summary>
         /// Gets the scripts that were executed.
         /// </summary>
-        public IEnumerable<SqlScript> Scripts
-        {
-            get { return scripts; }
-        }
+        public IEnumerable<SqlScript> Scripts => scripts;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="DatabaseUpgradeResult"/> is successful.
         /// </summary>
-        public bool Successful
-        {
-            get { return successful; }
-        }
+        public bool Successful => successful;
 
         /// <summary>
         /// Gets the error.
         /// </summary>
-        public Exception Error
-        {
-            get { return error; }
-        }
+        public Exception Error => error;
     }
 }

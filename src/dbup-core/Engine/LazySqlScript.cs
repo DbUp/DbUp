@@ -1,5 +1,4 @@
 ﻿using System;
-using DbUp.Support;
 
 namespace DbUp.Engine
 {
@@ -18,7 +17,7 @@ namespace DbUp.Engine
         /// <param name="contentProvider">The delegate which creates the content at execution time.</param>
         public LazySqlScript(string name, Func<string> contentProvider)
             : this(name, new SqlScriptOptions(), contentProvider)
-        {            
+        {
         }
 
         /// <summary>
@@ -37,9 +36,6 @@ namespace DbUp.Engine
         /// Gets the contents of the script.
         /// </summary>
         /// <value></value>
-        public override string Contents
-        {
-            get { return content ?? (content = contentProvider()); }
-        }
+        public override string Contents => content ?? (content = contentProvider());
     }
 }

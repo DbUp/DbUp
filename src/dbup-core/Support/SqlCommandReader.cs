@@ -28,7 +28,7 @@ namespace DbUp.Support
         {
             while (!HasReachedEnd)
             {
-                this.ReadCharacter += (type, c) =>
+                ReadCharacter += (type, c) =>
                 {
                     switch (type)
                     {
@@ -45,9 +45,9 @@ namespace DbUp.Support
                         default:
                             throw new ArgumentOutOfRangeException("type", type, null);
                     }
-                    
+
                 };
-                this.CommandEnded += () =>
+                CommandEnded += () =>
                 {
                     var commandText = GetCurrentCommandTextFromBuffer();
                     if (commandText.Length > 0)

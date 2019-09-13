@@ -1,6 +1,4 @@
-﻿using System;
-
-namespace DbUp.Support
+﻿namespace DbUp.Support
 {
     public enum ScriptType
     {

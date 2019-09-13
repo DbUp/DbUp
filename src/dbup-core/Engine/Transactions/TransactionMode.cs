@@ -1,5 +1,3 @@
-using System;
-
 namespace DbUp.Engine.Transactions
 {
     /// <summary>
@@ -16,7 +14,7 @@ namespace DbUp.Engine.Transactions
         /// DbUp will run using a single transaction for the whole upgrade operation
         /// </summary>
         SingleTransaction,
-        
+
         /// <summary>
         /// DbUp will create a new connection and transaction per script
         /// </summary>

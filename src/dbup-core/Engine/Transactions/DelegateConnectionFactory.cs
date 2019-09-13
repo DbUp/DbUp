@@ -17,7 +17,7 @@ namespace DbUp.Engine.Transactions
         {
             this.createConnection = createConnection;
         }
-        
+
         public IDbConnection CreateConnection(IUpgradeLog upgradeLog, DatabaseConnectionManager databaseConnectionManager)
         {
             return createConnection(upgradeLog, databaseConnectionManager);

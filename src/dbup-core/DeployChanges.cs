@@ -12,9 +12,6 @@ namespace DbUp
         /// <summary>
         /// Returns the databases supported by DbUp.
         /// </summary>
-        public static SupportedDatabases To
-        {
-            get { return Instance; }
-        }
+        public static SupportedDatabases To => Instance;
     }
 }

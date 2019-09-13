@@ -1,14 +1,14 @@
-﻿using DbUp.Engine;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
+using DbUp.Engine;
 
 namespace DbUp.Support
 {
     public abstract class SqlObjectParser : ISqlObjectParser
     {
-        readonly string quotePrefix;
-        readonly string quoteSuffix;
-        readonly Regex matchQuotes;
+        private readonly string quotePrefix;
+        private readonly string quoteSuffix;
+        private readonly Regex matchQuotes;
 
         protected SqlObjectParser(string quotePrefix, string quoteSuffix)
         {

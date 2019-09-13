@@ -11,7 +11,7 @@ namespace DbUp.Engine.Transactions
 
         public void Execute(Action<Func<IDbCommand>> action)
         {
-            action(()=>connection.CreateCommand());
+            action(() => connection.CreateCommand());
         }
 
         public T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult)

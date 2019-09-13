@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text.RegularExpressions;
-using DbUp.Helpers;
+﻿using System.Collections.Generic;
 
 namespace DbUp.Engine.Preprocessors
 {

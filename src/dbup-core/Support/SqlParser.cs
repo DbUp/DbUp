@@ -49,7 +49,7 @@ namespace DbUp.Support
         /// </summary>
         protected int CurrentIndex
         {
-            get { return currentIndex; }
+            get => currentIndex;
             private set
             {
                 currentIndex = value;
@@ -135,7 +135,7 @@ namespace DbUp.Support
         /// <summary>
         /// Hook to support custom statements
         /// </summary>
-        protected virtual bool IsCustomStatement { get { return false; } }
+        protected virtual bool IsCustomStatement => false;
 
         public override int Read()
         {
@@ -196,24 +196,12 @@ namespace DbUp.Support
         /// <summary>
         /// Has the Command Reader reached the end of the file
         /// </summary>
-        protected bool HasReachedEnd
-        {
-            get
-            {
-                return Peek() == -1;
-            }
-        }
+        protected bool HasReachedEnd => Peek() == -1;
 
         /// <summary>
         /// Is the current character end and of line character
         /// </summary>
-        protected bool IsEndOfLine
-        {
-            get
-            {
-                return CurrentChar == EndOfLineChar;
-            }
-        }
+        protected bool IsEndOfLine => CurrentChar == EndOfLineChar;
 
         /// <summary>
         /// Does current character match the character argument
@@ -242,25 +230,14 @@ namespace DbUp.Support
         /// <summary>
         /// Is character a single quote
         /// </summary>
-        protected bool IsQuote
-        {
-            get
-            {
+        protected bool IsQuote =>
                 // TODO should match double?
-                return CurrentChar == SingleQuoteChar;
-            }
-        }
+                CurrentChar == SingleQuoteChar;
 
         /// <summary>
         /// Is current character WhiteSpace
         /// </summary>
-        protected bool IsWhiteSpace
-        {
-            get
-            {
-                return char.IsWhiteSpace(CurrentChar);
-            }
-        }
+        protected bool IsWhiteSpace => char.IsWhiteSpace(CurrentChar);
 
         /// <summary>
         /// Peek at the next character
@@ -290,21 +267,9 @@ namespace DbUp.Support
             return true;
         }
 
-        private bool IsBeginningOfBracketedText
-        {
-            get
-            {
-                return CurrentChar == OpenBracketChar;
-            }
-        }
+        private bool IsBeginningOfBracketedText => CurrentChar == OpenBracketChar;
 
-        private bool IsEndOfBracketedText
-        {
-            get
-            {
-                return CurrentChar == CloseBracketChar;
-            }
-        }
+        private bool IsEndOfBracketedText => CurrentChar == CloseBracketChar;
 
         private bool IsBeginningOfDashDashComment
         {
@@ -318,13 +283,7 @@ namespace DbUp.Support
             }
         }
 
-        private bool IsBeginningOfSlashStarComment
-        {
-            get
-            {
-                return CurrentChar == SlashChar && Peek() == StarChar;
-            }
-        }
+        private bool IsBeginningOfSlashStarComment => CurrentChar == SlashChar && Peek() == StarChar;
 
         private bool IsBeginningOfDelimiter
         {
@@ -332,22 +291,15 @@ namespace DbUp.Support
             {
                 var lastCharIsNullOrEmpty = char.IsWhiteSpace(LastChar) || LastChar == NullChar || !DelimiterRequiresWhitespace;
                 var isCurrentCharacterStartOfDelimiter = IsCurrentCharEqualTo(Delimiter[0]);
-                string result;
                 return
                     lastCharIsNullOrEmpty &&
                     isCurrentCharacterStartOfDelimiter &&
-                    TryPeek(Delimiter.Length - 1, out result) &&
+                    TryPeek(Delimiter.Length - 1, out var result) &&
                     string.Equals(result, Delimiter.Substring(1), StringComparison.OrdinalIgnoreCase);
             }
         }
 
-        private bool IsEndOfSlashStarComment
-        {
-            get
-            {
-                return LastChar == StarChar && CurrentChar == SlashChar;
-            }
-        }
+        private bool IsEndOfSlashStarComment => LastChar == StarChar && CurrentChar == SlashChar;
 
 
         /// <summary>

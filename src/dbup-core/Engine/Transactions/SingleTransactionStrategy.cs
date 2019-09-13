@@ -69,7 +69,9 @@ namespace DbUp.Engine.Transactions
         public void Dispose()
         {
             if (!errorOccured)
+            {
                 transaction.Commit();
+            }
             else
             {
                 log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");

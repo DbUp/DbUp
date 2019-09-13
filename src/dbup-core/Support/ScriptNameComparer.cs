@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 
 namespace DbUp.Support
 {
@@ -13,7 +12,7 @@ namespace DbUp.Support
         }
 
         public int Compare(string x, string y) => comparer.Compare(x, y);
-        
+
         public bool Equals(string x, string y) => comparer.Compare(x, y) == 0;
 
         public int GetHashCode(string obj) => obj.GetHashCode();

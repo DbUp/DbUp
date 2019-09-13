@@ -27,10 +27,7 @@ namespace DbUp.Engine.Preprocessors
         /// Delimiter character for variables.
         /// Defaults to `$` but can be overriden in derived classes.
         /// </summary>
-        protected virtual char VariableDelimiter
-        {
-            get { return '$'; }
-        }
+        protected virtual char VariableDelimiter => '$';
 
         /// <summary>
         /// Replaces variables in the parsed SQL
@@ -42,9 +39,9 @@ namespace DbUp.Engine.Preprocessors
         {
             var sb = new StringBuilder();
 
-            this.ReadCharacter += (type, c) => sb.Append(c);
+            ReadCharacter += (type, c) => sb.Append(c);
 
-            this.ReadVariableName += (name) =>
+            ReadVariableName += (name) =>
             {
                 if (!variables.ContainsKey(name))
                 {
@@ -54,7 +51,7 @@ namespace DbUp.Engine.Preprocessors
                 sb.Append(variables[name]);
             };
 
-            this.Parse();
+            Parse();
 
             return sb.ToString();
         }

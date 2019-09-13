@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -29,7 +28,7 @@ namespace DbUp.ScriptProviders
         /// <param name="namer">A function that returns the name of the script</param>
         public ScriptInstanceProvider(Func<IScript, string> namer, params IScript[] scripts) : this(namer, new SqlScriptOptions(), scripts)
         {
-        }       
+        }
 
         /// <summary>
         /// Provider used to directly include an IScript instance during migrations
@@ -41,7 +40,7 @@ namespace DbUp.ScriptProviders
         {
             this.scripts = scripts;
             this.namer = namer;
-            this.sqlScriptOptions = sqlScriptOptions;            
+            this.sqlScriptOptions = sqlScriptOptions;
         }
 
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)

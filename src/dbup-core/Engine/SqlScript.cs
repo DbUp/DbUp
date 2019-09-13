@@ -2,7 +2,6 @@
 using System;
 using System.IO;
 using System.Text;
-using DbUp.Support;
 
 namespace DbUp.Engine
 {
@@ -29,9 +28,9 @@ namespace DbUp.Engine
         /// <param name="sqlScriptOptions">The script options.</param>        
         public SqlScript(string name, string contents, SqlScriptOptions sqlScriptOptions)
         {
-            this.Name = name;
-            this.Contents = contents;
-            this.SqlScriptOptions = sqlScriptOptions ?? new SqlScriptOptions();
+            Name = name;
+            Contents = contents;
+            SqlScriptOptions = sqlScriptOptions ?? new SqlScriptOptions();
         }
 
         /// <summary>
@@ -144,7 +143,7 @@ namespace DbUp.Engine
         {
             using (var resourceStreamReader = new StreamReader(stream, encoding, true))
             {
-                string c = resourceStreamReader.ReadToEnd();
+                var c = resourceStreamReader.ReadToEnd();
                 return new SqlScript(scriptName, c, sqlScriptOptions);
             }
         }

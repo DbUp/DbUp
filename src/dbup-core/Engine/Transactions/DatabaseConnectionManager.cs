@@ -10,11 +10,11 @@ namespace DbUp.Engine.Transactions
     /// </summary>
     public abstract class DatabaseConnectionManager : IConnectionManager
     {
-        readonly IConnectionFactory connectionFactory;
-        ITransactionStrategy transactionStrategy;
-        readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
-        IDbConnection upgradeConnection;
-        IConnectionFactory connectionFactoryOverride;
+        private readonly IConnectionFactory connectionFactory;
+        private ITransactionStrategy transactionStrategy;
+        private readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
+        private IDbConnection upgradeConnection;
+        private IConnectionFactory connectionFactoryOverride;
 
         /// <summary>
         /// Manages Database Connections
@@ -133,7 +133,7 @@ namespace DbUp.Engine.Transactions
             return new DelegateDisposable(() => connectionFactoryOverride = null);
         }
 
-        IDbConnection CreateConnection(IUpgradeLog upgradeLog)
+        private IDbConnection CreateConnection(IUpgradeLog upgradeLog)
         {
             return (connectionFactoryOverride ?? connectionFactory).CreateConnection(upgradeLog, this);
         }
