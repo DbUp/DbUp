@@ -121,7 +121,7 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition)
     {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(),-1, azureDatabaseEdition);
+        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), -1, azureDatabaseEdition);
     }
 
     /// <summary>
@@ -135,7 +135,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -160,7 +160,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -173,7 +173,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, collation: collation);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -186,7 +186,7 @@ public static class SqlServerExtensions
     {
         SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), azureDatabaseEdition: azureDatabaseEdition, collation: collation);
     }
-    
+
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -212,16 +212,14 @@ public static class SqlServerExtensions
     /// <param name="collation">The collation name to set during database creation</param>
     /// <returns></returns>
     public static void SqlDatabase(
-        this SupportedDatabasesForEnsureDatabase supported, 
-        string connectionString, 
-        IUpgradeLog logger, 
-        int timeout = -1, 
-        AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None, 
+        this SupportedDatabasesForEnsureDatabase supported,
+        string connectionString,
+        IUpgradeLog logger,
+        int timeout = -1,
+        AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None,
         string collation = null)
     {
-        string databaseName;
-        string masterConnectionString;
-        GetMasterConnectionStringBuilder(connectionString, logger, out masterConnectionString, out databaseName);
+        GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
 
         try
         {
@@ -243,7 +241,7 @@ public static class SqlServerExtensions
             if (DatabaseExists(connection, databaseName))
                 return;
 
-            string collationString = string.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
+            var collationString = string.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
             var sqlCommandText = string.Format
                     (
                         @"create database [{0}]{1}",
@@ -266,9 +264,9 @@ public static class SqlServerExtensions
                     sqlCommandText += " ( EDITION = ''premium'' );";
                     break;
             }
-        
 
-        // Create the database...
+
+            // Create the database...
             using (var command = new SqlCommand(sqlCommandText, connection)
             {
                 CommandType = CommandType.Text
@@ -319,9 +317,7 @@ public static class SqlServerExtensions
     /// <returns></returns>
     public static void SqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
     {
-        string databaseName;
-        string masterConnectionString;
-        GetMasterConnectionStringBuilder(connectionString, logger, out masterConnectionString, out databaseName);
+        GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
 
         using (var connection = new SqlConnection(masterConnectionString))
         {

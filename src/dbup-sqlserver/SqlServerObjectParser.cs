@@ -1,7 +1,7 @@
-﻿using DbUp.Support;
-using System;
-using System.Data.SqlClient;
+﻿using System;
 using System.Linq;
+using DbUp.Support;
+using DbUp.Support;
 
 namespace DbUp.SqlServer
 {
