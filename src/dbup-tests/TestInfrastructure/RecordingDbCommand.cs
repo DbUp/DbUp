@@ -8,11 +8,11 @@ namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbCommand : IDbCommand
     {
-        readonly CaptureLogsLogger logger;
-        readonly SqlScript[] runScripts;
-        readonly string schemaTableName;
-        readonly Dictionary<string, Func<object>> scalarResults;
-        readonly Dictionary<string, Func<int>> nonQueryResults;
+        private readonly CaptureLogsLogger logger;
+        private readonly SqlScript[] runScripts;
+        private readonly string schemaTableName;
+        private readonly Dictionary<string, Func<object>> scalarResults;
+        private readonly Dictionary<string, Func<int>> nonQueryResults;
 
         public RecordingDbCommand(CaptureLogsLogger logger, SqlScript[] runScripts, string schemaTableName,
             Dictionary<string, Func<object>> scalarResults, Dictionary<string, Func<int>> nonQueryResults)
@@ -58,7 +58,7 @@ namespace DbUp.Tests.TestInfrastructure
             return 0;
         }
 
-        void ThrowError()
+        private void ThrowError()
         {
             throw new TestDbException();
         }
@@ -124,7 +124,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public UpdateRowSource UpdatedRowSource { get; set; }
 
-        class TestDbException : DbException
+        private class TestDbException : DbException
         {
         }
     }

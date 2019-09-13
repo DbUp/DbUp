@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using DbUp.Builder;
-using DbUp.Engine;
-using DbUp.Engine.Output;
-using DbUp.Helpers;
-using NSubstitute;
+﻿using System.Collections.Generic;
 using Serilog.Core;
 using Serilog.Events;
-using Shouldly;
-using Xunit;
 
 namespace DbUp.Tests.Engine.Output
 {
@@ -44,7 +36,7 @@ namespace DbUp.Tests.Engine.Output
 #endif
 
 
-        class InMemorySink : ILogEventSink
+        private class InMemorySink : ILogEventSink
         {
             public List<LogEvent> Events { get; } = new List<LogEvent>();
             public void Emit(LogEvent logEvent) => Events.Add(logEvent);

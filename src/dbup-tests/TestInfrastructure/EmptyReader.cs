@@ -117,15 +117,9 @@ namespace DbUp.Tests.TestInfrastructure
 
         public int FieldCount { get; }
 
-        object IDataRecord.this[string name]
-        {
-            get { throw new NotImplementedException(); }
-        }
+        object IDataRecord.this[string name] => throw new NotImplementedException();
 
-        object IDataRecord.this[int i]
-        {
-            get { throw new NotImplementedException(); }
-        }
+        object IDataRecord.this[int i] => throw new NotImplementedException();
 
         public void Dispose()
         {

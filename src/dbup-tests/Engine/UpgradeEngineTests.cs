@@ -1,14 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using NUnit.Framework;
-using DbUp.SqlServer;
 using Shouldly;
 
 namespace DbUp.Tests.Engine
@@ -17,11 +16,11 @@ namespace DbUp.Tests.Engine
     {
         public class when_upgrading_a_database_with_variable_substitution : SpecificationFor<UpgradeEngine>
         {
-            IJournal versionTracker;
-            IScriptProvider scriptProvider;
-            IScriptExecutor scriptExecutor;
-            IDbConnection dbConnection;
-            IDbCommand dbCommand;
+            private IJournal versionTracker;
+            private IScriptProvider scriptProvider;
+            private IScriptExecutor scriptExecutor;
+            private IDbConnection dbConnection;
+            private IDbCommand dbCommand;
 
             public override UpgradeEngine Given()
             {
@@ -59,9 +58,9 @@ namespace DbUp.Tests.Engine
 
         public class when_marking_scripts_as_read : SpecificationFor<UpgradeEngine>
         {
-            IJournal versionTracker;
-            IScriptProvider scriptProvider;
-            IScriptExecutor scriptExecutor;
+            private IJournal versionTracker;
+            private IScriptProvider scriptProvider;
+            private IScriptExecutor scriptExecutor;
 
             public override UpgradeEngine Given()
             {

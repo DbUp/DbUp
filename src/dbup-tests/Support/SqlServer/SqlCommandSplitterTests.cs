@@ -1,7 +1,6 @@
 ﻿using System;
-using NUnit.Framework;
-using System.Text;
 using System.Linq;
+using System.Text;
 using DbUp.Support;
 using Shouldly;
 using Xunit;

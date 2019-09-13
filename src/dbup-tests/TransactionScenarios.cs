@@ -1,10 +1,8 @@
-﻿using System.IO;
-using Assent;
+﻿using Assent;
 using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Tests.TestInfrastructure;
-using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
 
@@ -12,18 +10,18 @@ namespace DbUp.Tests
 {
     public class TransactionScenarios
     {
-        UpgradeEngineBuilder upgradeEngineBuilder;
-        RecordingDbConnection testConnection;
-        SqlScript[] scripts;
-        CaptureLogsLogger logger;
-        Configuration assentConfig = new Configuration()
+        private UpgradeEngineBuilder upgradeEngineBuilder;
+        private RecordingDbConnection testConnection;
+        private SqlScript[] scripts;
+        private readonly CaptureLogsLogger logger;
+        private readonly Configuration assentConfig = new Configuration()
             .UsingNamer(new SubdirectoryNamer("ApprovalFiles"))
             .UsingSanitiser(Scrubbers.ScrubDates);
 
         public TransactionScenarios()
         {
             logger = new CaptureLogsLogger();
-            
+
             // Automatically approve the change, make sure to check the result before committing 
             // assentConfig = assentConfig.UsingReporter((received, approved) => File.Copy(received, approved, true));
         }
@@ -88,7 +86,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
+        private void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
         {
             scripts = new[]
             {
@@ -101,32 +99,32 @@ namespace DbUp.Tests
                 .PerformUpgrade();
         }
 
-        void ShouldStopExecution(string testName)
+        private void ShouldStopExecution(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldRollbackFailedScriptAndStopExecution(string testName)
+        private void ShouldRollbackFailedScriptAndStopExecution(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldExecuteAllScriptsInASingleTransaction(string testName)
+        private void ShouldExecuteAllScriptsInASingleTransaction(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldHaveExecutedEachScriptInATransaction(string testName)
+        private void ShouldHaveExecutedEachScriptInATransaction(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void ShouldExecuteScriptsWithoutUsingATransaction(string testName)
+        private void ShouldExecuteScriptsWithoutUsingATransaction(string testName)
         {
             this.Assent(logger.Log, assentConfig, testName);
         }
 
-        void DbUpSetupToUseSingleTransaction()
+        private void DbUpSetupToUseSingleTransaction()
         {
             testConnection = new RecordingDbConnection(logger, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
@@ -135,7 +133,7 @@ namespace DbUp.Tests
                 .WithTransaction();
         }
 
-        void DbUpSetupToNotUseTransactions()
+        private void DbUpSetupToNotUseTransactions()
         {
             testConnection = new RecordingDbConnection(logger, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
@@ -144,7 +142,7 @@ namespace DbUp.Tests
                 .WithoutTransaction();
         }
 
-        void DbUpSetupToUseTransactionPerScript()
+        private void DbUpSetupToUseTransactionPerScript()
         {
             testConnection = new RecordingDbConnection(logger, "SchemaVersions");
             upgradeEngineBuilder = DeployChanges.To
@@ -153,18 +151,18 @@ namespace DbUp.Tests
                 .WithTransactionPerScript();
         }
 
-        void UpgradeIsPerformedExecutingTwoScripts()
+        private void UpgradeIsPerformedExecutingTwoScripts()
         {
             scripts = new[]
             {
                 new SqlScript("Script0001.sql", "print 'script1'"),
                 new SqlScript("Script0002.sql", "print 'script2'")
             };
-             var result = upgradeEngineBuilder
-                .WithScripts(scripts)
-                .LogTo(logger)
-                .Build()
-                .PerformUpgrade();
+            var result = upgradeEngineBuilder
+               .WithScripts(scripts)
+               .LogTo(logger)
+               .Build()
+               .PerformUpgrade();
         }
     }
 }

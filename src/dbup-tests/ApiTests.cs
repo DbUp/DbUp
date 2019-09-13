@@ -1,7 +1,5 @@
 ﻿using System;
-using System.CodeDom;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -9,13 +7,9 @@ using System.Runtime.CompilerServices;
 using System.Runtime.Versioning;
 using System.Text;
 using Assent;
-using Assent.Namers;
-using Castle.Core.Internal;
-using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Oracle;
 using NSubstitute.Core;
-using Shouldly;
 using Xunit;
 
 namespace DbUp.Tests
@@ -37,7 +31,7 @@ namespace DbUp.Tests
         {
             var assembly = type.Assembly;
             var result = GetPublicApi(assembly);
-            
+
             var config = new Configuration()
                 .UsingExtension("cs")
                 .UsingNamer(m => Path.Combine(Path.GetDirectoryName(m.FilePath), "ApprovalFiles", assembly.GetName().Name));
@@ -45,7 +39,7 @@ namespace DbUp.Tests
             this.Assent(result, config);
         }
 
-        string GetPublicApi(Assembly assembly)
+        private string GetPublicApi(Assembly assembly)
         {
             var sb = new StringBuilder();
 
@@ -56,8 +50,8 @@ namespace DbUp.Tests
             sb.AppendLine();
 
             var namespaces = from t in assembly.GetTypes()
-                where t.IsPublic
-                group t by t.Namespace;
+                             where t.IsPublic
+                             group t by t.Namespace;
 
             foreach (var ns in namespaces.OrderBy(n => n.Key))
             {
@@ -114,8 +108,10 @@ namespace DbUp.Tests
                 isFirst = false;
 
                 if (argumentName != null)
+                {
                     sb.Append(argumentName)
                         .Append(" = ");
+                }
 
                 sb.Append(FormatValue(argumentValue));
             }
@@ -154,10 +150,12 @@ namespace DbUp.Tests
                 .AppendLine("{");
 
             foreach (var value in Enum.GetValues(type))
+            {
                 sb.Append(' ', indent + 4)
                     .Append(Enum.GetName(type, value))
                     .Append(" = ")
                     .AppendLine(Convert.ChangeType(value, type.GetEnumUnderlyingType())?.ToString());
+            }
 
             sb.Append(' ', indent)
                 .AppendLine("}");
@@ -196,8 +194,10 @@ namespace DbUp.Tests
                 baseAndInterfaces.Insert(0, type.BaseType);
 
             if (baseAndInterfaces.Count > 0)
+            {
                 sb.Append(" : ")
                     .Append(GetTypeList(baseAndInterfaces));
+            }
 
             sb.AppendLine();
 
@@ -267,8 +267,10 @@ namespace DbUp.Tests
                 .Append(field.Name);
 
             if (isConst)
+            {
                 sb.Append(" = ")
                     .Append(FormatValue(field.GetValue(null)));
+            }
 
             sb.AppendLine(";");
         }
@@ -389,10 +391,12 @@ namespace DbUp.Tests
             if (method.IsAbstract)
                 sb.Append("abstract ");
             else if (method.IsVirtual && !method.IsFinal)
+            {
                 if (method.Attributes.HasFlag(MethodAttributes.VtableLayoutMask))
                     sb.Append("virtual ");
                 else
                     sb.Append("override ");
+            }
         }
 
         private void AppendParameters(StringBuilder sb, MethodInfo method, ParameterInfo[] parameters)
@@ -420,8 +424,10 @@ namespace DbUp.Tests
                     .Append(parameter.Name);
 
                 if (parameter.IsOptional)
+                {
                     sb.Append(" = ")
                         .Append(FormatValue(parameter.RawDefaultValue));
+                }
             }
 
             sb.Append(")");
@@ -434,7 +440,7 @@ namespace DbUp.Tests
 
             if (value is bool b)
                 return b ? "true" : "false";
-            
+
             var asString = value is string ||
                            value is Guid;
 

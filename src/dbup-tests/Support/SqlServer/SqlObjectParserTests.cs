@@ -1,6 +1,6 @@
 ﻿using System;
-using DbUp.Support;
 using DbUp.SqlServer;
+using DbUp.Support;
 using Shouldly;
 using Xunit;
 

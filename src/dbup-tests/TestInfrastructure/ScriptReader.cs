@@ -6,8 +6,8 @@ namespace DbUp.Tests.TestInfrastructure
 {
     internal class ScriptReader : IDataReader
     {
-        readonly SqlScript[] runScripts;
-        int currentIndex = -1;
+        private readonly SqlScript[] runScripts;
+        private int currentIndex = -1;
 
         public ScriptReader(SqlScript[] runScripts)
         {
@@ -126,10 +126,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public int FieldCount { get; }
 
-        public object this[string name]
-        {
-            get { throw new NotImplementedException(); }
-        }
+        public object this[string name] => throw new NotImplementedException();
 
         public object this[int i] => runScripts[currentIndex].Name;
 

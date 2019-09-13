@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +7,6 @@ using DbUp.Engine.Output;
 using DbUp.ScriptProviders;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using NUnit.Framework;
 using Shouldly;
 
 namespace DbUp.Tests.ScriptProvider

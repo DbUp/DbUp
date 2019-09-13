@@ -1,12 +1,11 @@
 using System;
 using System.Data;
-using DbUp.Engine.Output;
 
 namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbTransaction : IDbTransaction
     {
-        readonly CaptureLogsLogger logger;
+        private readonly CaptureLogsLogger logger;
 
         public RecordingDbTransaction(CaptureLogsLogger logger)
         {

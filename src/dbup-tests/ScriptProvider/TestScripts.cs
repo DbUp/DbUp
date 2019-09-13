@@ -5,7 +5,7 @@ using System.Text.RegularExpressions;
 
 namespace DbUp.Tests.ScriptProvider
 {
-    static class TestScripts
+    internal static class TestScripts
     {
         public static void Create(out string testPath)
         {

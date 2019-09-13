@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
@@ -20,7 +19,7 @@ namespace DbUp.Tests.ScriptProvider
             [Fact]
             public void it_should_throw_when_empty_options()
             {
-                Should.Throw<ArgumentNullException>(() => { new FileSystemScriptProvider("Whatever", (FileSystemScriptOptions)null); });
+                Should.Throw<ArgumentNullException>(() => { new FileSystemScriptProvider("Whatever", null); });
             }
         }
 
@@ -81,21 +80,22 @@ namespace DbUp.Tests.ScriptProvider
         public class when_returning_scripts_from_a_directory_and_using_a_filter : SpecificationFor<FileSystemScriptProvider>,
              IDisposable
         {
-            string testPath;
-            IEnumerable<SqlScript> filesToExecute;
-            bool filterExecuted;
+            private string testPath;
+            private IEnumerable<SqlScript> filesToExecute;
+            private bool filterExecuted;
             private FileSystemScriptOptions options;
 
             public override FileSystemScriptProvider Given()
             {
                 TestScripts.Create(out testPath);
                 // Given a filter is provided..
-                options = new FileSystemScriptOptions() {
+                options = new FileSystemScriptOptions()
+                {
                     Filter = (a) =>
                 {
                     filterExecuted = true;
                     return true;
-                    }
+                }
                 };
                 return new FileSystemScriptProvider(testPath, options);
             }
@@ -130,7 +130,7 @@ namespace DbUp.Tests.ScriptProvider
         {
             private string testPath;
             private IEnumerable<SqlScript> filesToExecute;
-           
+
             public override FileSystemScriptProvider Given()
             {
                 TestScripts.Create(out testPath);
@@ -159,7 +159,7 @@ namespace DbUp.Tests.ScriptProvider
                     sqlScript.Contents.Length.ShouldBeGreaterThan(0);
                 }
             }
-            
+
             [Then]
             public void the_files_should_contain_the_subfolder_name()
             {

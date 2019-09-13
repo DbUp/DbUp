@@ -7,11 +7,11 @@ namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDbConnection : IDbConnection
     {
-        readonly Dictionary<string, Func<object>> scalarResults = new Dictionary<string, Func<object>>();
-        readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();
-        readonly CaptureLogsLogger logger;
-        readonly string schemaTableName;
-        SqlScript[] runScripts;
+        private readonly Dictionary<string, Func<object>> scalarResults = new Dictionary<string, Func<object>>();
+        private readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();
+        private readonly CaptureLogsLogger logger;
+        private readonly string schemaTableName;
+        private SqlScript[] runScripts;
 
         public RecordingDbConnection(CaptureLogsLogger logger, string schemaTableName)
         {

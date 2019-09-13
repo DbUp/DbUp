@@ -2,18 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using Assent;
-using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.SqlServer;
+using DbUp.Oracle;
 using DbUp.SQLite;
-using DbUp.Tests.Helpers;
+using DbUp.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
-using DbUp.Oracle;
 
 #if !NETCORE
 using DbUp.Firebird;
@@ -25,13 +23,13 @@ namespace DbUp.Tests
 {
     public class DatabaseSupportTests
     {
-        IConnectionFactory testConnectionFactory;
-        UpgradeEngineBuilder upgradeEngineBuilder;
-        List<SqlScript> scripts;
-        RecordingDbConnection recordingConnection;
-        DatabaseUpgradeResult result;
-        Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
-        CaptureLogsLogger logger;
+        private IConnectionFactory testConnectionFactory;
+        private UpgradeEngineBuilder upgradeEngineBuilder;
+        private List<SqlScript> scripts;
+        private RecordingDbConnection recordingConnection;
+        private DatabaseUpgradeResult result;
+        private Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournalToBuilder;
+        private CaptureLogsLogger logger;
 
         [Fact]
         public void VerifyBasicSupport()
@@ -80,11 +78,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        ExampleTable DatabaseExampleTable
-        {
-            get
-            {
-                return new ExampleTable("Deploy to")
+        private ExampleTable DatabaseExampleTable => new ExampleTable("Deploy to")
                 {
                     new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) =>
                     {
@@ -105,20 +99,18 @@ namespace DbUp.Tests
                     new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))                    
 #endif
                 };
-            }
-        }
 
-        void VariableSubstitutionIsSetup()
+        private void VariableSubstitutionIsSetup()
         {
             upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
         }
 
-        void JournalTableNameIsCustomised()
+        private void JournalTableNameIsCustomised()
         {
             upgradeEngineBuilder = addCustomNamedJournalToBuilder(upgradeEngineBuilder, "test", "TestSchemaVersions");
         }
 
-        void CommandLogReflectsScript(ExampleAction target, string testName)
+        private void CommandLogReflectsScript(ExampleAction target, string testName)
         {
             var configuration = new Configuration()
                 .UsingSanitiser(Scrubbers.ScrubDates)
@@ -126,35 +118,35 @@ namespace DbUp.Tests
 
             // Automatically approve the change, make sure to check the result before committing 
             // configuration = configuration.UsingReporter((received, approved) => File.Copy(received, approved, true));
-            
+
             this.Assent(logger.Log, configuration);
         }
 
-        void UpgradeIsSuccessful()
+        private void UpgradeIsSuccessful()
         {
             result.Successful.ShouldBe(true);
         }
 
-        void UpgradeIsPerformed()
+        private void UpgradeIsPerformed()
         {
             result = upgradeEngineBuilder.Build().PerformUpgrade();
         }
 
-        void SingleScriptExists()
+        private void SingleScriptExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
         }
 
-        void SingleScriptWithVariableUsageExists()
+        private void SingleScriptWithVariableUsageExists()
         {
             scripts.Add(new SqlScript("Script0001.sql", "print $TestVariable$"));
         }
 
-        void TargetDatabaseIsEmpty()
+        private void TargetDatabaseIsEmpty()
         {
         }
 
-        Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo, Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournal)
+        private Action Deploy(Func<SupportedDatabases, UpgradeEngineBuilder> deployTo, Func<UpgradeEngineBuilder, string, string, UpgradeEngineBuilder> addCustomNamedJournal)
         {
             return () =>
             {

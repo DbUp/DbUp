@@ -8,8 +8,8 @@ namespace DbUp.Tests.TestInfrastructure
 {
     internal class RecordingDataParameterCollection : IDataParameterCollection
     {
-        readonly IUpgradeLog logger;
-        readonly List<object> backingList;
+        private readonly IUpgradeLog logger;
+        private readonly List<object> backingList;
 
         public RecordingDataParameterCollection(IUpgradeLog logger)
         {
@@ -69,8 +69,8 @@ namespace DbUp.Tests.TestInfrastructure
 
         object IList.this[int index]
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
 
         public bool IsReadOnly { get; private set; }
@@ -92,8 +92,8 @@ namespace DbUp.Tests.TestInfrastructure
 
         object IDataParameterCollection.this[string parameterName]
         {
-            get { throw new NotImplementedException(); }
-            set { throw new NotImplementedException(); }
+            get => throw new NotImplementedException();
+            set => throw new NotImplementedException();
         }
     }
 }

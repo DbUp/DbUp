@@ -1,5 +1,4 @@
-﻿using System;
-using System.Data;
+﻿using System.Data;
 using DbUp.Helpers;
 using NSubstitute;
 using Shouldly;
@@ -17,7 +16,7 @@ namespace DbUp.Tests.Helpers
             var connection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
             connection.CreateCommand().Returns(command);
-            
+
             var upgradeEngine = DeployChanges.To
                 .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
                 .WithScript("testscript", "SELECT * FROM BLAH")

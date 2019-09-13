@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Text;
 using DbUp.Support;
-using NUnit.Framework;
 using Shouldly;
 using Xunit;
 
@@ -58,8 +54,8 @@ go";
             public string ParseStuff()
             {
                 var sb = new StringBuilder();
-                this.ReadCharacter += (type, c) => sb.Append(c);
-                this.Parse();
+                ReadCharacter += (type, c) => sb.Append(c);
+                Parse();
 
                 return sb.ToString();
             }

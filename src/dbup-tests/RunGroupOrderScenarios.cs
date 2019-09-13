@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -18,13 +17,13 @@ namespace DbUp.Tests
          SoThat = "So that my application's database is up to date")]
     public class RunGroupOrderScenarios
     {
-        readonly List<SqlScript> scripts;
-        readonly UpgradeEngineBuilder upgradeEngineBuilder;
-        readonly CaptureLogsLogger logger;
-        readonly DelegateConnectionFactory testConnectionFactory;
-        readonly RecordingDbConnection recordingConnection;
-        DatabaseUpgradeResult upgradeResult;
-        UpgradeEngine upgradeEngine;        
+        private readonly List<SqlScript> scripts;
+        private readonly UpgradeEngineBuilder upgradeEngineBuilder;
+        private readonly CaptureLogsLogger logger;
+        private readonly DelegateConnectionFactory testConnectionFactory;
+        private readonly RecordingDbConnection recordingConnection;
+        private DatabaseUpgradeResult upgradeResult;
+        private UpgradeEngine upgradeEngine;
 
         public RunGroupOrderScenarios()
         {
@@ -56,40 +55,40 @@ namespace DbUp.Tests
                 .And(t => t.AndShouldHaveRunAllScriptsInOrder())
                 .And(t => t.AndShouldLogInformation())
                 .BDDfy();
-        }                
+        }
 
-        void AndShouldLogInformation()
+        private void AndShouldLogInformation()
         {
             logger.InfoMessages.ShouldContain("Beginning database upgrade");
             logger.InfoMessages.ShouldContain("Upgrade successful");
         }
 
-        void AndShouldHaveRunAllScriptsInOrder()
+        private void AndShouldHaveRunAllScriptsInOrder()
         {
             // Check both results and journal
             upgradeResult.Scripts
                 .Select(s => s.Name)
-                .ShouldBe(new[] {"ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql" });
+                .ShouldBe(new[] { "ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql" });
         }
 
-        void ThenShouldHaveSuccessfulResult()
+        private void ThenShouldHaveSuccessfulResult()
         {
             upgradeResult.Successful.ShouldBeTrue();
         }
 
-        void GivenAnOutOfDateDatabase()
+        private void GivenAnOutOfDateDatabase()
         {
         }
 
-        void WhenDatabaseIsUpgraded()
+        private void WhenDatabaseIsUpgraded()
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             upgradeResult = upgradeEngine.PerformUpgrade();
-        }        
+        }
 
         public class TestScriptProvider : IScriptProvider
         {
-            readonly List<SqlScript> sqlScripts;
+            private readonly List<SqlScript> sqlScripts;
 
             public TestScriptProvider(List<SqlScript> sqlScripts)
             {
