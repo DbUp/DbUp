@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using DbUp.Support;
 
 namespace DbUp.Oracle
@@ -24,8 +22,7 @@ namespace DbUp.Oracle
         {
             get
             {
-                string statement;
-                return TryPeek(DelimiterKeyword.Length, out statement) &&
+                return TryPeek(DelimiterKeyword.Length, out var statement) &&
                        string.Equals(DelimiterKeyword, statement, StringComparison.OrdinalIgnoreCase);
             }
         }

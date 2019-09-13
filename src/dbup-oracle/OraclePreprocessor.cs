@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DbUp.Engine;
+﻿using DbUp.Engine;
 
 namespace DbUp.Oracle
 {

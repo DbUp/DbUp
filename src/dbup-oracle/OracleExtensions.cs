@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using DbUp.Builder;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 
 namespace DbUp.Oracle
