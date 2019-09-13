@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using System.Data;
 using DbUp.Support;
 
 namespace DbUp.Firebird
@@ -24,30 +24,30 @@ namespace DbUp.Firebird
         {
         }
 
-        static string CreateGeneratorSql(string tableName)
+        private static string CreateGeneratorSql(string tableName)
         {
             return $@"CREATE SEQUENCE {GeneratorName(tableName)}";
         }
 
-        static string CreateTriggerSql(string tableName)
+        private static string CreateTriggerSql(string tableName)
         {
-            return 
+            return
 $@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
     if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({GeneratorName(tableName)},1);
 END;";
         }
 
-        static string GeneratorName(string tableName)
+        private static string GeneratorName(string tableName)
         {
             return $"GEN_{tableName}ID";
         }
 
-        static string TriggerName(string tableName)
+        private static string TriggerName(string tableName)
         {
             return $"BI_{tableName}ID";
         }
 
-        void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
+        private void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
         {
             using (var command = dbCommandFactory())
             {
@@ -83,7 +83,7 @@ END;";
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            return 
+            return
 $@"CREATE TABLE {FqSchemaTableName}
 (
     schemaversionsid INTEGER NOT NULL,

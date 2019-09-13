@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using FirebirdSql.Data.FirebirdClient;
 using DbUp.Support;
+using FirebirdSql.Data.FirebirdClient;
 
 namespace DbUp.Firebird
 {
@@ -32,7 +32,7 @@ namespace DbUp.Firebird
         protected override string GetVerifySchemaSql(string schema)
         {
             throw new NotSupportedException();
-        }   
+        }
 
         protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
         {
