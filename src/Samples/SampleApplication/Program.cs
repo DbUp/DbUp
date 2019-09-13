@@ -4,7 +4,6 @@ using System.Reflection;
 using DbUp;
 using DbUp.Engine;
 using DbUp.Helpers;
-using DbUp.SqlServer.Helpers;
 using DbUp.Support;
 
 namespace SampleApplication
@@ -13,7 +12,7 @@ namespace SampleApplication
     {
         public static void Main(string[] args)
         {
-            string instanceName = @"(local)\SqlExpress";
+            var instanceName = @"(local)\SqlExpress";
             // Uncomment the following line to run against sql local db instance.
             // string instanceName = @"(localdb)\Projects";
 
@@ -23,7 +22,7 @@ namespace SampleApplication
             DropDatabase.For.SqlDatabase(connectionString);
 
             EnsureDatabase.For.SqlDatabase(connectionString);
-            
+
             var upgradeEngineBuilder = DeployChanges.To
                 .SqlDatabase(connectionString, null) //null or "" for default schema for user
                 .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script =>
@@ -33,7 +32,7 @@ namespace SampleApplication
 
                     return script.StartsWith("SampleApplication.Scripts.");
                 })
-                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1})
+                .WithScriptsEmbeddedInAssembly(Assembly.GetExecutingAssembly(), script => script.StartsWith("SampleApplication.RunAlways."), new SqlScriptOptions { ScriptType = ScriptType.RunAlways, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1 })
                 .LogToConsole();
 
             if (args.Any(a => "--withTransaction".Equals(a, StringComparison.InvariantCultureIgnoreCase)))
@@ -54,7 +53,7 @@ namespace SampleApplication
                 upgrader.GenerateUpgradeHtmlReport("UpgradeReport.html");
             }
             else
-            {                
+            {
                 var result = upgrader.PerformUpgrade();
 
                 // Display the result
