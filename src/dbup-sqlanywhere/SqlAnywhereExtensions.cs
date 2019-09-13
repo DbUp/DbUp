@@ -1,6 +1,6 @@
 ﻿using DbUp.Builder;
-using DbUp.SqlAnywhere;
 using DbUp.Engine.Transactions;
+using DbUp.SqlAnywhere;
 
 /// <summary>
 /// Configuration extension methods for SQL Anywhere.

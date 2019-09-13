@@ -13,7 +13,7 @@ namespace DbUp.SqlAnywhere
         /// <summary>
         /// Split text on ; or GO and ignore those between Being and End statements
         /// </summary>
-        private static readonly Regex splitOnCommaOrGoRegEx = new Regex(@"\s*(?:(?<!BEGIN(?:.(?!END))*)(?:;|\n\s*GO\s*\n)(?!(?:.(?<!BEGIN))*END))\s*", 
+        private static readonly Regex splitOnCommaOrGoRegEx = new Regex(@"\s*(?:(?<!BEGIN(?:.(?!END))*)(?:;|\n\s*GO\s*\n)(?!(?:.(?<!BEGIN))*END))\s*",
                                                                         RegexOptions.IgnoreCase | RegexOptions.Singleline);
 
         public SqlAnywhereConnectionManager(string connectionString) : base(l => new SAConnection(connectionString))
@@ -22,7 +22,7 @@ namespace DbUp.SqlAnywhere
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            string[] stringSeparators = new string[] { "GO" };
+            var stringSeparators = new string[] { "GO" };
             var parts = scriptContents.Split(stringSeparators, StringSplitOptions.RemoveEmptyEntries).ToList();
             return parts.Select(x => x.Trim()).Where(x => x.Length > 0).ToArray();
         }

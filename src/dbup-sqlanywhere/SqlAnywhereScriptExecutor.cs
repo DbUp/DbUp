@@ -41,7 +41,7 @@ namespace DbUp.SqlAnywhere
                 excuteCommand();
             }
             catch (Sap.Data.SQLAnywhere.SAException sqlException)
-            {                
+            {
                 Log().WriteInformation("SQLAnywhere exception has occured in script: '{0}'", script.Name);
                 Log().WriteError("Script block number: {0}; Message: {1}", index, sqlException.Message);
                 Log().WriteError(sqlException.ToString());
