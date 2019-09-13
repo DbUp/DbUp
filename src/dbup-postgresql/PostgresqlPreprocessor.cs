@@ -1,5 +1,4 @@
 ﻿using DbUp.Engine;
-using System;
 
 namespace DbUp.Postgresql
 {
