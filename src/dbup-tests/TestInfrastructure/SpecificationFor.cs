@@ -1,5 +1,3 @@
-using System;
-
 namespace DbUp.Tests.TestInfrastructure
 {
     public abstract class SpecificationFor<T>

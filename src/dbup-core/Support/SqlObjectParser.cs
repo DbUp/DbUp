@@ -1,6 +1,6 @@
-﻿using DbUp.Engine;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
+using DbUp.Engine;
 
 namespace DbUp.Support
 {

@@ -1,5 +1,3 @@
-using DbUp.Support;
-
 namespace DbUp.ScriptProviders
 {
     using System;
@@ -15,10 +13,10 @@ namespace DbUp.ScriptProviders
     /// </summary>
     public class EmbeddedScriptsProvider : IScriptProvider
     {
-        private readonly Assembly[] assemblies;
-        private readonly Encoding encoding;
-        private readonly Func<string, bool> filter;
-        private readonly SqlScriptOptions sqlScriptOptions;        
+        readonly Assembly[] assemblies;
+        readonly Encoding encoding;
+        readonly Func<string, bool> filter;
+        readonly SqlScriptOptions sqlScriptOptions;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="EmbeddedScriptsProvider"/> class.

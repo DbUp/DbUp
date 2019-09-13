@@ -14,8 +14,8 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class SharedConnection : IDbConnection
     {
-        private readonly bool connectionAlreadyOpenned;
-        private readonly IDbConnection connection;
+        readonly bool connectionAlreadyOpenned;
+        readonly IDbConnection connection;
 
         /// <summary>
         /// Constructs a new instance
@@ -54,24 +54,18 @@ namespace DbUp.SQLite.Helpers
 
         public string ConnectionString
         {
-            get { return connection.ConnectionString; }
-            set { connection.ConnectionString = value; }
+            get => connection.ConnectionString;
+            set => connection.ConnectionString = value;
         }
 
-        public int ConnectionTimeout
-        {
-            get { return connection.ConnectionTimeout; }
-        }
+        public int ConnectionTimeout => connection.ConnectionTimeout;
 
         public IDbCommand CreateCommand()
         {
             return connection.CreateCommand();
         }
 
-        public string Database
-        {
-            get { return connection.Database; }
-        }
+        public string Database => connection.Database;
 
         public void Open()
         {
@@ -79,10 +73,7 @@ namespace DbUp.SQLite.Helpers
                 connection.Open();
         }
 
-        public ConnectionState State
-        {
-            get { return connection.State; }
-        }
+        public ConnectionState State => connection.State;
 
         public void Dispose()
         {

@@ -39,7 +39,7 @@ namespace DbUp.SqlCe
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            return 
+            return
 $@"create table {FqSchemaTableName} (
     [Id] int identity(1,1) not null constraint {quotedPrimaryKeyName} primary key,
     [ScriptName] nvarchar(255) not null,

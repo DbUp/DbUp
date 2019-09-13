@@ -13,12 +13,12 @@ namespace DbUp.Builder
     /// </summary>
     public class UpgradeConfiguration
     {
-        private readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
-        private readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
-        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+        readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
+        readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
+        readonly Dictionary<string, string> variables = new Dictionary<string, string>();
 
-        private readonly IUpgradeLog defaultLog;
-        private IUpgradeLog log;
+        readonly IUpgradeLog defaultLog;
+        IUpgradeLog log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.
@@ -50,19 +50,19 @@ namespace DbUp.Builder
         public void AddLog(IUpgradeLog additionalLog)
         {
             log = log == null
-                ? additionalLog 
+                ? additionalLog
                 : new MultipleUpgradeLog(log, additionalLog);
         }
 
         /// <summary>
         /// Gets a mutable list of script providers.
         /// </summary>
-        public List<IScriptProvider> ScriptProviders { get { return scriptProviders; } }
+        public List<IScriptProvider> ScriptProviders => scriptProviders;
 
         /// <summary>
         /// Gets a mutable list of script pre-processors.
         /// </summary>
-        public List<IScriptPreprocessor> ScriptPreprocessors { get { return preProcessors; } }
+        public List<IScriptPreprocessor> ScriptPreprocessors => preProcessors;
 
         /// <summary>
         /// Gets or sets the journal, which tracks the scripts that have already been run.
@@ -90,10 +90,7 @@ namespace DbUp.Builder
         /// <summary>
         /// A collection of variables to be replaced in scripts before they are run
         /// </summary>
-        public Dictionary<string, string> Variables
-        {
-            get { return variables; }
-        }
+        public Dictionary<string, string> Variables => variables;
 
         /// <summary>
         /// Determines if variables should be replaced in scripts before they are run.

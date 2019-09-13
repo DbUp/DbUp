@@ -6,7 +6,7 @@ namespace DbUp.Engine.Output
 {
     public class AutodetectUpgradeLog : IUpgradeLog
     {
-        private readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
+        readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
                                       ?? LogToConsoleInstead;
 
         public void WriteInformation(string format, params object[] args) => log(LogLevel.Info, () => format, null, args);

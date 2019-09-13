@@ -9,7 +9,7 @@ namespace DbUp.MySql
     /// </summary>
     public class MySqlCommandReader : SqlCommandReader
     {
-        private const string DelimiterKeyword = "DELIMITER";
+        const string DelimiterKeyword = "DELIMITER";
 
         /// <summary>
         /// Creates an instance of MySqlCommandReader
@@ -21,15 +21,8 @@ namespace DbUp.MySql
         /// <summary>
         /// Hook to support custom statements
         /// </summary>
-        protected override bool IsCustomStatement
-        {
-            get
-            {
-                string statement;
-                return TryPeek(DelimiterKeyword.Length - 1, out statement) &&
+        protected override bool IsCustomStatement => TryPeek(DelimiterKeyword.Length - 1, out var statement) &&
                        string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase);
-            }
-        }
 
         /// <summary>
         /// Read a custom statement
@@ -56,7 +49,7 @@ namespace DbUp.MySql
             Delimiter = delimiter.ToString();
         }
 
-        private void SkipWhitespace()
+        void SkipWhitespace()
         {
             while (char.IsWhiteSpace(CurrentChar))
             {

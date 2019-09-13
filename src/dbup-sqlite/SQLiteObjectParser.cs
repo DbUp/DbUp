@@ -1,5 +1,4 @@
 ﻿using DbUp.Support;
-using System;
 
 namespace DbUp.SQLite
 {
@@ -7,8 +6,9 @@ namespace DbUp.SQLite
     /// Parses Sql Objects and performs quoting functions
     /// </summary>
     public class SQLiteObjectParser : SqlObjectParser
-    {       
-        public SQLiteObjectParser() : base("[", "]")
+    {
+        public SQLiteObjectParser()
+            : base("[", "]")
         {
         }
     }

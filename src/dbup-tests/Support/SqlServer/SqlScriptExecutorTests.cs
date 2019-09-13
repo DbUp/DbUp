@@ -5,13 +5,11 @@ using System.Data.Common;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Helpers;
+using DbUp.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using DbUp.SqlServer;
-using NSubstitute.ExceptionExtensions;
-using Xunit;
 using Shouldly;
+using Xunit;
 
 namespace DbUp.Tests.Support.SqlServer
 {
@@ -56,9 +54,9 @@ namespace DbUp.Tests.Support.SqlServer
         [Fact]
         public void uses_variable_subtitute_preprocessor_when_running_scripts_with_single_line_comment()
         {
-            string oneLineComment = @"--from excel $A$6
+            var oneLineComment = @"--from excel $A$6
                                   create $foo$.Table";
-            string oneLineCommentResult = @"--from excel $A$6
+            var oneLineCommentResult = @"--from excel $A$6
                                   create bar.Table";
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
@@ -74,9 +72,9 @@ namespace DbUp.Tests.Support.SqlServer
         [Fact]
         public void uses_variable_subtitute_preprocessor_when_running_scripts_with_one_line_comment()
         {
-            string oneLineComment = @"/* from excel $A$6 */
+            var oneLineComment = @"/* from excel $A$6 */
                                   create $foo$.Table";
-            string oneLineCommentResult = @"/* from excel $A$6 */
+            var oneLineCommentResult = @"/* from excel $A$6 */
                                   create bar.Table";
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
@@ -92,13 +90,13 @@ namespace DbUp.Tests.Support.SqlServer
         [Fact]
         public void uses_variable_subtitute_preprocessor_when_running_scripts_with_multi_line_comment()
         {
-            string multiLineComment = @"/* 
+            var multiLineComment = @"/* 
                                         some comment
                                         from excel $A$6 
                                         some comment
                                       */
                                   create $foo$.Table";
-            string multiLineCommentResult = @"/* 
+            var multiLineCommentResult = @"/* 
                                         some comment
                                         from excel $A$6 
                                         some comment
@@ -117,13 +115,13 @@ namespace DbUp.Tests.Support.SqlServer
         [Fact]
         public void uses_variable_subtitute_preprocessor_when_running_scripts_with_nested_single_line_comment()
         {
-            string multiLineComment = @"/* 
+            var multiLineComment = @"/* 
                                         some comment
                                         --from excel $A$6 
                                         some comment
                                       */
                                   create $foo$.Table";
-            string multiLineCommentResult = @"/* 
+            var multiLineCommentResult = @"/* 
                                         some comment
                                         --from excel $A$6 
                                         some comment
@@ -142,13 +140,13 @@ namespace DbUp.Tests.Support.SqlServer
         [Fact]
         public void uses_variable_subtitute_preprocessor_when_running_scripts_with_nested_comment()
         {
-            string multiLineComment = @"/* 
+            var multiLineComment = @"/* 
                                         some comment
                                         /* from excel $A$6 */
                                         some comment
                                       */
                                   create $foo$.Table";
-            string multiLineCommentResult = @"/* 
+            var multiLineCommentResult = @"/* 
                                         some comment
                                         /* from excel $A$6 */
                                         some comment

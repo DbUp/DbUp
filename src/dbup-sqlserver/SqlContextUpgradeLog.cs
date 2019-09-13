@@ -3,7 +3,7 @@ using Microsoft.SqlServer.Server;
 
 namespace DbUp.Engine.Output
 {
-    internal class SqlContextUpgradeLog : IUpgradeLog
+    class SqlContextUpgradeLog : IUpgradeLog
     {
         public void WriteInformation(string format, params object[] args)
         {

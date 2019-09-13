@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlServerCe;
 using DbUp.Engine.Transactions;
 using DbUp.Support;

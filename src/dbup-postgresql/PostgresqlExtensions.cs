@@ -3,8 +3,8 @@ using System.Data;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Output;
-using DbUp.Postgresql;
 using DbUp.Engine.Transactions;
+using DbUp.Postgresql;
 using Npgsql;
 
 // ReSharper disable once CheckNamespace
@@ -22,7 +22,7 @@ public static class PostgresqlExtensions
     /// <returns>
     /// A builder for a database upgrader designed for PostgreSQL databases.
     /// </returns>
-    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString) 
+    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString)
         => PostgresqlDatabase(supported, connectionString, null);
 
     /// <summary>
@@ -34,7 +34,7 @@ public static class PostgresqlExtensions
     /// <returns>
     /// A builder for a database upgrader designed for PostgreSQL databases.
     /// </returns>
-    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString, string schema) 
+    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString, string schema)
         => PostgresqlDatabase(new PostgresqlConnectionManager(connectionString), schema);
 
     /// <summary>
@@ -47,7 +47,7 @@ public static class PostgresqlExtensions
     /// </returns>
     public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
         => PostgresqlDatabase(connectionManager);
-    
+
     /// <summary>
     /// Creates an upgrader for PostgreSQL databases.
     /// </summary>
@@ -57,7 +57,7 @@ public static class PostgresqlExtensions
     /// </returns>
     public static UpgradeEngineBuilder PostgresqlDatabase(IConnectionManager connectionManager)
         => PostgresqlDatabase(connectionManager, null);
-    
+
     /// <summary>
     /// Creates an upgrader for PostgreSQL databases.
     /// </summary>
@@ -119,7 +119,7 @@ public static class PostgresqlExtensions
         var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
         if (!string.IsNullOrEmpty(logMasterConnectionStringBuilder.Password))
         {
-            logMasterConnectionStringBuilder.Password = String.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
+            logMasterConnectionStringBuilder.Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
         }
 
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
@@ -141,7 +141,7 @@ public static class PostgresqlExtensions
                 CommandType = CommandType.Text
             })
             {
-                var results = (int?) command.ExecuteScalar();
+                var results = (int?)command.ExecuteScalar();
 
                 // if the database exists, we're done here...
                 if (results.HasValue && results.Value == 1)
@@ -169,7 +169,7 @@ public static class PostgresqlExtensions
             logger.WriteInformation(@"Created database {0}", databaseName);
         }
     }
-    
+
     /// <summary>
     /// Tracks the list of executed scripts in a SQL Server table.
     /// </summary>

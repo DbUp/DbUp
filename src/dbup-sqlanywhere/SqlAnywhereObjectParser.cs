@@ -1,6 +1,6 @@
-﻿using DbUp.Support;
-using System;
+﻿using System;
 using System.Linq;
+using DbUp.Support;
 
 namespace DbUp.SqlAnywhere
 {

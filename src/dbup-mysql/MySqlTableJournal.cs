@@ -20,7 +20,7 @@ namespace DbUp.MySql
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
         public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            :base(connectionManager, logger, new MySqlObjectParser(), schema, table)
+            : base(connectionManager, logger, new MySqlObjectParser(), schema, table)
         {
         }
 
@@ -36,7 +36,7 @@ namespace DbUp.MySql
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            return 
+            return
 $@"CREATE TABLE {FqSchemaTableName} 
 (
     `schemaversionid` INT NOT NULL AUTO_INCREMENT,

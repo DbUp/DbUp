@@ -1,4 +1,3 @@
-using System;
 using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
@@ -10,7 +9,7 @@ namespace DbUp.ScriptProviders
     /// </summary>
     public sealed class StaticScriptProvider : IScriptProvider
     {
-        private readonly IEnumerable<SqlScript> scripts;
+        readonly IEnumerable<SqlScript> scripts;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="StaticScriptProvider"/> class.

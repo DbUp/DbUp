@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data.SqlServerCe;
-using DbUp;
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
 
@@ -38,13 +35,13 @@ public static class SqlCeExtensions
     /// </returns>
     public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
         => SqlCeDatabase(connectionManager);
-    
-    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
+
+    static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
         builder.Configure(c => c.ScriptExecutor = new SqlCeScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new SqlCeTableJournal(()=>connectionManager, ()=>c.Log, null, "SchemaVersions"));
+        builder.Configure(c => c.Journal = new SqlCeTableJournal(() => connectionManager, () => c.Log, null, "SchemaVersions"));
         builder.WithPreprocessor(new SqlCePreprocessor());
         return builder;
     }

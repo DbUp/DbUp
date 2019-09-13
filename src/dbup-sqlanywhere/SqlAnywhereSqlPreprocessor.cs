@@ -1,5 +1,4 @@
-﻿using System.Text.RegularExpressions;
-using DbUp.Engine;
+﻿using DbUp.Engine;
 
 namespace DbUp.SqlAnywhere
 {

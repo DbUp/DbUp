@@ -5,7 +5,6 @@ using System.Linq;
 using System.Text;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.Support;
 
 namespace DbUp.ScriptProviders
 {
@@ -14,11 +13,11 @@ namespace DbUp.ScriptProviders
     ///</summary>
     public class FileSystemScriptProvider : IScriptProvider
     {
-        private readonly string directoryPath;
-        private readonly Func<string, bool> filter;
-        private readonly Encoding encoding;
-        private readonly FileSystemScriptOptions options;
-        private readonly SqlScriptOptions sqlScriptOptions;
+        readonly string directoryPath;
+        readonly Func<string, bool> filter;
+        readonly Encoding encoding;
+        readonly FileSystemScriptOptions options;
+        readonly SqlScriptOptions sqlScriptOptions;
 
         ///<summary>
         ///</summary>
@@ -33,7 +32,7 @@ namespace DbUp.ScriptProviders
         ///<param name="options">Different options for the file system script provider</param>
         public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, new SqlScriptOptions())
         {
-        }        
+        }
 
         /// <summary>
         /// </summary>
@@ -45,8 +44,8 @@ namespace DbUp.ScriptProviders
             if (options == null)
                 throw new ArgumentNullException("options");
             this.directoryPath = directoryPath;
-            this.filter = options.Filter;
-            this.encoding = options.Encoding;
+            filter = options.Filter;
+            encoding = options.Encoding;
             this.options = options;
             this.sqlScriptOptions = sqlScriptOptions;
         }
@@ -57,7 +56,7 @@ namespace DbUp.ScriptProviders
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
             var files = new List<string>();
-            foreach (string scriptExtension in options.Extensions)
+            foreach (var scriptExtension in options.Extensions)
             {
                 files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
             }
@@ -70,7 +69,7 @@ namespace DbUp.ScriptProviders
                 .ToList();
         }
 
-        private SearchOption ShouldSearchSubDirectories()
+        SearchOption ShouldSearchSubDirectories()
         {
             return options.IncludeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         }

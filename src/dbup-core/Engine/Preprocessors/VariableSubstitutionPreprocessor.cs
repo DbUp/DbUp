@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.Specialized;
-using System.Linq;
-using System.Text.RegularExpressions;
-using DbUp.Helpers;
+﻿using System.Collections.Generic;
 
 namespace DbUp.Engine.Preprocessors
 {
@@ -12,7 +7,7 @@ namespace DbUp.Engine.Preprocessors
     /// </summary>
     public class VariableSubstitutionPreprocessor : IScriptPreprocessor
     {
-        private readonly IDictionary<string, string> variables;
+        readonly IDictionary<string, string> variables;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="VariableSubstitutionPreprocessor"/> class.

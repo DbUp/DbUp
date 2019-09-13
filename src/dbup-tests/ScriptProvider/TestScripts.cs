@@ -29,7 +29,7 @@ namespace DbUp.Tests.ScriptProvider
             }
         }
 
-        private static string GetScriptPathAndName(string scriptName)
+        static string GetScriptPathAndName(string scriptName)
         {
             var dir = Regex.Match(scriptName, @"\.(Folder\d)");
             if (dir.Success)
@@ -39,7 +39,7 @@ namespace DbUp.Tests.ScriptProvider
             return scriptName;
         }
 
-        private static string CreateTestPathBasedOnAssemblyLocation(Assembly assembly)
+        static string CreateTestPathBasedOnAssemblyLocation(Assembly assembly)
         {
             var directory = new FileInfo(assembly.Location).DirectoryName;
             var testPath = Path.Combine(directory, "sqlfiles");

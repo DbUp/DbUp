@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlServerCe;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using System.Data.SqlServerCe;
 using DbUp.Support;
 
 namespace DbUp.SqlCe
@@ -33,7 +33,7 @@ namespace DbUp.SqlCe
         protected override string GetVerifySchemaSql(string schema)
         {
             throw new NotSupportedException();
-        }     
+        }
 
         protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
         {

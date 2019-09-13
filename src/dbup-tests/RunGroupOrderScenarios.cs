@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -24,7 +23,7 @@ namespace DbUp.Tests
         readonly DelegateConnectionFactory testConnectionFactory;
         readonly RecordingDbConnection recordingConnection;
         DatabaseUpgradeResult upgradeResult;
-        UpgradeEngine upgradeEngine;        
+        UpgradeEngine upgradeEngine;
 
         public RunGroupOrderScenarios()
         {
@@ -56,7 +55,7 @@ namespace DbUp.Tests
                 .And(t => t.AndShouldHaveRunAllScriptsInOrder())
                 .And(t => t.AndShouldLogInformation())
                 .BDDfy();
-        }                
+        }
 
         void AndShouldLogInformation()
         {
@@ -69,7 +68,7 @@ namespace DbUp.Tests
             // Check both results and journal
             upgradeResult.Scripts
                 .Select(s => s.Name)
-                .ShouldBe(new[] {"ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql" });
+                .ShouldBe(new[] { "ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql" });
         }
 
         void ThenShouldHaveSuccessfulResult()
@@ -85,7 +84,7 @@ namespace DbUp.Tests
         {
             upgradeEngine = upgradeEngineBuilder.Build();
             upgradeResult = upgradeEngine.PerformUpgrade();
-        }        
+        }
 
         public class TestScriptProvider : IScriptProvider
         {

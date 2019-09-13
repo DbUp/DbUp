@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
-using DbUp.Engine.Filters;
 
 namespace DbUp.Engine
 {
@@ -11,7 +10,7 @@ namespace DbUp.Engine
     /// </summary>
     public class UpgradeEngine
     {
-        private readonly UpgradeConfiguration configuration;
+        readonly UpgradeConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeEngine"/> class.
@@ -52,7 +51,7 @@ namespace DbUp.Engine
         public bool TryConnect(out string errorMessage)
         {
             return configuration.ConnectionManager.TryConnect(configuration.Log, out errorMessage);
-        }        
+        }
 
         /// <summary>
         /// Performs the database upgrade.
@@ -114,7 +113,7 @@ namespace DbUp.Engine
             }
         }
 
-        private List<SqlScript> GetScriptsToExecuteInsideOperation()
+        List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
             var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());

@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
-using System.Data.Common;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
@@ -72,7 +71,7 @@ namespace DbUp.Support
                         using (var reader = command.ExecuteReader())
                         {
                             while (reader.Read())
-                                scripts.Add((string) reader[0]);
+                                scripts.Add((string)reader[0]);
                         }
                     }
 
@@ -199,10 +198,10 @@ namespace DbUp.Support
                 if (executeScalar == null)
                     return false;
                 if (executeScalar is long)
-                    return (long) executeScalar == 1;
+                    return (long)executeScalar == 1;
                 if (executeScalar is decimal)
                     return (decimal)executeScalar == 1;
-                return (int) executeScalar == 1;
+                return (int)executeScalar == 1;
             }
         }
 

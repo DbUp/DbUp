@@ -202,7 +202,7 @@ namespace DbUp.Support
                 }
 
                 var names = new List<string>();
-                for (int i = 0; i < reader.FieldCount; i++)
+                for (var i = 0; i < reader.FieldCount; i++)
                 {
                     names.Add(reader.GetName(i));
                 }
@@ -211,7 +211,7 @@ namespace DbUp.Support
                 while (reader.Read())
                 {
                     var line = new List<string>();
-                    for (int i = 0; i < reader.FieldCount; i++)
+                    for (var i = 0; i < reader.FieldCount; i++)
                     {
                         var value = reader.GetValue(i);
                         value = value == DBNull.Value ? null : value.ToString();
@@ -220,11 +220,11 @@ namespace DbUp.Support
                     lines.Add(line);
                 }
 
-                string format = "";
-                int totalLength = 0;
-                for (int i = 0; i < reader.FieldCount; i++)
+                var format = "";
+                var totalLength = 0;
+                for (var i = 0; i < reader.FieldCount; i++)
                 {
-                    int maxLength = (lines.Count == 0 ? 0 : lines.Max(l => (l[i] ?? "").Length)) + 2;
+                    var maxLength = (lines.Count == 0 ? 0 : lines.Max(l => (l[i] ?? "").Length)) + 2;
                     format += " {" + i + ", " + maxLength + "} |";
                     totalLength += (maxLength + 3);
                 }

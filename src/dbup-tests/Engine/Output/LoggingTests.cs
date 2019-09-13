@@ -1,14 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using DbUp.Builder;
-using DbUp.Engine;
-using DbUp.Engine.Output;
-using DbUp.Helpers;
-using NSubstitute;
+﻿using System.Collections.Generic;
 using Serilog.Core;
 using Serilog.Events;
-using Shouldly;
-using Xunit;
 
 namespace DbUp.Tests.Engine.Output
 {

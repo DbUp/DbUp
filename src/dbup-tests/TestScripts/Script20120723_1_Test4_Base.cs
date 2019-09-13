@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Data;
-using Castle.DynamicProxy.Generators.Emitters;
 using DbUp.Engine;
 
 namespace DbUp.Tests.TestScripts
