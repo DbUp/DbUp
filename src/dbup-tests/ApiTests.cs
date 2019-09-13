@@ -108,10 +108,7 @@ namespace DbUp.Tests
                 isFirst = false;
 
                 if (argumentName != null)
-                {
-                    sb.Append(argumentName)
-                        .Append(" = ");
-                }
+                    sb.Append(argumentName).Append(" = ");
 
                 sb.Append(FormatValue(argumentValue));
             }
