@@ -40,7 +40,7 @@ namespace DbUp.SQLite
         protected override string GetVerifySchemaSql(string schema)
         {
             throw new NotSupportedException();
-        }      
+        }
 
         protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
         {

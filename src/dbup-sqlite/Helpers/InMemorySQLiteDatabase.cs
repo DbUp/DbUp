@@ -48,7 +48,7 @@ namespace DbUp.SQLite.Helpers
             connectionManager = new SQLiteConnectionManager(connectionStringBuilder.ConnectionString);
             sharedConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sharedConnection.Open();
-            sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), new SQLiteObjectParser(),  null, () => true);
+            sqlRunner = new AdHocSqlRunner(() => sharedConnection.CreateCommand(), new SQLiteObjectParser(), null, () => true);
         }
 
         public string ConnectionString { get; set; }
@@ -64,10 +64,7 @@ namespace DbUp.SQLite.Helpers
         /// <summary>
         /// An adhoc sql runner against the in-memory database
         /// </summary>
-        public AdHocSqlRunner SqlRunner
-        {
-            get { return sqlRunner; }
-        }
+        public AdHocSqlRunner SqlRunner => sqlRunner;
 
         /// <summary>
         /// remove the database from memory

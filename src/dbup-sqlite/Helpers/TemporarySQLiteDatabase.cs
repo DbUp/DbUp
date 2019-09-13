@@ -57,15 +57,9 @@ namespace DbUp.SQLite.Helpers
         /// <summary>
         /// An adhoc sql runner against the temporary database
         /// </summary>
-        public AdHocSqlRunner SqlRunner
-        {
-            get { return sqlRunner; }
-        }
+        public AdHocSqlRunner SqlRunner => sqlRunner;
 
-        public SharedConnection SharedConnection
-        {
-            get { return sharedConnection; }
-        }
+        public SharedConnection SharedConnection => sharedConnection;
 
         /// <summary>
         /// Creates the database.
