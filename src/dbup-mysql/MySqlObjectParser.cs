@@ -1,5 +1,4 @@
-﻿using System;
-using DbUp.Support;
+﻿using DbUp.Support;
 
 namespace DbUp.MySql
 {

@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using MySql.Data.MySqlClient;
 using DbUp.Support;
+using MySql.Data.MySqlClient;
 
 namespace DbUp.MySql
 {
@@ -35,7 +35,7 @@ namespace DbUp.MySql
             throw new NotSupportedException();
         }
 
-     
+
 
         protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
         {

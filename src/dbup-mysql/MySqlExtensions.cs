@@ -1,7 +1,7 @@
-﻿using DbUp.Builder;
-using System.Linq;
-using DbUp.MySql;
+﻿using System.Linq;
+using DbUp.Builder;
 using DbUp.Engine.Transactions;
+using DbUp.MySql;
 
 /// <summary>
 /// Configuration extension methods for MySql.
@@ -40,7 +40,7 @@ public static class MySqlExtensions
     {
         return MySqlDatabase(new MySqlConnectionManager(connectionString), schema);
     }
-    
+
     /// <summary>
     /// Creates an upgrader for MySql databases.
     /// </summary>
