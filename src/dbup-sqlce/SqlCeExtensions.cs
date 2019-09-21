@@ -1,7 +1,4 @@
-﻿using System;
-using System.Data.SqlServerCe;
-using DbUp;
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using DbUp.Engine.Transactions;
 using DbUp.SqlCe;
 
@@ -38,8 +35,8 @@ public static class SqlCeExtensions
     /// </returns>
     public static UpgradeEngineBuilder SqlCeDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
         => SqlCeDatabase(connectionManager);
-    
-    private static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
+
+    static UpgradeEngineBuilder SqlCeDatabase(IConnectionManager connectionManager)
     {
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);

@@ -184,6 +184,12 @@ namespace DbUp.Engine
         public LazySqlScript(string name, DbUp.Engine.SqlScriptOptions sqlScriptOptions, System.Func<string> contentProvider) { }
         public override string Contents { get; }
     }
+    public class ScriptExecutedEventArgs : System.EventArgs
+    {
+        public ScriptExecutedEventArgs(DbUp.Engine.SqlScript script, DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
+        public DbUp.Engine.Transactions.IConnectionManager ConnectionManager { get; }
+        public DbUp.Engine.SqlScript Script { get; }
+    }
     public class SqlScript
     {
         public SqlScript(string name, string contents) { }
@@ -208,11 +214,13 @@ namespace DbUp.Engine
     public class UpgradeEngine
     {
         public UpgradeEngine(DbUp.Builder.UpgradeConfiguration configuration) { }
+        public event System.EventHandler ScriptExecuted;
         public System.Collections.Generic.List<string> GetExecutedScripts() { }
         public System.Collections.Generic.List<DbUp.Engine.SqlScript> GetScriptsToExecute() { }
         public bool IsUpgradeRequired() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(string latestScript) { }
+        protected virtual void OnScriptExecuted(DbUp.Engine.ScriptExecutedEventArgs e) { }
         public DbUp.Engine.DatabaseUpgradeResult PerformUpgrade() { }
         public bool TryConnect(out string errorMessage) { }
     }

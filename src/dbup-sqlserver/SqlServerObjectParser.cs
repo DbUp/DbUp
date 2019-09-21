@@ -1,6 +1,6 @@
-﻿using DbUp.Support;
-using System;
+﻿using System;
 using System.Linq;
+using DbUp.Support;
 
 namespace DbUp.SqlServer
 {
@@ -9,7 +9,9 @@ namespace DbUp.SqlServer
     /// </summary>
     public class SqlServerObjectParser : SqlObjectParser
     {
-        public SqlServerObjectParser() : base("[", "]")
+
+        public SqlServerObjectParser()
+            : base("[", "]")
         {
         }
 

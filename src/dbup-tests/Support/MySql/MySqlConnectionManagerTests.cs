@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Text;
 using DbUp.MySql;
-using NUnit.Framework;
 using Shouldly;
 using Xunit;
 

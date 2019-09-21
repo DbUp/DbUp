@@ -1,6 +1,6 @@
 ﻿using DbUp.Builder;
-using DbUp.SQLite.Helpers;
 using DbUp.SQLite;
+using DbUp.SQLite.Helpers;
 
 /// <summary>
 /// Configuration extension methods for SQLite (see http://www.sqlite.org/)

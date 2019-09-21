@@ -10,7 +10,7 @@ namespace DbUp.Support
     /// </summary>
     public class SqlCommandReader : SqlParser
     {
-        private readonly StringBuilder commandScriptBuilder;
+        readonly StringBuilder commandScriptBuilder;
 
         /// <summary>
         /// Creates an instance of <see cref="SqlCommandReader"/>.
@@ -45,7 +45,7 @@ namespace DbUp.Support
                         default:
                             throw new ArgumentOutOfRangeException(nameof(type), type, null);
                     }
-                    
+
                 };
                 CommandEnded += () =>
                 {
@@ -61,12 +61,12 @@ namespace DbUp.Support
             }
         }
 
-        private void ResetCommandBuffer()
+        void ResetCommandBuffer()
         {
             commandScriptBuilder.Length = 0;
         }
 
-        private string GetCurrentCommandTextFromBuffer()
+        string GetCurrentCommandTextFromBuffer()
         {
             return commandScriptBuilder.ToString().Trim();
         }

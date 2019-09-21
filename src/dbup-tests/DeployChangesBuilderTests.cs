@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data;
 using DbUp.Engine;
-using DbUp.Engine.Output;
-using DbUp.SqlServer;
 using NSubstitute;
 using Shouldly;
 using Xunit;

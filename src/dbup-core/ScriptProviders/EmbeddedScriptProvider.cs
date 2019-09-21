@@ -1,7 +1,7 @@
-﻿using DbUp.Engine;
-using System;
+﻿using System;
 using System.Reflection;
 using System.Text;
+using DbUp.Engine;
 
 namespace DbUp.ScriptProviders
 {

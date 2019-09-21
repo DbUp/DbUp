@@ -6,7 +6,7 @@ namespace DbUp.Engine.Transactions
 {
     public class DelegateConnectionFactory : IConnectionFactory
     {
-        private readonly Func<IUpgradeLog, DatabaseConnectionManager, IDbConnection> createConnection;
+        readonly Func<IUpgradeLog, DatabaseConnectionManager, IDbConnection> createConnection;
 
         public DelegateConnectionFactory(Func<IUpgradeLog, IDbConnection> createConnection)
             : this((l, _) => createConnection(l))
@@ -17,7 +17,7 @@ namespace DbUp.Engine.Transactions
         {
             this.createConnection = createConnection ?? throw new ArgumentNullException(nameof(createConnection));
         }
-        
+
         public IDbConnection CreateConnection(IUpgradeLog upgradeLog, DatabaseConnectionManager databaseConnectionManager)
         {
             return createConnection(upgradeLog, databaseConnectionManager);

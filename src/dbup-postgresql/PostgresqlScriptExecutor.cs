@@ -1,10 +1,10 @@
-﻿using DbUp.Engine;
+﻿using System;
+using System.Collections.Generic;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 using Npgsql;
-using System;
-using System.Collections.Generic;
 
 namespace DbUp.Postgresql
 {
@@ -43,7 +43,7 @@ namespace DbUp.Postgresql
 #endif
             {
                 Log().WriteInformation("Npgsql exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Block line {1}; Position: {2}; Message: {3}", index, exception.Line, exception.Position, exception.Message);               
+                Log().WriteError("Script block number: {0}; Block line {1}; Position: {2}; Message: {3}", index, exception.Line, exception.Position, exception.Message);
                 Log().WriteError(exception.ToString());
                 throw;
             }

@@ -1,5 +1,4 @@
-﻿using System;
-using Assent;
+﻿using Assent;
 using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using Xunit;
@@ -39,7 +38,7 @@ END$$").Build();
 
             result.Successful.ShouldBe(true);
             this.Assent(logger.Log, new Configuration().UsingSanitiser(Scrubbers.ScrubDates));
-            
+
         }
     }
 }

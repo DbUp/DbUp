@@ -1,10 +1,10 @@
-﻿using DbUp.Engine.Output;
+﻿using System;
+using System.Data;
+using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using Shouldly;
-using System;
-using System.Data;
 using Xunit;
 
 #pragma warning disable 618
@@ -17,7 +17,7 @@ namespace DbUp.Tests.Engine
         public void OnlyOneTransactionIsOpenedAtATimeWithTransactionPerScriptStrategy()
         {
             var connectionFactory = new TransactionCountingConnectionFactory();
-            
+
             var upgradeEngine = DeployChanges.To
                 .SqlDatabase("")
                 .OverrideConnectionFactory(connectionFactory)
@@ -29,13 +29,13 @@ namespace DbUp.Tests.Engine
             var result = upgradeEngine.PerformUpgrade();
             result.Error.ShouldBeNull();
             result.Successful.ShouldBeTrue();
-            
+
             connectionFactory.TransactionWasOpened.ShouldBeTrue("BeginTransaction was never called");
         }
-        
-        class TransactionCountingConnectionFactory  : IConnectionFactory
+
+        class TransactionCountingConnectionFactory : IConnectionFactory
         {
-            private int transactionCount;
+            int transactionCount;
 
             public bool TransactionWasOpened { get; private set; }
 
@@ -45,7 +45,7 @@ namespace DbUp.Tests.Engine
                 conn.BeginTransaction().ReturnsForAnyArgs(c =>
                 {
                     TransactionWasOpened = true;
-                    
+
                     if (transactionCount > 0)
                         throw new Exception("Test failed as multiple transaction were opened");
 

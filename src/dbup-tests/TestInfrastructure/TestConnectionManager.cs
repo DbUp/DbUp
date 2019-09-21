@@ -1,8 +1,8 @@
-﻿using DbUp.Engine;
+﻿using System.Collections.Generic;
+using System.Data;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using System.Collections.Generic;
-using System.Data;
 
 namespace DbUp.Tests.TestInfrastructure
 {

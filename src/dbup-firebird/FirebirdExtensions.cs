@@ -1,6 +1,6 @@
 ﻿using DbUp.Builder;
-using DbUp.Firebird;
 using DbUp.Engine.Transactions;
+using DbUp.Firebird;
 
 // ReSharper disable once CheckNamespace
 
@@ -21,7 +21,7 @@ public static class FirebirdExtensions
     {
         return FirebirdDatabase(new FirebirdConnectionManager(connectionString));
     }
-    
+
     /// <summary>
     /// Creates an upgrader for Firebird databases.
     /// </summary>

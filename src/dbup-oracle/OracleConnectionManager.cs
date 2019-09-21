@@ -1,4 +1,5 @@
-﻿using DbUp.Engine.Transactions;
+﻿using System.Collections.Generic;
+using DbUp.Engine.Transactions;
 using Oracle.ManagedDataAccess.Client;
 using System.Collections.Generic;
 

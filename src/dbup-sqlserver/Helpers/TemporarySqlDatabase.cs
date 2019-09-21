@@ -1,6 +1,6 @@
-﻿using DbUp.Helpers;
-using System;
+﻿using System;
 using System.Data.SqlClient;
+using DbUp.Helpers;
 
 namespace DbUp.SqlServer.Helpers
 {
@@ -9,12 +9,12 @@ namespace DbUp.SqlServer.Helpers
     /// </summary>
     public class TemporarySqlDatabase : IDisposable
     {
-        private const string localSqlInstance = @"(local)";
+        const string localSqlInstance = @"(local)";
 
-        private readonly string databaseName;
-        private readonly AdHocSqlRunner master;
-        private readonly SqlConnection sqlConnection;
-        private readonly SqlConnection masterSqlConnection;
+        readonly string databaseName;
+        readonly AdHocSqlRunner master;
+        readonly SqlConnection sqlConnection;
+        readonly SqlConnection masterSqlConnection;
 
         /// <summary>
         /// Creates new <see cref="TemporarySqlDatabase"/> against (local)
@@ -36,8 +36,10 @@ namespace DbUp.SqlServer.Helpers
         /// <param name="connectionStringBuilder"><see cref="SqlConnectionStringBuilder"/> specifying which database to create.</param>
         public TemporarySqlDatabase(SqlConnectionStringBuilder connectionStringBuilder)
         {
-            var builder = new SqlConnectionStringBuilder(connectionStringBuilder.ToString()); //so we don't mangle the connectionStringBuilder coming in
-            builder.Pooling = false; // make sure connection pooling is disabled so the connection is actually closed as expected
+            var builder = new SqlConnectionStringBuilder(connectionStringBuilder.ToString())
+            {
+                Pooling = false // make sure connection pooling is disabled so the connection is actually closed as expected
+            }; //so we don't mangle the connectionStringBuilder coming in
 
             // set the temporary database information
             databaseName = builder.InitialCatalog;

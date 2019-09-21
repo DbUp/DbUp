@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using Shouldly;
 using Xunit;
@@ -15,14 +14,16 @@ namespace DbUp.Tests.Helpers
             var excludeFile = System.IO.Path.Combine(currentDir, "TestFilterFiles", "ScriptNames.txt");
             var filter = Filters.ExcludeScriptNamesInFile(excludeFile);
 
-            var testScripts = new List<string>();
-            testScripts.Add("Script20110301_1_Test1.txt");
-            testScripts.Add("ShouldRemain.txt");
-            testScripts.Add("Script20130525_1_Test5.txt");
+            var testScripts = new List<string>
+            {
+                "Script20110301_1_Test1.txt",
+                "ShouldRemain.txt",
+                "Script20130525_1_Test5.txt"
+            };
 
             var scriptsToRun = testScripts.Where(filter);
 
-            scriptsToRun.ShouldBe(new [] { "ShouldRemain.txt" });
+            scriptsToRun.ShouldBe(new[] { "ShouldRemain.txt" });
         }
 
         [Fact(Skip = "Need to come up with a better way than current directory")]
@@ -32,10 +33,12 @@ namespace DbUp.Tests.Helpers
             var excludeFile = System.IO.Path.Combine(currentDir, "TestFilterFiles", "ScriptNames.txt");
             var filter = Filters.OnlyIncludeScriptNamesInFile(excludeFile);
 
-            var testScripts = new List<string>();
-            testScripts.Add("Script20110301_1_Test1.txt");
-            testScripts.Add("ShouldNotRemain.txt");
-            testScripts.Add("Script20130525_1_Test5.txt");
+            var testScripts = new List<string>
+            {
+                "Script20110301_1_Test1.txt",
+                "ShouldNotRemain.txt",
+                "Script20130525_1_Test5.txt"
+            };
 
             var scriptsToRun = testScripts.Where(filter);
 
@@ -47,10 +50,12 @@ namespace DbUp.Tests.Helpers
         [Fact]
         public void Should_Exclude_ScriptNames()
         {
-            var testScripts = new List<string>();
-            testScripts.Add("Script20110301_1_Test1.txt");
-            testScripts.Add("ShouldRemain.txt");
-            testScripts.Add("Script20130525_1_Test5.txt");
+            var testScripts = new List<string>
+            {
+                "Script20110301_1_Test1.txt",
+                "ShouldRemain.txt",
+                "Script20130525_1_Test5.txt"
+            };
 
             var filter = Filters.ExcludeScripts("Script20110301_1_Test1.txt", "Script20130525_1_Test5.txt");
             var scriptsToRun = testScripts.Where(filter);
@@ -63,10 +68,12 @@ namespace DbUp.Tests.Helpers
         [Fact]
         public void Should_Include_ScriptNames()
         {
-            var testScripts = new List<string>();
-            testScripts.Add("Script20110301_1_Test1.txt");
-            testScripts.Add("ShouldNotRemain.txt");
-            testScripts.Add("Script20130525_1_Test5.txt");
+            var testScripts = new List<string>
+            {
+                "Script20110301_1_Test1.txt",
+                "ShouldNotRemain.txt",
+                "Script20130525_1_Test5.txt"
+            };
 
             var filter = Filters.OnlyIncludeScripts("Script20110301_1_Test1.txt", "Script20130525_1_Test5.txt");
             var scriptsToRun = testScripts.Where(filter);

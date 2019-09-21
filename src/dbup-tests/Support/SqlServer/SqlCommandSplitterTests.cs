@@ -1,7 +1,6 @@
 ﻿using System;
-using NUnit.Framework;
-using System.Text;
 using System.Linq;
+using System.Text;
 using DbUp.Support;
 using Shouldly;
 using Xunit;
@@ -10,7 +9,7 @@ namespace DbUp.Tests.Support.SqlServer
 {
     public class SqlCommandSplitterTests
     {
-        private readonly SqlCommandSplitter sut;
+        readonly SqlCommandSplitter sut;
 
         public SqlCommandSplitterTests()
         {

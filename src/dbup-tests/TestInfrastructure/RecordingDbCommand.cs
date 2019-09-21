@@ -6,7 +6,7 @@ using DbUp.Engine;
 
 namespace DbUp.Tests.TestInfrastructure
 {
-    internal class RecordingDbCommand : IDbCommand
+    class RecordingDbCommand : IDbCommand
     {
         readonly CaptureLogsLogger logger;
         readonly SqlScript[] runScripts;

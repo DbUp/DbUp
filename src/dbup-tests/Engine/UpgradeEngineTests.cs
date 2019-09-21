@@ -1,4 +1,4 @@
-using DbUp.Builder;
+﻿using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;

@@ -5,7 +5,7 @@ using System.Data;
 
 namespace DbUp.Engine.Transactions
 {
-    internal class TransactionPerScriptStrategy : ITransactionStrategy
+    class TransactionPerScriptStrategy : ITransactionStrategy
     {
         private IDbConnection connection;
 

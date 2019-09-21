@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine;
@@ -150,7 +149,7 @@ namespace DbUp.Tests
             // Check both results and journal
             upgradeResult.Scripts
                 .Select(s => s.Name)
-                .ShouldBe(new[] {"Script1.sql", "Script2.sql", "Script3.sql"});
+                .ShouldBe(new[] { "Script1.sql", "Script2.sql", "Script3.sql" });
         }
 
         void ThenShouldNotRunAnyScripts()

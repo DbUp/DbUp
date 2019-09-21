@@ -1,8 +1,8 @@
-﻿using DbUp.Engine.Transactions;
-using Npgsql;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using DbUp.Engine.Transactions;
+using Npgsql;
 
 namespace DbUp.Postgresql
 {
@@ -15,7 +15,8 @@ namespace DbUp.Postgresql
         /// Creates a new PostgreSQL database connection.
         /// </summary>
         /// <param name="connectionString">The PostgreSQL connection string.</param>
-        public PostgresqlConnectionManager(string connectionString) : base(new DelegateConnectionFactory(l => new NpgsqlConnection(connectionString)))
+        public PostgresqlConnectionManager(string connectionString)
+            : base(new DelegateConnectionFactory(l => new NpgsqlConnection(connectionString)))
         {
         }
 

@@ -1,8 +1,8 @@
 ﻿using System;
+using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using System.Data;
 using DbUp.Support;
 
 namespace DbUp.Firebird
@@ -31,7 +31,7 @@ namespace DbUp.Firebird
 
         static string CreateTriggerSql(string tableName)
         {
-            return 
+            return
 $@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
     if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({GeneratorName(tableName)},1);
 END;";
@@ -77,7 +77,7 @@ END;";
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            return 
+            return
 $@"CREATE TABLE {FqSchemaTableName}
 (
     schemaversionsid INTEGER NOT NULL,

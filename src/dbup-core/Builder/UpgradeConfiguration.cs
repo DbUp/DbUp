@@ -13,8 +13,8 @@ namespace DbUp.Builder
     /// </summary>
     public class UpgradeConfiguration
     {
-        private readonly IUpgradeLog defaultLog;
-        private IUpgradeLog log;
+        readonly IUpgradeLog defaultLog;
+        IUpgradeLog log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.
@@ -52,7 +52,7 @@ namespace DbUp.Builder
             additionalLog = additionalLog ?? throw new ArgumentNullException(nameof(additionalLog));
 
             log = log == null
-                ? additionalLog 
+                ? additionalLog
                 : new MultipleUpgradeLog(log, additionalLog);
         }
 

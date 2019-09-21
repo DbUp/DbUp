@@ -46,7 +46,7 @@ namespace DbUp.Helpers
             File.WriteAllText(fullPath, htmlReport.ToString(), DbUpDefaults.DefaultEncoding);
         }
 
-        private static string GetHtmlHeader(string serverName, string databaseName)
+        static string GetHtmlHeader(string serverName, string databaseName)
         {
             return $@"<!DOCTYPE html>
 <html>
@@ -64,7 +64,7 @@ namespace DbUp.Helpers
             <div class=""alert alert-danger"">& nbsp;JavaScript execution is currently disabled. Enable JavaScript on your browser to view the change report.</div>
     </noscript>
 	<nav class=""navbar navbar-expand-lg navbar-light bg-light"">
-		<a class=""navbar-brand"" href=""#"">DBUp Delta Report Generated {DateTime.Now.ToString()}{(string.IsNullOrEmpty(serverName) == false ? " to upgrade " + serverName + "." + databaseName : string.Empty )}</a>
+		<a class=""navbar-brand"" href=""#"">DBUp Delta Report Generated {DateTime.Now.ToString()}{(string.IsNullOrEmpty(serverName) == false ? " to upgrade " + serverName + "." + databaseName : string.Empty)}</a>
 	</nav>
     <div class=""jumbotron"">
         <h2>DBUp Delta Report</h2>
@@ -77,7 +77,7 @@ namespace DbUp.Helpers
 ";
         }
 
-        private static string GetHtmlForScript(SqlScript sqlScript, int counter)
+        static string GetHtmlForScript(SqlScript sqlScript, int counter)
         {
             return $@"<div class=""card"">
 			<div class=""card-header"" id=""script{counter}"">
@@ -100,7 +100,7 @@ namespace DbUp.Helpers
 		</div>";
         }
 
-        private static string GetHtmlFooter()
+        static string GetHtmlFooter()
         {
             return @"
     </div>

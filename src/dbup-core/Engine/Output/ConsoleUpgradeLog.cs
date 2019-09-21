@@ -37,7 +37,7 @@ namespace DbUp.Engine.Output
             Write(ConsoleColor.Yellow, format, args);
         }
 
-        private static void Write(ConsoleColor color, string format, object[] args)
+        static void Write(ConsoleColor color, string format, object[] args)
         {
             var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = color;

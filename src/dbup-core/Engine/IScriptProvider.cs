@@ -1,5 +1,5 @@
-﻿using DbUp.Engine.Transactions;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DbUp.Engine.Transactions;
 
 namespace DbUp.Engine
 {

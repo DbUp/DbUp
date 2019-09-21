@@ -14,8 +14,8 @@ namespace DbUp.SQLite.Helpers
     /// </summary>
     public class SharedConnection : IDbConnection
     {
-        private readonly bool connectionAlreadyOpened;
-        private readonly IDbConnection connection;
+        readonly bool connectionAlreadyOpened;
+        readonly IDbConnection connection;
 
         /// <summary>
         /// Constructs a new instance

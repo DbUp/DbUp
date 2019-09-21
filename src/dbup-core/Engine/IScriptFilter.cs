@@ -1,5 +1,5 @@
-﻿using DbUp.Support;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
+using DbUp.Support;
 
 namespace DbUp.Engine
 {
