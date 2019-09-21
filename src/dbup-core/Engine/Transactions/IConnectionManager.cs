@@ -1,8 +1,8 @@
-﻿using DbUp.Engine.Output;
-using JetBrains.Annotations;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DbUp.Engine.Output;
+using JetBrains.Annotations;
 
 namespace DbUp.Engine.Transactions
 {

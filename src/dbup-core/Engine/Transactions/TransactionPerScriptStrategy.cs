@@ -1,13 +1,13 @@
-using DbUp.Engine.Output;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
     class TransactionPerScriptStrategy : ITransactionStrategy
     {
-        private IDbConnection connection;
+        IDbConnection connection;
 
         public void Execute(Action<Func<IDbCommand>> action)
         {

@@ -132,7 +132,7 @@ namespace DbUp.Helpers
             return results;
         }
 
-        private void Execute(string commandText, IEnumerable<Expression<Func<string, object>>> parameters, Action<IDbCommand> executor)
+        void Execute(string commandText, IEnumerable<Expression<Func<string, object>>> parameters, Action<IDbCommand> executor)
         {
             commandText = Preprocess(commandText);
             using (var command = commandFactory())
@@ -153,7 +153,7 @@ namespace DbUp.Helpers
             }
         }
 
-        private string Preprocess(string query)
+        string Preprocess(string query)
         {
             if (string.IsNullOrEmpty(Schema))
                 query = new StripSchemaPreprocessor().Process(query);
