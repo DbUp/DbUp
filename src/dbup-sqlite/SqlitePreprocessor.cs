@@ -1,5 +1,5 @@
-﻿using DbUp.Engine;
-using System.Text.RegularExpressions;
+﻿using System.Text.RegularExpressions;
+using DbUp.Engine;
 
 namespace DbUp.SQLite
 {

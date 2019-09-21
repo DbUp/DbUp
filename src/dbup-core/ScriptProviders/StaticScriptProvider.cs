@@ -1,7 +1,7 @@
+﻿using System;
+using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using System;
-using System.Collections.Generic;
 
 namespace DbUp.ScriptProviders
 {

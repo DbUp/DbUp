@@ -40,7 +40,7 @@ namespace DbUp.ScriptProviders
         {
             this.scripts = scripts;
             this.namer = namer ?? throw new ArgumentNullException(nameof(namer));
-            this.sqlScriptOptions = sqlScriptOptions;            
+            this.sqlScriptOptions = sqlScriptOptions;
         }
 
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)

@@ -1,6 +1,6 @@
-using DbUp.Engine.Output;
-using System;
+﻿using System;
 using System.Data;
+using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {

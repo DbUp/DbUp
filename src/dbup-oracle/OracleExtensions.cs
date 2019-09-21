@@ -1,7 +1,6 @@
 ﻿using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine.Transactions;
-using System.Linq;
 
 namespace DbUp.Oracle
 {

@@ -41,7 +41,7 @@ END;";
 
         static string TriggerName(string tableName) => $"BI_{tableName}ID";
 
-        private void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
+        void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
         {
             using (var command = dbCommandFactory())
             {

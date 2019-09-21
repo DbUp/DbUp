@@ -1,12 +1,12 @@
-namespace DbUp.ScriptProviders
+﻿namespace DbUp.ScriptProviders
 {
-    using Engine;
-    using Engine.Transactions;
     using System;
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
     using System.Text;
+    using Engine;
+    using Engine.Transactions;
 
     /// <summary>
     /// An <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts embedded in assemblies.

@@ -21,7 +21,7 @@ namespace DbUp.Support
         }
 
         /// <summary>
-        /// Quotes the SQL object/identifier to allow Special characters in the object name.       
+        /// Quotes the SQL object/identifier to allow Special characters in the object name.
         /// </summary>
         /// <param name="objectName">Name of the object / identifier to quote.</param>
         /// <returns>The quoted object name with trimmed whitespace</returns>
@@ -31,7 +31,7 @@ namespace DbUp.Support
         }
 
         /// <summary>
-        /// Quotes the SQL object/identifier to allow Special characters in the object name.      
+        /// Quotes the SQL object/identifier to allow Special characters in the object name.
         /// </summary>
         /// <param name="objectName">Name of the object / identifier to quote.</param>
         /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
