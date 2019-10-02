@@ -14,6 +14,8 @@ DbUp supports a number of different databases, the platforms are also listed und
     - &gt;= .NET 3.5
 * PostgreSQL
     - &gt;= .NET 4.0
+* Amazon Redshift
+    - &gt;= .NET 4.0
 * Firebird
     - &gt;= .NET 4.0
 
