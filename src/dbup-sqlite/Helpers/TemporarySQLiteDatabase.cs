@@ -21,9 +21,7 @@ namespace DbUp.SQLite.Helpers
     public class TemporarySQLiteDatabase : IDisposable
     {
         readonly string dataSourcePath;
-        readonly AdHocSqlRunner sqlRunner;
         readonly SQLiteConnection sqLiteConnection;
-        readonly SharedConnection sharedConnection;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="TemporarySQLiteDatabase"/> class.
@@ -50,16 +48,16 @@ namespace DbUp.SQLite.Helpers
 
             sqLiteConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
             sqLiteConnection.Open();
-            sharedConnection = new SharedConnection(sqLiteConnection);
-            sqlRunner = new AdHocSqlRunner(() => sqLiteConnection.CreateCommand(), new SQLiteObjectParser(), null, () => true);
+            SharedConnection = new SharedConnection(sqLiteConnection);
+            SqlRunner = new AdHocSqlRunner(() => sqLiteConnection.CreateCommand(), new SQLiteObjectParser(), null, () => true);
         }
 
         /// <summary>
         /// An adhoc sql runner against the temporary database
         /// </summary>
-        public AdHocSqlRunner SqlRunner => sqlRunner;
+        public AdHocSqlRunner SqlRunner { get; }
 
-        public SharedConnection SharedConnection => sharedConnection;
+        public SharedConnection SharedConnection { get; }
 
         /// <summary>
         /// Creates the database.
@@ -82,7 +80,7 @@ namespace DbUp.SQLite.Helpers
         {
             var filePath = new FileInfo(dataSourcePath);
             if (!filePath.Exists) return;
-            sharedConnection.Dispose();
+            SharedConnection.Dispose();
             sqLiteConnection.Dispose();
 #if !NETCORE
             SQLiteConnection.ClearAllPools();
@@ -92,7 +90,6 @@ namespace DbUp.SQLite.Helpers
             GC.Collect(2, GCCollectionMode.Forced);
             System.Threading.Thread.Sleep(100);
 #endif
-
             File.Delete(dataSourcePath);
         }
     }

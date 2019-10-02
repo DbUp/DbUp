@@ -3,7 +3,7 @@
 namespace DbUp.SqlCe
 {
     /// <summary>
-    /// Parses Sql Objects and performs quoting functions
+    /// Parses Sql Objects and performs quoting functions.
     /// </summary>
     public class SqlCeObjectParser : SqlObjectParser
     {

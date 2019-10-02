@@ -36,7 +36,7 @@ namespace DbUp.ScriptProviders
         /// <param name="filter">The filter.</param>
         /// <param name="encoding">The encoding.</param>
         /// <param name="sqlScriptOptions">The sql script options</param>        
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions) : base(new[] { assembly }, filter, encoding, sqlScriptOptions)
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions) : base(new[] { assembly ?? throw new ArgumentNullException(nameof(assembly)) }, filter, encoding, sqlScriptOptions)
         {
         }
     }

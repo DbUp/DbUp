@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DbUp.Engine.Preprocessors
 {
@@ -15,7 +16,7 @@ namespace DbUp.Engine.Preprocessors
         /// <param name="variables">The variables.</param>
         public VariableSubstitutionPreprocessor(IDictionary<string, string> variables)
         {
-            this.variables = variables;
+            this.variables = variables ?? throw new ArgumentNullException(nameof(variables));
         }
 
         /// <summary>

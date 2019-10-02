@@ -21,14 +21,14 @@ namespace DbUp.Support
         protected const int FailedRead = -1;
 
         /// <summary>
-        /// Creates an instance of SqlParser
+        /// Creates a new instance of <see cref="SqlParser"/>.
         /// </summary>
         /// <param name="sqlText">The text to be read</param>
         /// <param name="delimiter">The command delimiter</param>
         /// <param name="delimiterRequiresWhitespace">Whether it requires whitespace</param>
         public SqlParser(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true) : base(sqlText)
         {
-            this.sqlText = sqlText;
+            this.sqlText = sqlText ?? throw new ArgumentNullException(nameof(sqlText));
             Delimiter = delimiter;
             DelimiterRequiresWhitespace = delimiterRequiresWhitespace;
             currentIndex = -1;
@@ -92,8 +92,7 @@ namespace DbUp.Support
                     ReadCharacter(CharacterType.Command, CurrentChar);
                 }
             }
-            if (CommandEnded != null)
-                CommandEnded();
+            CommandEnded?.Invoke();
         }
 
         #region Events to be subscribed to by consuming or deriving classes
@@ -118,14 +117,10 @@ namespace DbUp.Support
         /// <param name="c">The character that was read</param>
         protected void OnReadCharacter(CharacterType type, char c)
         {
-            if (ReadCharacter != null)
-            {
-                ReadCharacter(type, c);
-            }
-
+            ReadCharacter?.Invoke(type, c);
         }
-        #endregion
 
+        #endregion
 
         /// <summary>
         /// Read a custom statement until it's end is detected
@@ -242,14 +237,7 @@ namespace DbUp.Support
         /// <summary>
         /// Peek at the next character
         /// </summary>
-        protected char PeekChar()
-        {
-            if (HasReachedEnd)
-            {
-                return NullChar;
-            }
-            return (char)Peek();
-        }
+        protected char PeekChar() => HasReachedEnd ? NullChar : (char)Peek();
 
         /// <summary>
         /// Peek at the next character

@@ -7,7 +7,6 @@ using Xunit;
 
 namespace DbUp.Tests.Support.SqlServer
 {
-
     public class SqlCommandSplitterTests
     {
         readonly SqlCommandSplitter sut;
@@ -31,7 +30,6 @@ SELECT AccountId,
         EstimatedInCents,
         OccupationInCents,
         GovernmentInCents".Replace("\r\n", "\n");
-
 
             var commands = sut.SplitScriptIntoCommands(statement).ToArray();
 
@@ -78,7 +76,6 @@ SELECT AccountId,
         [Fact]
         public void should_split_statements_on_go_and_handle_comments()
         {
-
             var sqlGo = "GO";
             var sqlGoWithTerminator = "GO;";
             var sqlBuilder = new StringBuilder();

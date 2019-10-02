@@ -128,7 +128,7 @@ namespace DbUp.Tests
         void AndTheFourthScriptToRunHasAnError()
         {
             var errorSql = "slect * from Oops";
-            recordingConnection.SetupNonQueryResult(errorSql, () => { throw new TestSqlException(); });
+            recordingConnection.SetupNonQueryResult(errorSql, () => throw new TestSqlException());
             scripts.Add(new SqlScript("ScriptWithError.sql", errorSql));
         }
 

@@ -10,9 +10,6 @@ namespace DbUp.Postgresql
         /// <summary>
         /// Performs some preprocessing step on a PostgreSQL script.
         /// </summary>
-        public string Process(string contents)
-        {
-            return contents;
-        }
+        public string Process(string contents) => contents;
     }
 }

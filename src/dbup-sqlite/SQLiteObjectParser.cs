@@ -3,7 +3,7 @@
 namespace DbUp.SQLite
 {
     /// <summary>
-    /// Parses Sql Objects and performs quoting functions
+    /// Parses Sql Objects and performs quoting functions.
     /// </summary>
     public class SQLiteObjectParser : SqlObjectParser
     {

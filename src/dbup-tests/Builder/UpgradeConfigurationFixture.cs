@@ -52,7 +52,6 @@ namespace DbUp.Tests.Builder
 
             config.Log = null;
             config.Log.ShouldBe(defaultLog);
-
         }
 
         class TestLog : IUpgradeLog

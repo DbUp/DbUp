@@ -6,14 +6,8 @@ namespace DbUp.Engine
     {
         readonly Action dispose;
 
-        public DelegateDisposable(Action dispose)
-        {
-            this.dispose = dispose;
-        }
+        public DelegateDisposable(Action dispose) => this.dispose = dispose;
 
-        public void Dispose()
-        {
-            dispose();
-        }
+        public void Dispose() => dispose();
     }
 }

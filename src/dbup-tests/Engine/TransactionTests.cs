@@ -35,7 +35,7 @@ namespace DbUp.Tests.Engine
 
         class TransactionCountingConnectionFactory : IConnectionFactory
         {
-            int transactionCount = 0;
+            int transactionCount;
 
             public bool TransactionWasOpened { get; private set; }
 

@@ -6,7 +6,7 @@ using DbUp.Engine.Output;
 namespace DbUp.Engine.Transactions
 {
     /// <summary>
-    /// The transaction strategy being to be used by the DatabaseConnectionManager
+    /// The transaction strategy being to be used by the <see cref="DatabaseConnectionManager"/>
     /// </summary>
     public interface ITransactionStrategy : IDisposable
     {

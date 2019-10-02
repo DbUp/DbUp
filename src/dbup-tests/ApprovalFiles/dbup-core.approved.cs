@@ -431,7 +431,7 @@ namespace DbUp.Support
         public virtual void Execute(DbUp.Engine.SqlScript script) { }
         public virtual void Execute(DbUp.Engine.SqlScript script, System.Collections.Generic.IDictionary<string, string> variables) { }
         protected virtual void ExecuteAndLogOutput(System.Data.IDbCommand command) { }
-        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action excuteCallback);
+        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action executeCallback);
         protected virtual void ExecuteNonQuery(System.Data.IDbCommand command) { }
         protected abstract string GetVerifySchemaSql(string schema);
         protected virtual string PreprocessScriptContents(DbUp.Engine.SqlScript script, System.Collections.Generic.IDictionary<string, string> variables) { }

@@ -30,5 +30,4 @@
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="4.5.2.0" />
   </ItemGroup>
 
-
 </Project>

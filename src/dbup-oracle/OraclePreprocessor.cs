@@ -4,9 +4,6 @@ namespace DbUp.Oracle
 {
     public class OraclePreprocessor : IScriptPreprocessor
     {
-        public string Process(string contents)
-        {
-            return contents;
-        }
+        public string Process(string contents) => contents;
     }
 }

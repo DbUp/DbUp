@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DbUp.Support
 {
@@ -8,7 +9,7 @@ namespace DbUp.Support
 
         public ScriptNameComparer(IComparer<string> comparer)
         {
-            this.comparer = comparer;
+            this.comparer = comparer ?? throw new ArgumentNullException(nameof(comparer));
         }
 
         public int Compare(string x, string y) => comparer.Compare(x, y);

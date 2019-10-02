@@ -37,15 +37,9 @@ $@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT 
 END;";
         }
 
-        static string GeneratorName(string tableName)
-        {
-            return $"GEN_{tableName}ID";
-        }
+        static string GeneratorName(string tableName) => $"GEN_{tableName}ID";
 
-        static string TriggerName(string tableName)
-        {
-            return $"BI_{tableName}ID";
-        }
+        static string TriggerName(string tableName) => $"BI_{tableName}ID";
 
         void ExecuteCommand(Func<IDbCommand> dbCommandFactory, string sql)
         {
@@ -59,11 +53,11 @@ END;";
 
         protected override void OnTableCreated(Func<IDbCommand> dbCommandFactory)
         {
-            var unqotedTableName = UnquoteSqlObjectName(FqSchemaTableName);
-            ExecuteCommand(dbCommandFactory, CreateGeneratorSql(unqotedTableName));
-            Log().WriteInformation($"The {GeneratorName(unqotedTableName)} generator has been created");
-            ExecuteCommand(dbCommandFactory, CreateTriggerSql(unqotedTableName));
-            Log().WriteInformation($"The {TriggerName(unqotedTableName)} trigger has been created");
+            var unquotedTableName = UnquoteSqlObjectName(FqSchemaTableName);
+            ExecuteCommand(dbCommandFactory, CreateGeneratorSql(unquotedTableName));
+            Log().WriteInformation($"The {GeneratorName(unquotedTableName)} generator has been created");
+            ExecuteCommand(dbCommandFactory, CreateTriggerSql(unquotedTableName));
+            Log().WriteInformation($"The {TriggerName(unquotedTableName)} trigger has been created");
         }
 
         protected override string DoesTableExistSql()

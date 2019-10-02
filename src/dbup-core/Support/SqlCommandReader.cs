@@ -13,7 +13,7 @@ namespace DbUp.Support
         readonly StringBuilder commandScriptBuilder;
 
         /// <summary>
-        /// Creates an instance of SqlCommandReader
+        /// Creates an instance of <see cref="SqlCommandReader"/>.
         /// </summary>
         public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true)
             : base(sqlText, delimiter, delimiterRequiresWhitespace)
@@ -43,7 +43,7 @@ namespace DbUp.Support
                         case CharacterType.Delimiter:
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("type", type, null);
+                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
                     }
 
                 };

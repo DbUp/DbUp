@@ -36,5 +36,4 @@
     <PackageReference Include="Npgsql" Version="3.2.6" />
   </ItemGroup>
 
-  
 </Project>

@@ -3,7 +3,7 @@
 namespace DbUp.Engine
 {
     /// <summary>
-    /// Represents a SQL Server script that is fetched at execution time, rather than discovery time
+    /// Represents a SQL script that is fetched at execution time, rather than discovery time
     /// </summary>
     public class LazySqlScript : SqlScript
     {

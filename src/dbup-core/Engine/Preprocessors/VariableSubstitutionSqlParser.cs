@@ -7,13 +7,12 @@ using DbUp.Support;
 namespace DbUp.Engine.Preprocessors
 {
     /// <summary>
-    /// Parses the Sql and substitutes variables, used by the VariableSubstitutionPreprocessor
+    /// Parses the Sql and substitutes variables, used by the <see cref="VariableSubstitutionPreprocessor"/>
     /// </summary>
     public class VariableSubstitutionSqlParser : SqlParser
     {
-
         /// <summary>
-        /// Default constructor
+        /// Initializes a new instance of the <see cref="VariableSubstitutionSqlParser"/> class.
         /// </summary>
         /// <param name="sqlText">The sql to be parsed</param>
         /// <param name="delimiter">The command delimiter (default = "GO")</param>
@@ -34,9 +33,13 @@ namespace DbUp.Engine.Preprocessors
         /// </summary>
         /// <param name="variables">Variable map</param>
         /// <returns>The sql with all variables replaced</returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="variables"/> is null</exception>
         /// <exception cref="InvalidOperationException">Throws if a variable is present in the SQL but not in the `variables` map</exception>
         public string ReplaceVariables(IDictionary<string, string> variables)
         {
+            if (variables == null)
+                throw new ArgumentNullException(nameof(variables));
+
             var sb = new StringBuilder();
 
             ReadCharacter += (type, c) => sb.Append(c);
@@ -76,7 +79,7 @@ namespace DbUp.Engine.Preprocessors
         /// <returns>True if it's a valid variable name character</returns>
         protected virtual bool ValidVariableNameCharacter(char c)
         {
-            return (char.IsLetterOrDigit(c) || c == '_' || c == '-');
+            return char.IsLetterOrDigit(c) || c == '_' || c == '-';
         }
 
         /// <summary>

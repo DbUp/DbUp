@@ -11,15 +11,13 @@ namespace DbUp.SqlServer.Helpers
     {
         const string localSqlInstance = @"(local)";
 
-        readonly string connectionString;
-        readonly AdHocSqlRunner database;
         readonly string databaseName;
         readonly AdHocSqlRunner master;
         readonly SqlConnection sqlConnection;
         readonly SqlConnection masterSqlConnection;
 
         /// <summary>
-        /// Creates new TemporarySqlDatabase against (local)
+        /// Creates new <see cref="TemporarySqlDatabase"/> against (local)
         /// </summary>
         public TemporarySqlDatabase(string name) : this(name, localSqlInstance) { }
 
@@ -45,9 +43,9 @@ namespace DbUp.SqlServer.Helpers
 
             // set the temporary database information
             databaseName = builder.InitialCatalog;
-            connectionString = builder.ConnectionString;
-            sqlConnection = new SqlConnection(connectionString);
-            database = new AdHocSqlRunner(sqlConnection.CreateCommand, new SqlServer.SqlServerObjectParser(), "dbo", () => true);
+            ConnectionString = builder.ConnectionString;
+            sqlConnection = new SqlConnection(ConnectionString);
+            AdHoc = new AdHocSqlRunner(sqlConnection.CreateCommand, new SqlServer.SqlServerObjectParser(), "dbo", () => true);
 
             // set the master database information
             builder.InitialCatalog = "master";
@@ -59,13 +57,13 @@ namespace DbUp.SqlServer.Helpers
         /// Gets the connection string.
         /// </summary>
         /// <value>The connection string.</value>
-        public string ConnectionString => connectionString;
+        public string ConnectionString { get; }
 
         /// <summary>
         /// Gets a tool to run ad-hoc SQL queries.
         /// </summary>
         /// <value>The ad hoc.</value>
-        public AdHocSqlRunner AdHoc => database;
+        public AdHocSqlRunner AdHoc { get; }
 
         /// <summary>
         /// Creates the database.

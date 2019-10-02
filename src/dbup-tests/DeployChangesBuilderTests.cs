@@ -70,7 +70,6 @@ namespace DbUp.Tests
             command.CommandTimeout.ShouldBe(0);
         }
 
-
         [Fact]
         public void WithExecutionTimeout_Should_Not_Allow_Negative_Timeout_Values()
         {
