@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
@@ -66,7 +66,7 @@ namespace DbUp.ScriptProviders
         IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)
         {
             var script = typeof(IScript);
-            return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory => assembly
+            return assembly
                 .GetTypes()
                 .Where(type =>
                 {
@@ -79,8 +79,12 @@ namespace DbUp.ScriptProviders
                        !type.IsAbstract;
 #endif
                 })
-                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", sqlScriptOptions, () => ((IScript)Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
-                .ToList());
+                .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", sqlScriptOptions, () =>
+                connectionManager.ExecuteCommandsWithManagedConnection(
+                    dbCommandFactory =>
+                                        ((IScript)Activator.CreateInstance(s))
+                                        .ProvideScript(dbCommandFactory)))
+                ).ToList();
         }
 
         /// <summary>
