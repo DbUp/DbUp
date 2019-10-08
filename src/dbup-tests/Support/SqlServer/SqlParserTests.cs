@@ -16,19 +16,25 @@ go
 DELIMITERION;
 go;
 DELIMITER";
-            var parser = new TestSqlParser(originalSql, "DELIMITER");
-            var parsedSql = parser.ParseStuff();
-            parsedSql.ShouldBe(originalSql);
+            using (var parser = new TestSqlParser(originalSql, "DELIMITER"))
+            {
+                var parsedSql = parser.ParseStuff();
+                parsedSql.ShouldBe(originalSql);
+            }
         }
+
         [Fact]
         public void should_handle_delimiter_at_the_eof()
         {
             var originalSql = @"something
 go";
-            var parser = new TestSqlParser(originalSql);
-            var parsedSql = parser.ParseStuff();
-            parsedSql.ShouldBe(originalSql);
+            using (var parser = new TestSqlParser(originalSql))
+            {
+                var parsedSql = parser.ParseStuff();
+                parsedSql.ShouldBe(originalSql);
+            }
         }
+
         [Fact]
         public void shouldnt_change_parsed_script()
         {
@@ -40,9 +46,11 @@ Someotherstuff
 gogogo this shouldnt match
 ;
 go";
-            var parser = new TestSqlParser(originalSql);
-            var parsedSql = parser.ParseStuff();
-            parsedSql.ShouldBe(originalSql);
+            using (var parser = new TestSqlParser(originalSql))
+            {
+                var parsedSql = parser.ParseStuff();
+                parsedSql.ShouldBe(originalSql);
+            }
         }
 
         class TestSqlParser : SqlParser
