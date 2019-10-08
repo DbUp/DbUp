@@ -363,8 +363,12 @@ namespace DbUp.Support
 
         void ReadSlashStarComment()
         {
-            // Write the current slash.
+            // We have entered this method because we've identified the "/*" pattern.
+            // Write both characters here as technically they go together as a token.
             ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
+            Read();
+            ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
+
             // Read until we find a the ending of the slash star comment,
             // Or a nested slash star comment.
             while (Read() != FailedRead)
@@ -372,6 +376,7 @@ namespace DbUp.Support
                 // Try to get out of the comment straight away
                 if (IsEndOfSlashStarComment)
                 {
+                    // Write both characters of the "*/" token immediately then return
                     ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
                     Read();
                     ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
@@ -380,7 +385,7 @@ namespace DbUp.Support
 
                 if (IsBeginningOfSlashStarComment)
                 {
-                    // Nested comment found - using recursive call to read it.
+                    // Nested comment found - using recursive call to read it then continue the loop.
                     ReadSlashStarComment();
                     continue;
                 }
