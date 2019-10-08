@@ -279,15 +279,14 @@ namespace DbUp.Support
             {
                 var lastCharIsNullOrEmpty = char.IsWhiteSpace(LastChar) || LastChar == NullChar || !DelimiterRequiresWhitespace;
                 var isCurrentCharacterStartOfDelimiter = IsCurrentCharEqualTo(Delimiter[0]);
-                return
-                    lastCharIsNullOrEmpty &&
-                    isCurrentCharacterStartOfDelimiter &&
-                    TryPeek(Delimiter.Length - 1, out var result) &&
-                    string.Equals(result, Delimiter.Substring(1), StringComparison.OrdinalIgnoreCase);
+                return lastCharIsNullOrEmpty
+                       && isCurrentCharacterStartOfDelimiter
+                       && TryPeek(Delimiter.Length - 1, out var result)
+                       && string.Equals(result, Delimiter.Substring(1), StringComparison.OrdinalIgnoreCase);
             }
         }
 
-        bool IsEndOfSlashStarComment => LastChar == StarChar && CurrentChar == SlashChar;
+        bool IsEndOfSlashStarComment => CurrentChar == StarChar && Peek() == SlashChar;
 
 
         /// <summary>
@@ -370,19 +369,23 @@ namespace DbUp.Support
             // Or a nested slash star comment.
             while (Read() != FailedRead)
             {
+                // Try to get out of the comment straight away
+                if (IsEndOfSlashStarComment)
+                {
+                    ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
+                    Read();
+                    ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
+                    return;
+                }
+
                 if (IsBeginningOfSlashStarComment)
                 {
                     // Nested comment found - using recursive call to read it.
                     ReadSlashStarComment();
+                    continue;
                 }
-                else
-                {
-                    ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
-                    if (IsEndOfSlashStarComment)
-                    {
-                        return;
-                    }
-                }
+
+                ReadCharacter(CharacterType.SlashStarComment, CurrentChar);
             }
         }
 
