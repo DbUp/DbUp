@@ -4,7 +4,7 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts.</Description>
     <Title>DbUp MS Sql Server Support</Title>
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
-    <TargetFrameworks>netstandard1.3;net35</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net46</TargetFrameworks>
     <AssemblyName>dbup-sqlserver</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -24,15 +24,15 @@
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
+  <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <DefineConstants>$(DefineConstants);SUPPORTS_SQL_CONTEXT</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <Reference Include="System.Data" />
     <Reference Include="System" />
   </ItemGroup>
