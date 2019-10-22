@@ -19,11 +19,11 @@ namespace DbUp.Oracle
     }
     public static class OracleExtensions
     {
-        public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
+        public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
-        public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(DbUp.Engine.Transactions.IConnectionManager connectionManager, string schema) { }
+        public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
     }
     public class OracleObjectParser : DbUp.Support.SqlObjectParser, DbUp.Engine.ISqlObjectParser
     {

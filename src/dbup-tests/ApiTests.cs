@@ -125,7 +125,7 @@ namespace DbUp.Tests
 
         void AppendTypes(StringBuilder sb, int indent, IEnumerable<Type> types)
         {
-            foreach (var type in types)
+            foreach (var type in types.OrderBy(t => t.Name))
             {
                 AppendAttributes(sb, indent, type.GetCustomAttributesData(), false);
 
@@ -222,7 +222,12 @@ namespace DbUp.Tests
             foreach (var property in type.GetProperties(bindingFlags).OrderBy(p => p.Name))
                 AppendProperty(sb, type, indent, property);
 
-            var methods = type.GetMethods(bindingFlags).Where(m => m.IsPublic || m.IsFamily).Where(m => !m.IsSpecialName).OrderBy(p => p.Name);
+            var methods = type.GetMethods(bindingFlags)
+                              .Where(m => m.IsPublic || m.IsFamily)
+                              .Where(m => !m.IsSpecialName)
+                              .OrderBy(p => p.Name)
+                              .ThenByDescending(p => p.GetParameters().Length);
+
             foreach (var method in methods)
                 AppendMethod(sb, indent, method);
 
