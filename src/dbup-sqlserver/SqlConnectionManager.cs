@@ -11,6 +11,8 @@ namespace DbUp.SqlServer
     /// </summary>
     public class SqlConnectionManager : DatabaseConnectionManager
     {
+        internal SqlCommandSplitter CommandSplitter { get; set; } = new SqlCommandSplitter();
+
         /// <summary>
         /// Manages Sql Database Connections
         /// </summary>
@@ -29,10 +31,6 @@ namespace DbUp.SqlServer
         }
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
-        {
-            var commandSplitter = new SqlCommandSplitter();
-            var scriptStatements = commandSplitter.SplitScriptIntoCommands(scriptContents);
-            return scriptStatements;
-        }
+            => CommandSplitter.SplitScriptIntoCommands(scriptContents);
     }
 }
