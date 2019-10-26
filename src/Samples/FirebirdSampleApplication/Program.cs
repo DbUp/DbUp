@@ -1,16 +1,17 @@
 ﻿using System;
-using System.Configuration;
 using System.Diagnostics;
 using System.Reflection;
+using Microsoft.Extensions.Configuration;
 using DbUp;
 
 namespace FirebirdSampleApplication
 {
     class Program
     {
-        static int Main(string[] args)
+        static int Main()
         {
-            var connectionString = ConfigurationManager.ConnectionStrings["SampleFirebird"].ConnectionString;
+            var config = GetConfig();
+            string connectionString = config.GetConnectionString("SampleFirebird");
 
             var upgrader =
                 DeployChanges.To
@@ -37,6 +38,14 @@ namespace FirebirdSampleApplication
             Console.ResetColor();
             WaitIfDebug();
             return 0;
+        }
+
+        private static IConfiguration GetConfig()
+        {
+            IConfiguration config = new ConfigurationBuilder()
+                .AddJsonFile("appsettings.json", true, true)
+                .Build();
+            return config;
         }
 
         [Conditional("DEBUG")]
