@@ -1,6 +1,6 @@
 ﻿using System;
-using DbUp.Support;
 using DbUp.SqlServer;
+using DbUp.Support;
 using Shouldly;
 using Xunit;
 
@@ -8,7 +8,7 @@ namespace DbUp.Tests.Support.SqlServer
 {
     public class SqlObjectParserTests
     {
-        private readonly SqlServerObjectParser sut;
+        readonly SqlServerObjectParser sut;
 
         public SqlObjectParserTests()
         {

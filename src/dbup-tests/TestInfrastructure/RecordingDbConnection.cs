@@ -5,7 +5,7 @@ using DbUp.Engine;
 
 namespace DbUp.Tests.TestInfrastructure
 {
-    internal class RecordingDbConnection : IDbConnection
+    class RecordingDbConnection : IDbConnection
     {
         readonly Dictionary<string, Func<object>> scalarResults = new Dictionary<string, Func<object>>();
         readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();

@@ -1,14 +1,13 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using NUnit.Framework;
-using DbUp.SqlServer;
 using Shouldly;
 
 namespace DbUp.Tests.Engine

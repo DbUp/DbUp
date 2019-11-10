@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using DbUp.Engine.Transactions;
 using Oracle.ManagedDataAccess.Client;
 
@@ -9,9 +7,9 @@ namespace DbUp.Oracle
     public class OracleConnectionManager : DatabaseConnectionManager
     {
         /// <summary>
-        /// Creates a new MySql database connection.
+        /// Creates a new Oracle database connection.
         /// </summary>
-        /// <param name="connectionString">The MySql connection string.</param>
+        /// <param name="connectionString">The Oracle connection string.</param>
         public OracleConnectionManager(string connectionString) : base(new DelegateConnectionFactory(l => new OracleConnection(connectionString)))
         {
         }

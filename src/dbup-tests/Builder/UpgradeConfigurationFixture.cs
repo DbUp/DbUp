@@ -37,9 +37,9 @@ namespace DbUp.Tests.Builder
             config.Log.WriteInformation("Test");
 
             config.Log.ShouldBeOfType<MultipleUpgradeLog>();
-            log1.WasWritten.ShouldBe(true);            
-            log2.WasWritten.ShouldBe(true);            
-            log3.WasWritten.ShouldBe(true);            
+            log1.WasWritten.ShouldBe(true);
+            log2.WasWritten.ShouldBe(true);
+            log3.WasWritten.ShouldBe(true);
         }
 
         [Fact]
@@ -49,12 +49,11 @@ namespace DbUp.Tests.Builder
             var defaultLog = config.Log;
             config.AddLog(new NoOpUpgradeLog());
             config.Log.ShouldNotBe(defaultLog);
-            
+
             config.Log = null;
             config.Log.ShouldBe(defaultLog);
-
         }
-        
+
         class TestLog : IUpgradeLog
         {
             public bool WasWritten { get; private set; }

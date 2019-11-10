@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Data.SqlClient;
-using System.Diagnostics;
-using DbUp.Engine.Output;
 using DbUp.Helpers;
 
 namespace DbUp.SqlServer.Helpers
@@ -11,17 +9,15 @@ namespace DbUp.SqlServer.Helpers
     /// </summary>
     public class TemporarySqlDatabase : IDisposable
     {
-        private const string localSqlInstance = @"(local)";
+        const string localSqlInstance = @"(local)";
 
-        private readonly string connectionString;
-        private readonly AdHocSqlRunner database;
-        private readonly string databaseName;
-        private readonly AdHocSqlRunner master;
-        private readonly SqlConnection sqlConnection;
-        private readonly SqlConnection masterSqlConnection;
+        readonly string databaseName;
+        readonly AdHocSqlRunner master;
+        readonly SqlConnection sqlConnection;
+        readonly SqlConnection masterSqlConnection;
 
-		/// <summary>
-        /// Creates new TemporarySqlDatabase against (local)
+        /// <summary>
+        /// Creates new <see cref="TemporarySqlDatabase"/> against (local)
         /// </summary>
         public TemporarySqlDatabase(string name) : this(name, localSqlInstance) { }
 
@@ -40,14 +36,16 @@ namespace DbUp.SqlServer.Helpers
         /// <param name="connectionStringBuilder"><see cref="SqlConnectionStringBuilder"/> specifying which database to create.</param>
         public TemporarySqlDatabase(SqlConnectionStringBuilder connectionStringBuilder)
         {
-            var builder = new SqlConnectionStringBuilder(connectionStringBuilder.ToString()); //so we don't mangle the connectionStringBuilder coming in
-            builder.Pooling = false; // make sure connection pooling is disabled so the connection is actually closed as expected
+            var builder = new SqlConnectionStringBuilder(connectionStringBuilder.ToString())
+            {
+                Pooling = false // make sure connection pooling is disabled so the connection is actually closed as expected
+            }; //so we don't mangle the connectionStringBuilder coming in
 
             // set the temporary database information
             databaseName = builder.InitialCatalog;
-            connectionString = builder.ConnectionString;
-            sqlConnection = new SqlConnection(connectionString);
-            database = new AdHocSqlRunner(sqlConnection.CreateCommand, new SqlServer.SqlServerObjectParser(), "dbo", () => true);
+            ConnectionString = builder.ConnectionString;
+            sqlConnection = new SqlConnection(ConnectionString);
+            AdHoc = new AdHocSqlRunner(sqlConnection.CreateCommand, new SqlServer.SqlServerObjectParser(), "dbo", () => true);
 
             // set the master database information
             builder.InitialCatalog = "master";
@@ -59,19 +57,13 @@ namespace DbUp.SqlServer.Helpers
         /// Gets the connection string.
         /// </summary>
         /// <value>The connection string.</value>
-        public string ConnectionString
-        {
-            get { return connectionString; }
-        }
+        public string ConnectionString { get; }
 
         /// <summary>
         /// Gets a tool to run ad-hoc SQL queries.
         /// </summary>
         /// <value>The ad hoc.</value>
-        public AdHocSqlRunner AdHoc
-        {
-            get { return database; }
-        }
+        public AdHocSqlRunner AdHoc { get; }
 
         /// <summary>
         /// Creates the database.

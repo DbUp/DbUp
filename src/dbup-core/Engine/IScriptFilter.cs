@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using DbUp.Engine.Filters;
 using DbUp.Support;
 
 namespace DbUp.Engine

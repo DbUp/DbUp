@@ -1,6 +1,6 @@
-﻿using DbUp.Engine;
-using System;
+﻿using System;
 using System.Text.RegularExpressions;
+using DbUp.Engine;
 
 namespace DbUp.Support
 {
@@ -21,9 +21,9 @@ namespace DbUp.Support
         }
 
         /// <summary>
-        /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.
+        /// Quotes the SQL object/identifier to allow Special characters in the object name.
         /// </summary>
-        /// <param name="objectName">Name of the object to quote.</param>
+        /// <param name="objectName">Name of the object / identifier to quote.</param>
         /// <returns>The quoted object name with trimmed whitespace</returns>
         public string QuoteIdentifier(string objectName)
         {
@@ -31,24 +31,23 @@ namespace DbUp.Support
         }
 
         /// <summary>
-        /// Quotes the name of the SQLite object in square brackets to allow Special characters in the object name.
+        /// Quotes the SQL object/identifier to allow Special characters in the object name.
         /// </summary>
-        /// <param name="objectName">Name of the object to quote.</param>
+        /// <param name="objectName">Name of the object / identifier to quote.</param>
         /// <param name="objectNameOptions">The settings which indicate if the whitespace should be dropped or not.</param>
         /// <returns>The quoted object name</returns>
         public virtual string QuoteIdentifier(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
-                throw new ArgumentNullException();
+                throw new ArgumentNullException(nameof(objectName));
 
-            if (ObjectNameOptions.Trim == objectNameOptions)
+            if (objectNameOptions == ObjectNameOptions.Trim)
                 objectName = objectName.Trim();
 
             // Don't double quote
             if (matchQuotes.IsMatch(objectName))
                 return objectName;
 
-            // defer to sqlite command implementation.
             return $"{quotePrefix}{objectName}{quoteSuffix}";
         }
 

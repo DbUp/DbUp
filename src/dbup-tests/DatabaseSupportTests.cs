@@ -2,23 +2,22 @@
 using System.Collections.Generic;
 using System.IO;
 using Assent;
-using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.SqlServer;
+using DbUp.Oracle;
 using DbUp.SQLite;
-using DbUp.Tests.Helpers;
+using DbUp.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
-using DbUp.Oracle;
 
 #if !NETCORE
 using DbUp.Firebird;
 using DbUp.MySql;
 using DbUp.Postgresql;
+using DbUp.Redshift;
 #endif
 
 namespace DbUp.Tests
@@ -80,11 +79,7 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        ExampleTable DatabaseExampleTable
-        {
-            get
-            {
-                return new ExampleTable("Deploy to")
+        ExampleTable DatabaseExampleTable => new ExampleTable("Deploy to")
                 {
                     new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) =>
                     {
@@ -101,12 +96,11 @@ namespace DbUp.Tests
 #if !NETCORE
                     new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
                     new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+                    new ExampleAction("Redshift", Deploy(to => to.RedshiftDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new RedshiftTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))                    
 #endif
                 };
-            }
-        }
 
         void VariableSubstitutionIsSetup()
         {
@@ -124,9 +118,9 @@ namespace DbUp.Tests
                 .UsingSanitiser(Scrubbers.ScrubDates)
                 .UsingNamer(new Namer(target, testName));
 
-            // Automatically approve the change, make sure to check the result before commiting 
-            // configuration = configuration.UsingReporter((recieved, approved) => File.Copy(recieved, approved, true));
-            
+            // Automatically approve the change, make sure to check the result before committing 
+            // configuration = configuration.UsingReporter((received, approved) => File.Copy(received, approved, true));
+
             this.Assent(logger.Log, configuration);
         }
 
@@ -171,10 +165,10 @@ namespace DbUp.Tests
             };
         }
 
-        private class Namer : INamer
+        class Namer : INamer
         {
-            private readonly ExampleAction target;
-            private readonly string testName;
+            readonly ExampleAction target;
+            readonly string testName;
 
             public Namer(ExampleAction target, string testName)
             {

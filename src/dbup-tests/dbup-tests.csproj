@@ -16,6 +16,7 @@
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
     <ProjectReference Include="..\dbup-oracle\dbup-oracle.csproj" />
+    <ProjectReference Include="..\dbup-redshift\dbup-redshift.csproj" />
     <ProjectReference Include="..\dbup-sqlserver\dbup-sqlserver.csproj" />
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
     <ProjectReference Include="..\dbup-mysql\dbup-mysql.csproj" />
@@ -32,6 +33,7 @@
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
     <ProjectReference Include="..\dbup-sqlce\dbup-sqlce.csproj" />
     <ProjectReference Include="..\dbup-firebird\dbup-firebird.csproj" />
+    <ProjectReference Include="..\dbup-sqlanywhere\dbup-sqlanywhere.csproj" />
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="4.0.8876.1" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,6 +42,7 @@
     <Compile Remove="**\*.received.cs" />
     <EmbeddedResource Include="TestScripts\**\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
     <Compile Remove="ApprovalFiles\*.cs" />
+    <None Include="ApprovalFiles\*.cs" />
     <None Update="TestFilterFiles\ScriptNames.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

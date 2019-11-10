@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Data;
 using DbUp.Engine;
-using DbUp.Engine.Output;
-using DbUp.SqlServer;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -71,7 +69,6 @@ namespace DbUp.Tests
 
             command.CommandTimeout.ShouldBe(0);
         }
-
 
         [Fact]
         public void WithExecutionTimeout_Should_Not_Allow_Negative_Timeout_Values()

@@ -6,7 +6,7 @@ namespace DbUp.Engine.Output
 {
     public class AutodetectUpgradeLog : IUpgradeLog
     {
-        private readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
+        readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
                                       ?? LogToConsoleInstead;
 
         public void WriteInformation(string format, params object[] args) => log(LogLevel.Info, () => format, null, args);
@@ -31,9 +31,16 @@ namespace DbUp.Engine.Output
                 }
             }
 
+            var oldColor = Console.ForegroundColor;
             Console.ForegroundColor = GetColor();
-            Console.WriteLine(format(), args);
-            Console.ResetColor();
+            try
+            {
+                Console.WriteLine(format(), args);
+            }
+            finally
+            {
+                Console.ForegroundColor = oldColor;
+            }
             return true;
         }
     }

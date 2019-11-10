@@ -4,11 +4,11 @@ using System.Data.SQLite;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.SQLite;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using DbUp.SQLite;
-using Xunit;
 using Shouldly;
+using Xunit;
 
 namespace DbUp.Tests.Support.SQLite
 {

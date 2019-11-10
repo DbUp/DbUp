@@ -10,10 +10,10 @@ namespace DbUp.Support
     /// </summary>
     public class SqlCommandReader : SqlParser
     {
-        private readonly StringBuilder commandScriptBuilder;
+        readonly StringBuilder commandScriptBuilder;
 
         /// <summary>
-        /// Creates an instance of SqlCommandReader
+        /// Creates an instance of <see cref="SqlCommandReader"/>.
         /// </summary>
         public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true)
             : base(sqlText, delimiter, delimiterRequiresWhitespace)
@@ -28,7 +28,7 @@ namespace DbUp.Support
         {
             while (!HasReachedEnd)
             {
-                this.ReadCharacter += (type, c) =>
+                ReadCharacter += (type, c) =>
                 {
                     switch (type)
                     {
@@ -43,11 +43,11 @@ namespace DbUp.Support
                         case CharacterType.Delimiter:
                             break;
                         default:
-                            throw new ArgumentOutOfRangeException("type", type, null);
+                            throw new ArgumentOutOfRangeException(nameof(type), type, null);
                     }
-                    
+
                 };
-                this.CommandEnded += () =>
+                CommandEnded += () =>
                 {
                     var commandText = GetCurrentCommandTextFromBuffer();
                     if (commandText.Length > 0)
@@ -61,12 +61,12 @@ namespace DbUp.Support
             }
         }
 
-        private void ResetCommandBuffer()
+        void ResetCommandBuffer()
         {
             commandScriptBuilder.Length = 0;
         }
 
-        private string GetCurrentCommandTextFromBuffer()
+        string GetCurrentCommandTextFromBuffer()
         {
             return commandScriptBuilder.ToString().Trim();
         }

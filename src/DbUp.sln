@@ -1,10 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.26730.10
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29230.61
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		..\appveyor.yml = ..\appveyor.yml
 		..\Breaking changes.md = ..\Breaking changes.md
 		..\build.cake = ..\build.cake
@@ -38,6 +39,10 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApplication", "Samples\SampleApplication\SampleApplication.csproj", "{397F41BC-1076-4D1B-9620-C6051E8104F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-oracle", "dbup-oracle\dbup-oracle.csproj", "{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlanywhere", "dbup-sqlanywhere\dbup-sqlanywhere.csproj", "{93F59A3B-70CB-44CA-AA41-B76889AA9D51}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-redshift", "dbup-redshift\dbup-redshift.csproj", "{7E77DD23-2E16-471A-897B-C67FB73C62C8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -89,6 +94,14 @@ Global
 		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

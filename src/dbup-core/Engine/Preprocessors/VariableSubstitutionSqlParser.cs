@@ -7,13 +7,12 @@ using DbUp.Support;
 namespace DbUp.Engine.Preprocessors
 {
     /// <summary>
-    /// Parses the Sql and substitutes variables, used by the VariableSubstitutionPreprocessor
+    /// Parses the Sql and substitutes variables, used by the <see cref="VariableSubstitutionPreprocessor"/>
     /// </summary>
     public class VariableSubstitutionSqlParser : SqlParser
     {
-
         /// <summary>
-        /// Default constructor
+        /// Initializes a new instance of the <see cref="VariableSubstitutionSqlParser"/> class.
         /// </summary>
         /// <param name="sqlText">The sql to be parsed</param>
         /// <param name="delimiter">The command delimiter (default = "GO")</param>
@@ -27,24 +26,25 @@ namespace DbUp.Engine.Preprocessors
         /// Delimiter character for variables.
         /// Defaults to `$` but can be overriden in derived classes.
         /// </summary>
-        protected virtual char VariableDelimiter
-        {
-            get { return '$'; }
-        }
+        protected virtual char VariableDelimiter => '$';
 
         /// <summary>
         /// Replaces variables in the parsed SQL
         /// </summary>
         /// <param name="variables">Variable map</param>
         /// <returns>The sql with all variables replaced</returns>
+        /// <exception cref="ArgumentNullException">Throws if <paramref name="variables"/> is null</exception>
         /// <exception cref="InvalidOperationException">Throws if a variable is present in the SQL but not in the `variables` map</exception>
         public string ReplaceVariables(IDictionary<string, string> variables)
         {
+            if (variables == null)
+                throw new ArgumentNullException(nameof(variables));
+
             var sb = new StringBuilder();
 
-            this.ReadCharacter += (type, c) => sb.Append(c);
+            ReadCharacter += (type, c) => sb.Append(c);
 
-            this.ReadVariableName += (name) =>
+            ReadVariableName += (name) =>
             {
                 if (!variables.ContainsKey(name))
                 {
@@ -54,7 +54,7 @@ namespace DbUp.Engine.Preprocessors
                 sb.Append(variables[name]);
             };
 
-            this.Parse();
+            Parse();
 
             return sb.ToString();
         }
@@ -79,7 +79,7 @@ namespace DbUp.Engine.Preprocessors
         /// <returns>True if it's a valid variable name character</returns>
         protected virtual bool ValidVariableNameCharacter(char c)
         {
-            return (char.IsLetterOrDigit(c) || c == '_' || c == '-');
+            return char.IsLetterOrDigit(c) || c == '_' || c == '-';
         }
 
         /// <summary>
@@ -110,6 +110,6 @@ namespace DbUp.Engine.Preprocessors
             }
         }
 
-        private event Action<string> ReadVariableName;
+        event Action<string> ReadVariableName;
     }
 }

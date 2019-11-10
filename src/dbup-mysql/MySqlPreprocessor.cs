@@ -1,5 +1,4 @@
 ﻿using DbUp.Engine;
-using System;
 
 namespace DbUp.MySql
 {
@@ -9,11 +8,8 @@ namespace DbUp.MySql
     public class MySqlPreprocessor : IScriptPreprocessor
     {
         /// <summary>
-        /// Performs some proprocessing step on a PostgreSQL script.
+        /// Performs some preprocessing step on a PostgreSQL script.
         /// </summary>
-        public string Process(string contents)
-        {
-            return contents;
-        }
+        public string Process(string contents) => contents;
     }
 }

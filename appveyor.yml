@@ -13,3 +13,6 @@ skip_tags: true
 
 cache:
   - src\packages -> **\packages.config  # preserve "packages" directory in the root of build folder but will reset it if packages.config is modified
+
+environment:
+  AssentNonInteractive: true

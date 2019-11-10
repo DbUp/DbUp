@@ -20,7 +20,6 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' OR '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);MY_SQL_DATA_6_9_5</DefineConstants>
   </PropertyGroup>
@@ -37,6 +36,5 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="MySql.Data" Version="6.10.6" />
   </ItemGroup>
-
-
+  
 </Project>

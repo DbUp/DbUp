@@ -13,11 +13,11 @@ namespace DbUp.Helpers
     /// </summary>
     public class AdHocSqlRunner
     {
-        private readonly IScriptPreprocessor[] additionalScriptPreprocessors;
-        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
-        private readonly Func<IDbCommand> commandFactory;
-        private readonly Func<bool> variablesEnabled;
-        private readonly ISqlObjectParser sqlObjectParser;
+        readonly IScriptPreprocessor[] additionalScriptPreprocessors;
+        readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+        readonly Func<IDbCommand> commandFactory;
+        readonly Func<bool> variablesEnabled;
+        readonly ISqlObjectParser sqlObjectParser;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
@@ -100,7 +100,8 @@ namespace DbUp.Helpers
         }
 
         /// <summary>
-        /// Executes a select query or procedure.
+        /// Executes a select query or procedure. Note: does not support queries returning multiple columns with the same name, for example:
+        /// select 1 as mycolumn, 2 as mycolumn
         /// </summary>
         /// <param name="query">The query.</param>
         /// <param name="parameters">The parameters.</param>
@@ -116,12 +117,12 @@ namespace DbUp.Helpers
                         while (reader.Read())
                         {
                             var line = new Dictionary<string, string>();
-                            for (int i = 0; i < reader.FieldCount; i++)
+                            for (var i = 0; i < reader.FieldCount; i++)
                             {
                                 var name = reader.GetName(i);
                                 var value = reader.GetValue(i);
                                 value = value == DBNull.Value ? null : value.ToString();
-                                line.Add(name, (string) value);
+                                line.Add(name, (string)value);
                             }
                             results.Add(line);
                         }

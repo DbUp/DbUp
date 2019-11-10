@@ -13,7 +13,7 @@ namespace DbUp.Engine.Transactions
         /// </summary>
         /// <param name="upgradeLog"></param>
         /// <param name="databaseConnectionManager"></param>
-        /// <returns></returns>
+        /// <returns>Created connection</returns>
         IDbConnection CreateConnection(IUpgradeLog upgradeLog, DatabaseConnectionManager databaseConnectionManager);
     }
 }

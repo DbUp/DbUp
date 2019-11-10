@@ -72,10 +72,12 @@ Task("Package")
             "firebird:dbup-firebird." + versionInfo.NuGetVersion + ".nupkg",
             "mysql:dbup-mysql." + versionInfo.NuGetVersion + ".nupkg",
             "postgresql:dbup-postgresql." + versionInfo.NuGetVersion + ".nupkg",
+            "redshift:dbup-redshift." + versionInfo.NuGetVersion + ".nupkg",
             "sqlce:dbup-sqlce." + versionInfo.NuGetVersion + ".nupkg",
             "sqlite:dbup-sqlite." + versionInfo.NuGetVersion + ".nupkg",
             "sqlite-mono:dbup-sqlite-mono." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg"
+            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg",
+            "sqlanywhere:dbup-sqlanywhere." + versionInfo.NuGetVersion + ".nupkg"
         });
 
         if (AppVeyor.IsRunningOnAppVeyor)

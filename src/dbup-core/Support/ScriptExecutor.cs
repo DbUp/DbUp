@@ -140,7 +140,7 @@ namespace DbUp.Support
                             {
                                 executeAction = ExecuteNonQuery;
                             }
-                            // Execute within a wrapper that allows a provider specific derived class to handle provider speicfic exception.
+                            // Execute within a wrapper that allows a provider specific derived class to handle provider specific exception.
                             ExecuteCommandsWithinExceptionHandler(index, script, () =>
                             {
                                 executeAction(command);
@@ -166,7 +166,7 @@ namespace DbUp.Support
             }
         }
 
-        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCallback);
+        protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCallback);
 
         protected virtual void ExecuteNonQuery(IDbCommand command)
         {
@@ -194,20 +194,24 @@ namespace DbUp.Support
         {
             do
             {
+                if (reader.FieldCount == 0)
+                {
+                    if (reader.RecordsAffected >= 0)
+                        Log().WriteInformation("RecordsAffected: {0}", reader.RecordsAffected);
+                    return;
+                }
+
                 var names = new List<string>();
-                for (int i = 0; i < reader.FieldCount; i++)
+                for (var i = 0; i < reader.FieldCount; i++)
                 {
                     names.Add(reader.GetName(i));
                 }
-
-                if (names.Count == 0)
-                    return;
 
                 var lines = new List<List<string>>();
                 while (reader.Read())
                 {
                     var line = new List<string>();
-                    for (int i = 0; i < reader.FieldCount; i++)
+                    for (var i = 0; i < reader.FieldCount; i++)
                     {
                         var value = reader.GetValue(i);
                         value = value == DBNull.Value ? null : value.ToString();
@@ -216,11 +220,11 @@ namespace DbUp.Support
                     lines.Add(line);
                 }
 
-                string format = "";
-                int totalLength = 0;
-                for (int i = 0; i < reader.FieldCount; i++)
+                var format = "";
+                var totalLength = 0;
+                for (var i = 0; i < reader.FieldCount; i++)
                 {
-                    int maxLength = (lines.Count == 0 ? 0 : lines.Max(l => (l[i] ?? "").Length)) + 2;
+                    var maxLength = (lines.Count == 0 ? 0 : lines.Max(l => (l[i] ?? "").Length)) + 2;
                     format += " {" + i + ", " + maxLength + "} |";
                     totalLength += (maxLength + 3);
                 }

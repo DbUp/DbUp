@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
 
 namespace DbUp.Engine.Transactions
 {
-    internal class NoTransactionStrategy : ITransactionStrategy
+    class NoTransactionStrategy : ITransactionStrategy
     {
-        private IDbConnection connection;
+        IDbConnection connection;
 
         public void Execute(Action<Func<IDbCommand>> action)
         {
-            action(()=>connection.CreateCommand());
+            action(() => connection.CreateCommand());
         }
 
         public T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult)
@@ -21,7 +21,7 @@ namespace DbUp.Engine.Transactions
 
         public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
         {
-            connection = dbConnection;
+            connection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
         }
 
         public void Dispose() { }

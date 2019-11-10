@@ -1,10 +1,8 @@
-﻿using System.IO;
-using Assent;
+﻿using Assent;
 using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Tests.TestInfrastructure;
-using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
 
@@ -15,17 +13,17 @@ namespace DbUp.Tests
         UpgradeEngineBuilder upgradeEngineBuilder;
         RecordingDbConnection testConnection;
         SqlScript[] scripts;
-        CaptureLogsLogger logger;
-        Configuration assentConfig = new Configuration()
+        readonly CaptureLogsLogger logger;
+        readonly Configuration assentConfig = new Configuration()
             .UsingNamer(new SubdirectoryNamer("ApprovalFiles"))
             .UsingSanitiser(Scrubbers.ScrubDates);
 
         public TransactionScenarios()
         {
             logger = new CaptureLogsLogger();
-            
-            // Automatically approve the change, make sure to check the result before commiting 
-            // assentConfig = assentConfig.UsingReporter((recieved, approved) => File.Copy(recieved, approved, true));
+
+            // Automatically approve the change, make sure to check the result before committing 
+            // assentConfig = assentConfig.UsingReporter((received, approved) => File.Copy(received, approved, true));
         }
 
         [Fact]
@@ -160,11 +158,11 @@ namespace DbUp.Tests
                 new SqlScript("Script0001.sql", "print 'script1'"),
                 new SqlScript("Script0002.sql", "print 'script2'")
             };
-             var result = upgradeEngineBuilder
-                .WithScripts(scripts)
-                .LogTo(logger)
-                .Build()
-                .PerformUpgrade();
+            var result = upgradeEngineBuilder
+               .WithScripts(scripts)
+               .LogTo(logger)
+               .Build()
+               .PerformUpgrade();
         }
     }
 }

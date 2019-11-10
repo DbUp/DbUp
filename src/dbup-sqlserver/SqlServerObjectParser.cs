@@ -1,7 +1,6 @@
-﻿using DbUp.Support;
-using System;
-using System.Data.SqlClient;
+﻿using System;
 using System.Linq;
+using DbUp.Support;
 
 namespace DbUp.SqlServer
 {
@@ -11,9 +10,9 @@ namespace DbUp.SqlServer
     public class SqlServerObjectParser : SqlObjectParser
     {
 
-        public SqlServerObjectParser() : base("[", "]")
+        public SqlServerObjectParser()
+            : base("[", "]")
         {
-
         }
 
         /// <summary>
@@ -27,25 +26,20 @@ namespace DbUp.SqlServer
         public override string QuoteIdentifier(string objectName, ObjectNameOptions objectNameOptions)
         {
             if (string.IsNullOrEmpty(objectName))
-                throw new ArgumentNullException();
-
+                throw new ArgumentNullException(nameof(objectName));
 
             if (ObjectNameOptions.Trim == objectNameOptions)
                 objectName = objectName.Trim();
 
-
             const int SqlSysnameLength = 128;
             if (objectName.Length > SqlSysnameLength)
-                throw new ArgumentOutOfRangeException(@"objectName", "A SQL server object name is maximum 128 characters long");
-
+                throw new ArgumentOutOfRangeException(nameof(objectName), "A SQL server object name is maximum 128 characters long");
 
             // The ] in the string need to be doubled up so it means we always need an un-even number of ] 
             if (objectName.StartsWith("[") && objectName.EndsWith("]") && objectName.Count(x => x == ']') % 2 == 1)
                 return objectName;
 
-
             return string.Concat("[", objectName.Replace("]", "]]"), "]");
-
         }
     }
 }

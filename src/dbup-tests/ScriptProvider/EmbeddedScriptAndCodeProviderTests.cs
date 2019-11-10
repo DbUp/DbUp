@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using System.Linq;
 using System.Reflection;
@@ -8,7 +7,6 @@ using DbUp.Engine.Output;
 using DbUp.ScriptProviders;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
-using NUnit.Framework;
 using Shouldly;
 
 namespace DbUp.Tests.ScriptProvider
@@ -17,7 +15,7 @@ namespace DbUp.Tests.ScriptProvider
     {
         public class when_no_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
         {
-            private SqlScript[] scriptsToExecute;
+            SqlScript[] scriptsToExecute;
 
             public override EmbeddedScriptAndCodeProvider Given()
             {
@@ -36,7 +34,17 @@ namespace DbUp.Tests.ScriptProvider
             [Then]
             public void it_should_return_all_sql_files()
             {
-                scriptsToExecute.Length.ShouldBe(10);
+                scriptsToExecute
+                    .Count(s => s.Name.EndsWith(".sql"))
+                    .ShouldBe(9);
+            }
+
+            [Then]
+            public void should_ignore_abstract_implementations()
+            {
+                scriptsToExecute
+                    .Where(s => s.Name.EndsWith("Script20120723_1_Test4_Base.cs"))
+                    .ShouldBeEmpty();
             }
 
             [Then]
@@ -51,7 +59,7 @@ namespace DbUp.Tests.ScriptProvider
 
         public class when_a_specific_filter_is_set : SpecificationFor<EmbeddedScriptAndCodeProvider>
         {
-            private SqlScript[] scriptsToExecute;
+            SqlScript[] scriptsToExecute;
 
             public override EmbeddedScriptAndCodeProvider Given()
             {

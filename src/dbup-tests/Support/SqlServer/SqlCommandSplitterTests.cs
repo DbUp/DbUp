@@ -1,17 +1,15 @@
 ﻿using System;
-using NUnit.Framework;
-using System.Text;
 using System.Linq;
+using System.Text;
 using DbUp.Support;
 using Shouldly;
 using Xunit;
 
 namespace DbUp.Tests.Support.SqlServer
 {
-
     public class SqlCommandSplitterTests
     {
-        private readonly SqlCommandSplitter sut;
+        readonly SqlCommandSplitter sut;
 
         public SqlCommandSplitterTests()
         {
@@ -32,7 +30,6 @@ SELECT AccountId,
         EstimatedInCents,
         OccupationInCents,
         GovernmentInCents".Replace("\r\n", "\n");
-
 
             var commands = sut.SplitScriptIntoCommands(statement).ToArray();
 
@@ -79,7 +76,6 @@ SELECT AccountId,
         [Fact]
         public void should_split_statements_on_go_and_handle_comments()
         {
-
             var sqlGo = "GO";
             var sqlGoWithTerminator = "GO;";
             var sqlBuilder = new StringBuilder();
@@ -117,7 +113,7 @@ SELECT AccountId,
             var strangeInsert = sqlBuilder.ToString();
             sqlBuilder.Clear();
 
-            // Combine into one SQL statement seperated with GO.          
+            // Combine into one SQL statement separated with GO.          
             sqlBuilder.AppendLine(sqlCommandWithMultiLineComment);
             sqlBuilder.AppendLine(sqlGo);
             sqlBuilder.AppendLine(sqlCommandWithSingleLineComment);

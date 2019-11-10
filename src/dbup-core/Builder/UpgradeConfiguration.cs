@@ -13,12 +13,8 @@ namespace DbUp.Builder
     /// </summary>
     public class UpgradeConfiguration
     {
-        private readonly List<IScriptProvider> scriptProviders = new List<IScriptProvider>();
-        private readonly List<IScriptPreprocessor> preProcessors = new List<IScriptPreprocessor>();
-        private readonly Dictionary<string, string> variables = new Dictionary<string, string>();
-
-        private readonly IUpgradeLog defaultLog;
-        private IUpgradeLog log;
+        readonly IUpgradeLog defaultLog;
+        IUpgradeLog log;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.
@@ -47,22 +43,28 @@ namespace DbUp.Builder
             set => log = value;
         }
 
+        /// <summary>
+        /// Adds additional log which captures details about the upgrade.
+        /// </summary>
+        /// <param name="additionalLog"></param>
         public void AddLog(IUpgradeLog additionalLog)
         {
+            additionalLog = additionalLog ?? throw new ArgumentNullException(nameof(additionalLog));
+
             log = log == null
-                ? additionalLog 
+                ? additionalLog
                 : new MultipleUpgradeLog(log, additionalLog);
         }
 
         /// <summary>
         /// Gets a mutable list of script providers.
         /// </summary>
-        public List<IScriptProvider> ScriptProviders { get { return scriptProviders; } }
+        public List<IScriptProvider> ScriptProviders { get; } = new List<IScriptProvider>();
 
         /// <summary>
         /// Gets a mutable list of script pre-processors.
         /// </summary>
-        public List<IScriptPreprocessor> ScriptPreprocessors { get { return preProcessors; } }
+        public List<IScriptPreprocessor> ScriptPreprocessors { get; } = new List<IScriptPreprocessor>();
 
         /// <summary>
         /// Gets or sets the journal, which tracks the scripts that have already been run.
@@ -76,8 +78,8 @@ namespace DbUp.Builder
 
         /// <summary>
         /// Gets or sets the comparer used to sort scripts and match script names against the log of already run scripts.
-        /// The default comparer is StringComparer.Ordinal.
-        /// By implementing your own comparer you can make make the matching and ordering case insensitive,
+        /// The default comparer is <see cref="StringComparer.Ordinal"/>.
+        /// By implementing your own comparer you can make the matching and ordering case insensitive,
         /// change how numbers are handled or support the renaming of scripts
         /// </summary>
         public ScriptNameComparer ScriptNameComparer { get; set; } = new ScriptNameComparer(StringComparer.Ordinal);
@@ -90,10 +92,7 @@ namespace DbUp.Builder
         /// <summary>
         /// A collection of variables to be replaced in scripts before they are run
         /// </summary>
-        public Dictionary<string, string> Variables
-        {
-            get { return variables; }
-        }
+        public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
 
         /// <summary>
         /// Determines if variables should be replaced in scripts before they are run.
@@ -118,7 +117,7 @@ namespace DbUp.Builder
         /// <param name="newVariables">The variables </param>
         public void AddVariables(IDictionary<string, string> newVariables)
         {
-            foreach (var variable in newVariables)
+            foreach (var variable in newVariables ?? throw new ArgumentNullException(nameof(newVariables)))
             {
                 Variables.Add(variable.Key, variable.Value);
             }

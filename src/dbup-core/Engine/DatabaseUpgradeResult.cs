@@ -8,9 +8,9 @@ namespace DbUp.Engine
     /// </summary>
     public sealed class DatabaseUpgradeResult
     {
-        private readonly List<SqlScript> scripts;
-        private readonly bool successful;
-        private readonly Exception error;
+        readonly List<SqlScript> scripts;
+        readonly bool successful;
+        readonly Exception error;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseUpgradeResult"/> class.
@@ -29,25 +29,16 @@ namespace DbUp.Engine
         /// <summary>
         /// Gets the scripts that were executed.
         /// </summary>
-        public IEnumerable<SqlScript> Scripts
-        {
-            get { return scripts; }
-        }
+        public IEnumerable<SqlScript> Scripts => scripts;
 
         /// <summary>
         /// Gets a value indicating whether this <see cref="DatabaseUpgradeResult"/> is successful.
         /// </summary>
-        public bool Successful
-        {
-            get { return successful; }
-        }
+        public bool Successful => successful;
 
         /// <summary>
         /// Gets the error.
         /// </summary>
-        public Exception Error
-        {
-            get { return error; }
-        }
+        public Exception Error => error;
     }
 }

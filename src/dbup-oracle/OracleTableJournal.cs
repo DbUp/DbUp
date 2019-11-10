@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Globalization;
-using System.Text;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
@@ -13,9 +11,9 @@ namespace DbUp.Oracle
     {
         bool journalExists;
         /// <summary>
-        /// Creates a new MySql table journal.
+        /// Creates a new Oracle table journal.
         /// </summary>
-        /// <param name="connectionManager">The MySql connection manager.</param>
+        /// <param name="connectionManager">The Oracle connection manager.</param>
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
@@ -28,7 +26,7 @@ namespace DbUp.Oracle
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
-            var fqSchemaTableName = this.UnquotedSchemaTableName;
+            var fqSchemaTableName = UnquotedSchemaTableName;
             return
                 $@" CREATE TABLE {fqSchemaTableName} 
                 (
@@ -41,13 +39,13 @@ namespace DbUp.Oracle
 
         protected string CreateSchemaTableSequenceSql()
         {
-            var fqSchemaTableName = this.UnquotedSchemaTableName;
+            var fqSchemaTableName = UnquotedSchemaTableName;
             return $@" CREATE SEQUENCE {fqSchemaTableName}_sequence";
         }
 
         protected string CreateSchemaTableTriggerSql()
         {
-            var fqSchemaTableName = this.UnquotedSchemaTableName;
+            var fqSchemaTableName = UnquotedSchemaTableName;
             return $@" CREATE OR REPLACE TRIGGER {fqSchemaTableName}_on_insert
                     BEFORE INSERT ON {fqSchemaTableName}
                     FOR EACH ROW
@@ -62,7 +60,7 @@ namespace DbUp.Oracle
         protected override string GetInsertJournalEntrySql(string scriptName, string applied)
         {
             var unquotedSchemaTableName = UnquotedSchemaTableName.ToUpper(English);
-            return $"insert into {unquotedSchemaTableName} (ScriptName, Applied) values (:" + scriptName.Replace("@","") + ",:" + applied.Replace("@","") + ")";
+            return $"insert into {unquotedSchemaTableName} (ScriptName, Applied) values (:" + scriptName.Replace("@", "") + ",:" + applied.Replace("@", "") + ")";
         }
 
         protected override string GetJournalEntriesSql()

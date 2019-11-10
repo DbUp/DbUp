@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DbUp.Engine.Transactions;
@@ -34,7 +33,7 @@ namespace DbUp.SQLite
         }
 
         /// <summary>
-        /// Sqlite statements seprator is ; (see http://www.sqlite.org/lang.html)
+        /// Sqlite statements separator is ; (see http://www.sqlite.org/lang.html)
         /// </summary>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {

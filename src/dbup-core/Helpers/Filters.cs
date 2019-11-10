@@ -1,7 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 
 namespace DbUp
 {
@@ -25,10 +23,9 @@ namespace DbUp
         /// <returns></returns>
         public static Func<string, bool> ExcludeScriptNamesInFile(string fileName)
         {
-            // read script names from text file into a list,
+            // read script names from text file into a list
             var scriptNames = System.IO.File.ReadAllLines(fileName).ToArray();
             return ExcludeScripts(scriptNames);
-            //return (s) => { return !scriptNames.Contains(s); };
         }
 
         /// <summary>
@@ -41,10 +38,9 @@ namespace DbUp
         /// <returns></returns>
         public static Func<string, bool> OnlyIncludeScriptNamesInFile(string fileName)
         {
-            // read script names from text file into a list,
+            // read script names from text file into a list
             var scriptNames = System.IO.File.ReadAllLines(fileName).ToArray();
             return OnlyIncludeScripts(scriptNames);
-            //  return (s) => { return scriptNames.Contains(s); };
         }
 
         /// <summary>
@@ -52,21 +48,14 @@ namespace DbUp
         /// </summary>    
         /// <param name="scriptNames">The names of the scripts to be excluded.</param>
         /// <returns></returns>
-        public static Func<string, bool> ExcludeScripts(params string[] scriptNames)
-        {
-            // read script names from text file into a list,          
-            return (s) => { return !scriptNames.Contains(s); };
-        }
+        public static Func<string, bool> ExcludeScripts(params string[] scriptNames) => s => !scriptNames.Contains(s);
 
         /// <summary>
         /// This filter will include only the specified scripts, and exclude any others.
         /// </summary>    
         /// <param name="scriptNames">The names of the scripts to be included.</param>
         /// <returns></returns>
-        public static Func<string, bool> OnlyIncludeScripts(params string[] scriptNames)
-        {
-            return (s) => { return scriptNames.Contains(s); };
-        }
+        public static Func<string, bool> OnlyIncludeScripts(params string[] scriptNames) => s => scriptNames.Contains(s);
     }
 }
 

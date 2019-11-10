@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
 using DbUp.Engine;
 using NSubstitute;
-using NUnit.Framework;
 using Shouldly;
 using Xunit;
 #pragma warning disable 618
@@ -74,7 +69,7 @@ namespace DbUp.Tests.Engine
 
             command.CommandText.ShouldBe("/*$somevar$*/");
         }
-        
+
         [Fact]
         public void ignores_undefined_variables_in_complex_comments()
         {
@@ -136,7 +131,7 @@ namespace DbUp.Tests.Engine
             result.Successful.ShouldBeFalse();
             result.Error.ShouldBeOfType<InvalidOperationException>();
         }
-        
+
         [Fact]
         public void ignores_if_whitespace_between_dollars()
         {
@@ -157,7 +152,7 @@ namespace DbUp.Tests.Engine
             result.Successful.ShouldBeTrue();
             command.CommandText.ShouldBe("$some var$");
         }
-        
+
         [Fact]
         public void ignores_if_newline_between_dollars()
         {

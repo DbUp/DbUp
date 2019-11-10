@@ -3,17 +3,16 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using MySql.Data.MySqlClient;
 using DbUp.Support;
+using MySql.Data.MySqlClient;
 
 namespace DbUp.MySql
 {
     /// <summary>
-    /// An implementation of ScriptExecutor that executes against a MySql database.
+    /// An implementation of <see cref="ScriptExecutor"/> that executes against a MySql database.
     /// </summary>
     public class MySqlScriptExecutor : ScriptExecutor
     {
-
         /// <summary>
         /// Initializes an instance of the <see cref="MySqlScriptExecutor"/> class.
         /// </summary>
@@ -27,7 +26,6 @@ namespace DbUp.MySql
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journalFactory)
             : base(connectionManagerFactory, new MySqlObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journalFactory)
         {
-
         }
 
         protected override string GetVerifySchemaSql(string schema)
@@ -35,13 +33,11 @@ namespace DbUp.MySql
             throw new NotSupportedException();
         }
 
-     
-
-        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCommand)
         {
             try
             {
-                excuteCommand();
+                executeCommand();
             }
             catch (MySqlException exception)
             {
@@ -51,7 +47,7 @@ namespace DbUp.MySql
                 var code = exception.Code;
 #endif
                 Log().WriteInformation("MySql exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("MySql error code: {0}; Number {1}; Message: {2}", index, code, exception.Number, exception.Message);
+                Log().WriteError("Script block number: {0}; MySql error code: {1}; Number {2}; Message: {3}", index, code, exception.Number, exception.Message);
                 Log().WriteError(exception.ToString());
                 throw;
             }

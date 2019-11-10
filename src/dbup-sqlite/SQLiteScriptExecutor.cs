@@ -13,15 +13,13 @@ using SQLiteException = Microsoft.Data.Sqlite.SqliteException;
 using System.Data.SQLite;
 #endif
 
-
 namespace DbUp.SQLite
 {
     /// <summary>
-    /// An implementation of ScriptExecutor that executes against a SQLite database.
+    /// An implementation of <see cref="ScriptExecutor"/> that executes against a SQLite database.
     /// </summary>
     public class SQLiteScriptExecutor : ScriptExecutor
     {
-
         /// <summary>
         /// Initializes an instance of the <see cref="SQLiteScriptExecutor"/> class.
         /// </summary>
@@ -40,13 +38,13 @@ namespace DbUp.SQLite
         protected override string GetVerifySchemaSql(string schema)
         {
             throw new NotSupportedException();
-        }      
+        }
 
-        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCommand)
         {
             try
             {
-                excuteCommand();
+                executeCommand();
             }
             catch (SQLiteException exception)
             {

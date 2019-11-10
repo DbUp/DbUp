@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
-using DbUp.Engine.Filters;
 
 namespace DbUp.Engine
 {
@@ -11,7 +10,7 @@ namespace DbUp.Engine
     /// </summary>
     public class UpgradeEngine
     {
-        private readonly UpgradeConfiguration configuration;
+        readonly UpgradeConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeEngine"/> class.
@@ -20,6 +19,20 @@ namespace DbUp.Engine
         public UpgradeEngine(UpgradeConfiguration configuration)
         {
             this.configuration = configuration;
+        }
+
+        /// <summary>
+        /// An event that is raised after each script is executed.
+        /// </summary>
+        public event EventHandler ScriptExecuted;
+
+        /// <summary>
+        /// Invokes the <see cref="ScriptExecuted"/> event; called whenever a script is executed.
+        /// </summary>
+        /// <param name="e"></param>
+        protected virtual void OnScriptExecuted(ScriptExecutedEventArgs e)
+        {
+            ScriptExecuted?.Invoke(this, e);
         }
 
         /// <summary>
@@ -71,6 +84,8 @@ namespace DbUp.Engine
 
                         configuration.ScriptExecutor.Execute(script, configuration.Variables);
 
+                        OnScriptExecuted(new ScriptExecutedEventArgs(script, configuration.ConnectionManager));
+
                         executed.Add(script);
                     }
 
@@ -98,12 +113,12 @@ namespace DbUp.Engine
             }
         }
 
-        private List<SqlScript> GetScriptsToExecuteInsideOperation()
+        List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
             var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
             var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
-            var sorted = allScripts.OrderBy(s => s.Name, configuration.ScriptNameComparer);
+            var sorted = allScripts.OrderBy(s => s.SqlScriptOptions.RunGroupOrder).ThenBy(s => s.Name, configuration.ScriptNameComparer);
             var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames, configuration.ScriptNameComparer);
             return filtered.ToList();
         }

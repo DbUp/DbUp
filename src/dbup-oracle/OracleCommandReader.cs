@@ -1,17 +1,15 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Text;
-using System.Threading.Tasks;
 using DbUp.Support;
 
 namespace DbUp.Oracle
 {
     public class OracleCommandReader : SqlCommandReader
     {
-        private const string DelimiterKeyword = "DELIMITER";
+        const string DelimiterKeyword = "DELIMITER";
 
         /// <summary>
-        /// Creates an instance of MySqlCommandReader
+        /// Creates an instance of OracleCommandReader
         /// </summary>
         public OracleCommandReader(string sqlText) : base(sqlText, ";", delimiterRequiresWhitespace: false)
         {
@@ -20,15 +18,8 @@ namespace DbUp.Oracle
         /// <summary>
         /// Hook to support custom statements
         /// </summary>
-        protected override bool IsCustomStatement
-        {
-            get
-            {
-                string statement;
-                return TryPeek(DelimiterKeyword.Length, out statement) &&
+        protected override bool IsCustomStatement => TryPeek(DelimiterKeyword.Length, out var statement) &&
                        string.Equals(DelimiterKeyword, statement, StringComparison.OrdinalIgnoreCase);
-            }
-        }
 
         /// <summary>
         /// Read a custom statement
@@ -55,7 +46,7 @@ namespace DbUp.Oracle
             Delimiter = delimiter.ToString();
         }
 
-        private void SkipWhitespace()
+        void SkipWhitespace()
         {
             while (char.IsWhiteSpace(CurrentChar))
             {

@@ -9,11 +9,10 @@ using DbUp.Support;
 namespace DbUp.SqlServer
 {
     /// <summary>
-    /// An implementation of ScriptExecutor that executes against a SQL Server database.
+    /// An implementation of <see cref="ScriptExecutor"/> that executes against a SQL Server database.
     /// </summary>
     public class SqlScriptExecutor : ScriptExecutor
     {
-
         /// <summary>
         /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
         /// </summary>
@@ -27,28 +26,26 @@ namespace DbUp.SqlServer
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journalFactory)
             : base(connectionManagerFactory, new SqlServerObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journalFactory)
         {
-
         }
 
         protected override string GetVerifySchemaSql(string schema)
         {
             return string.Format(@"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA [{0}]')", Schema);
-        }      
+        }
 
-        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action excuteCommand)
+        protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCommand)
         {
             try
             {
-                excuteCommand();
+                executeCommand();
             }
             catch (SqlException sqlException)
             {
                 Log().WriteInformation("SQL exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Block line {1}; Message: {2}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
+                Log().WriteError("Script block number: {0}; Block line {1}; Procedure {2}; Number {3}; Message: {4}", index, sqlException.LineNumber, sqlException.Procedure, sqlException.Number, sqlException.Message);
                 Log().WriteError(sqlException.ToString());
                 throw;
             }
         }
-
     }
 }

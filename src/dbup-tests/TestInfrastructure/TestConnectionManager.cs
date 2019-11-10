@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
@@ -17,7 +16,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            return new[] {scriptContents};
+            return new[] { scriptContents };
         }
     }
 }

@@ -15,6 +15,7 @@ namespace DbUp.Console
             var username = "";
             var password = "";
             bool mark = false;
+            int executionTimeout = 30;
             var connectionString = "";
 
             bool show_help = false;
@@ -30,6 +31,7 @@ namespace DbUp.Console
                 { "cs|connectionString=", "Full connection string", cs => connectionString = cs},
                 { "h|help",  "show this message and exit", v => show_help = v != null },
                 {"mark", "Mark scripts as executed but take no action", m => mark = true},
+                {"et|executionTimeout=", "Execution Timeout (sec) | defaults to 30", et => executionTimeout = int.Parse(et)},
             };
 
             optionSet.Parse(args);
@@ -53,6 +55,7 @@ namespace DbUp.Console
             var dbup = DeployChanges.To
                 .SqlDatabase(connectionString)
                 .LogToConsole()
+                .WithExecutionTimeout(TimeSpan.FromSeconds(executionTimeout))
                 .WithScriptsFromFileSystem(directory)
                 .Build();
 

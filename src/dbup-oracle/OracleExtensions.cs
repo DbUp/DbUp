@@ -1,9 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Linq;
 using DbUp.Builder;
-using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 
 namespace DbUp.Oracle
@@ -21,13 +17,13 @@ namespace DbUp.Oracle
         }
 
         /// <summary>
-        /// Creates an upgrader for MySql databases.
+        /// Creates an upgrader for Oracle databases.
         /// </summary>
         /// <param name="supported">Fluent helper type.</param>
-        /// <param name="connectionString">MySql database connection string.</param>
-        /// <param name="schema">Which MySql schema to check for changes</param>
+        /// <param name="connectionString">Oracle database connection string.</param>
+        /// <param name="schema">Which Oracle schema to check for changes</param>
         /// <returns>
-        /// A builder for a database upgrader designed for MySql databases.
+        /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string schema)
         {
@@ -35,22 +31,22 @@ namespace DbUp.Oracle
         }
 
         /// <summary>
-        /// Creates an upgrader for MySql databases.
+        /// Creates an upgrader for Oracle databases.
         /// </summary>
         /// <param name="supported">Fluent helper type.</param>
-        /// <param name="connectionManager">The <see cref="MySqlConnectionManager"/> to be used during a database upgrade.</param>
+        /// <param name="connectionManager">The <see cref="OracleConnectionManager"/> to be used during a database upgrade.</param>
         /// <returns>
-        /// A builder for a database upgrader designed for MySql databases.
+        /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
             => OracleDatabase(connectionManager);
 
         /// <summary>
-        /// Creates an upgrader for MySql databases.
+        /// Creates an upgrader for Oracle databases.
         /// </summary>
-        /// <param name="connectionManager">The <see cref="MySqlConnectionManager"/> to be used during a database upgrade.</param>
+        /// <param name="connectionManager">The <see cref="OracleConnectionManager"/> to be used during a database upgrade.</param>
         /// <returns>
-        /// A builder for a database upgrader designed for MySql databases.
+        /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
         public static UpgradeEngineBuilder OracleDatabase(IConnectionManager connectionManager)
         {
@@ -58,12 +54,12 @@ namespace DbUp.Oracle
         }
 
         /// <summary>
-        /// Creates an upgrader for MySql databases.
+        /// Creates an upgrader for Oracle databases.
         /// </summary>
-        /// <param name="connectionManager">The <see cref="MySqlConnectionManager"/> to be used during a database upgrade.</param>
-        /// /// <param name="schema">Which MySQL schema to check for changes</param>
+        /// <param name="connectionManager">The <see cref="OracleConnectionManager"/> to be used during a database upgrade.</param>
+        /// /// <param name="schema">Which Oracle schema to check for changes</param>
         /// <returns>
-        /// A builder for a database upgrader designed for MySql databases.
+        /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
         public static UpgradeEngineBuilder OracleDatabase(IConnectionManager connectionManager, string schema)
         {

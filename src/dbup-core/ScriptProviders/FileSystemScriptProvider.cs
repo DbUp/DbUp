@@ -13,15 +13,16 @@ namespace DbUp.ScriptProviders
     ///</summary>
     public class FileSystemScriptProvider : IScriptProvider
     {
-        private readonly string directoryPath;
-        private readonly Func<string, bool> filter;
-        private readonly Encoding encoding;
-        private FileSystemScriptOptions options;
+        readonly string directoryPath;
+        readonly Func<string, bool> filter;
+        readonly Encoding encoding;
+        readonly FileSystemScriptOptions options;
+        readonly SqlScriptOptions sqlScriptOptions;
 
         ///<summary>
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        public FileSystemScriptProvider(string directoryPath):this(directoryPath, new FileSystemScriptOptions())
+        public FileSystemScriptProvider(string directoryPath) : this(directoryPath, new FileSystemScriptOptions(), new SqlScriptOptions())
         {
         }
 
@@ -29,14 +30,24 @@ namespace DbUp.ScriptProviders
         ///</summary>
         ///<param name="directoryPath">Path to SQL upgrade scripts</param>
         ///<param name="options">Different options for the file system script provider</param>
-        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options)
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, new SqlScriptOptions())
         {
-            if (options==null)
+        }
+
+        /// <summary>
+        /// </summary>
+        /// <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="options">Different options for the file system script provider</param>
+        /// <param name="sqlScriptOptions">The sql script options</param>        
+        public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, SqlScriptOptions sqlScriptOptions)
+        {
+            if (options == null)
                 throw new ArgumentNullException("options");
             this.directoryPath = directoryPath;
-            this.filter = options.Filter;
-            this.encoding = options.Encoding;
+            filter = options.Filter;
+            encoding = options.Encoding;
             this.options = options;
+            this.sqlScriptOptions = sqlScriptOptions;
         }
 
         /// <summary>
@@ -44,17 +55,21 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var files = Directory.GetFiles(directoryPath, "*.sql", ShouldSearchSubDirectories()).AsEnumerable();
+            var files = new List<string>();
+            foreach (var scriptExtension in options.Extensions)
+            {
+                files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
+            }
             if (filter != null)
             {
-                files = files.Where(filter);
+                files = files.Where(filter).ToList();
             }
-            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding))
+            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
                 .OrderBy(x => x.Name)
                 .ToList();
         }
 
-        private SearchOption ShouldSearchSubDirectories()
+        SearchOption ShouldSearchSubDirectories()
         {
             return options.IncludeSubDirectories ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly;
         }

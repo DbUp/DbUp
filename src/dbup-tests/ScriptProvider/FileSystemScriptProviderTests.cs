@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Reflection;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
@@ -20,14 +19,14 @@ namespace DbUp.Tests.ScriptProvider
             [Fact]
             public void it_should_throw_when_empty_options()
             {
-                Should.Throw<ArgumentNullException>(() => { new FileSystemScriptProvider("Whatever", (FileSystemScriptOptions)null); });
+                Should.Throw<ArgumentNullException>(() => { new FileSystemScriptProvider("Whatever", null); });
             }
         }
 
         public class when_returning_scripts_from_a_directory : SpecificationFor<FileSystemScriptProvider>, IDisposable
         {
-            private string testPath;
-            private IEnumerable<SqlScript> filesToExecute;
+            string testPath;
+            IEnumerable<SqlScript> filesToExecute;
 
             public override FileSystemScriptProvider Given()
             {
@@ -35,9 +34,6 @@ namespace DbUp.Tests.ScriptProvider
 
                 return new FileSystemScriptProvider(testPath);
             }
-
-
-
 
             protected override void When()
             {
@@ -84,22 +80,22 @@ namespace DbUp.Tests.ScriptProvider
             string testPath;
             IEnumerable<SqlScript> filesToExecute;
             bool filterExecuted;
-            private FileSystemScriptOptions options;
+            FileSystemScriptOptions options;
 
             public override FileSystemScriptProvider Given()
             {
                 TestScripts.Create(out testPath);
                 // Given a filter is provided..
-                options = new FileSystemScriptOptions() {
+                options = new FileSystemScriptOptions()
+                {
                     Filter = (a) =>
                 {
                     filterExecuted = true;
                     return true;
-                    }
+                }
                 };
                 return new FileSystemScriptProvider(testPath, options);
             }
-
 
             protected override void When()
             {
@@ -125,12 +121,11 @@ namespace DbUp.Tests.ScriptProvider
             }
         }
 
-
         public class when_returning_scripts_from_a_directory_and_using_subdirectories_option : SpecificationFor<FileSystemScriptProvider>, IDisposable
         {
-            private string testPath;
-            private IEnumerable<SqlScript> filesToExecute;
-           
+            string testPath;
+            IEnumerable<SqlScript> filesToExecute;
+
             public override FileSystemScriptProvider Given()
             {
                 TestScripts.Create(out testPath);
@@ -138,12 +133,10 @@ namespace DbUp.Tests.ScriptProvider
                 return new FileSystemScriptProvider(testPath, options);
             }
 
-
             protected override void When()
             {
                 filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
             }
-
 
             [Then]
             public void it_should_return_all_sql_files()
@@ -159,7 +152,7 @@ namespace DbUp.Tests.ScriptProvider
                     sqlScript.Contents.Length.ShouldBeGreaterThan(0);
                 }
             }
-            
+
             [Then]
             public void the_files_should_contain_the_subfolder_name()
             {
@@ -168,7 +161,7 @@ namespace DbUp.Tests.ScriptProvider
                         .ShouldContain("Folder1.dbup-tests.TestScripts.Test1__9.sql");
             }
 
-            [Then()]
+            [Then]
             public void the_files_should_be_correctly_ordered_with_subdirectory_order()
             {
                 filesToExecute.ElementAt(0).Name.ShouldEndWith("Script20110301_1_Test1.sql");
@@ -186,6 +179,13 @@ namespace DbUp.Tests.ScriptProvider
             {
                 Directory.Delete(testPath, true);
             }
+        }
+
+        [Fact]
+        public void options_should_include_sql()
+        {
+            var options = new FileSystemScriptOptions();
+            options.Extensions.ShouldContain("*.sql");
         }
     }
 }
