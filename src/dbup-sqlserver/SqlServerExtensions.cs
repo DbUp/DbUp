@@ -24,9 +24,9 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString)
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, bool useAzureSqlIntegratedSecurity = false)
     {
-        return SqlDatabase(supported, connectionString, null);
+        return SqlDatabase(supported, connectionString, null, useAzureSqlIntegratedSecurity);
     }
 
     /// <summary>
@@ -38,9 +38,9 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema)
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity = false)
     {
-        return SqlDatabase(new SqlConnectionManager(connectionString), schema);
+        return SqlDatabase(new SqlConnectionManager(connectionString, useAzureSqlIntegratedSecurity), schema);
     }
 
     /// <summary>
