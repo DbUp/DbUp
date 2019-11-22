@@ -18,7 +18,16 @@ namespace DbUp.SqlServer
         /// Manages Sql Database Connections
         /// </summary>
         /// <param name="connectionString"></param>
-        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity = false)
+        public SqlConnectionManager(string connectionString)
+            : this(connectionString, false)
+        {
+        }
+
+        /// <summary>
+        /// Manages Sql Database Connections
+        /// </summary>
+        /// <param name="connectionString"></param>
+        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity)
             : base(new DelegateConnectionFactory((log, dbManager) =>
             {
                 var conn = new SqlConnection(connectionString);
