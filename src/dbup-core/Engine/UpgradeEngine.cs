@@ -113,9 +113,24 @@ namespace DbUp.Engine
             }
         }
 
+        public List<string> GetExecutedButNotDiscoveredScripts()
+        {
+            return GetExecutedScripts().Except(GetDiscoveredScriptsAsEnumerable().Select(x => x.Name)).ToList();
+        }
+
+        public List<SqlScript> GetDiscoveredScripts()
+        {
+            return GetDiscoveredScriptsAsEnumerable().ToList();
+        }
+
+        IEnumerable<SqlScript> GetDiscoveredScriptsAsEnumerable()
+        {
+            return configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
+        }
+
         List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
-            var allScripts = configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
+            var allScripts = GetDiscoveredScriptsAsEnumerable();
             var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
             var sorted = allScripts.OrderBy(s => s.SqlScriptOptions.RunGroupOrder).ThenBy(s => s.Name, configuration.ScriptNameComparer);

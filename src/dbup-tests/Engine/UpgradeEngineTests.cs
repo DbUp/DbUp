@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
@@ -96,6 +97,87 @@ namespace DbUp.Tests.Engine
             public void the_scripts_are_not_run()
             {
                 scriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
+            }
+        }
+
+        public class when_querying_discovered_scripts : SpecificationFor<UpgradeEngine>
+        {
+            IJournal versionTracker;
+            IScriptProvider scriptProvider;
+            IScriptExecutor scriptExecutor;
+            List<string> discoveredScripts;
+
+            public override UpgradeEngine Given()
+            {
+                scriptProvider = Substitute.For<IScriptProvider>();
+                versionTracker = Substitute.For<IJournal>();
+                versionTracker.GetExecutedScripts().Returns(new[] { "#1", "#2", "#3" });
+                scriptExecutor = Substitute.For<IScriptExecutor>();
+
+                var config = new UpgradeConfiguration
+                {
+                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
+                };
+                config.ScriptProviders.Add(scriptProvider);
+                config.ScriptExecutor = scriptExecutor;
+                config.Journal = versionTracker;
+
+                var upgrader = new UpgradeEngine(config);
+                return upgrader;
+            }
+
+            protected override void When()
+            {
+                discoveredScripts = Subject.GetExecutedScripts();
+            }
+
+            [Then]
+            public void discovered_scripts_are_returned()
+            {
+                discoveredScripts.ShouldBe(new[] { "#1", "#2", "#3" });
+            }
+        }
+
+        public class when_querying_executed_but_not_discovered_scripts : SpecificationFor<UpgradeEngine>
+        {
+            IJournal versionTracker;
+            IScriptProvider scriptProvider;
+            IScriptExecutor scriptExecutor;
+            List<string> discoveredScripts;
+
+            public override UpgradeEngine Given()
+            {
+                scriptProvider = Substitute.For<IScriptProvider>();
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript>
+                {
+                    new SqlScript("#1", "Content of #1"),
+                    new SqlScript("#3", "Content of #3"),
+                });
+                versionTracker = Substitute.For<IJournal>();
+                versionTracker.GetExecutedScripts().Returns(new[] { "#1", "#2", "#3" });
+                scriptExecutor = Substitute.For<IScriptExecutor>();
+
+                var config = new UpgradeConfiguration
+                {
+                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
+                };
+                config.ScriptProviders.Add(scriptProvider);
+                config.ScriptExecutor = scriptExecutor;
+                config.Journal = versionTracker;
+
+                var upgrader = new UpgradeEngine(config);
+                return upgrader;
+            }
+
+            protected override void When()
+            {
+                discoveredScripts = Subject.GetExecutedButNotDiscoveredScripts();
+            }
+
+            [Then]
+            public void discovered_scripts_are_returned()
+            {
+                discoveredScripts.ShouldBe(new[] { "#2" });
             }
         }
     }
