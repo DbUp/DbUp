@@ -131,6 +131,7 @@ namespace DbUp.Builder
     {
         public UpgradeEngineBuilder() { }
         public DbUp.Engine.UpgradeEngine Build() { }
+        public DbUp.Builder.UpgradeConfiguration BuildConfiguration() { }
         public void Configure(System.Action<DbUp.Builder.UpgradeConfiguration> configuration) { }
     }
 }
