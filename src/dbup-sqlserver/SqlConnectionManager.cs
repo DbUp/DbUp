@@ -18,7 +18,7 @@ namespace DbUp.SqlServer
         /// Manages Sql Database Connections
         /// </summary>
         /// <param name="connectionString"></param>
-        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity)
+        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity = false)
             : base(new DelegateConnectionFactory((log, dbManager) =>
             {
                 var conn = new SqlConnection(connectionString);
@@ -28,7 +28,7 @@ namespace DbUp.SqlServer
                     conn.AccessToken = (new AzureServiceTokenProvider()).GetAccessTokenAsync("https://database.windows.net/").GetAwaiter().GetResult();
 #else
                 if(useAzureSqlIntegratedSecurity)
-                    throw new Exception("You are targeting a framework that does not support Azure AppAuthentication. The minimum target frameworks are .NET Framework 4.5.2 and .NET Standard 1.4.");
+                    throw new Exception("You are targeting a framework that does not support Azure AppAuthentication. The minimum target frameworks are .NET Framework 4.6 and .NET Standard 2.0.");
 #endif
 
                 if (dbManager.IsScriptOutputLogged)
