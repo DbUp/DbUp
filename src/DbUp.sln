@@ -44,6 +44,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlanywhere", "dbup-sq
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-redshift", "dbup-redshift\dbup-redshift.csproj", "{7E77DD23-2E16-471A-897B-C67FB73C62C8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -102,12 +104,17 @@ Global
 		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{397F41BC-1076-4D1B-9620-C6051E8104F4} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
+		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6807402B-EE7A-4324-A615-28F3499B1E9F}
