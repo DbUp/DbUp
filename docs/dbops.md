@@ -1,6 +1,6 @@
 # DBOps
 
-DBOps is a Powershell module based on DbUp that provides Continuous Integration/Continuous Deployment capabilities for SQL database deployments. It comes with an easy-to-use set of functions developed to enhance and simplify the DbUp experience for Powershell users. Along with multiple configuration and script deployment options, it also comes with an ability to organize scripts into ready-to-deploy packages, creating artifacts for you deployment pipeline. Such packages can now be deployed in a straightforward and fully repeatable manner.
+DBOps is a Powershell module based on DbUp that provides Continuous Integration/Continuous Deployment capabilities for SQL database deployments. It comes with an easy-to-use set of functions developed to enhance and simplify the DbUp experience for Powershell users. Along with multiple configuration and script deployment options, it also comes with an ability to organize scripts into ready-to-deploy packages, creating artifacts for your deployment pipeline. Such packages can now be deployed in a straightforward and fully repeatable manner.
 
 RDBMS currently supported by DBOps:
 * SQL Server
