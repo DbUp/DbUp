@@ -51,7 +51,7 @@ Import-Module .\dbops
 * Build/Test/Deploy scenarios inside the Continuous Integration/Continuous Delivery pipeline
 * Dynamic deployment based on modified files in the source folder
 * Versioned package deployment (e.g. Octopus Deployment)
-* Octopus Deployment database deployments
+* Octopus Deploy database deployments
 
 ## Getting started
 ### SQL script deployments and running DB queries
