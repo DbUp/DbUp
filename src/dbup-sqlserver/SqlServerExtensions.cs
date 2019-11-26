@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Data;
 using System.Data.SqlClient;
 using DbUp;
@@ -24,9 +24,9 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, bool useAzureSqlIntegratedSecurity = false)
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString)
     {
-        return SqlDatabase(supported, connectionString, null, useAzureSqlIntegratedSecurity);
+        return SqlDatabase(supported, connectionString, null);
     }
 
     /// <summary>
@@ -38,10 +38,27 @@ public static class SqlServerExtensions
     /// <returns>
     /// A builder for a database upgrader designed for SQL Server databases.
     /// </returns>
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity = false)
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema)
+    {
+        return SqlDatabase(new SqlConnectionManager(connectionString), schema);
+    }
+
+#if SUPPORTS_AZURE_AD
+    /// <summary>
+    /// Creates an upgrader for SQL Server databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="schema">The SQL schema name to use. Defaults to 'dbo' if null.</param>
+    /// <param name="useAzureSqlIntegratedSecurity">Whether to use Azure SQL Integrated Security</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for SQL Server databases.
+    /// </returns>
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity)
     {
         return SqlDatabase(new SqlConnectionManager(connectionString, useAzureSqlIntegratedSecurity), schema);
     }
+#endif
 
     /// <summary>
     /// Creates an upgrader for SQL Server databases.

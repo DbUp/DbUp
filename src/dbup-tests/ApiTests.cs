@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using Assent;
@@ -18,7 +19,7 @@ namespace DbUp.Tests
     {
         [Theory]
         [InlineData(typeof(UpgradeEngine))]
-        [InlineData(typeof(SqlServerExtensions))]
+        [InlineData(typeof(SqlServerExtensions), true)]
         [InlineData(typeof(SQLiteExtensions))]
         [InlineData(typeof(MySqlExtensions))]
         [InlineData(typeof(OracleExtensions))]
@@ -29,14 +30,17 @@ namespace DbUp.Tests
         [InlineData(typeof(SqlCeExtensions))]
         [InlineData(typeof(SqlAnywhereExtensions))]
 #endif
-        public void NoPublicApiChanges(Type type)
+        public void NoPublicApiChanges(Type type, bool differByFramework = false)
         {
             var assembly = type.Assembly;
             var result = GetPublicApi(assembly);
 
+            var framework = RuntimeInformation.FrameworkDescription.Contains(".NET Core") ? "netcore" : "netfx";
+            var approvalPostfix = differByFramework ? $".{framework}" : "";
+
             var config = new Configuration()
                 .UsingExtension("cs")
-                .UsingNamer(m => Path.Combine(Path.GetDirectoryName(m.FilePath), "ApprovalFiles", assembly.GetName().Name));
+                .UsingNamer(m => Path.Combine(Path.GetDirectoryName(m.FilePath), "ApprovalFiles", assembly.GetName().Name + approvalPostfix));
 
             this.Assent(result, config);
         }
