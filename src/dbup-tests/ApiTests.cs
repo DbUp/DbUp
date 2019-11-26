@@ -18,6 +18,7 @@ namespace DbUp.Tests
     {
         [Theory]
         [InlineData(typeof(UpgradeEngine))]
+        [InlineData(typeof(SqlServerExtensions))]
         [InlineData(typeof(SQLiteExtensions))]
         [InlineData(typeof(MySqlExtensions))]
         [InlineData(typeof(OracleExtensions))]
