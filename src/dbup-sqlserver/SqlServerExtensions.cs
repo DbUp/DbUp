@@ -238,33 +238,26 @@ public static class SqlServerExtensions
     {
         GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
 
-        try
-        {
-            using (var connection = new SqlConnection(connectionString))
-            {
-                connection.Open();
-                if (DatabaseExists(connection, databaseName))
-                    return;
-            }
-        }
-        catch (Exception e)
-        {
-            logger.WriteInformation(@"Database not found on server with connection string in settings: {0}", e.Message);
-        }
-
         using (var connection = new SqlConnection(masterConnectionString))
         {
-            connection.Open();
+            try
+            {
+                connection.Open();
+            }
+            catch (SqlException)
+            {
+                // Failed to connect to master, lets try direct  
+                if (DatabaseExistsIfConnectedToDirectly(logger, connectionString, databaseName))
+                    return;
+
+                throw;
+            }
+
             if (DatabaseExists(connection, databaseName))
                 return;
 
-            var collationString = string.IsNullOrEmpty(collation) ? "" : string.Format(@" COLLATE {0}", collation);
-            var sqlCommandText = string.Format
-                    (
-                        @"create database [{0}]{1}",
-                        databaseName,
-                        collationString
-                    );
+            var collationString = string.IsNullOrEmpty(collation) ? "" : $@" COLLATE {collation}";
+            var sqlCommandText = $@"create database [{databaseName}]{collationString}";
 
             switch (azureDatabaseEdition)
             {
@@ -298,6 +291,23 @@ public static class SqlServerExtensions
             }
 
             logger.WriteInformation(@"Created database {0}", databaseName);
+        }
+    }
+
+    private static bool DatabaseExistsIfConnectedToDirectly(IUpgradeLog logger, string connectionString, string databaseName)
+    {
+        try
+        {
+            using (var connection = new SqlConnection(connectionString))
+            {
+                connection.Open();
+                return DatabaseExists(connection, databaseName);
+            }
+        }
+        catch
+        {
+            logger.WriteInformation("Could not connect to the database directly");
+            return false;
         }
     }
 
