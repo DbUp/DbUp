@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 #if SUPPORTS_AZURE_AD
