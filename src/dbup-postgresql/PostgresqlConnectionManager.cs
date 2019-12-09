@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using System.Text.RegularExpressions;
+using System.Text.RegularExpressions; 
+using System.Security.Cryptography.X509Certificates;
 using DbUp.Engine.Transactions;
 using Npgsql;
 
@@ -17,6 +18,24 @@ namespace DbUp.Postgresql
         /// <param name="connectionString">The PostgreSQL connection string.</param>
         public PostgresqlConnectionManager(string connectionString)
             : base(new DelegateConnectionFactory(l => new NpgsqlConnection(connectionString)))
+        {
+        }
+
+        /// <summary>
+        /// Creates a new PostgreSQL database connection with a certificate.
+        /// </summary>
+        /// <param name="connectionString">The PostgreSQL connection string.</param>
+        /// <param name="certificateFile">A byte array representation of an X509 certificate.</param>
+        public PostgresqlConnectionManager(string connectionString, byte[] certificateFile)
+            : base(new DelegateConnectionFactory(l =>
+                {
+                    NpgsqlConnection databaseConnection = new NpgsqlConnection(connectionString);
+                    databaseConnection.ProvideClientCertificatesCallback +=
+                        certs => certs.Add(new X509Certificate2(certificateFile));
+
+                    return databaseConnection;
+                }
+                ))
         {
         }
 
