@@ -144,7 +144,7 @@ namespace DbUp.Engine
 
             using (var resourceStreamReader = new StreamReader(stream, encoding, true))
             {
-                string contents = resourceStreamReader.ReadToEnd();
+                var contents = resourceStreamReader.ReadToEnd();
                 return new SqlScript(scriptName, contents, sqlScriptOptions);
             }
         }

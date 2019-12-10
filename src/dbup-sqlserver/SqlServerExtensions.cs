@@ -294,7 +294,7 @@ public static class SqlServerExtensions
         }
     }
 
-    private static bool DatabaseExistsIfConnectedToDirectly(IUpgradeLog logger, string connectionString, string databaseName)
+    static bool DatabaseExistsIfConnectedToDirectly(IUpgradeLog logger, string connectionString, string databaseName)
     {
         try
         {

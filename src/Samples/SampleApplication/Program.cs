@@ -17,7 +17,7 @@ namespace SampleApplication
             // string instanceName = @"(localdb)\Projects";
 
             var connectionString =
-                "Server=(localdb)\\MSSQLLocalDB; Database=test8; Trusted_connection=true";
+                $"Server={instanceName}; Database=test8; Trusted_connection=true";
 
             DropDatabase.For.SqlDatabase(connectionString);
 

@@ -42,7 +42,7 @@ namespace DbUp.SqlServer
             {
                 var conn = new SqlConnection(connectionString);
 
-                if(useAzureSqlIntegratedSecurity)
+                if (useAzureSqlIntegratedSecurity)
                     conn.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (dbManager.IsScriptOutputLogged)
