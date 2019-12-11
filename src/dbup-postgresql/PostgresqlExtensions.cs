@@ -44,12 +44,12 @@ public static class PostgresqlExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">PostgreSQL database connection string.</param>
     /// <param name="schema">The schema in which to check for changes</param>
-    /// <param name="certificateFile">A byte array representation of an X509 certificate.</param>
+    /// <param name="certificate">Certificate for securing connection.</param>
     /// <returns>
     /// A builder for a database upgrader designed for PostgreSQL databases.
     /// </returns>
-    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString, string schema, byte[] certificateFile)
-        => PostgresqlDatabase(new PostgresqlConnectionManager(connectionString, certificateFile), schema);
+    public static UpgradeEngineBuilder PostgresqlDatabase(this SupportedDatabases supported, string connectionString, string schema, X509Certificate2 certificate)
+        => PostgresqlDatabase(new PostgresqlConnectionManager(connectionString, certificate), schema);
 
     /// <summary>
     /// Creates an upgrader for PostgreSQL databases.
@@ -106,11 +106,11 @@ public static class PostgresqlExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
-    /// <param name="certificateFile">A byte array representation of an X509 certificate.</param>
+    /// <param name="certificate">Certificate for securing connection.</param>
     /// <returns></returns>
-    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, byte[] certificateFile)
+    public static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, X509Certificate2 certificate)
     {
-        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), certificateFile);
+        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), certificate);
     }
 
     /// <summary>
@@ -125,7 +125,7 @@ public static class PostgresqlExtensions
         PostgresqlDatabase(supported, connectionString, logger, null);
     }
 
-    private static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, byte[] certificateFile)
+    private static void PostgresqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, IUpgradeLog logger, X509Certificate2 certificate)
     {
         if (supported == null) throw new ArgumentNullException("supported");
 
@@ -157,10 +157,10 @@ public static class PostgresqlExtensions
 
         using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
-            if (certificateFile != null)
+            if (certificate!= null)
             {
                 connection.ProvideClientCertificatesCallback +=
-                    certs => certs.Add(new X509Certificate2(certificateFile));
+                    certs => certs.Add(certificate);
             }
             connection.Open();
 

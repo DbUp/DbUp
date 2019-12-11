@@ -25,13 +25,13 @@ namespace DbUp.Postgresql
         /// Creates a new PostgreSQL database connection with a certificate.
         /// </summary>
         /// <param name="connectionString">The PostgreSQL connection string.</param>
-        /// <param name="certificateFile">A byte array representation of an X509 certificate.</param>
-        public PostgresqlConnectionManager(string connectionString, byte[] certificateFile)
+        /// <param name="certificate">Certificate for securing connection.</param>
+        public PostgresqlConnectionManager(string connectionString, X509Certificate2 certificate)
             : base(new DelegateConnectionFactory(l =>
                 {
                     NpgsqlConnection databaseConnection = new NpgsqlConnection(connectionString);
                     databaseConnection.ProvideClientCertificatesCallback +=
-                        certs => certs.Add(new X509Certificate2(certificateFile));
+                        certs => certs.Add(certificate);
 
                     return databaseConnection;
                 }
