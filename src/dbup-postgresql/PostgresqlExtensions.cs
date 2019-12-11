@@ -157,7 +157,7 @@ public static class PostgresqlExtensions
 
         using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
-            if (certificate!= null)
+            if (certificate != null)
             {
                 connection.ProvideClientCertificatesCallback +=
                     certs => certs.Add(certificate);
