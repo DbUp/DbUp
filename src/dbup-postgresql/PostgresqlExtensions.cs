@@ -11,7 +11,7 @@ using Npgsql;
 // ReSharper disable once CheckNamespace
 
 /// <summary>
-/// Configuration  extension methods for PostgreSQL.
+/// Configuration extension methods for PostgreSQL.
 /// </summary>
 public static class PostgresqlExtensions
 {
