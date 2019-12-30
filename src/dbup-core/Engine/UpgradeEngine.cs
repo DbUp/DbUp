@@ -95,7 +95,7 @@ namespace DbUp.Engine
             }
             catch (Exception ex)
             {
-                ex.Data.Add("Error occurred in script: ", executedScriptName);
+                ex.Data["Error occurred in script: "] = executedScriptName;
                 configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(executed, false, ex);
             }
