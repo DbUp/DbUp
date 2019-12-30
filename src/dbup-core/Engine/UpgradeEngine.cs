@@ -95,7 +95,14 @@ namespace DbUp.Engine
             }
             catch (Exception ex)
             {
-                ex.Data.Add("Error occurred in script: ", executedScriptName);
+                const string scriptNameKey = "Error occurred in script: ";
+
+                // Exception can be re-used when using connection pooling
+                if (ex.Data.Contains(scriptNameKey))
+                    ex.Data[scriptNameKey] = executedScriptName;
+                else
+                    ex.Data.Add(scriptNameKey, executedScriptName);
+
                 configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
                 return new DatabaseUpgradeResult(executed, false, ex);
             }
