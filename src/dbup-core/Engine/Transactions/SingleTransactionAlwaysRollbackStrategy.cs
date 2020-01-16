@@ -77,11 +77,14 @@ namespace DbUp.Engine.Transactions
                 log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
             }
 
+            // Always rollback
+            transaction?.Rollback();
+
             //Restore the executed scripts collection
             executedScriptsCollection.Clear();
             executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);
 
-            transaction.Dispose();
+            transaction?.Dispose();
         }
     }
 }
