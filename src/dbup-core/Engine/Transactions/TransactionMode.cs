@@ -23,6 +23,6 @@
         /// <summary>
         /// DbUp will run scripts using a single transaction for the whole upgrade operation but will rollback at the end
         /// </summary>
-        SingleTransactionWithRollback
+        SingleTransactionAlwaysRollback
     }
 }

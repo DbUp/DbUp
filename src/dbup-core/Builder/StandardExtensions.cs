@@ -761,9 +761,9 @@ public static class StandardExtensions
     /// </summary>
     /// <param name="builder"></param>
     /// <returns></returns>
-    public static UpgradeEngineBuilder WithTransactionButRollback(this UpgradeEngineBuilder builder)
+    public static UpgradeEngineBuilder WithTransactionAlwaysRollback(this UpgradeEngineBuilder builder)
     {
-        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.SingleTransactionWithRollback);
+        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.SingleTransactionAlwaysRollback);
 
         return builder;
     }
