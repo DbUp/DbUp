@@ -60,7 +60,7 @@ namespace DbUp.Engine
         {
             var executed = new List<SqlScript>();
 
-            string executedScriptName = null;
+            SqlScript executedScript = null;
             try
             {
                 using (configuration.ConnectionManager.OperationStarting(configuration.Log, executed))
@@ -73,14 +73,14 @@ namespace DbUp.Engine
                     if (scriptsToExecute.Count == 0)
                     {
                         configuration.Log.WriteInformation("No new scripts need to be executed - completing.");
-                        return new DatabaseUpgradeResult(executed, true, null);
+                        return new DatabaseUpgradeResult(executed, true, null, null);
                     }
 
                     configuration.ScriptExecutor.VerifySchema();
 
                     foreach (var script in scriptsToExecute)
                     {
-                        executedScriptName = script.Name;
+                        executedScript = script;
 
                         configuration.ScriptExecutor.Execute(script, configuration.Variables);
 
@@ -90,14 +90,14 @@ namespace DbUp.Engine
                     }
 
                     configuration.Log.WriteInformation("Upgrade successful");
-                    return new DatabaseUpgradeResult(executed, true, null);
+                    return new DatabaseUpgradeResult(executed, true, null, null);
                 }
             }
             catch (Exception ex)
             {
-                ex.Data["Error occurred in script: "] = executedScriptName;
+                ex.Data["Error occurred in script: "] = executedScript.Name;
                 configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
-                return new DatabaseUpgradeResult(executed, false, ex);
+                return new DatabaseUpgradeResult(executed, false, ex, executedScript);
             }
         }
 
@@ -155,6 +155,7 @@ namespace DbUp.Engine
         public DatabaseUpgradeResult MarkAsExecuted()
         {
             var marked = new List<SqlScript>();
+            SqlScript executedScript = null; 
             using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked))
             {
                 try
@@ -163,6 +164,7 @@ namespace DbUp.Engine
 
                     foreach (var script in scriptsToExecute)
                     {
+                        executedScript = script;
                         configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(
                             connectionFactory => configuration.Journal.StoreExecutedScript(script, connectionFactory));
                         configuration.Log.WriteInformation("Marking script {0} as executed", script.Name);
@@ -170,12 +172,12 @@ namespace DbUp.Engine
                     }
 
                     configuration.Log.WriteInformation("Script marking successful");
-                    return new DatabaseUpgradeResult(marked, true, null);
+                    return new DatabaseUpgradeResult(marked, true, null, null);
                 }
                 catch (Exception ex)
                 {
                     configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
-                    return new DatabaseUpgradeResult(marked, false, ex);
+                    return new DatabaseUpgradeResult(marked, false, ex, executedScript);
                 }
             }
         }
@@ -183,6 +185,7 @@ namespace DbUp.Engine
         public DatabaseUpgradeResult MarkAsExecuted(string latestScript)
         {
             var marked = new List<SqlScript>();
+            SqlScript executedScript = null; 
             using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked))
             {
                 try
@@ -191,6 +194,7 @@ namespace DbUp.Engine
 
                     foreach (var script in scriptsToExecute)
                     {
+                        executedScript = script;
                         configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(
                             commandFactory => configuration.Journal.StoreExecutedScript(script, commandFactory));
                         configuration.Log.WriteInformation("Marking script {0} as executed", script.Name);
@@ -202,12 +206,12 @@ namespace DbUp.Engine
                     }
 
                     configuration.Log.WriteInformation("Script marking successful");
-                    return new DatabaseUpgradeResult(marked, true, null);
+                    return new DatabaseUpgradeResult(marked, true, null, null);
                 }
                 catch (Exception ex)
                 {
                     configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
-                    return new DatabaseUpgradeResult(marked, false, ex);
+                    return new DatabaseUpgradeResult(marked, false, ex, executedScript);
                 }
             }
         }
