@@ -143,6 +143,7 @@ namespace DbUp.Engine
         public System.Exception Error { get; }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Scripts { get; }
         public bool Successful { get; }
+        public DbUp.Engine.SqlScript ErrorScript { get; }
     }
     public interface IJournal
     {

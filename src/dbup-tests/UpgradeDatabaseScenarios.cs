@@ -94,6 +94,7 @@ namespace DbUp.Tests
                 .Then(t => t.ThenShouldNotRunAnyScripts())
                 .And(t => t.AndShouldHaveFailedResult())
                 .And(t => t.AndErrorMessageShouldBeLogged())
+                .And(t => t.AndScriptThatErroredIsRecorded())
                 .BDDfy();
         }
 
@@ -107,6 +108,7 @@ namespace DbUp.Tests
                 .Then(t => t.ThenShouldNotRunAnyScripts())
                 .And(t => t.AndShouldHaveFailedResult())
                 .And(t => t.AndErrorMessageShouldBeLogged())
+                .And(t => t.AndScriptThatErroredIsRecorded())
                 .BDDfy();
         }
 
@@ -136,6 +138,11 @@ namespace DbUp.Tests
         {
             scripts.Clear();
             AndTheFourthScriptToRunHasAnError();
+        }
+
+        void AndScriptThatErroredIsRecorded()
+        {
+            upgradeResult.ErrorScript.Name.ShouldContain("ScriptWithError.sql");
         }
 
         void AndShouldLogInformation()
