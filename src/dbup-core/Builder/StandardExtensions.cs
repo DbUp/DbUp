@@ -757,6 +757,18 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Run DbUp in a single transaction but rollback at the end
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithTransactionAlwaysRollback(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.SingleTransactionAlwaysRollback);
+
+        return builder;
+    }
+
+    /// <summary>
     /// Run each script in it's own transaction
     /// </summary>
     /// <param name="builder"></param>

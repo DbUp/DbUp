@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
@@ -34,7 +34,8 @@ namespace DbUp.Engine.Transactions
             {
                 {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},
                 {TransactionMode.SingleTransaction, ()=>new SingleTransactionStrategy()},
-                {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy()}
+                {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy()},
+                {TransactionMode.SingleTransactionAlwaysRollback, ()=>new SingleTransactionAlwaysRollbackStrategy()}
             };
         }
 
