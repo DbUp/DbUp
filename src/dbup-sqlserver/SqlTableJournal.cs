@@ -58,10 +58,5 @@ $@"create table {FqSchemaTableName} (
     [Hash] varchar(100) null
 )";
         }
-
-        protected override string CreateHashColumnSql()
-        {
-            return string.Format($"alter table {FqSchemaTableName} add [Hash] varchar(100)");
-        }
     }
 }

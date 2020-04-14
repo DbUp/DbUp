@@ -2,12 +2,13 @@
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Helpers;
 using DbUp.Support;
 
 namespace DbUp.SQLite
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a
     /// SQLite database using a table called SchemaVersions.
     /// </summary>
     public class SQLiteTableJournal : TableJournal
@@ -15,11 +16,11 @@ namespace DbUp.SQLite
         /// <summary>
         /// Initializes a new instance of the <see cref="SQLiteTableJournal"/> class.
         /// </summary>
-        public SQLiteTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string table) :
-            base(connectionManager, logger, new SQLiteObjectParser(), null, table)
+        public SQLiteTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IHasher> hasher, string table) :
+            base(connectionManager, logger, new SQLiteObjectParser(), hasher, null, table)
         { }
 
-        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, SqlScript script)
         {
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }

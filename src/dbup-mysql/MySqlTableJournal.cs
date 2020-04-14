@@ -2,12 +2,13 @@
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Helpers;
 using DbUp.Support;
 
 namespace DbUp.MySql
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a
     /// MySql database using a table called SchemaVersions.
     /// </summary>
     public class MySqlTableJournal : TableJournal
@@ -19,14 +20,14 @@ namespace DbUp.MySql
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
-        public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, new MySqlObjectParser(), schema, table)
+        public MySqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IHasher> hasher, string schema, string table)
+            : base(connectionManager, logger, new MySqlObjectParser(), hasher, schema, table)
         {
         }
 
-        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, SqlScript script)
         {
-            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
+           return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
         protected override string GetJournalEntriesSql()
@@ -37,7 +38,7 @@ namespace DbUp.MySql
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
         {
             return
-$@"CREATE TABLE {FqSchemaTableName} 
+$@"CREATE TABLE {FqSchemaTableName}
 (
     `schemaversionid` INT NOT NULL AUTO_INCREMENT,
     `scriptname` VARCHAR(255) NOT NULL,

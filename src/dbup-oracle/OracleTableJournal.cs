@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Data;
 using System.Globalization;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Helpers;
 using DbUp.Support;
 
 namespace DbUp.Oracle
@@ -17,8 +19,8 @@ namespace DbUp.Oracle
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="schema">The name of the schema the journal is stored in.</param>
         /// <param name="table">The name of the journal table.</param>
-        public OracleTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, new OracleObjectParser(), schema, table)
+        public OracleTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IHasher> hasher, string schema, string table)
+            : base(connectionManager, logger, new OracleObjectParser(), hasher, schema, table)
         {
         }
 
@@ -28,12 +30,12 @@ namespace DbUp.Oracle
         {
             var fqSchemaTableName = UnquotedSchemaTableName;
             return
-                $@" CREATE TABLE {fqSchemaTableName} 
+                $@" CREATE TABLE {fqSchemaTableName}
                 (
                     schemaversionid NUMBER(10),
                     scriptname VARCHAR2(255) NOT NULL,
                     applied TIMESTAMP NOT NULL,
-                    CONSTRAINT PK_{ fqSchemaTableName } PRIMARY KEY (schemaversionid) 
+                    CONSTRAINT PK_{ fqSchemaTableName } PRIMARY KEY (schemaversionid)
                 )";
         }
 
@@ -57,10 +59,10 @@ namespace DbUp.Oracle
                 ";
         }
 
-        protected override string GetInsertJournalEntrySql(string scriptName, string applied)
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, SqlScript script)
         {
-            var unquotedSchemaTableName = UnquotedSchemaTableName.ToUpper(English);
-            return $"insert into {unquotedSchemaTableName} (ScriptName, Applied) values (:" + scriptName.Replace("@", "") + ",:" + applied.Replace("@", "") + ")";
+           var unquotedSchemaTableName = UnquotedSchemaTableName.ToUpper(English);
+           return $"insert into {unquotedSchemaTableName} (ScriptName, Applied) values (:" + scriptName.Replace("@", "") + ",:" + applied.Replace("@", "") + ")";
         }
 
         protected override string GetJournalEntriesSql()

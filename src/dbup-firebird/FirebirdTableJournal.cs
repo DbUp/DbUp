@@ -3,12 +3,13 @@ using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Helpers;
 using DbUp.Support;
 
 namespace DbUp.Firebird
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a
     /// Firebird database using a table called SchemaVersions.
     /// </summary>
     public class FirebirdTableJournal : TableJournal
@@ -19,8 +20,8 @@ namespace DbUp.Firebird
         /// <param name="connectionManager">The Firebird connection manager.</param>
         /// <param name="logger">The upgrade logger.</param>
         /// <param name="tableName">The name of the journal table.</param>
-        public FirebirdTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string tableName)
-            : base(connectionManager, logger, new FirebirdObjectParser(), null, tableName)
+        public FirebirdTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IHasher> hasher, string tableName)
+            : base(connectionManager, logger, new FirebirdObjectParser(), hasher, null, tableName)
         {
         }
 
@@ -65,9 +66,9 @@ END;";
             return $"select 1 from RDB$RELATIONS where RDB$SYSTEM_FLAG = 0 and RDB$RELATION_NAME = '{UnquotedSchemaTableName}'";
         }
 
-        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, SqlScript script)
         {
-            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({scriptName}, {applied})";
+           return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({scriptName}, {applied})";
         }
 
         protected override string GetJournalEntriesSql()

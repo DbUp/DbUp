@@ -21,7 +21,7 @@ public static class SqlAnywhereExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = new SqlAnywhereConnectionManager(connectionString));
         builder.Configure(c => c.ScriptExecutor = new SqlAnywhereScriptExecutor(() => c.ConnectionManager, () => c.Log, null, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new SqlAnywhereTableJournal(() => c.ConnectionManager, () => c.Log, null, "schemaversions"));
+        builder.Configure(c => c.Journal = new SqlAnywhereTableJournal(() => c.ConnectionManager, () => c.Log, () => c.Hasher, null, "schemaversions"));
         return builder;
     }
 
@@ -39,7 +39,7 @@ public static class SqlAnywhereExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
         builder.Configure(c => c.ScriptExecutor = new SqlAnywhereScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new SqlAnywhereTableJournal(() => c.ConnectionManager, () => c.Log, schema, "SchemaVersions"));
+        builder.Configure(c => c.Journal = new SqlAnywhereTableJournal(() => c.ConnectionManager, () => c.Log, () => c.Hasher, schema, "SchemaVersions"));
         return builder;
     }
 

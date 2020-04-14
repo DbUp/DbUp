@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Globalization;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Helpers;
 using DbUp.Support;
 
 
@@ -23,14 +25,14 @@ namespace DbUp.SqlAnywhere
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dba", "MyVersionTable");
         /// </example>
-        public SqlAnywhereTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, new SqlAnywhereObjectParser(), schema, table)
+        public SqlAnywhereTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IHasher> hasher, string schema, string table)
+            : base(connectionManager, logger, new SqlAnywhereObjectParser(), hasher, schema, table)
         {
         }
 
         public static CultureInfo English = new CultureInfo("en-UK", false);
 
-        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, SqlScript script)
         {
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values (? ,?)";
         }

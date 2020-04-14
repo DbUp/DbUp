@@ -160,22 +160,10 @@ namespace DbUp.Support
         {
             var command = dbCommandFactory();
 
-            // TODO: Figure out why this was changed in DbUp.OnChange
-            //// command.CommandText = GetJournalEntriesSql(dbCommandFactory) ?? GetJournalEntriesSql(); 
             command.CommandText = GetJournalEntriesSql();
             command.CommandType = CommandType.Text;
             return command;
         }
-
-        // TODO: Figure out whether this is needed
-        //protected IDbCommand GetCreateHashColumnCommand(Func<IDbCommand> dbCommandFactory)
-        //{
-        //    var command = dbCommandFactory();
-        //    command.CommandText = CreateHashColumnSql();
-        //    command.CommandType = CommandType.Text;
-
-        //    return command;
-        //}
 
         protected IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory)
         {
@@ -199,22 +187,11 @@ namespace DbUp.Support
         /// </summary>
         protected abstract string GetJournalEntriesSql();
 
-        // TODO: Figure out what this is
-        //protected virtual string GetJournalEntriesSql(Func<IDbCommand> dbCommandFactory)
-        //{
-        //    return null;
-        //}
-
         /// <summary>
         /// Sql for creating journal table
         /// </summary>
         /// <param name="quotedPrimaryKeyName">Following PK_{TableName}_Id naming</param>
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
-
-        /// <summary>
-        /// Sql for adding hash column to journal table
-        /// </summary>
-        protected abstract string CreateHashColumnSql();
 
         /// <summary>
         /// Unquotes a quoted identifier.

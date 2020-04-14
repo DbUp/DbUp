@@ -71,7 +71,7 @@ public static class RedshiftExtensions
         var builder = new UpgradeEngineBuilder();
         builder.Configure(c => c.ConnectionManager = connectionManager);
         builder.Configure(c => c.ScriptExecutor = new RedshiftScriptExecutor(() => c.ConnectionManager, () => c.Log, schema, () => c.VariablesEnabled, c.ScriptPreprocessors, () => c.Journal));
-        builder.Configure(c => c.Journal = new RedshiftTableJournal(() => c.ConnectionManager, () => c.Log, schema, "schemaversions"));
+        builder.Configure(c => c.Journal = new RedshiftTableJournal(() => c.ConnectionManager, () => c.Log, () => c.Hasher, schema, "schemaversions"));
         builder.WithPreprocessor(new RedshiftPreprocessor());
         return builder;
     }
@@ -179,7 +179,7 @@ public static class RedshiftExtensions
     /// <returns></returns>
     public static UpgradeEngineBuilder JournalToRedshiftTable(this UpgradeEngineBuilder builder, string schema, string table)
     {
-        builder.Configure(c => c.Journal = new RedshiftTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
+        builder.Configure(c => c.Journal = new RedshiftTableJournal(() => c.ConnectionManager, () => c.Log, () => c.Hasher, schema, table));
         return builder;
     }
 }
