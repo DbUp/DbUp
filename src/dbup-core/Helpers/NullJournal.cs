@@ -1,5 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using DbUp.Engine;
 
 namespace DbUp.Helpers
@@ -13,7 +15,7 @@ namespace DbUp.Helpers
         /// Returns an empty array of length 0.
         /// </summary>
         /// <returns></returns>
-        public string[] GetExecutedScripts() => new string[0];
+        public IEnumerable<ExecutedSqlScript> GetExecutedScripts() => Enumerable.Empty<ExecutedSqlScript>();
 
         /// <summary>
         /// Does not store the script, simply returns.

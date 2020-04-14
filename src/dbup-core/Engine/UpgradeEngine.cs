@@ -8,9 +8,9 @@ namespace DbUp.Engine
     /// <summary>
     /// This class orchestrates the database upgrade process.
     /// </summary>
-    public class UpgradeEngine
+    public class UpgradeEngine : IUpgradeEngine
     {
-        readonly UpgradeConfiguration configuration;
+        private readonly UpgradeConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeEngine"/> class.
@@ -101,6 +101,11 @@ namespace DbUp.Engine
             }
         }
 
+        public List<SqlScript> GetDiscoveredScripts()
+        {
+            return GetDiscoveredScriptsAsEnumerable().ToList();
+        }
+
         /// <summary>
         /// Returns a list of scripts that will be executed when the upgrade is performed
         /// </summary>
@@ -113,36 +118,38 @@ namespace DbUp.Engine
             }
         }
 
-        public List<string> GetExecutedButNotDiscoveredScripts()
-        {
-            return GetExecutedScripts().Except(GetDiscoveredScriptsAsEnumerable().Select(x => x.Name)).ToList();
-        }
-
-        public List<SqlScript> GetDiscoveredScripts()
-        {
-            return GetDiscoveredScriptsAsEnumerable().ToList();
-        }
-
-        IEnumerable<SqlScript> GetDiscoveredScriptsAsEnumerable()
-        {
-            return configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
-        }
-
-        List<SqlScript> GetScriptsToExecuteInsideOperation()
+        private List<SqlScript> GetScriptsToExecuteInsideOperation()
         {
             var allScripts = GetDiscoveredScriptsAsEnumerable();
-            var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
+            var executedScripts = configuration.Journal.GetExecutedScripts();
 
-            var sorted = allScripts.OrderBy(s => s.SqlScriptOptions.RunGroupOrder).ThenBy(s => s.Name, configuration.ScriptNameComparer);
-            var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames, configuration.ScriptNameComparer);
+            var sorted = allScripts
+                .OrderBy(s => s.SqlScriptOptions.RunGroupOrder)
+                .ThenBy(s => s.Name, configuration.ScriptNameComparer);
+
+            var filtered = configuration.ScriptFilter.Filter(sorted, executedScripts, configuration.ScriptNameComparer, configuration.Hasher);
             return filtered.ToList();
+        }
+
+        public List<string> GetExecutedButNotDiscoveredScripts()
+        {
+            return GetExecutedScripts()
+                .Except(GetDiscoveredScriptsAsEnumerable().Select(x => x.Name))
+                .ToList();
+        }
+
+        private IEnumerable<SqlScript> GetDiscoveredScriptsAsEnumerable()
+        {
+            return configuration.ScriptProviders.SelectMany(scriptProvider => scriptProvider.GetScripts(configuration.ConnectionManager));
         }
 
         public List<string> GetExecutedScripts()
         {
             using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
             {
-                return configuration.Journal.GetExecutedScripts()
+                return configuration.Journal
+                    .GetExecutedScripts()
+                    .Select(e => e.Name)
                     .ToList();
             }
         }

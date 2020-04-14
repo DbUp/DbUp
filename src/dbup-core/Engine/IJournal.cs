@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 
 namespace DbUp.Engine
@@ -12,7 +13,7 @@ namespace DbUp.Engine
         /// Recalls the version number of the database.
         /// </summary>
         /// <returns></returns>
-        string[] GetExecutedScripts();
+        IEnumerable<ExecutedSqlScript> GetExecutedScripts();
 
         /// <summary>
         /// Records an upgrade script for a database.

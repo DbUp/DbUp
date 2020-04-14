@@ -10,6 +10,8 @@
         /// <summary>
         /// The script will always be run.  Useful for setting permissions.  Please note, the script should be written so it can always be ran.
         /// </summary>
-        RunAlways = 1
+        RunAlways = 1,
+
+        RunOnChange = 2
     }
 }

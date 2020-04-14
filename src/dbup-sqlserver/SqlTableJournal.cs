@@ -1,6 +1,8 @@
 ﻿using System;
+using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Helpers;
 using DbUp.Support;
 
 namespace DbUp.SqlServer
@@ -21,19 +23,29 @@ namespace DbUp.SqlServer
         /// <example>
         /// var journal = new TableJournal("Server=server;Database=database;Trusted_Connection=True", "dbo", "MyVersionTable");
         /// </example>
-        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string table)
-            : base(connectionManager, logger, new SqlServerObjectParser(), schema, table)
+        public SqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, Func<IHasher> hasher, string schema, string table)
+            : base(connectionManager, logger, new SqlServerObjectParser(), hasher, schema, table)
         {
         }
 
-        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
+        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied, string @hash, SqlScript script)
         {
+            if (script.SqlScriptOptions.ScriptType == ScriptType.RunOnChange)
+            {
+                return $"delete from {FqSchemaTableName} where ScriptName = {@scriptName};" +
+                       $"insert into {FqSchemaTableName} (ScriptName, Applied, Hash) values ({@scriptName}, {@applied}, {@hash})";
+            }
+
             return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
         }
 
         protected override string GetJournalEntriesSql()
         {
-            return $"select [ScriptName] from {FqSchemaTableName} order by [ScriptName]";
+            return string.Format($@"select  [ScriptName], [Hash]
+                                   from     {FqSchemaTableName} sv
+                                            JOIN
+                                            (select max(Applied) as MaxApplied from {FqSchemaTableName} group by [ScriptName]) as svSelf ON sv.Applied = svSelf.MaxApplied
+                                   order    by [ScriptName]");
         }
 
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName)
@@ -42,8 +54,14 @@ namespace DbUp.SqlServer
 $@"create table {FqSchemaTableName} (
     [Id] int identity(1,1) not null constraint {quotedPrimaryKeyName} primary key,
     [ScriptName] nvarchar(255) not null,
-    [Applied] datetime not null
+    [Applied] datetime not null,
+    [Hash] varchar(100) null
 )";
+        }
+
+        protected override string CreateHashColumnSql()
+        {
+            return string.Format($"alter table {FqSchemaTableName} add [Hash] varchar(100)");
         }
     }
 }
