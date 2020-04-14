@@ -32,10 +32,10 @@ namespace DbUp.Firebird
     }
     public class FirebirdTableJournal : DbUp.Support.TableJournal, DbUp.Engine.IJournal
     {
-        public FirebirdTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string tableName) { }
+        public FirebirdTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, System.Func<DbUp.Helpers.IHasher> hasher, string tableName) { }
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
         protected override string DoesTableExistSql() { }
-        protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, DbUp.Engine.SqlScript script) { }
         protected override string GetJournalEntriesSql() { }
         protected override void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
     }

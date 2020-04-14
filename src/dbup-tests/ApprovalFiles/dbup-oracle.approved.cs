@@ -44,7 +44,7 @@ namespace DbUp.Oracle
     public class OracleTableJournal : DbUp.Support.TableJournal, DbUp.Engine.IJournal
     {
         public static System.Globalization.CultureInfo English;
-        public OracleTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
+        public OracleTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, System.Func<DbUp.Helpers.IHasher> hasher, string schema, string table) { }
         protected string CreateSchemaTableSequenceSql() { }
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
         protected string CreateSchemaTableTriggerSql() { }
@@ -52,7 +52,7 @@ namespace DbUp.Oracle
         public override void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected System.Data.IDbCommand GetCreateTableSequence(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected System.Data.IDbCommand GetCreateTableTrigger(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
-        protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, DbUp.Engine.SqlScript script) { }
         protected override string GetJournalEntriesSql() { }
     }
 }

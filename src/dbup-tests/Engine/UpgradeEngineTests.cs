@@ -110,7 +110,12 @@ namespace DbUp.Tests.Engine
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
                 versionTracker = Substitute.For<IJournal>();
-                versionTracker.GetExecutedScripts().Returns(new[] { "#1", "#2", "#3" });
+                versionTracker.GetExecutedScripts().Returns(new List<ExecutedSqlScript>
+                {
+                    new ExecutedSqlScript { Hash = "a", Name = "#1" },
+                    new ExecutedSqlScript { Hash = "b", Name = "#2" },
+                    new ExecutedSqlScript { Hash = "c", Name = "#3" }
+                });
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
                 var config = new UpgradeConfiguration
@@ -153,7 +158,12 @@ namespace DbUp.Tests.Engine
                     new SqlScript("#3", "Content of #3"),
                 });
                 versionTracker = Substitute.For<IJournal>();
-                versionTracker.GetExecutedScripts().Returns(new[] { "#1", "#2", "#3" });
+                versionTracker.GetExecutedScripts().Returns(new List<ExecutedSqlScript>
+                {
+                    new ExecutedSqlScript { Hash = "a", Name = "#1" },
+                    new ExecutedSqlScript { Hash = "b", Name = "#2" },
+                    new ExecutedSqlScript { Hash = "c", Name = "#3" }
+                });
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
                 var config = new UpgradeConfiguration

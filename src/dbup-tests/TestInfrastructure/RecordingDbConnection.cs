@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
@@ -11,7 +11,7 @@ namespace DbUp.Tests.TestInfrastructure
         readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();
         readonly CaptureLogsLogger logger;
         readonly string schemaTableName;
-        SqlScript[] runScripts;
+        ExecutedSqlScript[] runScripts;
 
         public RecordingDbConnection(CaptureLogsLogger logger, string schemaTableName)
         {
@@ -64,7 +64,7 @@ namespace DbUp.Tests.TestInfrastructure
 
         public ConnectionState State { get; private set; }
 
-        public void SetupRunScripts(params SqlScript[] runScripts)
+        public void SetupRunScripts(params ExecutedSqlScript[] runScripts)
         {
             this.runScripts = runScripts;
         }

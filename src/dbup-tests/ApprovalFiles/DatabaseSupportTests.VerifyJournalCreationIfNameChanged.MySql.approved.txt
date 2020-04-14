@@ -9,7 +9,7 @@ Info:         Checking whether journal table exists..
 DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'TestSchemaVersions' and TABLE_SCHEMA = 'test'
 DB Operation: Dispose command
 Info:         Creating the `test`.`TestSchemaVersions` table
-DB Operation: Execute non query command: CREATE TABLE `test`.`TestSchemaVersions` 
+DB Operation: Execute non query command: CREATE TABLE `test`.`TestSchemaVersions`
 (
     `schemaversionid` INT NOT NULL AUTO_INCREMENT,
     `scriptname` VARCHAR(255) NOT NULL,
@@ -24,6 +24,8 @@ DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: hash=
 DB Operation: Execute non query command: insert into `test`.`TestSchemaVersions` (ScriptName, Applied) values (@scriptName, @applied)
 DB Operation: Dispose command
 Info:         Upgrade successful

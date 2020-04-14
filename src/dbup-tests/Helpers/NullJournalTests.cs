@@ -25,7 +25,7 @@ namespace DbUp.Tests.Helpers
 
             upgradeEngine.PerformUpgrade();
 
-            journal.GetExecutedScripts().ShouldBeEmpty();
+            Assert.Empty(journal.GetExecutedScripts());
         }
     }
 }

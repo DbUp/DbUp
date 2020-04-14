@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\src",
+    "\\src\\dbup-core",
+    "\\src\\dbup-core\\Support",
+    "\\src\\dbup-oracle",
+    "\\src\\dbup-sqlite",
+    "\\src\\dbup-tests",
+    "\\src\\dbup-tests\\ApprovalFiles",
+    "\\src\\dbup-tests\\Support",
+    "\\src\\dbup-tests\\Support\\Oracle"
+  ],
+  "SelectedNode": "\\src\\dbup-core\\dbup-core.csproj",
+  "PreviewInSolutionExplorer": false
+}

@@ -115,6 +115,7 @@ namespace DbUp.Builder
     {
         public UpgradeConfiguration() { }
         public DbUp.Engine.Transactions.IConnectionManager ConnectionManager { get; set; }
+        public DbUp.Helpers.IHasher Hasher { get; set; }
         public DbUp.Engine.IJournal Journal { get; set; }
         public DbUp.Engine.Output.IUpgradeLog Log { get; set; }
         public DbUp.Engine.IScriptExecutor ScriptExecutor { get; set; }
@@ -145,10 +146,16 @@ namespace DbUp.Engine
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Scripts { get; }
         public bool Successful { get; }
     }
+    public class ExecutedSqlScript
+    {
+        public ExecutedSqlScript() { }
+        public string Hash { get; set; }
+        public string Name { get; set; }
+    }
     public interface IJournal
     {
         void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory);
-        string[] GetExecutedScripts();
+        System.Collections.Generic.IEnumerable<DbUp.Engine.ExecutedSqlScript> GetExecutedScripts();
         void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory);
     }
     public interface IScript
@@ -165,6 +172,7 @@ namespace DbUp.Engine
     public interface IScriptFilter
     {
         System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Filter(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> sorted, System.Collections.Generic.HashSet<string> executedScriptNames, DbUp.Support.ScriptNameComparer comparer);
+        System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Filter(System.Linq.IOrderedEnumerable<DbUp.Engine.SqlScript> sorted, System.Collections.Generic.IEnumerable<DbUp.Engine.ExecutedSqlScript> executedScripts, DbUp.Support.ScriptNameComparer configurationScriptNameComparer, DbUp.Helpers.IHasher hasher);
     }
     public interface IScriptPreprocessor
     {
@@ -179,6 +187,19 @@ namespace DbUp.Engine
         string QuoteIdentifier(string objectName);
         string QuoteIdentifier(string objectName, DbUp.Support.ObjectNameOptions objectNameOptions);
         string UnquoteIdentifier(string objectName);
+    }
+    public interface IUpgradeEngine
+    {
+        event System.EventHandler ScriptExecuted;
+        System.Collections.Generic.List<DbUp.Engine.SqlScript> GetDiscoveredScripts();
+        System.Collections.Generic.List<string> GetExecutedButNotDiscoveredScripts();
+        System.Collections.Generic.List<string> GetExecutedScripts();
+        System.Collections.Generic.List<DbUp.Engine.SqlScript> GetScriptsToExecute();
+        bool IsUpgradeRequired();
+        DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted();
+        DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(string latestScript);
+        DbUp.Engine.DatabaseUpgradeResult PerformUpgrade();
+        bool TryConnect(out string errorMessage);
     }
     public class LazySqlScript : DbUp.Engine.SqlScript
     {
@@ -213,7 +234,7 @@ namespace DbUp.Engine
         public int RunGroupOrder { get; set; }
         public DbUp.Support.ScriptType ScriptType { get; set; }
     }
-    public class UpgradeEngine
+    public class UpgradeEngine : DbUp.Engine.IUpgradeEngine
     {
         public UpgradeEngine(DbUp.Builder.UpgradeConfiguration configuration) { }
         public event System.EventHandler ScriptExecuted;
@@ -235,6 +256,7 @@ namespace DbUp.Engine.Filters
     {
         public DefaultScriptFilter() { }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Filter(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> sorted, System.Collections.Generic.HashSet<string> executedScriptNames, DbUp.Support.ScriptNameComparer comparer) { }
+        public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Filter(System.Linq.IOrderedEnumerable<DbUp.Engine.SqlScript> sorted, System.Collections.Generic.IEnumerable<DbUp.Engine.ExecutedSqlScript> executedScripts, DbUp.Support.ScriptNameComparer comparer, DbUp.Helpers.IHasher hasher) { }
     }
 }
 namespace DbUp.Engine.Output
@@ -364,17 +386,26 @@ namespace DbUp.Helpers
         public object ExecuteScalar(string query, params System.Linq.Expressions.Expression<System.Func<string, object>>[] parameters) { }
         public DbUp.Helpers.AdHocSqlRunner WithVariable(string variableName, string value) { }
     }
+    public class Hasher : DbUp.Helpers.IHasher
+    {
+        public Hasher() { }
+        public string GetHash(string input) { }
+    }
+    public interface IHasher
+    {
+        string GetHash(string input);
+    }
     public class NullJournal : DbUp.Engine.IJournal
     {
         public NullJournal() { }
         public void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
-        public string[] GetExecutedScripts() { }
+        public System.Collections.Generic.IEnumerable<DbUp.Engine.ExecutedSqlScript> GetExecutedScripts() { }
         public void StoreExecutedScript(DbUp.Engine.SqlScript script, System.Func<System.Data.IDbCommand> dbCommandFactory) { }
     }
     public static class UpgradeEngineHtmlReport
     {
-        public static void GenerateUpgradeHtmlReport(this DbUp.Engine.UpgradeEngine upgradeEngine, string fullPath) { }
-        public static void GenerateUpgradeHtmlReport(this DbUp.Engine.UpgradeEngine upgradeEngine, string fullPath, string serverName, string databaseName) { }
+        public static void GenerateUpgradeHtmlReport(this DbUp.Engine.IUpgradeEngine upgradeEngine, string fullPath) { }
+        public static void GenerateUpgradeHtmlReport(this DbUp.Engine.IUpgradeEngine upgradeEngine, string fullPath, string serverName, string databaseName) { }
     }
 }
 namespace DbUp.ScriptProviders
@@ -455,6 +486,7 @@ namespace DbUp.Support
     {
         RunOnce = 0
         RunAlways = 1
+        RunOnChange = 2
     }
     public class SqlCommandReader : DbUp.Support.SqlParser, System.IDisposable
     {
@@ -515,9 +547,10 @@ namespace DbUp.Support
     }
     public abstract class TableJournal : DbUp.Engine.IJournal
     {
-        protected TableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, DbUp.Engine.ISqlObjectParser sqlObjectParser, string schema, string table) { }
+        protected TableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, DbUp.Engine.ISqlObjectParser sqlObjectParser, System.Func<DbUp.Helpers.IHasher> hasher, string schema, string table) { }
         protected System.Func<DbUp.Engine.Transactions.IConnectionManager> ConnectionManager { get; }
         protected string FqSchemaTableName { get; }
+        protected System.Func<DbUp.Helpers.IHasher> Hasher { get; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         protected string SchemaTableSchema { get; }
         protected string UnquotedSchemaTableName { get; }
@@ -526,8 +559,8 @@ namespace DbUp.Support
         protected virtual string DoesTableExistSql() { }
         public virtual void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
-        public string[] GetExecutedScripts() { }
-        protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);
+        public System.Collections.Generic.IEnumerable<DbUp.Engine.ExecutedSqlScript> GetExecutedScripts() { }
+        protected abstract string GetInsertJournalEntrySql(string scriptName, string applied, string hash, DbUp.Engine.SqlScript script);
         protected System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
         protected System.Data.IDbCommand GetJournalEntriesCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected abstract string GetJournalEntriesSql();

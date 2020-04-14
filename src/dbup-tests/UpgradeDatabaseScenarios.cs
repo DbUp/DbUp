@@ -17,6 +17,7 @@ namespace DbUp.Tests
     public class UpgradeDatabaseScenarios
     {
         readonly List<SqlScript> scripts;
+        readonly List<ExecutedSqlScript> executedScripts;
         readonly UpgradeEngineBuilder upgradeEngineBuilder;
         readonly CaptureLogsLogger logger;
         readonly DelegateConnectionFactory testConnectionFactory;
@@ -33,6 +34,13 @@ namespace DbUp.Tests
                 new SqlScript("Script1.sql", "create table Foo (Id int identity)"),
                 new SqlScript("Script2.sql", "alter table Foo add column Name varchar(255)"),
                 new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')")
+            };
+
+            executedScripts = new List<ExecutedSqlScript>
+            {
+                new ExecutedSqlScript { Name = "Script1.sql", Hash = "a" },
+                new ExecutedSqlScript { Name = "Script2.sql", Hash = "b" },
+                new ExecutedSqlScript { Name = "Script3.sql", Hash = "c" }
             };
 
             logger = new CaptureLogsLogger();
@@ -168,7 +176,7 @@ namespace DbUp.Tests
 
         void GivenAnUpToDateDatabase()
         {
-            recordingConnection.SetupRunScripts(scripts[0], scripts[1], scripts[2]);
+            recordingConnection.SetupRunScripts(executedScripts[0], executedScripts[1], executedScripts[2]);
         }
 
         void WhenCheckIfDatabaseUpgradeIsRequired()

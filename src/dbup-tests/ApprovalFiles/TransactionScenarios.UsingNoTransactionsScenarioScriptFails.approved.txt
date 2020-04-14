@@ -6,7 +6,8 @@ DB Operation: Dispose command
 DB Operation: Execute non query command: create table [dbo].[SchemaVersions] (
     [Id] int identity(1,1) not null constraint [PK_SchemaVersions_Id] primary key,
     [ScriptName] nvarchar(255) not null,
-    [Applied] datetime not null
+    [Applied] datetime not null,
+    [Hash] varchar(100) null
 )
 DB Operation: Dispose command
 DB Operation: Execute non query command: error

@@ -50,9 +50,9 @@ namespace DbUp.MySql
     }
     public class MySqlTableJournal : DbUp.Support.TableJournal, DbUp.Engine.IJournal
     {
-        public MySqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string table) { }
+        public MySqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, System.Func<DbUp.Helpers.IHasher> hasher, string schema, string table) { }
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
-        protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, DbUp.Engine.SqlScript script) { }
         protected override string GetJournalEntriesSql() { }
     }
 }

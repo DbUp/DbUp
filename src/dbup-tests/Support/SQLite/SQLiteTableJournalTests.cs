@@ -4,6 +4,7 @@ using System.Data.SQLite;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
+using DbUp.Helpers;
 using DbUp.SQLite;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
@@ -24,7 +25,7 @@ namespace DbUp.Tests.Support.SQLite
             var connectionManager = Substitute.For<IConnectionManager>();
             command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
             var consoleUpgradeLog = new ConsoleUpgradeLog();
-            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
+            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, () => new Hasher(), "SchemaVersions");
 
             // When
             var scripts = journal.GetExecutedScripts();
@@ -43,18 +44,20 @@ namespace DbUp.Tests.Support.SQLite
             var command = Substitute.For<IDbCommand>();
             var param1 = Substitute.For<IDbDataParameter>();
             var param2 = Substitute.For<IDbDataParameter>();
+            var param3 = Substitute.For<IDbDataParameter>();
             dbConnection.CreateCommand().Returns(command);
-            command.CreateParameter().Returns(param1, param2);
+            command.CreateParameter().Returns(param1, param2, param3);
             command.ExecuteScalar().Returns(x => 0);
             var consoleUpgradeLog = new ConsoleUpgradeLog();
-            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
+            var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, () => new Hasher(), "SchemaVersions");
 
             // When
             journal.StoreExecutedScript(new SqlScript("test", "select 1"), () => command);
 
             // Expect
-            command.Received(2).CreateParameter();
+            command.Received(3).CreateParameter();
             param1.ParameterName.ShouldBe("scriptName");
+            param3.ParameterName.ShouldBe("hash");
             param2.ParameterName.ShouldBe("applied");
             command.Received().ExecuteNonQuery();
         }

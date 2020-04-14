@@ -40,9 +40,9 @@ namespace DbUp.Postgresql
     }
     public class PostgresqlTableJournal : DbUp.Support.TableJournal, DbUp.Engine.IJournal
     {
-        public PostgresqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string tableName) { }
+        public PostgresqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, System.Func<DbUp.Helpers.IHasher> hasher, string schema, string tableName) { }
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
-        protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied, string hash, DbUp.Engine.SqlScript script) { }
         protected override string GetJournalEntriesSql() { }
     }
 }

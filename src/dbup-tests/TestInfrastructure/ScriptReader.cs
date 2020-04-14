@@ -1,15 +1,15 @@
-using System;
+﻿using System;
 using System.Data;
 using DbUp.Engine;
 
 namespace DbUp.Tests.TestInfrastructure
 {
-    class ScriptReader : IDataReader
+  class ScriptReader : IDataReader
     {
-        readonly SqlScript[] runScripts;
+        readonly ExecutedSqlScript[] runScripts;
         int currentIndex = -1;
 
-        public ScriptReader(SqlScript[] runScripts)
+        public ScriptReader(ExecutedSqlScript[] runScripts)
         {
             this.runScripts = runScripts;
         }
@@ -126,7 +126,21 @@ namespace DbUp.Tests.TestInfrastructure
 
         public int FieldCount { get; }
 
-        public object this[string name] => throw new NotImplementedException();
+        public object this[string name]
+        {
+            get
+            {
+                switch (name)
+                {
+                    case "ScriptName":
+                        return runScripts[currentIndex].Name;
+                    case "Hash":
+                        return runScripts[currentIndex].Hash;
+                    default:
+                        throw new NotImplementedException();
+                }
+            }
+        }
 
         public object this[int i] => runScripts[currentIndex].Name;
 

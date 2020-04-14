@@ -24,6 +24,8 @@ DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: hash=
 DB Operation: Execute non query command: insert into "test"."TestSchemaVersions" (ScriptName, Applied) values (@scriptName, @applied)
 DB Operation: Dispose command
 Info:         Upgrade successful

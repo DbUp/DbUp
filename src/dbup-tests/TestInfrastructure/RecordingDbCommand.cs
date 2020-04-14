@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -9,12 +9,12 @@ namespace DbUp.Tests.TestInfrastructure
     class RecordingDbCommand : IDbCommand
     {
         readonly CaptureLogsLogger logger;
-        readonly SqlScript[] runScripts;
+        readonly ExecutedSqlScript[] runScripts;
         readonly string schemaTableName;
         readonly Dictionary<string, Func<object>> scalarResults;
         readonly Dictionary<string, Func<int>> nonQueryResults;
 
-        public RecordingDbCommand(CaptureLogsLogger logger, SqlScript[] runScripts, string schemaTableName,
+        public RecordingDbCommand(CaptureLogsLogger logger, ExecutedSqlScript[] runScripts, string schemaTableName,
             Dictionary<string, Func<object>> scalarResults, Dictionary<string, Func<int>> nonQueryResults)
         {
             this.logger = logger;

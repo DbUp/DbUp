@@ -11,12 +11,12 @@ DB Operation: Dispose command
 Info:         Creating the "schemaversions" table
 DB Operation: Execute non query command:  CREATE SEQUENCE schemaversions_sequence
 DB Operation: Dispose command
-DB Operation: Execute non query command:  CREATE TABLE schemaversions 
+DB Operation: Execute non query command:  CREATE TABLE schemaversions
                 (
                     schemaversionid NUMBER(10),
                     scriptname VARCHAR2(255) NOT NULL,
                     applied TIMESTAMP NOT NULL,
-                    CONSTRAINT PK_schemaversions PRIMARY KEY (schemaversionid) 
+                    CONSTRAINT PK_schemaversions PRIMARY KEY (schemaversionid)
                 )
 DB Operation: Dispose command
 DB Operation: Execute non query command:  CREATE OR REPLACE TRIGGER schemaversions_on_insert
@@ -36,6 +36,8 @@ DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
 DB Operation: Create parameter
 Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: hash=
 DB Operation: Execute non query command: insert into SCHEMAVERSIONS (ScriptName, Applied) values (:scriptName,:applied)
 DB Operation: Dispose command
 Info:         Upgrade successful
