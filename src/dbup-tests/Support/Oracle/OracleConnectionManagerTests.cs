@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Text;
 using DbUp.Oracle;
 using Shouldly;
 using Xunit;
@@ -31,5 +32,26 @@ namespace DbUp.Tests.Support.Oracle
 
             result.Count().ShouldBe(2);
         }
+
+        [Fact]
+        public void ParsesOutBeginningDelimiter()
+        {
+            const string singleCommand = "select banner as \"oracle version\" from v$version";
+            var multiCommand = new StringBuilder()
+                .AppendLine("DELIMITER $$")
+                .AppendLine(singleCommand + "$$")
+                .Append(singleCommand);
+
+            var connectionManager = new OracleConnectionManager("connectionstring");
+            var result = connectionManager.SplitScriptIntoCommands(multiCommand.ToString())
+                .ToArray();
+
+            result.ShouldBe(new[]
+            {
+                singleCommand,
+                singleCommand
+            });
+        }
+
     }
 }

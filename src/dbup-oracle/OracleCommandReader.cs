@@ -18,8 +18,8 @@ namespace DbUp.Oracle
         /// <summary>
         /// Hook to support custom statements
         /// </summary>
-        protected override bool IsCustomStatement => TryPeek(DelimiterKeyword.Length, out var statement) &&
-                       string.Equals(DelimiterKeyword, statement, StringComparison.OrdinalIgnoreCase);
+        protected override bool IsCustomStatement => TryPeek(DelimiterKeyword.Length - 1, out var statement) &&
+                       string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Read a custom statement
