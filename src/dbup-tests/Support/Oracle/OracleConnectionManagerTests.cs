@@ -37,6 +37,8 @@ namespace DbUp.Tests.Support.Oracle
         public void ParsesOutBeginningDelimiter()
         {
             const string singleCommand = "select banner as \"oracle version\" from v$version";
+            
+            // commands separated only with customer delimiter - no semicolon
             var multiCommand = new StringBuilder()
                 .AppendLine("DELIMITER $$")
                 .AppendLine(singleCommand + "$$")
