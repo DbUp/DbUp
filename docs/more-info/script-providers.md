@@ -23,9 +23,49 @@ builder.WithScriptsEmbeddedInAssemblies(new[]
 ```
 
 ## FileSystemScriptProvider
-Finds scripts in a specified directory
+Reads upgrade scripts from a path on the file system.
+
 ### Usage
-`builder.WithScriptsFromFileSystem(path)`
+
+Read all files with a `.sql` extension from the location specified by `path`.
+```
+builder.WithScriptsFromFileSystem(path)
+```
+
+Locate all files with a `.sql` extension from the location specified by `path` then filter them using the lambda function.
+```
+builder.WithScriptsFromFileSystem(path, sqlFilePath => sqlFilePath.Contains("good"))
+```
+
+Read all files with a `.sql` extension from the location specified by `path` using the specified encoding.
+```
+builder.WithScriptsFromFileSystem(path, Encoding.UTF8)
+```
+
+Locate all files with a `.sql` extension from the location specified by `path`, then filter them using the lambda function, and read them using the specified encoding.
+```
+builder.WithScriptsFromFileSystem(path, sqlFilePath => sqlFilePath.Contains("good"), Encoding.UTF8)
+```
+
+Fully customise the options for the `FileSystemScriptProvider`.
+```
+var options = new FileSystemScriptOptions
+{
+  // true = scan into subdirectories, false = top directory only
+  IncludeSubDirectories = true,
+  
+  // Patterns to search the file system for. Set to "*.sql" by default.
+  Extensions = new [] { "*.sql" },
+  
+  // Type of text encoding to use when reading the files. Defaults to "Encoding.UTF8".
+  Encoding = Encoding.UTF8,
+
+  // Pass each file path located to this function and filter based on the result
+  Filter = path => path.Contains("value")
+}
+
+builder.WithScriptsFromFileSystem(path, options);
+```
 
 ## StaticScriptProvider
 Allows you to easily programatically supply scripts from code
