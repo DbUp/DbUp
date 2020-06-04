@@ -11,7 +11,7 @@ namespace DbUp.Oracle
         /// <summary>
         /// Creates an instance of OracleCommandReader
         /// </summary>
-        public OracleCommandReader(string sqlText) : base(sqlText, ";", delimiterRequiresWhitespace: false)
+        public OracleCommandReader(string sqlText) : base(sqlText, "/", delimiterRequiresWhitespace: false)
         {
         }
 
