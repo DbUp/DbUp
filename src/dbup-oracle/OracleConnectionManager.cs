@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Linq;
 using DbUp.Engine.Transactions;
 using Oracle.ManagedDataAccess.Client;
 
@@ -18,7 +19,21 @@ namespace DbUp.Oracle
         {
             var commandSplitter = new OracleCommandSplitter();
             var scriptStatements = commandSplitter.SplitScriptIntoCommands(scriptContents);
-            return scriptStatements;
+            var commands = new List<string>();
+            foreach (var statement in scriptStatements)
+            {
+                var lowerStatement = statement.ToLower().Trim();
+                if (lowerStatement.Contains("begin") || !lowerStatement.Contains(";"))
+                {
+                    commands.Add(statement);
+                } 
+                else
+                {
+                    var subStatements = statement.Split(';').Select(x => x.Trim()).Where(x => !string.IsNullOrWhiteSpace(x));
+                    commands.AddRange(subStatements);
+                }
+            }
+            return commands;
         }
     }
 }
