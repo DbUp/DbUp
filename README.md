@@ -17,6 +17,9 @@ DbUp is a .NET library that helps you to deploy changes to SQL Server databases.
 | DbUp-Firebird  | [![NuGet](https://img.shields.io/nuget/dt/dbup-firebird.svg)](https://www.nuget.org/packages/dbup-firebird) [![NuGet](https://img.shields.io/nuget/v/dbup-firebird.svg)](https://www.nuget.org/packages/dbup-firebird) | [![NuGet](https://img.shields.io/nuget/vpre/dbup-firebird.svg)](https://www.nuget.org/packages/dbup-firebird) |
 | DbUp-Oracle  | [![NuGet](https://img.shields.io/nuget/dt/dbup-oracle.svg)](https://www.nuget.org/packages/dbup-oracle) [![NuGet](https://img.shields.io/nuget/v/dbup-oracle.svg)](https://www.nuget.org/packages/dbup-oracle) | [![NuGet](https://img.shields.io/nuget/vpre/dbup-oracle.svg)](https://www.nuget.org/packages/dbup-oracle) |
 
+## Getting Help
+To learn more about DbUp check out the [documentation](https://dbup.readthedocs.io/en/latest/)
+
 # Development
 ## Getting Started
 Install:
