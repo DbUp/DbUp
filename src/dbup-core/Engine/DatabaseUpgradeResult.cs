@@ -11,6 +11,7 @@ namespace DbUp.Engine
         readonly List<SqlScript> scripts;
         readonly bool successful;
         readonly Exception error;
+        readonly SqlScript errorScript;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="DatabaseUpgradeResult"/> class.
@@ -18,12 +19,13 @@ namespace DbUp.Engine
         /// <param name="scripts">The scripts that were executed.</param>
         /// <param name="successful">if set to <c>true</c> [successful].</param>
         /// <param name="error">The error.</param>
-        public DatabaseUpgradeResult(IEnumerable<SqlScript> scripts, bool successful, Exception error)
+        public DatabaseUpgradeResult(IEnumerable<SqlScript> scripts, bool successful, Exception error, SqlScript errorScript)
         {
             this.scripts = new List<SqlScript>();
             this.scripts.AddRange(scripts);
             this.successful = successful;
             this.error = error;
+            this.errorScript = errorScript;
         }
 
         /// <summary>
@@ -40,5 +42,10 @@ namespace DbUp.Engine
         /// Gets the error.
         /// </summary>
         public Exception Error => error;
+
+        /// <summary>
+        /// Gets the script that was executing when an error occured.
+        /// </summary>
+        public SqlScript ErrorScript => errorScript;
     }
 }

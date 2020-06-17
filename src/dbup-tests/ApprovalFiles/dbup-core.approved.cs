@@ -140,8 +140,9 @@ namespace DbUp.Engine
 {
     public sealed class DatabaseUpgradeResult
     {
-        public DatabaseUpgradeResult(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> scripts, bool successful, System.Exception error) { }
+        public DatabaseUpgradeResult(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> scripts, bool successful, System.Exception error, DbUp.Engine.SqlScript errorScript) { }
         public System.Exception Error { get; }
+        public DbUp.Engine.SqlScript ErrorScript { get; }
         public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Scripts { get; }
         public bool Successful { get; }
     }
