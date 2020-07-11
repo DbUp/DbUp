@@ -55,18 +55,45 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var files = new List<string>();
-            foreach (var scriptExtension in options.Extensions)
+            if (options.PrefixWithSubDirectoryNames)
             {
-                files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
+                var files = new List<string>();
+                foreach (var scriptExtension in options.Extensions)
+                {
+                    files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
+                }
+                if (filter != null)
+                {
+                    files = files.Where(filter).ToList();
+                }
+                return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
+                    .OrderBy(x => x.Name)
+                    .ToList();
             }
-            if (filter != null)
+            else
             {
-                files = files.Where(filter).ToList();
+                var files = new List<FileInfo>();
+                foreach (var scriptExtension in options.Extensions)
+                {
+                    files.AddRange(
+                        new DirectoryInfo(directoryPath).GetFiles(scriptExtension, ShouldSearchSubDirectories())
+                    );
+                }
+                foreach (var fileInfo in files)
+                {
+                    if (files.Count(f => f.Name == fileInfo.Name) > 1)
+                    {
+                        throw new Exception($"Duplicate filename: {fileInfo.Name}");
+                    }
+                }
+                if (filter != null)
+                {
+                    files = files.Where(x => filter(x.Name)).ToList();
+                }
+                return files.Select(x => SqlScript.FromStream(x.Name, new FileStream(x.FullName, FileMode.Open, FileAccess.Read), encoding, sqlScriptOptions))
+                    .OrderBy(x => x.Name)
+                    .ToList();
             }
-            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
-                .OrderBy(x => x.Name)
-                .ToList();
         }
 
         SearchOption ShouldSearchSubDirectories()

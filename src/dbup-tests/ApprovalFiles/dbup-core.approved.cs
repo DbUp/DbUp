@@ -409,6 +409,7 @@ namespace DbUp.ScriptProviders
         public string[] Extensions { get; set; }
         public System.Func<string, bool> Filter { get; set; }
         public bool IncludeSubDirectories { get; set; }
+        public bool PrefixWithSubDirectoryNames { get; set; }
     }
     public class FileSystemScriptProvider : DbUp.Engine.IScriptProvider
     {
