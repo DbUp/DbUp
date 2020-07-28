@@ -181,6 +181,66 @@ namespace DbUp.Tests.ScriptProvider
             }
         }
 
+        public class when_returning_scripts_from_a_directory_and_using_subdirectories_option_without_prefix : SpecificationFor<FileSystemScriptProvider>, IDisposable
+        {
+            string testPath;
+            IEnumerable<SqlScript> filesToExecute;
+
+            public override FileSystemScriptProvider Given()
+            {
+                TestScripts.Create(out testPath);
+                var options = new FileSystemScriptOptions() { IncludeSubDirectories = true, UseOnlyFilenameForScriptName = true };
+                return new FileSystemScriptProvider(testPath, options);
+            }
+
+            protected override void When()
+            {
+                filesToExecute = Subject.GetScripts(Substitute.For<IConnectionManager>());
+            }
+
+            [Then]
+            public void it_should_return_all_sql_files()
+            {
+                filesToExecute.Count().ShouldBe(9);
+            }
+
+            [Then]
+            public void the_file_should_contain_content()
+            {
+                foreach (var sqlScript in filesToExecute)
+                {
+                    sqlScript.Contents.Length.ShouldBeGreaterThan(0);
+                }
+            }
+
+            [Then]
+            public void the_files_should_not_contain_the_subfolder_name()
+            {
+                filesToExecute
+                        .Select(f => f.Name)
+                        .ShouldContain("dbup-tests.TestScripts.Test1__9.sql");
+            }
+
+            [Then]
+            public void the_files_should_be_correctly_ordered_without_subdirectory_order()
+            {
+                filesToExecute.ElementAt(0).Name.ShouldEndWith("Script20110301_1_Test1.sql");
+                filesToExecute.ElementAt(1).Name.ShouldEndWith("Script20110301_2_Test2.sql");
+                filesToExecute.ElementAt(2).Name.ShouldEndWith("Script20110302_1_Test3.sql");
+                filesToExecute.ElementAt(3).Name.ShouldEndWith("Script20130525_1_Test5.sql");
+                filesToExecute.ElementAt(4).Name.ShouldEndWith("Script20130525_2_Test5.sql");
+                filesToExecute.ElementAt(5).Name.ShouldEndWith("Test1__1.sql");
+                filesToExecute.ElementAt(6).Name.ShouldEndWith("Test1__9.sql");
+                filesToExecute.ElementAt(7).Name.ShouldEndWith("Test2__1.sql");
+                filesToExecute.ElementAt(8).Name.ShouldEndWith("Test2__9.sql");
+            }
+
+            public void Dispose()
+            {
+                Directory.Delete(testPath, true);
+            }
+        }
+
         [Fact]
         public void options_should_include_sql()
         {
