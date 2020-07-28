@@ -79,12 +79,14 @@ namespace DbUp.ScriptProviders
                         new DirectoryInfo(directoryPath).GetFiles(scriptExtension, ShouldSearchSubDirectories())
                     );
                 }
-                foreach (var fileInfo in files)
-                {
-                    if (files.Count(f => f.Name == fileInfo.Name) > 1)
-                    {
-                        throw new Exception($"Duplicate filename: {fileInfo.Name}");
+                var dupeFiles = files.GroupBy(f => f.Name).Where(grp => grp.Count() > 1).SelectMany(f => f.Select(fi => fi.FullName)).ToList();
+                if (dupeFiles.Count > 0) {
+                    var sbError = new StringBuilder();
+                    sbError.AppendLine("Duplicate filenames:");
+                    foreach (var file in dupeFiles) {
+                        sbError.AppendLine($"- {file}");
                     }
+                    throw new Exception(sbError.ToString());
                 }
                 if (filter != null)
                 {
