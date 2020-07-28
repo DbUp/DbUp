@@ -189,7 +189,7 @@ namespace DbUp.Tests.ScriptProvider
             public override FileSystemScriptProvider Given()
             {
                 TestScripts.Create(out testPath);
-                var options = new FileSystemScriptOptions() { IncludeSubDirectories = true, PrefixWithSubDirectoryNames = false };
+                var options = new FileSystemScriptOptions() { IncludeSubDirectories = true, UseOnlyFilenameForScriptName = true };
                 return new FileSystemScriptProvider(testPath, options);
             }
 

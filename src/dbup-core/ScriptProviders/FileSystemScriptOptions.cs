@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 
 namespace DbUp.ScriptProviders
@@ -22,9 +22,9 @@ namespace DbUp.ScriptProviders
         public bool IncludeSubDirectories { get; set; }
 
         /// <summary>
-        /// The provider will prefix script names with their subdirectory names.
+        /// The provider will not prefix script names with their subdirectory names.
         /// </summary>
-        public bool PrefixWithSubDirectoryNames { get; set; } = true;
+        public bool UseOnlyFilenameForScriptName { get; set; } = false;
 
         /// <summary>
         /// The filter to be used for filtering files 

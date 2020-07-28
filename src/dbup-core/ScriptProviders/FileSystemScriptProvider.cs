@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,7 +55,7 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            if (options.PrefixWithSubDirectoryNames)
+            if (!options.UseOnlyFilenameForScriptName)
             {
                 var files = new List<string>();
                 foreach (var scriptExtension in options.Extensions)
