@@ -24,7 +24,7 @@ namespace DbUp.SqlServer
                  var conn = new SqlConnection(connectionString);
 
                  if (dbManager.IsScriptOutputLogged)
-                     conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}{Environment.NewLine}", e.Message);
+                     conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}", e.Message);
 
                  return conn;
              }))
@@ -46,7 +46,7 @@ namespace DbUp.SqlServer
                     conn.AccessToken = new AzureServiceTokenProvider().GetAccessTokenAsync("https://database.windows.net/").ConfigureAwait(false).GetAwaiter().GetResult();
 
                 if (dbManager.IsScriptOutputLogged)
-                    conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}{Environment.NewLine}", e.Message);
+                    conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}", e.Message);
 
                 return conn;
             }))
