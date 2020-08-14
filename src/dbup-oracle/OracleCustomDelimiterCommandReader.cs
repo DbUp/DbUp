@@ -11,7 +11,7 @@ namespace DbUp.Oracle
         /// <summary>
         /// Creates an instance of OracleCommandReader
         /// </summary>
-        public OracleCustomDelimiterCommandReader(string sqlText, char delimiter, bool ignoreComments = false) : base(sqlText, delimiter.ToString(), delimiterRequiresWhitespace: false, ignoreComments)
+        public OracleCustomDelimiterCommandReader(string sqlText, char delimiter, bool ignoreComments = false) : base(sqlText, delimiter.ToString(), delimiterRequiresWhitespace: false, ignoreComments: ignoreComments)
         {
         }
 
