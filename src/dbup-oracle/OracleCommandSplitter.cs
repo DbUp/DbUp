@@ -14,9 +14,9 @@ namespace DbUp.Oracle
             this.commandReaderFactory = scriptContents => new OracleCommandReader(scriptContents);
         }
         
-        public OracleCommandSplitter(char delimiter)
+        public OracleCommandSplitter(char delimiter, bool ignoreComments = false)
         {
-            this.commandReaderFactory = scriptContents => new OracleCustomDelimiterCommandReader(scriptContents, delimiter);
+            this.commandReaderFactory = scriptContents => new OracleCustomDelimiterCommandReader(scriptContents, delimiter, ignoreComments);
         }
         
         /// <summary>
