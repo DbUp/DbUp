@@ -463,7 +463,7 @@ namespace DbUp.Support
     }
     public class SqlCommandReader : DbUp.Support.SqlParser, System.IDisposable
     {
-        public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true) { }
+        public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true, bool ignoreComments = false) { }
         public void ReadAllCommands(System.Action<string> handleCommand) { }
     }
     public class SqlCommandSplitter
