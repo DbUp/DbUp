@@ -69,19 +69,22 @@ namespace DbUp.Engine.Transactions
             try
             {
                 errorMessage = "";
-                upgradeConnection = CreateConnection(upgradeLog);
-                if (upgradeConnection.State == ConnectionState.Closed)
-                    upgradeConnection.Open();
-                var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
-                strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
-                strategy.Execute(dbCommandFactory =>
+                using (upgradeConnection = CreateConnection(upgradeLog))
                 {
-                    using (var command = dbCommandFactory())
+                    if (upgradeConnection.State == ConnectionState.Closed)
+                        upgradeConnection.Open();
+                    var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
+                    strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
+                    strategy.Execute(dbCommandFactory =>
                     {
-                        command.CommandText = "select 1";
-                        command.ExecuteScalar();
-                    }
-                });
+                        using (var command = dbCommandFactory())
+                        {
+                            command.CommandText = "select 1";
+                            command.ExecuteScalar();
+                        }
+                    });
+                }
+
                 return true;
             }
             catch (Exception ex)
