@@ -285,7 +285,7 @@ public static class PostgresqlExtensions
                 : null
         };
         
-        logger.WriteInformation("postgres ConnectionString => \"{0}\"", logConnectionStringBuilder.ConnectionString);
+        logger.WriteInformation("Master ConnectionString => {0}", logConnectionStringBuilder.ConnectionString);
 
         databaseName = database;
         return postgresConnectionStringBuilder.ConnectionString;
