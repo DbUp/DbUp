@@ -129,33 +129,9 @@ public static class PostgresqlExtensions
     {
         if (supported == null) throw new ArgumentNullException("supported");
 
-        if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
-        {
-            throw new ArgumentNullException("connectionString");
-        }
+        var postgresConnectionString = GetPostgresConnectionString(connectionString, logger, out var databaseName);
 
-        if (logger == null) throw new ArgumentNullException("logger");
-
-        var masterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-
-        var databaseName = masterConnectionStringBuilder.Database;
-
-        if (string.IsNullOrEmpty(databaseName) || databaseName.Trim() == string.Empty)
-        {
-            throw new InvalidOperationException("The connection string does not specify a database name.");
-        }
-
-        masterConnectionStringBuilder.Database = "postgres";
-
-        var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
-        if (!string.IsNullOrEmpty(logMasterConnectionStringBuilder.Password))
-        {
-            logMasterConnectionStringBuilder.Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
-        }
-
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
-
-        using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
+        using (var connection = new NpgsqlConnection(postgresConnectionString))
         {
             if (certificate != null)
             {
