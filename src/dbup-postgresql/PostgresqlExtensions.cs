@@ -240,7 +240,55 @@ public static class PostgresqlExtensions
     /// <returns></returns>
     public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
     {
-        throw new NotImplementedException();
+        var postgresConnectionString = GetPostgresConnectionString(connectionString, logger, out var database);
+        
+        var commandText = string.Concat(
+            $"SELECT pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where pg_stat_activity.datname = '{database}'; ",
+            $"DROP DATABASE IF EXISTS \"{database}\";");
+        
+
+        using (var connection = new NpgsqlConnection(postgresConnectionString))
+        {
+            connection.Open();
+
+            using (var command = new NpgsqlCommand(commandText, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+            
+            logger.WriteInformation("Dropped database {0}", database);
+            
+            connection.Close();
+        }
+    }
+
+    static string GetPostgresConnectionString(string connectionString, IUpgradeLog logger, out string databaseName)
+    {
+        if (string.IsNullOrEmpty(connectionString.Trim()))
+        {
+            throw new ArgumentNullException(nameof(connectionString));
+        }
+
+        if (logger is null)
+        {
+            throw new ArgumentNullException(nameof(logger));
+        }
+
+        var postgresConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+        var database = postgresConnectionStringBuilder.Database;
+        postgresConnectionStringBuilder.Database = "postgres";
+
+        var logConnectionStringBuilder = new NpgsqlConnectionStringBuilder(postgresConnectionStringBuilder.ConnectionString)
+        {
+            Password = postgresConnectionStringBuilder.Password is string originalPassword
+                ? string.Empty.PadRight(originalPassword.Length, '*')
+                : null
+        };
+        
+        logger.WriteInformation("postgres ConnectionString => \"{0}\"", logConnectionStringBuilder.ConnectionString);
+
+        databaseName = database;
+        return postgresConnectionStringBuilder.ConnectionString;
     }
 
     /// <summary>
