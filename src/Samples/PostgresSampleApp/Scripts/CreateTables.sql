@@ -1,4 +1,8 @@
 ﻿
+/**
+  Fairly unoriginal book/author example database.
+  This isn't the fun part!
+ */
 
 create table "Authors" (
     "Id" serial not null,
