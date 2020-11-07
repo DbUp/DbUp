@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+    <PropertyGroup>
+        <OutputType>Exe</OutputType>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Nullable>enable</Nullable>
+    </PropertyGroup>
+
+    <ItemGroup>
+      <PackageReference Include="CommandLineParser" Version="2.9.0-preview1" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\..\dbup-core\dbup-core.csproj" />
+      <ProjectReference Include="..\..\dbup-postgresql\dbup-postgresql.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Remove="Scripts\CreateTables.sql" />
+      <EmbeddedResource Include="Scripts\CreateTables.sql">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </EmbeddedResource>
+    </ItemGroup>
+
+</Project>

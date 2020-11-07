@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SQLiteSampleApplication", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebirdSampleApplication", "Samples\FirebirdSampleApplication\FirebirdSampleApplication.csproj", "{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PostgresSampleApp", "Samples\PostgresSampleApp\PostgresSampleApp.csproj", "{D69C8886-EFB9-435A-A84B-74085FA16F33}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D69C8886-EFB9-435A-A84B-74085FA16F33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D69C8886-EFB9-435A-A84B-74085FA16F33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D69C8886-EFB9-435A-A84B-74085FA16F33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D69C8886-EFB9-435A-A84B-74085FA16F33}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -122,6 +128,7 @@ Global
 		{397F41BC-1076-4D1B-9620-C6051E8104F4} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
+		{D69C8886-EFB9-435A-A84B-74085FA16F33} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6807402B-EE7A-4324-A615-28F3499B1E9F}
