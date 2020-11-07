@@ -215,7 +215,7 @@ public static class PostgresqlExtensions
     /// <returns></returns>
     public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString)
     {
-        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
+        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), null);
     }
 
     /// <summary>
@@ -223,11 +223,16 @@ public static class PostgresqlExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
-    /// <param name="commandTimeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <param name="certificate">Certificate for securing connection.</param>
     /// <returns></returns>
-    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, int commandTimeout)
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, X509Certificate2 certificate)
     {
-        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), certificate);
+    }
+
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog log)
+    {
+        PostgresqlDatabase(supported, connectionString, log, null);
     }
 
     /// <summary>
@@ -236,9 +241,9 @@ public static class PostgresqlExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
-    /// <param name="timeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <param name="certificate">Certificate for securing connection.</param>
     /// <returns></returns>
-    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, X509Certificate2 certificate)
     {
         var postgresConnectionString = GetPostgresConnectionString(connectionString, logger, out var database);
         
@@ -249,6 +254,12 @@ public static class PostgresqlExtensions
 
         using (var connection = new NpgsqlConnection(postgresConnectionString))
         {
+            if (certificate != null)
+            {
+                connection.ProvideClientCertificatesCallback +=
+                    certs => certs.Add(certificate);
+            }
+            
             connection.Open();
 
             using (var command = new NpgsqlCommand(commandText, connection))
