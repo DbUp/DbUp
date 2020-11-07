@@ -227,7 +227,6 @@ public static class PostgresqlExtensions
             $"SELECT pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where pg_stat_activity.datname = '{database}'; ",
             $"DROP DATABASE IF EXISTS \"{database}\";");
         
-
         using (var connection = new NpgsqlConnection(postgresConnectionString))
         {
             if (certificate != null)
