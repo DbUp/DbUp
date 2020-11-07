@@ -206,6 +206,43 @@ public static class PostgresqlExtensions
         }
     }
 
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString)
+    {
+        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, int commandTimeout)
+    {
+        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="timeout">Use this to set the command time out for dropping a database in case you're encountering a time out in this operation.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, int timeout = -1)
+    {
+        throw new NotImplementedException();
+    }
+
     /// <summary>
     /// Tracks the list of executed scripts in a SQL Server table.
     /// </summary>
