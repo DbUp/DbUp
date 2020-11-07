@@ -206,9 +206,9 @@ public static class PostgresqlExtensions
         PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), certificate);
     }
 
-    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog log)
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger)
     {
-        PostgresqlDatabase(supported, connectionString, log, null);
+        PostgresqlDatabase(supported, connectionString, logger, null);
     }
 
     /// <summary>
