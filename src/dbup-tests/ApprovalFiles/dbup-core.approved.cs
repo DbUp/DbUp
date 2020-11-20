@@ -201,7 +201,7 @@ namespace DbUp.Engine
         public SqlScript(string name, string contents) { }
         public SqlScript(string name, string contents, DbUp.Engine.SqlScriptOptions sqlScriptOptions) { }
         public virtual string Contents { get; }
-        public string Name { get; }
+        public virtual string Name { get; }
         public DbUp.Engine.SqlScriptOptions SqlScriptOptions { get; }
         public static DbUp.Engine.SqlScript FromFile(string path) { }
         public static DbUp.Engine.SqlScript FromFile(string path, System.Text.Encoding encoding) { }

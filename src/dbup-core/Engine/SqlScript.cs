@@ -46,7 +46,7 @@ namespace DbUp.Engine
         /// <summary>
         /// Gets the name of the script.
         /// </summary>
-        public string Name { get; }
+        public virtual string Name { get; }
 
         /// <summary>
         /// Create a <see cref="SqlScript"/> from a file using Default encoding
