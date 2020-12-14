@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+#if USE_MSSQLCLIENT
+using Microsoft.Data.SqlClient;
+#else
 using System.Data.SqlClient;
+#endif
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;

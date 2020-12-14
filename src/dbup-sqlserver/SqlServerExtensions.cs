@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Data;
+#if USE_MSSQLCLIENT
+using Microsoft.Data.SqlClient;
+#else
 using System.Data.SqlClient;
+#endif
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Output;

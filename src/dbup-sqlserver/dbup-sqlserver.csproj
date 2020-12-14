@@ -4,7 +4,7 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases by running change scripts.</Description>
     <Title>DbUp MS Sql Server Support</Title>
     <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net35;net46</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard2.0;net35;net46;net5.0</TargetFrameworks>
     <AssemblyName>dbup-sqlserver</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -42,6 +42,11 @@
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.3.1" />
   </ItemGroup>
 
+    <ItemGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+        <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.0" />
+        <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.3.1" />
+    </ItemGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net35' ">
     <DefineConstants>$(DefineConstants);SUPPORTS_SQL_CONTEXT</DefineConstants>
   </PropertyGroup>
@@ -53,5 +58,9 @@
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
     <DefineConstants>$(DefineConstants);SUPPORTS_AZURE_AD</DefineConstants>
   </PropertyGroup>
+
+    <PropertyGroup Condition=" '$(TargetFramework)' == 'net5.0' ">
+        <DefineConstants>$(DefineConstants);USE_MSSQLCLIENT</DefineConstants>
+    </PropertyGroup>
 
 </Project>
