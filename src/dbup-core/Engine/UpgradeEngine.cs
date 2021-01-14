@@ -218,5 +218,34 @@ namespace DbUp.Engine
                 }
             }
         }
+        public DatabaseUpgradeResult MarkAsExecuted(Func<SqlScript,bool> predicate)
+        {
+            var marked = new List<SqlScript>();
+            SqlScript executedScript = null; 
+            using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked))
+            {
+                try
+                {
+                    var scriptsToExecute = GetScriptsToExecuteInsideOperation().Where(predicate).ToList();
+
+                    foreach (var script in scriptsToExecute)
+                    {
+                        executedScript = script;
+                        configuration.ConnectionManager.ExecuteCommandsWithManagedConnection(
+                            connectionFactory => configuration.Journal.StoreExecutedScript(script, connectionFactory));
+                        configuration.Log.WriteInformation("Marking script {0} as executed", script.Name);
+                        marked.Add(script);
+                    }
+
+                    configuration.Log.WriteInformation("Script marking successful");
+                    return new DatabaseUpgradeResult(marked, true, null, null);
+                }
+                catch (Exception ex)
+                {
+                    configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
+                    return new DatabaseUpgradeResult(marked, false, ex, executedScript);
+                }
+            }
+        }
     }
 }
