@@ -51,10 +51,11 @@ namespace DbUp.MySql
 
         void SkipWhitespace()
         {
-            while (char.IsWhiteSpace(CurrentChar))
+            int result;
+            do
             {
-                Read();
-            }
+                result = Read();
+            } while (result != FailedRead && char.IsWhiteSpace(CurrentChar));
         }
     }
 }
