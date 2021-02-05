@@ -230,9 +230,9 @@ namespace DbUp.Tests.Support.SqlServer
                       {
                           "Info:         Executing Database Server script 'Test'",
                           "Info:         -------------",
-                          "Info:         | One | Two | ",
+                          "Info:         | One | Two |",
                           "Info:         -------------",
-                          "Info:         |   A |   B | ",
+                          "Info:         |   A |   B |",
                           "Info:         -------------",
                           "Info:"
                       }));
