@@ -3,6 +3,9 @@
 
 public static class SqlServerExtensions
 {
+    public static DbUp.Builder.UpgradeEngineBuilder AzureSqlDatabaseWithIntegratedSecurity(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
+    public static DbUp.Builder.UpgradeEngineBuilder AzureSqlDatabaseWithIntegratedSecurity(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, string resource) { }
+    public static DbUp.Builder.UpgradeEngineBuilder AzureSqlDatabaseWithIntegratedSecurity(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, string resource, string tenantId, string azureAdInstance = "https://login.microsoftonline.com/") { }
     public static DbUp.Builder.UpgradeEngineBuilder JournalToSqlTable(this DbUp.Builder.UpgradeEngineBuilder builder, string schema, string table) { }
     public static DbUp.Builder.UpgradeEngineBuilder LogToSqlContext(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
@@ -31,10 +34,16 @@ namespace DbUp.SqlServer
         Standard = 2
         Premium = 3
     }
+    public class AzureSqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
+    {
+        public AzureSqlConnectionManager(string connectionString) { }
+        public AzureSqlConnectionManager(string connectionString, string resource) { }
+        public AzureSqlConnectionManager(string connectionString, string resource, string tenantId, string azureAdInstance = "https://login.microsoftonline.com/") { }
+        public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
+    }
     public class SqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
         public SqlConnectionManager(string connectionString) { }
-        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
