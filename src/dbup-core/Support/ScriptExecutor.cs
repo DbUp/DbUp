@@ -231,14 +231,15 @@ namespace DbUp.Support
                 format = "|" + format;
                 totalLength += 1;
 
-                Log().WriteInformation(new string('-', totalLength));
-                Log().WriteInformation(format, names.ToArray());
-                Log().WriteInformation(new string('-', totalLength));
+                var delimiterLine = new string('-', totalLength);
+                Log().WriteInformation(delimiterLine);
+                Log().WriteInformation(string.Format(format, names.ToArray()));
+                Log().WriteInformation(delimiterLine);
                 foreach (var line in lines)
                 {
-                    Log().WriteInformation(format, line.ToArray());
+                    Log().WriteInformation(string.Format(format, line.ToArray()));
                 }
-                Log().WriteInformation(new string('-', totalLength));
+                Log().WriteInformation(delimiterLine);
                 Log().WriteInformation("\r\n");
             } while (reader.NextResult());
         }
