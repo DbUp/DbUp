@@ -8,6 +8,7 @@ using DbUp.Engine.Transactions;
 using DbUp.SqlServer;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Shouldly;
 using Xunit;
 
@@ -195,17 +196,43 @@ namespace DbUp.Tests.Support.SqlServer
         {
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
-            dbConnection.CreateCommand().Returns(command);
-            var executor = new SqlScriptExecutor(() => new TestConnectionManager(dbConnection, true)
-            {
-                IsScriptOutputLogged = true
-            }, () => new ConsoleUpgradeLog(), "foo", () => true, null, () => Substitute.For<IJournal>());
 
-            executor.Execute(new SqlScript("Test", "create $schema$.Table"));
+            var reader = Substitute.For<IDataReader>();
+            reader.FieldCount.Returns(2);
+            reader.GetName(Arg.Is(0)).Returns("One");
+            reader.GetName(Arg.Is(1)).Returns("Two");
+            reader.GetName(Arg.Is<int>(i => i < 0 || i > 1)).Throws(new ArgumentOutOfRangeException("i"));
+
+            reader.Read().Returns(true, false);
+            reader.GetValue(Arg.Is(0)).Returns("A");
+            reader.GetValue(Arg.Is(1)).Returns("B");
+            reader.NextResult().Returns(false);
+
+            command.ExecuteReader().Returns(reader);
+
+            var logger = new CaptureLogsLogger();
+            dbConnection.CreateCommand().Returns(command);
+            var executor = new SqlScriptExecutor(() => new TestConnectionManager(dbConnection, true) { IsScriptOutputLogged = true },
+                                                 () => logger,
+                                                 "foo",
+                                                 () => true,
+                                                 null,
+                                                 () => Substitute.For<IJournal>());
+
+            executor.Execute(new SqlScript("Test", "SELECT * FROM $schema$.[Table]"));
 
             command.Received().ExecuteReader();
             command.DidNotReceive().ExecuteNonQuery();
-            command.CommandText.ShouldBe("create [foo].Table");
+            command.CommandText.ShouldBe("SELECT * FROM [foo].[Table]");
+
+            logger.Log.Trim()
+                      .ShouldBe(@"Info:         Executing Database Server script 'Test'
+Info:         -------------
+Info:         | One | Two |
+Info:         -------------
+Info:         |   A |   B |
+Info:         -------------
+Info:");
         }
 
         [Fact]
