@@ -226,13 +226,16 @@ namespace DbUp.Tests.Support.SqlServer
             command.CommandText.ShouldBe("SELECT * FROM [foo].[Table]");
 
             logger.Log.Trim()
-                      .ShouldBe(@"Info:         Executing Database Server script 'Test'
-Info:         -------------
-Info:         | One | Two |
-Info:         -------------
-Info:         |   A |   B |
-Info:         -------------
-Info:");
+                      .ShouldBe(string.Join(Environment.NewLine, new[]
+                      {
+                          "Info:         Executing Database Server script 'Test'",
+                          "Info:         -------------",
+                          "Info:         | One | Two | ",
+                          "Info:         -------------",
+                          "Info:         |   A |   B | ",
+                          "Info:         -------------",
+                          "Info:"
+                      }));
         }
 
         [Fact]
