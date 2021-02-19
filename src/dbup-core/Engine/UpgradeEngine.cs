@@ -10,7 +10,7 @@ namespace DbUp.Engine
     /// </summary>
     public class UpgradeEngine
     {
-        readonly UpgradeConfiguration configuration;
+        protected readonly UpgradeConfiguration configuration;
 
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeEngine"/> class.
@@ -38,7 +38,7 @@ namespace DbUp.Engine
         /// <summary>
         /// Determines whether the database is out of date and can be upgraded.
         /// </summary>
-        public bool IsUpgradeRequired()
+        public virtual bool IsUpgradeRequired()
         {
             return GetScriptsToExecute().Count() != 0;
         }
@@ -48,7 +48,7 @@ namespace DbUp.Engine
         /// </summary>
         /// <param name="errorMessage">Any error message encountered.</param>
         /// <returns></returns>
-        public bool TryConnect(out string errorMessage)
+        public virtual bool TryConnect(out string errorMessage)
         {
             return configuration.ConnectionManager.TryConnect(configuration.Log, out errorMessage);
         }
@@ -56,7 +56,7 @@ namespace DbUp.Engine
         /// <summary>
         /// Performs the database upgrade.
         /// </summary>
-        public DatabaseUpgradeResult PerformUpgrade()
+        public virtual DatabaseUpgradeResult PerformUpgrade()
         {
             var executed = new List<SqlScript>();
 
@@ -108,7 +108,7 @@ namespace DbUp.Engine
         /// Returns a list of scripts that will be executed when the upgrade is performed
         /// </summary>
         /// <returns>The scripts to be executed</returns>
-        public List<SqlScript> GetScriptsToExecute()
+        public virtual List<SqlScript> GetScriptsToExecute()
         {
             using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
             {
@@ -116,12 +116,12 @@ namespace DbUp.Engine
             }
         }
 
-        public List<string> GetExecutedButNotDiscoveredScripts()
+        public virtual List<string> GetExecutedButNotDiscoveredScripts()
         {
             return GetExecutedScripts().Except(GetDiscoveredScriptsAsEnumerable().Select(x => x.Name)).ToList();
         }
 
-        public List<SqlScript> GetDiscoveredScripts()
+        public virtual List<SqlScript> GetDiscoveredScripts()
         {
             return GetDiscoveredScriptsAsEnumerable().ToList();
         }
@@ -141,7 +141,7 @@ namespace DbUp.Engine
             return filtered.ToList();
         }
 
-        public List<string> GetExecutedScripts()
+        public virtual List<string> GetExecutedScripts()
         {
             using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
             {
@@ -155,7 +155,7 @@ namespace DbUp.Engine
         /// Useful for bringing development environments into sync with automated environments
         ///</summary>
         ///<returns></returns>
-        public DatabaseUpgradeResult MarkAsExecuted()
+        public virtual DatabaseUpgradeResult MarkAsExecuted()
         {
             var marked = new List<SqlScript>();
             SqlScript executedScript = null; 
@@ -185,7 +185,7 @@ namespace DbUp.Engine
             }
         }
 
-        public DatabaseUpgradeResult MarkAsExecuted(string latestScript)
+        public virtual DatabaseUpgradeResult MarkAsExecuted(string latestScript)
         {
             var marked = new List<SqlScript>();
             SqlScript executedScript = null; 
