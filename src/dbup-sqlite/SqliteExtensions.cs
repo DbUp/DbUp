@@ -49,4 +49,15 @@ public static class SQLiteExtensions
         builder.WithPreprocessor(new SQLitePreprocessor());
         return builder;
     }
+    
+    /// <summary>
+    /// Tracks the list of executed scripts in a custom SQLite table.
+    /// </summary>
+    /// <param name="table">The name of the table used to store the list of executed scripts.</param>
+    /// <returns>The <see cref="UpgradeEngineBuilder"/> used to set the journal table name.</returns>
+    public static UpgradeEngineBuilder JournalToSQLiteTable(this UpgradeEngineBuilder builder, string table)
+    {
+        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, table));
+        return builder;
+    }
 }
