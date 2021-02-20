@@ -6,6 +6,7 @@ public static class SQLiteExtensions
 {
     public static DbUp.Builder.UpgradeEngineBuilder SQLiteDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
     public static DbUp.Builder.UpgradeEngineBuilder SQLiteDatabase(this DbUp.Builder.SupportedDatabases supported, DbUp.SQLite.Helpers.SharedConnection sharedConnection) { }
+    public static DbUp.Builder.UpgradeEngineBuilder JournalToSQLiteTable(this DbUp.Builder.UpgradeEngineBuilder builder, string table) { }
 }
 namespace DbUp.SQLite
 {
