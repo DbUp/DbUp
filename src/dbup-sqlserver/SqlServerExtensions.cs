@@ -43,23 +43,6 @@ public static class SqlServerExtensions
         return SqlDatabase(new SqlConnectionManager(connectionString), schema);
     }
 
-#if SUPPORTS_AZURE_AD
-    /// <summary>
-    /// Creates an upgrader for SQL Server databases.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="schema">The SQL schema name to use. Defaults to 'dbo' if null.</param>
-    /// <param name="useAzureSqlIntegratedSecurity">Whether to use Azure SQL Integrated Security</param>
-    /// <returns>
-    /// A builder for a database upgrader designed for SQL Server databases.
-    /// </returns>
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity)
-    {
-        return SqlDatabase(new SqlConnectionManager(connectionString, useAzureSqlIntegratedSecurity), schema);
-    }
-#endif
-
     /// <summary>
     /// Creates an upgrader for SQL Server databases.
     /// </summary>
