@@ -56,8 +56,8 @@ namespace DbUp.SQLite.Helpers
         public int ConnectionTimeout { get; }
         public string Database { get; }
         public System.Data.ConnectionState State { get; }
-        public System.Data.IDbTransaction BeginTransaction(System.Data.IsolationLevel il) { }
         public System.Data.IDbTransaction BeginTransaction() { }
+        public System.Data.IDbTransaction BeginTransaction(System.Data.IsolationLevel il) { }
         public void ChangeDatabase(string databaseName) { }
         public void Close() { }
         public System.Data.IDbCommand CreateCommand() { }
