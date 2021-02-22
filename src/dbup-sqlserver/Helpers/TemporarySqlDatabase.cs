@@ -1,5 +1,9 @@
 ﻿using System;
+#if SUPPORTS_MICROSOFT_SQLCLIENT
+using Microsoft.Data.SqlClient;
+#else
 using System.Data.SqlClient;
+#endif
 using DbUp.Helpers;
 
 namespace DbUp.SqlServer.Helpers
