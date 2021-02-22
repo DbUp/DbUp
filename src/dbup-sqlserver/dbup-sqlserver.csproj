@@ -24,7 +24,7 @@
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' ">
+  <ItemGroup Condition=" '$(TargetFramework)' == 'net35' Or '$(TargetFramework)' == 'net46' ">
     <Reference Include="System.Data" />
     <Reference Include="System" />
   </ItemGroup>
