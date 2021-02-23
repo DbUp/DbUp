@@ -228,6 +228,7 @@ namespace DbUp.Engine
         public bool IsUpgradeRequired() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted() { }
         public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(string latestScript) { }
+        public DbUp.Engine.DatabaseUpgradeResult MarkAsExecuted(Func<SqlScript,bool> predicate) { }
         protected virtual void OnScriptExecuted(DbUp.Engine.ScriptExecutedEventArgs e) { }
         public DbUp.Engine.DatabaseUpgradeResult PerformUpgrade() { }
         public bool TryConnect(out string errorMessage) { }
