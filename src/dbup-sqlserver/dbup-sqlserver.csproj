@@ -30,15 +30,14 @@
   </ItemGroup>
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.1" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.3.1" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <PackageReference Include="System.Data.SqlClient" Version="4.4.0" />
   </ItemGroup>
-
   <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <PackageReference Include="System.Data.SqlClient" Version="4.6.0" />
+    <PackageReference Include="Microsoft.Data.SqlClient" Version="2.1.1" />
     <PackageReference Include="Microsoft.Azure.Services.AppAuthentication" Version="1.3.1" />
   </ItemGroup>
 
@@ -47,11 +46,11 @@
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'net46' ">
-    <DefineConstants>$(DefineConstants);SUPPORTS_SQL_CONTEXT;SUPPORTS_AZURE_AD</DefineConstants>
+    <DefineConstants>$(DefineConstants);SUPPORTS_SQL_CONTEXT;SUPPORTS_AZURE_AD;SUPPORTS_MICROSOFT_SQLCLIENT</DefineConstants>
   </PropertyGroup>
 
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard2.0' ">
-    <DefineConstants>$(DefineConstants);SUPPORTS_AZURE_AD</DefineConstants>
+    <DefineConstants>$(DefineConstants);SUPPORTS_AZURE_AD;SUPPORTS_MICROSOFT_SQLCLIENT</DefineConstants>
   </PropertyGroup>
 
 </Project>

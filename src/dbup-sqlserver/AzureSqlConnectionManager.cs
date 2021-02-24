@@ -1,5 +1,9 @@
 ﻿using System.Collections.Generic;
+#if SUPPORTS_MICROSOFT_SQLCLIENT
+using Microsoft.Data.SqlClient;
+#else
 using System.Data.SqlClient;
+#endif
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 
