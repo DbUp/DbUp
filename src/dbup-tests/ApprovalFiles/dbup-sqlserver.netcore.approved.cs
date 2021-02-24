@@ -1,4 +1,4 @@
-[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("8190b40b-ac5b-414f-8a00-9b6a2c12b010")]
 
 public static class AzureSqlServerExtensions
@@ -74,12 +74,7 @@ namespace DbUp.SqlServer.Helpers
     {
         public TemporarySqlDatabase(string name) { }
         public TemporarySqlDatabase(string name, string instanceName) { }
-#if SUPPORTS_MICROSOFT_SQLCLIENT
-        public TemporarySqlDatabase(Microsoft.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
-#else
-        public TemporarySqlDatabase(System.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
-#endif
-
+        public TemporarySqlDatabase(SqlConnectionStringBuilder connectionStringBuilder) { }
         public DbUp.Helpers.AdHocSqlRunner AdHoc { get; }
         public string ConnectionString { get; }
         public void Create() { }

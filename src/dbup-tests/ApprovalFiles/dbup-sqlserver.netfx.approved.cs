@@ -1,4 +1,4 @@
-[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("8190b40b-ac5b-414f-8a00-9b6a2c12b010")]
 
 public static class AzureSqlServerExtensions
@@ -47,7 +47,7 @@ namespace DbUp.SqlServer
     }
     public class SqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
-        public SqlConnectionManager(string connectionString) { }
+        public  Manager(string connectionString) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
@@ -75,11 +75,7 @@ namespace DbUp.SqlServer.Helpers
     {
         public TemporarySqlDatabase(string name) { }
         public TemporarySqlDatabase(string name, string instanceName) { }
-#if SUPPORTS_MICROSOFT_SQLCLIENT
-        public TemporarySqlDatabase(Microsoft.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
-#else
-        public TemporarySqlDatabase(System.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
-#endif
+        public TemporarySqlDatabase(SqlConnectionStringBuilder connectionStringBuilder) { }
         public DbUp.Helpers.AdHocSqlRunner AdHoc { get; }
         public string ConnectionString { get; }
         public void Create() { }
