@@ -74,7 +74,12 @@ namespace DbUp.SqlServer.Helpers
     {
         public TemporarySqlDatabase(string name) { }
         public TemporarySqlDatabase(string name, string instanceName) { }
+#if SUPPORTS_MICROSOFT_SQLCLIENT
+        public TemporarySqlDatabase(Microsoft.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
+#else
         public TemporarySqlDatabase(System.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
+#endif
+
         public DbUp.Helpers.AdHocSqlRunner AdHoc { get; }
         public string ConnectionString { get; }
         public void Create() { }
