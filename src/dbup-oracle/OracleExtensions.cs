@@ -10,9 +10,9 @@ namespace DbUp.Oracle
         [Obsolete("Use OracleDatabaseWithSlashDelimiter, OracleDatabaseWithSemicolonDelimiter or the OracleDatabase with the delimiter parameter instead, see https://github.com/DbUp/DbUp/pull/335")]
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString)
         {
-            foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
+            foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].Trim().ToLower() == "database"))
             {
-                return OracleDatabase(new OracleConnectionManager(connectionString), pair[1]);
+                return OracleDatabase(new OracleConnectionManager(connectionString), pair[1].Trim());
             }
 
             return OracleDatabase(new OracleConnectionManager(connectionString));
@@ -38,9 +38,9 @@ namespace DbUp.Oracle
 
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, char delimiter)
         {
-            foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
+            foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].Trim().ToLower() == "database"))
             {
-                return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)), pair[1]);
+                return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)), pair[1].Trim());
             }
 
             return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)));
