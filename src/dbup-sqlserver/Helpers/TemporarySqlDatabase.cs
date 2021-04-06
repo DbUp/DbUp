@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Data.SqlClient;
 using DbUp.Helpers;
+using Microsoft.Data.SqlClient;
 
 namespace DbUp.SqlServer.Helpers
 {

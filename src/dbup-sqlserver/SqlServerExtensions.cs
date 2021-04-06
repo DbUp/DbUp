@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Data;
-using System.Data.SqlClient;
+using Microsoft.Data.SqlClient;
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Output;
