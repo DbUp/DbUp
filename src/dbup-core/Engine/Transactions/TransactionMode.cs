@@ -1,4 +1,4 @@
-namespace DbUp.Engine.Transactions
+﻿namespace DbUp.Engine.Transactions
 {
     /// <summary>
     /// The transaction strategy to use
@@ -18,6 +18,11 @@ namespace DbUp.Engine.Transactions
         /// <summary>
         /// DbUp will run scripts using a separate transaction per script
         /// </summary>
-        TransactionPerScript
+        TransactionPerScript,
+
+        /// <summary>
+        /// DbUp will run scripts using a single transaction for the whole upgrade operation but will rollback at the end
+        /// </summary>
+        SingleTransactionAlwaysRollback
     }
 }

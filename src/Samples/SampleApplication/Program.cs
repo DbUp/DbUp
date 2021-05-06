@@ -12,12 +12,12 @@ namespace SampleApplication
     {
         public static void Main(string[] args)
         {
-            var instanceName = @"(local)\SqlExpress";
+            var instanceName = @"(localdb)\\MSSQLLocalDB";
             // Uncomment the following line to run against sql local db instance.
             // string instanceName = @"(localdb)\Projects";
 
             var connectionString =
-                $"Data Source={instanceName};Initial Catalog=SampleApplication;Integrated Security=True;Pooling=False";
+                $"Server={instanceName}; Database=test8; Trusted_connection=true";
 
             DropDatabase.For.SqlDatabase(connectionString);
 

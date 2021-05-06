@@ -11,9 +11,9 @@ namespace DbUp.Tests.Support.Oracle
         [Fact]
         public void CanParseSingleLineScript()
         {
-            const string singleCommand = "create table FOO (myid INT NOT NULL);";
+            const string singleCommand = "create table FOO (myid INT NOT NULL)/";
 
-            var connectionManager = new OracleConnectionManager("connectionstring");
+            var connectionManager = new OracleConnectionManager("connectionstring", new OracleCommandSplitter('/'));
             var result = connectionManager.SplitScriptIntoCommands(singleCommand);
 
             result.Count().ShouldBe(1);
@@ -22,11 +22,11 @@ namespace DbUp.Tests.Support.Oracle
         [Fact]
         public void CanParseMultilineScript()
         {
-            var multiCommand = "create table FOO (myid INT NOT NULL);";
+            var multiCommand = "create table FOO (myid INT NOT NULL)/";
             multiCommand += Environment.NewLine;
-            multiCommand += "create table BAR (myid INT NOT NULL);";
+            multiCommand += "create table BAR (myid INT NOT NULL)";
 
-            var connectionManager = new OracleConnectionManager("connectionstring");
+            var connectionManager = new OracleConnectionManager("connectionstring", new OracleCommandSplitter('/'));
             var result = connectionManager.SplitScriptIntoCommands(multiCommand);
 
             result.Count().ShouldBe(2);

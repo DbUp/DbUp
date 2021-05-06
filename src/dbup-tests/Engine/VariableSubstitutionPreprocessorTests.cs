@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
 using NSubstitute;
@@ -75,8 +76,15 @@ namespace DbUp.Tests.Engine
         {
             var journal = Substitute.For<IJournal>();
             var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
+            var commands = new List<IDbCommand>();
+
+            _ = connection.CreateCommand()
+                          .Returns(ci =>
+                          {
+                              var command = Substitute.For<IDbCommand>();
+                              commands.Add(command);
+                              return command;
+                          });
 
             var upgradeEngine = DeployChanges.To
                 .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
@@ -85,9 +93,12 @@ namespace DbUp.Tests.Engine
                 .WithVariable("beansprouts", "coriander")
                 .Build();
 
-            upgradeEngine.PerformUpgrade();
+            var result = upgradeEngine.PerformUpgrade();
 
-            command.CommandText.ShouldBe("/*/**/$somevar$*/");
+            commands.ShouldNotBeNull();
+            commands.ShouldNotBeEmpty();
+            commands[0].CommandText.ShouldBe("IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'Db') Exec('CREATE SCHEMA [Db]')");
+            commands[1].CommandText.ShouldBe("/*/**/$somevar$*/");
         }
 
         [Fact]

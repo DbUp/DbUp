@@ -1,28 +1,26 @@
-﻿using System;
+using System;
 using System.Text;
 using DbUp.Support;
 
-namespace DbUp.MySql
+namespace DbUp.Oracle
 {
-    /// <summary>
-    /// Reads MySQL commands from an underlying text stream. Supports DELIMITED .. statement
-    /// </summary>
-    public class MySqlCommandReader : SqlCommandReader
+    public class OracleCustomDelimiterCommandReader : SqlCommandReader
     {
         const string DelimiterKeyword = "DELIMITER";
 
         /// <summary>
-        /// Creates an instance of MySqlCommandReader
+        /// Creates an instance of OracleCommandReader
         /// </summary>
-        public MySqlCommandReader(string sqlText) : base(sqlText, ";", delimiterRequiresWhitespace: false)
+        public OracleCustomDelimiterCommandReader(string sqlText, char delimiter) : base(sqlText, delimiter.ToString(), delimiterRequiresWhitespace: false)
         {
         }
 
         /// <summary>
         /// Hook to support custom statements
         /// </summary>
-        protected override bool IsCustomStatement => TryPeek(DelimiterKeyword.Length - 1, out var statement) &&
-                       string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase);
+        protected override bool IsCustomStatement
+            => TryPeek(DelimiterKeyword.Length - 1, out var statement) &&
+               string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Read a custom statement
@@ -43,18 +41,16 @@ namespace DbUp.MySql
                 {
                     break;
                 }
-            }
-            while (!IsEndOfLine && !IsWhiteSpace);
+            } while (!IsEndOfLine && !IsWhiteSpace);
 
             Delimiter = delimiter.ToString();
         }
 
         void SkipWhitespace()
         {
-            var result = 0;
-            while (result != FailedRead && char.IsWhiteSpace(CurrentChar))
+            while (char.IsWhiteSpace(CurrentChar))
             {
-                result = Read();
+                Read();
             }
         }
     }

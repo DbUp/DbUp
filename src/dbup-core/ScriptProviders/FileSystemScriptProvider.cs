@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -55,18 +55,47 @@ namespace DbUp.ScriptProviders
         /// </summary>
         public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
         {
-            var files = new List<string>();
-            foreach (var scriptExtension in options.Extensions)
+            if (!options.UseOnlyFilenameForScriptName)
             {
-                files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
+                var files = new List<string>();
+                foreach (var scriptExtension in options.Extensions)
+                {
+                    files.AddRange(Directory.GetFiles(directoryPath, scriptExtension, ShouldSearchSubDirectories()));
+                }
+                if (filter != null)
+                {
+                    files = files.Where(filter).ToList();
+                }
+                return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
+                    .OrderBy(x => x.Name)
+                    .ToList();
             }
-            if (filter != null)
+            else
             {
-                files = files.Where(filter).ToList();
+                var files = new List<FileInfo>();
+                foreach (var scriptExtension in options.Extensions)
+                {
+                    files.AddRange(
+                        new DirectoryInfo(directoryPath).GetFiles(scriptExtension, ShouldSearchSubDirectories())
+                    );
+                }
+                var dupeFiles = files.GroupBy(f => f.Name).Where(grp => grp.Count() > 1).SelectMany(f => f.Select(fi => fi.FullName)).ToList();
+                if (dupeFiles.Count > 0) {
+                    var sbError = new StringBuilder();
+                    sbError.AppendLine("Duplicate filenames:");
+                    foreach (var file in dupeFiles) {
+                        sbError.AppendLine($"- {file}");
+                    }
+                    throw new Exception(sbError.ToString());
+                }
+                if (filter != null)
+                {
+                    files = files.Where(x => filter(x.Name)).ToList();
+                }
+                return files.Select(x => SqlScript.FromStream(x.Name, new FileStream(x.FullName, FileMode.Open, FileAccess.Read), encoding, sqlScriptOptions))
+                    .OrderBy(x => x.Name)
+                    .ToList();
             }
-            return files.Select(x => SqlScript.FromFile(directoryPath, x, encoding, sqlScriptOptions))
-                .OrderBy(x => x.Name)
-                .ToList();
         }
 
         SearchOption ShouldSearchSubDirectories()

@@ -11,6 +11,7 @@ pages:
 - Supported Databases: supported-databases.md
 - FAQ: faq.md
 - Contributing: contributing.md
+- DBOps Powershell Module: dbops.md
 
 - More Info:
   - Script Providers: more-info/script-providers.md

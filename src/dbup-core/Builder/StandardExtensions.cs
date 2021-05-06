@@ -412,6 +412,21 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Adds all scripts from a folder on the file system, with custom options (Encoding, filter, etc.).
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="path">The directory path.</param>
+    /// <param name="options">Options for the file System Provider</param>
+    /// <param name="sqlScriptOptions">The sql script options</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsFromFileSystem(this UpgradeEngineBuilder builder, string path, FileSystemScriptOptions options, SqlScriptOptions sqlScriptOptions)
+    {
+        return WithScripts(builder, new FileSystemScriptProvider(path, options, sqlScriptOptions));
+    }
+
+    /// <summary>
     /// Adds all scripts found as embedded resources in the given assembly.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -752,6 +767,18 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder WithTransaction(this UpgradeEngineBuilder builder)
     {
         builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.SingleTransaction);
+
+        return builder;
+    }
+
+    /// <summary>
+    /// Run DbUp in a single transaction but rollback at the end
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder WithTransactionAlwaysRollback(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.ConnectionManager.TransactionMode = TransactionMode.SingleTransactionAlwaysRollback);
 
         return builder;
     }

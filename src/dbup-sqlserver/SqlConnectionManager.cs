@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Data.SqlClient;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
@@ -16,17 +15,16 @@ namespace DbUp.SqlServer
         /// </summary>
         /// <param name="connectionString"></param>
         public SqlConnectionManager(string connectionString)
-            : base(new DelegateConnectionFactory((log, dbManager) =>
-            {
-                var conn = new SqlConnection(connectionString);
+             : base(new DelegateConnectionFactory((log, dbManager) =>
+             {
+                 var conn = new SqlConnection(connectionString);
 
-                if (dbManager.IsScriptOutputLogged)
-                    conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}{Environment.NewLine}", e.Message);
+                 if (dbManager.IsScriptOutputLogged)
+                     conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}", e.Message);
 
-                return conn;
-            }))
-        {
-        }
+                 return conn;
+             }))
+        { }
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {

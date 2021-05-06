@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using DbUp.Support;
@@ -143,6 +144,61 @@ SELECT AccountId,
             sqlCommands[1].ShouldBe(sqlCommandWithSingleLineComment.Trim());
             sqlCommands[2].ShouldBe(sqlCommandWithSingleLineCommentWithEndDashes.Trim());
             sqlCommands[3].ShouldBe(strangeInsert.Trim());
+        }
+
+        [Theory, MemberData(nameof(MultilineCommentData))]
+        public void should_handle_nested_multiline_comments(string sqlWithNestedMultilineComment, string[] expectedCommands)
+        {
+            var commands = sut.SplitScriptIntoCommands(sqlWithNestedMultilineComment)
+                              .ToArray();
+
+            commands.ShouldNotBeNull();
+            commands.ShouldNotBeEmpty();
+
+            commands.ShouldBe(expectedCommands, Case.Sensitive);
+        }
+
+        public static IEnumerable<object[]> MultilineCommentData()
+        {
+
+            yield return new object[]
+            {
+                $"{Environment.NewLine}/* comment1 /* comment2 */*/{Environment.NewLine}SELECT * FROM[ExampleTable]{Environment.NewLine}",
+                new string[]
+                {
+                    $"/* comment1 /* comment2 */*/{Environment.NewLine}SELECT * FROM[ExampleTable]"
+                }
+            };
+
+            yield return new object[]
+            {
+                $"{Environment.NewLine}/* comment1 /* comment2 */*/{Environment.NewLine}SELECT * FROM[ExampleTable]{Environment.NewLine}GO{Environment.NewLine}SELECT TOP 1[Id] FROM[SomewhereElse]{Environment.NewLine}GO{Environment.NewLine}EXEC sp_SomeStoredProc;{Environment.NewLine}",
+                new string[]
+                {
+                    $"/* comment1 /* comment2 */*/{Environment.NewLine}SELECT * FROM[ExampleTable]",
+                    "SELECT TOP 1[Id] FROM[SomewhereElse]",
+                    "EXEC sp_SomeStoredProc;"
+                }
+            };
+
+            yield return new object[]
+            {
+                "/*/*/*/*/**/*/*/*/*/",
+                new string[] { "/*/*/*/*/**/*/*/*/*/" }
+            };
+
+            yield return new object[]
+            {
+                @"/*/*/*/*/*
+GO
+*/*/*/*/*/",
+                new string[]
+                {
+                    @"/*/*/*/*/*
+GO
+*/*/*/*/*/"
+                }
+            };
         }
     }
 }

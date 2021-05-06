@@ -1,6 +1,6 @@
 ﻿using System;
-using System.Reflection;
 using System.Diagnostics;
+using System.Reflection;
 using DbUp;
 using DbUp.Engine;
 using DbUp.SQLite.Helpers;
@@ -26,7 +26,7 @@ namespace SQLiteSampleApplication
                 watch.Start();
 
                 var result = upgrader.PerformUpgrade();
-                
+
                 watch.Stop();
                 Display("File", result, watch.Elapsed);
             } // Database will be deleted at this point
@@ -58,7 +58,7 @@ namespace SQLiteSampleApplication
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("Success!");
                 Console.WriteLine("{0} Database Upgrade Runtime: {1}", dbType,
-                    String.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10));
+                    string.Format("{0:00}:{1:00}:{2:00}.{3:00}", ts.Hours, ts.Minutes, ts.Seconds, ts.Milliseconds / 10));
                 Console.ReadKey();
             }
             else

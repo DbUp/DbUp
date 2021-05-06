@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using Assent;
@@ -18,6 +19,7 @@ namespace DbUp.Tests
     {
         [Theory]
         [InlineData(typeof(UpgradeEngine))]
+        [InlineData(typeof(SqlServerExtensions), true)]
         [InlineData(typeof(SQLiteExtensions))]
         [InlineData(typeof(MySqlExtensions))]
         [InlineData(typeof(OracleExtensions))]
@@ -28,14 +30,17 @@ namespace DbUp.Tests
         [InlineData(typeof(SqlCeExtensions))]
         [InlineData(typeof(SqlAnywhereExtensions))]
 #endif
-        public void NoPublicApiChanges(Type type)
+        public void NoPublicApiChanges(Type type, bool differByFramework = false)
         {
             var assembly = type.Assembly;
             var result = GetPublicApi(assembly);
 
+            var framework = RuntimeInformation.FrameworkDescription.Contains(".NET Core") ? "netcore" : "netfx";
+            var approvalPostfix = differByFramework ? $".{framework}" : "";
+
             var config = new Configuration()
                 .UsingExtension("cs")
-                .UsingNamer(m => Path.Combine(Path.GetDirectoryName(m.FilePath), "ApprovalFiles", assembly.GetName().Name));
+                .UsingNamer(m => Path.Combine(Path.GetDirectoryName(m.FilePath), "ApprovalFiles", assembly.GetName().Name + approvalPostfix));
 
             this.Assent(result, config);
         }
@@ -54,7 +59,7 @@ namespace DbUp.Tests
                              where t.IsPublic
                              group t by t.Namespace;
 
-            foreach (var ns in namespaces.OrderBy(n => n.Key))
+            foreach (var ns in namespaces.OrderBy(n => n.Key, StringComparer.InvariantCulture))
             {
                 if (ns.Key == null)
                 {
@@ -78,7 +83,7 @@ namespace DbUp.Tests
                 .Where(a => a.AttributeType.Namespace != "System.Diagnostics")
                 .Where(a => a.AttributeType.Namespace != "System.Runtime.CompilerServices")
                 .Where(a => a.AttributeType != typeof(TargetFrameworkAttribute))
-                .OrderBy(a => a.AttributeType.FullName);
+                .OrderBy(a => a.AttributeType.FullName, StringComparer.InvariantCulture);
 
             foreach (var attribute in c)
             {
@@ -208,25 +213,30 @@ namespace DbUp.Tests
         {
             var bindingFlags = BindingFlags.Instance | BindingFlags.Static | BindingFlags.Public | BindingFlags.NonPublic | BindingFlags.DeclaredOnly;
 
-            var fields = type.GetFields(bindingFlags).Where(m => m.IsPublic || m.IsFamily).OrderBy(p => p.Name);
+            var fields = type.GetFields(bindingFlags).Where(m => m.IsPublic || m.IsFamily).OrderBy(p => p.Name, StringComparer.InvariantCulture);
             foreach (var field in fields)
                 AppendField(sb, indent, field);
 
-            var ctors = type.GetConstructors(bindingFlags).Where(m => m.IsPublic || m.IsFamily);
+            var ctors = type.GetConstructors(bindingFlags).Where(m => m.IsPublic || m.IsFamily).OrderBy(ctor => ctor.GetParameters().Length);
             foreach (var ctor in ctors)
                 AppendConstructors(sb, indent, ctor);
 
-            foreach (var evt in type.GetEvents(bindingFlags).OrderBy(p => p.Name))
+            foreach (var evt in type.GetEvents(bindingFlags).OrderBy(p => p.Name, StringComparer.InvariantCulture))
                 AppendEvent(sb, indent, evt);
 
-            foreach (var property in type.GetProperties(bindingFlags).OrderBy(p => p.Name))
+            foreach (var property in type.GetProperties(bindingFlags).OrderBy(p => p.Name, StringComparer.InvariantCulture))
                 AppendProperty(sb, type, indent, property);
 
-            var methods = type.GetMethods(bindingFlags).Where(m => m.IsPublic || m.IsFamily).Where(m => !m.IsSpecialName).OrderBy(p => p.Name);
+            var methods = type.GetMethods(bindingFlags)
+                .Where(m => m.IsPublic || m.IsFamily)
+                .Where(m => !m.IsSpecialName)
+                .OrderBy(p => p.Name, StringComparer.InvariantCulture)
+                .ThenBy(p => GetTypeName(p.ReturnParameter.ParameterType), StringComparer.InvariantCulture)
+                .ThenBy(p => p.GetParameters().Length);
             foreach (var method in methods)
                 AppendMethod(sb, indent, method);
 
-            var nested = type.GetNestedTypes(bindingFlags).Where(m => m.IsPublic || m.IsNestedPublic || m.IsNestedFamily).OrderBy(p => p.Name);
+            var nested = type.GetNestedTypes(bindingFlags).Where(m => m.IsPublic || m.IsNestedPublic || m.IsNestedFamily).OrderBy(p => p.Name, StringComparer.InvariantCulture);
             AppendTypes(sb, indent, nested);
         }
 

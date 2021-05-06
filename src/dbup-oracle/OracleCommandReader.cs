@@ -4,6 +4,7 @@ using DbUp.Support;
 
 namespace DbUp.Oracle
 {
+    [Obsolete]
     public class OracleCommandReader : SqlCommandReader
     {
         const string DelimiterKeyword = "DELIMITER";
@@ -19,7 +20,7 @@ namespace DbUp.Oracle
         /// Hook to support custom statements
         /// </summary>
         protected override bool IsCustomStatement => TryPeek(DelimiterKeyword.Length, out var statement) &&
-                       string.Equals(DelimiterKeyword, statement, StringComparison.OrdinalIgnoreCase);
+                                                     string.Equals(DelimiterKeyword, statement, StringComparison.OrdinalIgnoreCase);
 
         /// <summary>
         /// Read a custom statement
@@ -40,8 +41,7 @@ namespace DbUp.Oracle
                 {
                     break;
                 }
-            }
-            while (!IsEndOfLine && !IsWhiteSpace);
+            } while (!IsEndOfLine && !IsWhiteSpace);
 
             Delimiter = delimiter.ToString();
         }

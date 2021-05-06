@@ -91,7 +91,7 @@ namespace DbUp.Tests
                         builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, tableName));
                         return builder;
                     })),
-                    new ExampleAction("Oracle", Deploy(to => to.OracleDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new OracleTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+                    new ExampleAction("Oracle", Deploy(to => to.OracleDatabaseWithDefaultDelimiter(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new OracleTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
 
 #if !NETCORE
                     new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),

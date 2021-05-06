@@ -25,7 +25,7 @@ namespace DbUp.Tests.Support.SQLite
                 .SQLiteDatabase(connectionString)
                 .WithScript("Script0001", "CREATE TABLE IF NOT EXISTS Foo (Id int)")
                 .Build();
-        }    
+        }
     }
 }
 #endif
