@@ -48,13 +48,9 @@ namespace DbUp.Oracle
             }
             catch (OracleException exception)
             {
-#if MY_SQL_DATA_6_9_5
-                var code = exception.ErrorCode;
-#else
-                var code = exception.ErrorCode;
-#endif
                 Log().WriteInformation("Oracle exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Oracle error code: {0}; Number {1}; Message: {2}", index, code, exception.Number, exception.Message);
+                // OracleException.Number is the actual oracle error code
+                Log().WriteError("Script block number: {0}; Oracle error code: {1}; Message: {2}", index, exception.Number, exception.Message);
                 Log().WriteError(exception.ToString());
                 throw;
             }
