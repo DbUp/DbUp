@@ -15,15 +15,7 @@ namespace DbUp.SqlServer
         /// </summary>
         /// <param name="connectionString"></param>
         public SqlConnectionManager(string connectionString)
-             : base(new DelegateConnectionFactory((log, dbManager) =>
-             {
-                 var conn = new SqlConnection(connectionString);
-
-                 if (dbManager.IsScriptOutputLogged)
-                     conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}", e.Message);
-
-                 return conn;
-             }))
+             : this(new SqlConnection(connectionString))
         { }
 
         public SqlConnectionManager(SqlConnection connection)
