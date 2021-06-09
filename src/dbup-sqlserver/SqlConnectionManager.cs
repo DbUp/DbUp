@@ -26,6 +26,16 @@ namespace DbUp.SqlServer
              }))
         { }
 
+        public SqlConnectionManager(SqlConnection connection)
+               : base(new DelegateConnectionFactory((log, dbManager) =>
+               {
+                   if (dbManager.IsScriptOutputLogged)
+                       connection.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}", e.Message);
+
+                   return connection;
+               }))
+        { }
+
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var commandSplitter = new SqlCommandSplitter();
