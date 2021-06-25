@@ -1,4 +1,4 @@
-
+﻿
 namespace DbUp.Oracle
 {
     [System.ObsoleteAttribute()]
@@ -12,7 +12,7 @@ namespace DbUp.Oracle
     {
         [System.ObsoleteAttribute()]
         public OracleCommandSplitter() { }
-        public OracleCommandSplitter(char delimiter) { }
+        public OracleCommandSplitter(char delimiter, bool ignoreComments = false) { }
         public System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class OracleConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
@@ -24,7 +24,7 @@ namespace DbUp.Oracle
     }
     public class OracleCustomDelimiterCommandReader : DbUp.Support.SqlCommandReader, System.IDisposable
     {
-        public OracleCustomDelimiterCommandReader(string sqlText, char delimiter) { }
+        public OracleCustomDelimiterCommandReader(string sqlText, char delimiter, bool ignoreComments = false) { }
         protected override bool IsCustomStatement { get; }
         protected override void ReadCustomStatement() { }
     }
