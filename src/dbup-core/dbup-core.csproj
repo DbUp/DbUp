@@ -13,7 +13,7 @@
     <PackageId>dbup-core</PackageId>
     <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
     <PackageIconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</PackageIconUrl>
-    <PackageProjectUrl>http://dbup.github.com</PackageProjectUrl>
+    <PackageProjectUrl>https://dbup.github.io</PackageProjectUrl>
     <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
