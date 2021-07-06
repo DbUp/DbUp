@@ -129,33 +129,9 @@ public static class PostgresqlExtensions
     {
         if (supported == null) throw new ArgumentNullException("supported");
 
-        if (string.IsNullOrEmpty(connectionString) || connectionString.Trim() == string.Empty)
-        {
-            throw new ArgumentNullException("connectionString");
-        }
+        var postgresConnectionString = GetPostgresConnectionString(connectionString, logger, out var databaseName);
 
-        if (logger == null) throw new ArgumentNullException("logger");
-
-        var masterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
-
-        var databaseName = masterConnectionStringBuilder.Database;
-
-        if (string.IsNullOrEmpty(databaseName) || databaseName.Trim() == string.Empty)
-        {
-            throw new InvalidOperationException("The connection string does not specify a database name.");
-        }
-
-        masterConnectionStringBuilder.Database = "postgres";
-
-        var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
-        if (!string.IsNullOrEmpty(logMasterConnectionStringBuilder.Password))
-        {
-            logMasterConnectionStringBuilder.Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
-        }
-
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
-
-        using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
+        using (var connection = new NpgsqlConnection(postgresConnectionString))
         {
             if (certificate != null)
             {
@@ -204,6 +180,101 @@ public static class PostgresqlExtensions
 
             logger.WriteInformation(@"Created database {0}", databaseName);
         }
+    }
+
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString)
+    {
+        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), null);
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="certificate">Certificate for securing connection.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, X509Certificate2 certificate)
+    {
+        PostgresqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), certificate);
+    }
+
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger)
+    {
+        PostgresqlDatabase(supported, connectionString, logger, null);
+    }
+
+    /// <summary>
+    /// Drop the database specified in the connection string.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="logger">The <see cref="DbUp.Engine.Output.IUpgradeLog"/> used to record actions.</param>
+    /// <param name="certificate">Certificate for securing connection.</param>
+    /// <returns></returns>
+    public static void PostgresqlDatabase(this SupportedDatabasesForDropDatabase supported, string connectionString, IUpgradeLog logger, X509Certificate2 certificate)
+    {
+        var postgresConnectionString = GetPostgresConnectionString(connectionString, logger, out var database);
+        
+        var commandText = string.Concat(
+            $"SELECT pg_terminate_backend(pg_stat_activity.pid) from pg_stat_activity where pg_stat_activity.datname = '{database}'; ",
+            $"DROP DATABASE IF EXISTS \"{database}\";");
+        
+        using (var connection = new NpgsqlConnection(postgresConnectionString))
+        {
+            if (certificate != null)
+            {
+                connection.ProvideClientCertificatesCallback +=
+                    certs => certs.Add(certificate);
+            }
+            
+            connection.Open();
+
+            using (var command = new NpgsqlCommand(commandText, connection))
+            {
+                command.ExecuteNonQuery();
+            }
+            
+            logger.WriteInformation("Dropped database {0}", database);
+            
+            connection.Close();
+        }
+    }
+
+    static string GetPostgresConnectionString(string connectionString, IUpgradeLog logger, out string databaseName)
+    {
+        if (string.IsNullOrEmpty(connectionString.Trim()))
+        {
+            throw new ArgumentNullException(nameof(connectionString));
+        }
+
+        if (logger is null)
+        {
+            throw new ArgumentNullException(nameof(logger));
+        }
+
+        var postgresConnectionStringBuilder = new NpgsqlConnectionStringBuilder(connectionString);
+        var database = postgresConnectionStringBuilder.Database;
+        postgresConnectionStringBuilder.Database = "postgres";
+
+        var logConnectionStringBuilder = new NpgsqlConnectionStringBuilder(postgresConnectionStringBuilder.ConnectionString)
+        {
+            Password = postgresConnectionStringBuilder.Password is string originalPassword
+                ? string.Empty.PadRight(originalPassword.Length, '*')
+                : null
+        };
+        
+        logger.WriteInformation("Master ConnectionString => {0}", logConnectionStringBuilder.ConnectionString);
+
+        databaseName = database;
+        return postgresConnectionStringBuilder.ConnectionString;
     }
 
     /// <summary>
