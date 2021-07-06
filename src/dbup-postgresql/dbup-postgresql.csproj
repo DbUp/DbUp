@@ -33,7 +33,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net35'">
-    <PackageReference Include="Npgsql" Version="3.2.6" />
+    <PackageReference Include="Npgsql" Version="3.2.7" />
   </ItemGroup>
 
 </Project>
