@@ -35,7 +35,6 @@ namespace DbUp.Tests.Engine.Output
         }
 #endif
 
-
         class InMemorySink : ILogEventSink
         {
             public List<LogEvent> Events { get; } = new List<LogEvent>();

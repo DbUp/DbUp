@@ -9,10 +9,8 @@ namespace DbUp.SqlAnywhere
     /// </summary>
     public class SqlAnywhereObjectParser : SqlObjectParser
     {
-
         public SqlAnywhereObjectParser() : base("[", "]")
         {
-
         }
 
         /// <summary>
@@ -44,7 +42,6 @@ namespace DbUp.SqlAnywhere
 
 
             return string.Concat("[", objectName.Replace("]", "]]"), "]");
-
         }
     }
 }

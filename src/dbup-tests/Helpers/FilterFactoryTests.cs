@@ -107,6 +107,5 @@ Script20130525_1_Test5.txt");
             scriptsToRun.Count().ShouldBe(2);
             scriptsToRun.Contains("ShouldNotRemain.txt").ShouldBeFalse();
         }
-
     }
 }

@@ -23,7 +23,6 @@ namespace DbUp.Oracle
             IEnumerable<IScriptPreprocessor> scriptPreprocessors, Func<IJournal> journalFactory)
             : base(connectionManagerFactory, new OracleObjectParser(), log, schema, variablesEnabled, scriptPreprocessors, journalFactory)
         {
-
         }
 
         protected override string GetVerifySchemaSql(string schema)

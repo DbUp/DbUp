@@ -160,7 +160,6 @@ SELECT AccountId,
 
         public static IEnumerable<object[]> MultilineCommentData()
         {
-
             yield return new object[]
             {
                 $"{Environment.NewLine}/* comment1 /* comment2 */*/{Environment.NewLine}SELECT * FROM[ExampleTable]{Environment.NewLine}",

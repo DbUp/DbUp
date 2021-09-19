@@ -7,7 +7,7 @@ using DbUp.Support;
 namespace DbUp.Postgresql
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a
     /// PostgreSQL database using a table called SchemaVersions.
     /// </summary>
     public class PostgresqlTableJournal : TableJournal

@@ -29,7 +29,6 @@ namespace DbUp.Helpers
         public AdHocSqlRunner(Func<IDbCommand> commandFactory, ISqlObjectParser sqlObjectParser, string schema, params IScriptPreprocessor[] additionalScriptPreprocessors)
             : this(commandFactory, sqlObjectParser, schema, () => true, additionalScriptPreprocessors)
         {
-
         }
 
         /// <summary>

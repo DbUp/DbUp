@@ -70,7 +70,6 @@ namespace SampleApplication
                 }
             }
 
-
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine();
             Console.WriteLine("Press any key to delete your database and continue");

@@ -38,7 +38,7 @@ namespace DbUp.ScriptProviders
         /// </summary>
         /// <param name="directoryPath">Path to SQL upgrade scripts</param>
         /// <param name="options">Different options for the file system script provider</param>
-        /// <param name="sqlScriptOptions">The sql script options</param>        
+        /// <param name="sqlScriptOptions">The sql script options</param>
         public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options, SqlScriptOptions sqlScriptOptions)
         {
             if (options == null)
