@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,7 +75,37 @@ namespace DbUp.Tests.Support.MySql
                 "CREATE TABLE IF NOT EXISTS 'BAR';"
             });
         }
-        
+
+        [Fact]
+        public void ParsesOutCommentWithinStoredProcedureContainingApostrophe()
+        {
+            var createProcedureCommand =
+@"CREATE PROCEDURE Test(
+    IN param1 smallint)
+BEGIN 
+    SELECT
+        field1,
+        field2 # this field isn't very useful
+    FROM
+        table1
+END";
+
+            var multiCommand = new StringBuilder()
+               .AppendLine("DELIMITER $$")
+               .Append(createProcedureCommand)
+               .AppendLine("$$")
+               .AppendLine("DELIMITER ;");
+
+            var connectionManager = new MySqlConnectionManager("connectionstring");
+            var result = connectionManager.SplitScriptIntoCommands(multiCommand.ToString())
+                .ToArray();
+
+            result.ShouldBe(new[]
+            {
+                createProcedureCommand
+            });
+        }
+
         [Fact]
         public void DoesNotGetStuckInSkipWhitespace()
         {

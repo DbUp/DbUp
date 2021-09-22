@@ -17,6 +17,7 @@ namespace DbUp.Support
         const char StarChar = '*';
         const char OpenBracketChar = '[';
         const char CloseBracketChar = ']';
+        const char HashTagChar = '#';
 
         protected const int FailedRead = -1;
 
@@ -77,6 +78,10 @@ namespace DbUp.Support
                 else if (IsBeginningOfDashDashComment)
                 {
                     ReadDashDashComment();
+                }
+                else if (IsBeginningOfHashTagComment)
+                {
+                    ReadHashTagComment();
                 }
                 else if (IsBeginningOfSlashStarComment)
                 {
@@ -271,6 +276,8 @@ namespace DbUp.Support
             }
         }
 
+        bool IsBeginningOfHashTagComment => CurrentChar == HashTagChar;
+
         bool IsBeginningOfSlashStarComment => CurrentChar == SlashChar && Peek() == StarChar;
 
         bool IsBeginningOfDelimiter
@@ -357,6 +364,25 @@ namespace DbUp.Support
                     break;
                 }
                 ReadCharacter(CharacterType.DashComment, CurrentChar);
+            }
+            while (!IsEndOfLine);
+        }
+
+        /// <summary>
+        /// Reads # comments
+        /// </summary>
+        void ReadHashTagComment()
+        {
+            // Writes the current dash.
+            ReadCharacter(CharacterType.HashTagComment, CurrentChar);
+            // Read until we hit the end of line.
+            do
+            {
+                if (Read() == FailedRead)
+                {
+                    break;
+                }
+                ReadCharacter(CharacterType.HashTagComment, CurrentChar);
             }
             while (!IsEndOfLine);
         }
@@ -462,6 +488,8 @@ namespace DbUp.Support
             Delimiter,
             /// <summary>Character is a custom statement (open for new implementation)</summary>
             CustomStatement,
+            /// <summary>Character belongs to a # comment</summary>
+            HashTagComment,
         }
     }
 }
