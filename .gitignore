@@ -94,3 +94,4 @@ project.lock.json
 project.lock.json
 tools/*/
 artifacts/
+/.vs

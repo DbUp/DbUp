@@ -8,6 +8,7 @@ namespace DbUp.Engine.Transactions
     class TransactionPerScriptStrategy : ITransactionStrategy
     {
         IDbConnection connection;
+        int? commandTimeout;
 
         public void Execute(Action<Func<IDbCommand>> action)
         {
@@ -16,6 +17,10 @@ namespace DbUp.Engine.Transactions
                 action(() =>
                 {
                     var command = connection.CreateCommand();
+                    if (commandTimeout.HasValue)
+                    {
+                        command.CommandTimeout = commandTimeout.Value;
+                    }
                     command.Transaction = transaction;
                     return command;
                 });
@@ -30,6 +35,10 @@ namespace DbUp.Engine.Transactions
                 var result = actionWithResult(() =>
                 {
                     var command = connection.CreateCommand();
+                    if (commandTimeout.HasValue)
+                    {
+                        command.CommandTimeout = commandTimeout.Value;
+                    }
                     command.Transaction = transaction;
                     return command;
                 });
@@ -38,9 +47,10 @@ namespace DbUp.Engine.Transactions
             }
         }
 
-        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts, int? executionTimeoutSeconds)
         {
             connection = dbConnection ?? throw new ArgumentNullException(nameof(dbConnection));
+            commandTimeout = executionTimeoutSeconds;
         }
 
         public void Dispose() { }

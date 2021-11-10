@@ -8,6 +8,7 @@ namespace DbUp.Engine.Transactions
     class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
     {
         IDbConnection connection;
+        int? commandTimeout;
         IDbTransaction transaction;
         bool errorOccured;
         IUpgradeLog log;
@@ -24,6 +25,10 @@ namespace DbUp.Engine.Transactions
                 action(() =>
                 {
                     var command = connection.CreateCommand();
+                    if (commandTimeout.HasValue)
+                    {
+                        command.CommandTimeout = commandTimeout.Value;
+                    }
                     command.Transaction = transaction;
                     return command;
                 });
@@ -45,6 +50,10 @@ namespace DbUp.Engine.Transactions
                 return actionWithResult(() =>
                 {
                     var command = connection.CreateCommand();
+                    if (commandTimeout.HasValue)
+                    {
+                        command.CommandTimeout = commandTimeout.Value;
+                    }
                     command.Transaction = transaction;
                     return command;
                 });
@@ -56,11 +65,12 @@ namespace DbUp.Engine.Transactions
             }
         }
 
-        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts, int? executionTimeoutSeconds)
         {
             executedScriptsCollection = executedScripts;
             executedScriptsListBeforeExecution = executedScripts.ToArray();
             connection = dbConnection;
+            commandTimeout = executionTimeoutSeconds;
             log = upgradeLog;
             upgradeLog.WriteInformation("Beginning transaction");
             transaction = connection.BeginTransaction();

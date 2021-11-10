@@ -17,6 +17,11 @@ namespace DbUp.Engine.Transactions
         IConnectionFactory connectionFactoryOverride;
 
         /// <summary>
+        /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
+        /// </summary>
+        public int? ExecutionTimeoutSeconds { get; set; }
+
+        /// <summary>
         /// Manages Database Connections
         /// </summary>
         protected DatabaseConnectionManager(Func<IUpgradeLog, IDbConnection> connectionFactory) : this(new DelegateConnectionFactory(connectionFactory))
@@ -50,7 +55,7 @@ namespace DbUp.Engine.Transactions
             if (transactionStrategy != null)
                 throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
             transactionStrategy = transactionStrategyFactory[TransactionMode]();
-            transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts);
+            transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts, ExecutionTimeoutSeconds);
 
             return new DelegateDisposable(() =>
             {
@@ -74,7 +79,7 @@ namespace DbUp.Engine.Transactions
                     if (upgradeConnection.State == ConnectionState.Closed)
                         upgradeConnection.Open();
                     var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
-                    strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
+                    strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>(), ExecutionTimeoutSeconds);
                     strategy.Execute(dbCommandFactory =>
                     {
                         using (var command = dbCommandFactory())
