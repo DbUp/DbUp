@@ -1,6 +1,6 @@
 DbUp supports a number of different databases, the platforms are also listed under each database.
 
-* Sql Server 2000, 2005, 2008, 2012, 2014, 2016
+* Sql Server 2000, 2005, 2008, 2012, 2014, 2016, 2019
 * Sql Azure
     - &gt;= .NET 3.5
 * SQLite
