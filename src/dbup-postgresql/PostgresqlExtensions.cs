@@ -150,7 +150,7 @@ public static class PostgresqlExtensions
         var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
         if (!string.IsNullOrEmpty(logMasterConnectionStringBuilder.Password))
         {
-            logMasterConnectionStringBuilder.Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
+            logMasterConnectionStringBuilder.Password = "******";
         }
 
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);

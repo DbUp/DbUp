@@ -362,7 +362,7 @@ public static class SqlServerExtensions
         masterConnectionStringBuilder.InitialCatalog = "master";
         var logMasterConnectionStringBuilder = new SqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString)
         {
-            Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*')
+            Password = "******"
         };
 
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
