@@ -33,6 +33,19 @@ public static class SqlServerExtensions
     /// Creates an upgrader for SQL Server databases.
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connection">The sql connection.</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for SQL Server databases.
+    /// </returns>
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, SqlConnection connection)
+    {
+        return SqlDatabase(supported, connection, null);
+    }
+
+    /// <summary>
+    /// Creates an upgrader for SQL Server databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <param name="schema">The SQL schema name to use. Defaults to 'dbo'.</param>
     /// <returns>
@@ -41,6 +54,20 @@ public static class SqlServerExtensions
     public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema)
     {
         return SqlDatabase(new SqlConnectionManager(connectionString), schema);
+    }
+
+    /// <summary>
+    /// Creates an upgrader for SQL Server databases.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connection">The sql connection.</param>
+    /// <param name="schema">The SQL schema name to use. Defaults to 'dbo'.</param>
+    /// <returns>
+    /// A builder for a database upgrader designed for SQL Server databases.
+    /// </returns>
+    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, SqlConnection connection, string schema)
+    {
+        return SqlDatabase(new SqlConnectionManager(connection), schema);
     }
 
     /// <summary>

@@ -15,15 +15,17 @@ namespace DbUp.SqlServer
         /// </summary>
         /// <param name="connectionString"></param>
         public SqlConnectionManager(string connectionString)
-             : base(new DelegateConnectionFactory((log, dbManager) =>
-             {
-                 var conn = new SqlConnection(connectionString);
+             : this(new SqlConnection(connectionString))
+        { }
 
-                 if (dbManager.IsScriptOutputLogged)
-                     conn.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}", e.Message);
+        public SqlConnectionManager(SqlConnection connection)
+               : base(new DelegateConnectionFactory((log, dbManager) =>
+               {
+                   if (dbManager.IsScriptOutputLogged)
+                       connection.InfoMessage += (sender, e) => log.WriteInformation($"{{0}}", e.Message);
 
-                 return conn;
-             }))
+                   return connection;
+               }))
         { }
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)

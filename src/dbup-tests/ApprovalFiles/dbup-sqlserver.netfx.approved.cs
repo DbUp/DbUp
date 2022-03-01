@@ -1,4 +1,4 @@
-[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("8190b40b-ac5b-414f-8a00-9b6a2c12b010")]
 
 public static class AzureSqlServerExtensions
@@ -16,6 +16,8 @@ public static class SqlServerExtensions
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, DbUp.Engine.Transactions.IConnectionManager connectionManager, string schema = null) { }
+    public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, SqlConnection connection) { }
+    public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition) { }
@@ -48,6 +50,7 @@ namespace DbUp.SqlServer
     public class SqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
         public SqlConnectionManager(string connectionString) { }
+        public SqlConnectionManager(SqlConnection connection) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
