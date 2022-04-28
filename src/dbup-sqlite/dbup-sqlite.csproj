@@ -11,9 +11,9 @@
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>dbup-sqlite</PackageId>
     <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
-    <PackageIconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</PackageIconUrl>
+    <PackageIcon>dbup-icon.png</PackageIcon>
     <PackageProjectUrl>https://dbup.github.io</PackageProjectUrl>
-    <PackageLicenseUrl>http://www.opensource.org/licenses/mit-license.php</PackageLicenseUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
@@ -36,5 +36,10 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
+  </ItemGroup>
+
 
 </Project>
