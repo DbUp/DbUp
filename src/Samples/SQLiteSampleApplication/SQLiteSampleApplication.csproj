@@ -4,6 +4,7 @@
     <RootNamespace>SQLiteSampleApplication</RootNamespace>
     <AssemblyName>SQLiteSampleApplication</AssemblyName>
     <OutputType>Exe</OutputType>
+    <NoWarn>$(NoWarn);NETSDK1138</NoWarn> <!-- Purposefully leaving an old version of netcoreapp to ensure we have compatibility. This never gets published -->
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\dbup-sqlite\dbup-sqlite.csproj" />
