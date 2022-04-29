@@ -1,4 +1,4 @@
-﻿#tool "nuget:?package=GitVersion.CommandLine"
+﻿#tool "nuget:?package=GitVersion.CommandLine&Version=5.10.1"
 
 var target = Argument("target", "Default");
 var outputDir = "./artifacts/";
@@ -7,7 +7,13 @@ Task("Clean")
     .Does(() => {
         if (DirectoryExists(outputDir))
         {
-            DeleteDirectory(outputDir, recursive:true);
+            DeleteDirectory(
+                outputDir,
+                new DeleteDirectorySettings {
+                    Recursive = true,
+                    Force = true
+                }
+            );
         }
     });
 
@@ -38,7 +44,6 @@ Task("Build")
     .Does(() => {
         var settings =  new MSBuildSettings()
             .SetConfiguration("Release")
-            .UseToolVersion(MSBuildToolVersion.VS2017)
             .WithProperty("Version", versionInfo.NuGetVersion)
             .WithProperty("PackageOutputPath", System.IO.Path.GetFullPath(outputDir))
             .WithTarget("Build")
@@ -53,7 +58,9 @@ Task("Test")
          DotNetCoreTest("./src/dbup-tests/dbup-tests.csproj", new DotNetCoreTestSettings
         {
             Configuration = "Release",
-            NoBuild = true
+            NoBuild = true,
+            Loggers = new[] {"console;verbosity=detailed", "trx" },
+            ResultsDirectory = $"{outputDir}/TestResults"
         });
     });
 
@@ -84,6 +91,11 @@ Task("Package")
         {
             foreach (var file in GetFiles(outputDir + "**/*"))
                 AppVeyor.UploadArtifact(file.FullPath);
+        }
+        if (GitHubActions.IsRunningOnGitHubActions)
+        {
+            foreach (var file in GetFiles(outputDir + "**/*"))
+                GitHubActions.Commands.UploadArtifact(file.GetDirectory(), file.GetFilename().FullPath);
         }
     });
 
