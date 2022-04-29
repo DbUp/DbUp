@@ -37,6 +37,8 @@
   <ItemGroup>
     <Compile Remove="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs" />
     <Compile Include="..\dbup-sqlite\**\*.cs" Exclude="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs;bin\**;obj\**;**\*.xproj;packages\**" />
+    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
   </ItemGroup>
+
 
 </Project>

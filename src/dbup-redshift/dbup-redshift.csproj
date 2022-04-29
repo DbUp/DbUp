@@ -36,5 +36,8 @@
     <PackageReference Include="Npgsql" Version="3.2.6" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
+  </ItemGroup>
   
 </Project>

@@ -54,4 +54,9 @@
     <DefineConstants>$(DefineConstants);SUPPORTS_AZURE_AD</DefineConstants>
   </PropertyGroup>
 
+  <ItemGroup>
+    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
+  </ItemGroup>
+
+
 </Project>

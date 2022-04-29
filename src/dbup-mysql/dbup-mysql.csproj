@@ -36,5 +36,10 @@
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="MySql.Data" Version="6.10.6" />
   </ItemGroup>
+
+  <ItemGroup>
+    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
+  </ItemGroup>
+
   
 </Project>

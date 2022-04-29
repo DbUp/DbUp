@@ -37,4 +37,9 @@
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
 
+  <ItemGroup>
+    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
+  </ItemGroup>
+
+
 </Project>
