@@ -7,7 +7,7 @@ configuration:
 build_script:
   - ps: .\build.ps1
 
-image: Visual Studio 2017
+image: Visual Studio 2022
 test: off
 skip_tags: true
 
