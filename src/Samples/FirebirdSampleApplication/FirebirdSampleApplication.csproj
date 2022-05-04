@@ -4,6 +4,8 @@
     <RootNamespace>FirebirdSampleApplication</RootNamespace>
     <AssemblyName>FirebirdSampleApplication</AssemblyName>
     <OutputType>Exe</OutputType>
+    <NoWarn>$(NoWarn);NETSDK1138</NoWarn> <!-- Purposefully leaving an old version of netcoreapp to ensure we have compatibility. This never gets published -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\dbup-core\dbup-core.csproj" />
