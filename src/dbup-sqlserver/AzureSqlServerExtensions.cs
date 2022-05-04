@@ -10,23 +10,6 @@ using DbUp.SqlServer;
 // ReSharper disable CheckNamespace
 public static class AzureSqlServerExtensions
 {
-    /// <summary>Creates an upgrader for SQL Server databases.</summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="schema">The SQL schema name to use. Defaults to 'dbo' if <see langword="null" />.</param>
-    /// <param name="useAzureSqlIntegratedSecurity">Whether to use Azure SQL Integrated Security</param>
-    /// <returns>A builder for a database upgrader designed for SQL Server databases.</returns>
-    [Obsolete("Use \"AzureSqlDatabaseWithIntegratedSecurity(this SupportedDatabases, string, string)\" if passing \"true\" to \"useAzureSqlIntegratedSecurity\".")]
-    public static UpgradeEngineBuilder SqlDatabase(this SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity)
-    {
-        if (useAzureSqlIntegratedSecurity)
-        {
-            return AzureSqlDatabaseWithIntegratedSecurity(supported, connectionString, schema);
-        }
-
-        return supported.SqlDatabase(new SqlConnectionManager(connectionString), schema);
-    }
-
     /// <summary>Creates an upgrader for Azure SQL Databases using Azure AD Integrated Security.</summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
