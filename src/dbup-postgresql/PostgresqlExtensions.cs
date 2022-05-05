@@ -153,6 +153,8 @@ public static class PostgresqlExtensions
 
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
 
+        masterConnectionStringBuilder.Database = "postgres";
+
         using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
             if (certificate != null)
