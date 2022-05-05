@@ -3,15 +3,15 @@ using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.Common.RecordingDb
 {
-    class RecordingDbConnection : IDbConnection
+    public class RecordingDbConnection : IDbConnection
     {
-        readonly Dictionary<string, Func<object>> scalarResults = new Dictionary<string, Func<object>>();
-        readonly Dictionary<string, Func<int>> nonQueryResults = new Dictionary<string, Func<int>>();
+        readonly Dictionary<string?, Func<object>> scalarResults = new Dictionary<string?, Func<object>>();
+        readonly Dictionary<string?, Func<int>> nonQueryResults = new Dictionary<string?, Func<int>>();
         readonly CaptureLogsLogger logger;
         readonly string schemaTableName;
-        SqlScript[] runScripts;
+        private SqlScript[]? runScripts;
 
         public RecordingDbConnection(CaptureLogsLogger logger, string schemaTableName)
         {
@@ -56,11 +56,11 @@ namespace DbUp.Tests.TestInfrastructure
             logger.WriteDbOperation("Dispose connection");
         }
 
-        public string ConnectionString { get; set; }
+        public string? ConnectionString { get; set; }
 
         public int ConnectionTimeout { get; private set; }
 
-        public string Database { get; private set; }
+        public string? Database { get; private set; }
 
         public ConnectionState State { get; private set; }
 
@@ -69,12 +69,12 @@ namespace DbUp.Tests.TestInfrastructure
             this.runScripts = runScripts;
         }
 
-        public void SetupScalarResult(string sql, Func<object> action)
+        public void SetupScalarResult(string? sql, Func<object> action)
         {
             scalarResults.Add(sql, action);
         }
 
-        public void SetupNonQueryResult(string sql, Func<int> result)
+        public void SetupNonQueryResult(string? sql, Func<int> result)
         {
             nonQueryResults.Add(sql, result);
         }

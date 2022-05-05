@@ -4,18 +4,23 @@ using System.Data;
 using System.Data.Common;
 using DbUp.Engine;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.Common.RecordingDb
 {
     class RecordingDbCommand : IDbCommand
     {
         readonly CaptureLogsLogger logger;
-        readonly SqlScript[] runScripts;
+        readonly SqlScript[]? runScripts;
         readonly string schemaTableName;
-        readonly Dictionary<string, Func<object>> scalarResults;
-        readonly Dictionary<string, Func<int>> nonQueryResults;
+        readonly Dictionary<string?, Func<object>> scalarResults;
+        readonly Dictionary<string?, Func<int>> nonQueryResults;
 
-        public RecordingDbCommand(CaptureLogsLogger logger, SqlScript[] runScripts, string schemaTableName,
-            Dictionary<string, Func<object>> scalarResults, Dictionary<string, Func<int>> nonQueryResults)
+        public RecordingDbCommand(
+            CaptureLogsLogger logger,
+            SqlScript[]? runScripts,
+            string schemaTableName,
+            Dictionary<string?, Func<object>> scalarResults,
+            Dictionary<string?, Func<int>> nonQueryResults
+        )
         {
             this.logger = logger;
             this.runScripts = runScripts;
@@ -67,6 +72,9 @@ namespace DbUp.Tests.TestInfrastructure
         {
             logger.WriteDbOperation($"Execute reader command: {CommandText}");
 
+            if (CommandText == null)
+                throw new InvalidOperationException("CommandText must be set before calling");
+
             if (CommandText == "error")
                 ThrowError();
 
@@ -84,9 +92,12 @@ namespace DbUp.Tests.TestInfrastructure
             throw new NotImplementedException();
         }
 
-        public object ExecuteScalar()
+        public object? ExecuteScalar()
         {
             logger.WriteDbOperation($"Execute scalar command: {CommandText}");
+
+            if (CommandText == null)
+                throw new InvalidOperationException("CommandText must be set before calling");
 
             if (CommandText == "error")
                 ThrowError();
@@ -107,14 +118,14 @@ namespace DbUp.Tests.TestInfrastructure
             return null;
         }
 
-        public IDbConnection Connection { get; set; }
+        public IDbConnection? Connection { get; set; }
 
-        public IDbTransaction Transaction { get; set; }
+        public IDbTransaction? Transaction { get; set; }
 
         /// <summary>
         /// Set to 'error' to throw when executed
         /// </summary>
-        public string CommandText { get; set; }
+        public string? CommandText { get; set; }
 
         public int CommandTimeout { get; set; }
 

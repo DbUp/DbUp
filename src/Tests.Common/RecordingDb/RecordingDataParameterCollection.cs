@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.Common.RecordingDb
 {
     class RecordingDataParameterCollection : IDataParameterCollection
     {
@@ -28,7 +28,7 @@ namespace DbUp.Tests.TestInfrastructure
         }
 
         public int Count { get; private set; }
-        public object SyncRoot { get; private set; }
+        public object? SyncRoot { get; private set; }
         public bool IsSynchronized { get; private set; }
         public int Add(object value)
         {

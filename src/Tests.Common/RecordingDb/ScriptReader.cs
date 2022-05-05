@@ -2,14 +2,14 @@ using System;
 using System.Data;
 using DbUp.Engine;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.Common.RecordingDb
 {
     class ScriptReader : IDataReader
     {
-        readonly SqlScript[] runScripts;
+        readonly SqlScript[]? runScripts;
         int currentIndex = -1;
 
-        public ScriptReader(SqlScript[] runScripts)
+        public ScriptReader(SqlScript[]? runScripts)
         {
             this.runScripts = runScripts;
         }
@@ -128,7 +128,16 @@ namespace DbUp.Tests.TestInfrastructure
 
         public object this[string name] => throw new NotImplementedException();
 
-        public object this[int i] => runScripts[currentIndex].Name;
+        public object this[int i]
+        {
+            get
+            {
+                if (runScripts == null)
+                    throw new InvalidOperationException("runScripts is null");
+
+                return runScripts[currentIndex].Name;
+            }
+        }
 
         public void Dispose()
         {

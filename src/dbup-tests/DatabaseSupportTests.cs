@@ -8,7 +8,8 @@ using DbUp.Engine.Transactions;
 using DbUp.Oracle;
 using DbUp.SQLite;
 using DbUp.SqlServer;
-using DbUp.Tests.TestInfrastructure;
+using DbUp.Tests.Common;
+using DbUp.Tests.Common.RecordingDb;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
@@ -98,7 +99,7 @@ namespace DbUp.Tests
                     new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("Redshift", Deploy(to => to.RedshiftDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new RedshiftTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
-                    new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))                    
+                    new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))
 #endif
                 };
 
@@ -118,7 +119,7 @@ namespace DbUp.Tests
                 .UsingSanitiser(Scrubbers.ScrubDates)
                 .UsingNamer(new Namer(target, testName));
 
-            // Automatically approve the change, make sure to check the result before committing 
+            // Automatically approve the change, make sure to check the result before committing
             // configuration = configuration.UsingReporter((received, approved) => File.Copy(received, approved, true));
 
             this.Assent(logger.Log, configuration);

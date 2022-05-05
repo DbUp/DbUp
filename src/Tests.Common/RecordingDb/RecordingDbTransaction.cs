@@ -1,7 +1,7 @@
 using System;
 using System.Data;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.Common.RecordingDb
 {
     class RecordingDbTransaction : IDbTransaction
     {
@@ -27,7 +27,7 @@ namespace DbUp.Tests.TestInfrastructure
             throw new NotImplementedException();
         }
 
-        public IDbConnection Connection { get; private set; }
+        public IDbConnection? Connection { get; private set; }
         public IsolationLevel IsolationLevel { get; private set; }
     }
 }

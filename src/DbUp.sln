@@ -48,6 +48,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteSampleApplication", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebirdSampleApplication", "Samples\FirebirdSampleApplication\FirebirdSampleApplication.csproj", "{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "Tests.Common\Tests.Common.csproj", "{FB720E8A-51FC-4B0B-A4BA-3560FA52BE12}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FB720E8A-51FC-4B0B-A4BA-3560FA52BE12}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB720E8A-51FC-4B0B-A4BA-3560FA52BE12}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB720E8A-51FC-4B0B-A4BA-3560FA52BE12}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB720E8A-51FC-4B0B-A4BA-3560FA52BE12}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

@@ -1,9 +1,9 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 using DbUp.Engine.Output;
 
-namespace DbUp.Tests
+namespace DbUp.Tests.Common
 {
     public class CaptureLogsLogger : IUpgradeLog
     {

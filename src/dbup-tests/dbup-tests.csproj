@@ -10,11 +10,13 @@
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <NoWarn>$(NoWarn);NETSDK1138</NoWarn> <!-- Purposefully leaving an old version of netcoreapp to ensure we have compatibility. This never gets published -->
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0' ">
     <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Tests.Common\Tests.Common.csproj" />
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
     <ProjectReference Include="..\dbup-oracle\dbup-oracle.csproj" />
     <ProjectReference Include="..\dbup-redshift\dbup-redshift.csproj" />
@@ -28,7 +30,6 @@
     <PackageReference Include="Serilog" Version="2.6.0" />
     <PackageReference Include="Shouldly" Version="2.8.1" />
     <PackageReference Include="Assent" Version="1.2.1" />
-    <PackageReference Include="TestStack.BDDfy" Version="4.3.1" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
   </ItemGroup>
   <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">

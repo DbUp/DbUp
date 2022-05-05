@@ -1,6 +1,6 @@
 using System.Text.RegularExpressions;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.Common
 {
     public static class Scrubbers
     {
