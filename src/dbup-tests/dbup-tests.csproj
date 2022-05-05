@@ -44,8 +44,8 @@
   <ItemGroup>
     <Compile Remove="**\*.received.cs" />
     <EmbeddedResource Include="TestScripts\**\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <Compile Remove="ApprovalFiles\*.cs" />
-    <None Include="ApprovalFiles\*.cs" />
+    <Compile Remove="**\ApprovalFiles\*.cs" />
+    <None Include="**\ApprovalFiles\*.cs" />
     <None Update="TestFilterFiles\ScriptNames.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
