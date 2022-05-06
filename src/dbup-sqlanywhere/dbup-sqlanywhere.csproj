@@ -7,7 +7,7 @@
     <Company>Dillistone Systems</Company>
     <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
     <GeneratePackageOnBuild>false</GeneratePackageOnBuild>
-    <RepositoryUrl>https://github.com/DbUp/DbUp</RepositoryUrl>
+    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
   </PropertyGroup>
 
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
