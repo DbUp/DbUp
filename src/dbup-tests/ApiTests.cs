@@ -25,6 +25,7 @@ namespace DbUp.Tests
         [InlineData(typeof(OracleExtensions))]
         [InlineData(typeof(PostgresqlExtensions))]
         [InlineData(typeof(RedshiftExtensions))]
+        [InlineData(typeof(SpannerExtensions))]
 #if !NETCORE
         [InlineData(typeof(FirebirdExtensions))]
         [InlineData(typeof(SqlCeExtensions))]

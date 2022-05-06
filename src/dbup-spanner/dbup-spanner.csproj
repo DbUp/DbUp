@@ -1,0 +1,45 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds Google Cloud Spanner support.</Description>
+        <Title>DbUp Google Cloud Spanner Support</Title>
+        <Authors>Martin Raychev</Authors>
+        <TargetFrameworks>netstandard2.0;net461</TargetFrameworks>
+        <AssemblyName>dbup-spanner</AssemblyName>
+        <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
+        <SignAssembly>true</SignAssembly>
+        <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
+        <PackageId>dbup-spanner</PackageId>
+        <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
+        <PackageIcon>dbup-icon.png</PackageIcon>
+        <PackageProjectUrl>https://dbup.github.io</PackageProjectUrl>
+        <PackageLicenseExpression>MIT</PackageLicenseExpression>
+        <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
+        <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
+        <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
+        <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
+        <PackageIconUrl />
+    </PropertyGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+        <PackageReference Include="Google.Cloud.Spanner.Data">
+            <Version>3.14.0</Version>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup Condition="'$(TargetFramework)' == 'net461' ">
+        <PackageReference Include="Google.Cloud.Spanner.Data">
+            <Version>3.14.0</Version>
+        </PackageReference>
+    </ItemGroup>
+
+    <ItemGroup>
+      <None Include="..\..\dbup-icon.png">
+        <Pack>True</Pack>
+        <PackagePath></PackagePath>
+      </None>
+    </ItemGroup>
+</Project>
