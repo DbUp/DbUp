@@ -34,11 +34,9 @@ jobs:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
           AssentNonInteractive: true
 
-      - name: Upload NuGet packages as artifacts ⬆️
-        uses: actions/upload-artifact@v3
-        with:
-          name: nuget-packages
-          path: artifacts/*.nupkg
+      - name: Push NuGet packages to GitHub Packages ⬆️
+        working-directory: artifacts
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
 
       - name: Test Report 🧪
         uses: dorny/test-reporter@v1

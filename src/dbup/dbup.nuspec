@@ -9,6 +9,7 @@
     reference the SQL Server code. Uninstall this package and install dbup-sqlserver, or the package for the server(s) you are targeting instead!</description>
     <language>en-US</language>
     <license type="expression">MIT</license>
+    <repositoryUrl>https://github.com/DbUp/DbUp</repositoryUrl>
     <releaseNotes>https://github.com/DbUp/DbUp/releases</releaseNotes>
     <projectUrl>http://dbup.github.com</projectUrl>
     <icon>dbup-icon.png</icon>
