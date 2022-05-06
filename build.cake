@@ -33,7 +33,7 @@ Task("Restore")
     .IsDependentOn("Version")
     .Does(() => {
         DotNetCoreRestore("src", new DotNetCoreRestoreSettings() {
-            ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.NuGetVersion)
+            ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.SemVer)
         });
     });
 
@@ -44,7 +44,7 @@ Task("Build")
     .Does(() => {
         var settings =  new MSBuildSettings()
             .SetConfiguration("Release")
-            .WithProperty("Version", versionInfo.NuGetVersion)
+            .WithProperty("Version", versionInfo.SemVer)
             .WithProperty("PackageOutputPath", System.IO.Path.GetFullPath(outputDir))
             .WithTarget("Build")
             .WithTarget("Pack");
@@ -70,7 +70,7 @@ Task("Package")
 
         NuGetPack("./src/dbup/dbup.nuspec", new NuGetPackSettings() {
             OutputDirectory = System.IO.Path.GetFullPath(outputDir),
-            Version = versionInfo.NuGetVersion
+            Version = versionInfo.SemVer
         });
     });
 
