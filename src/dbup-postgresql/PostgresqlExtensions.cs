@@ -145,6 +145,8 @@ public static class PostgresqlExtensions
             throw new InvalidOperationException("The connection string does not specify a database name.");
         }
 
+        masterConnectionStringBuilder.Database = "postgres";
+
         var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
         if (!string.IsNullOrEmpty(logMasterConnectionStringBuilder.Password))
         {
