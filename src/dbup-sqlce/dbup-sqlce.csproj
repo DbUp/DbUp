@@ -3,18 +3,13 @@
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SqlCe support. It works with SQL CE 4.0 SP1, which can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=30709</Description>
     <Title>DbUp SQL CE Support</Title>
-    <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
     <TargetFrameworks>net40;net45</TargetFrameworks>
     <AssemblyName>dbup-sqlce</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>dbup-sqlce</PackageId>
-    <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
     <PackageIcon>dbup-icon.png</PackageIcon>
-    <PackageProjectUrl>https://dbup.github.io</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
@@ -35,5 +30,11 @@
     <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>

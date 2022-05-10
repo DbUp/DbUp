@@ -3,18 +3,13 @@
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds MySql support.</Description>
     <Title>DbUp MySql Support</Title>
-    <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
     <TargetFrameworks>netstandard1.3;netstandard2.0;net35;net45</TargetFrameworks>
     <AssemblyName>dbup-mysql</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
     <PackageId>dbup-mysql</PackageId>
-    <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
     <PackageIcon>dbup-icon.png</PackageIcon>
-    <PackageProjectUrl>https://dbup.github.io</PackageProjectUrl>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
@@ -31,7 +26,8 @@
 
   <ItemGroup Condition=" '$(TargetFramework)' == 'net35' OR '$(TargetFramework)' == 'net45' ">
     <Reference Include="System" />
-    <PackageReference Include="MySql.Data" Version="6.9.5" /> <!-- last version to support < .NET 4.5.2. -->
+    <PackageReference Include="MySql.Data" Version="6.9.5" />
+    <!-- last version to support < .NET 4.5.2. -->
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
@@ -42,5 +38,11 @@
     <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
   </ItemGroup>
 
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
 
 </Project>
