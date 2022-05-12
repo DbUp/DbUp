@@ -21,10 +21,10 @@ Info:         The "test"."TestSchemaVersions" table has been created
 DB Operation: Execute non query command: script1contents
 DB Operation: Dispose command
 DB Operation: Create parameter
-Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
+Info:         DB Operation: Add parameter to command: =Script0001.sql
 DB Operation: Create parameter
-Info:         DB Operation: Add parameter to command: applied=<date>
-DB Operation: Execute non query command: insert into "test"."TestSchemaVersions" (ScriptName, Applied) values (@scriptName, @applied)
+Info:         DB Operation: Add parameter to command: =<date>
+DB Operation: Execute non query command: insert into "test"."TestSchemaVersions" (ScriptName, Applied) values ($1, $2)
 DB Operation: Dispose command
 Info:         Upgrade successful
 DB Operation: Dispose connection
