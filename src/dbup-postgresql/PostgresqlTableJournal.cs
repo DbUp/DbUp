@@ -33,7 +33,8 @@ namespace DbUp.Postgresql
             enableSqlRewriting = !AppContext.TryGetSwitch("Npgsql.EnableSqlRewriting", out bool enabled) || enabled;
 #endif
 
-            if (enableSqlRewriting) return base.GetInsertScriptCommand(dbCommandFactory, script);
+            if (enableSqlRewriting)
+                return base.GetInsertScriptCommand(dbCommandFactory, script);
 
             var command = dbCommandFactory();
 
