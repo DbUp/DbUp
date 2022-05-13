@@ -27,6 +27,14 @@ namespace DbUp.Postgresql
 
         protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {
+            bool enableSqlRewriting = true;
+#if NETSTANDARD1_3_OR_GREATER || NET46_OR_GREATER || NETCOREAPP
+            // EnableSqlRewriting is enabled by default, and needs to be explicitly disabled
+            enableSqlRewriting = !AppContext.TryGetSwitch("Npgsql.EnableSqlRewriting", out bool enabled) || enabled;
+#endif
+
+            if (enableSqlRewriting) return base.GetInsertScriptCommand(dbCommandFactory, script);
+
             var command = dbCommandFactory();
 
             var scriptNameParam = command.CreateParameter();
