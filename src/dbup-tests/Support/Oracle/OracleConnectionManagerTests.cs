@@ -31,5 +31,19 @@ namespace DbUp.Tests.Support.Oracle
 
             result.Count().ShouldBe(2);
         }
+
+        [Fact]
+        public void CanParseMultilineScriptWithCustomDelimiter()
+        {
+            var sqlScript = @"
+create table FOO (myid INT NOT NULL);
+create table BAR (myid INT NOT NULL);
+";
+
+            var connectionManager = new OracleConnectionManager("connectionstring", new OracleCommandSplitter(';'));
+            var result = connectionManager.SplitScriptIntoCommands(sqlScript);
+
+            result.Count().ShouldBe(2);
+        }
     }
 }
