@@ -13,13 +13,7 @@ namespace DbUp.Oracle
         /// Creates a new Oracle database connection.
         /// </summary>
         /// <param name="connectionString">The Oracle connection string.</param>
-        [Obsolete]
-        public OracleConnectionManager(string connectionString)
-            : this(connectionString, new OracleCommandSplitter())
-        {
-            Console.WriteLine();
-        }
-        
+        /// <param name="commandSplitter">Oracle command splitter instance.</param>
         public OracleConnectionManager(string connectionString, OracleCommandSplitter commandSplitter)
             : base(new DelegateConnectionFactory(l => new OracleConnection(connectionString)))
         {

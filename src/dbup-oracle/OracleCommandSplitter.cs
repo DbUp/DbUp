@@ -7,12 +7,6 @@ namespace DbUp.Oracle
     public class OracleCommandSplitter
     {
         private readonly Func<string, SqlCommandReader> commandReaderFactory;
-
-        [Obsolete]
-        public OracleCommandSplitter()
-        {
-            this.commandReaderFactory = scriptContents => new OracleCommandReader(scriptContents);
-        }
         
         public OracleCommandSplitter(char delimiter)
         {
