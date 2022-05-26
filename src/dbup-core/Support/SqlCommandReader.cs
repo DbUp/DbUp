@@ -11,14 +11,16 @@ namespace DbUp.Support
     public class SqlCommandReader : SqlParser
     {
         readonly StringBuilder commandScriptBuilder;
+        readonly bool ignoreComments;
 
         /// <summary>
         /// Creates an instance of <see cref="SqlCommandReader"/>.
         /// </summary>
-        public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true)
+        public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true, bool ignoreComments = false)
             : base(sqlText, delimiter, delimiterRequiresWhitespace)
         {
             commandScriptBuilder = new StringBuilder();
+            this.ignoreComments = ignoreComments;
         }
 
         /// <summary>
@@ -32,9 +34,14 @@ namespace DbUp.Support
                 {
                     switch (type)
                     {
-                        case CharacterType.Command:
                         case CharacterType.SlashStarComment:
                         case CharacterType.DashComment:
+                            if (!ignoreComments)
+                            {
+                                commandScriptBuilder.Append(c);
+                            }
+                            break;
+                        case CharacterType.Command:
                         case CharacterType.BracketedText:
                         case CharacterType.QuotedString:
                         case CharacterType.CustomStatement:
