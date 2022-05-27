@@ -41,20 +41,6 @@ namespace DbUp.Oracle
 
             return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)));
         }
-
-        ///// <summary>
-        ///// Creates an upgrader for Oracle databases.
-        ///// </summary>
-        ///// <param name="supported">Fluent helper type.</param>
-        ///// <param name="connectionString">Oracle database connection string.</param>
-        ///// <param name="schema">Which Oracle schema to check for changes</param>
-        ///// <returns>
-        ///// A builder for a database upgrader designed for Oracle databases.
-        ///// </returns>
-        //public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string schema, string delimiter)
-        //{
-        //    return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)), schema);
-        //}
         
         /// <summary>
         /// Creates an upgrader for Oracle databases.
