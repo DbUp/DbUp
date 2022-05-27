@@ -1,17 +1,17 @@
-using System;
+﻿using System;
 using System.Text;
 using DbUp.Support;
 
 namespace DbUp.Oracle
 {
-    public class OracleCustomDelimiterCommandReader : SqlCommandReader
+    public class OracleCommandReader : SqlCommandReader
     {
         const string DelimiterKeyword = "DELIMITER";
 
         /// <summary>
         /// Creates an instance of OracleCommandReader
         /// </summary>
-        public OracleCustomDelimiterCommandReader(string sqlText, char delimiter) : base(sqlText, delimiter.ToString(), delimiterRequiresWhitespace: false)
+        public OracleCommandReader(string sqlText, char delimiter) : base(sqlText, delimiter.ToString(), delimiterRequiresWhitespace: false)
         {
         }
 
