@@ -6,9 +6,11 @@ using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.Oracle;
+using DbUp.Spanner;
 using DbUp.SQLite;
 using DbUp.SqlServer;
 using DbUp.Tests.TestInfrastructure;
+using MySql.Data.MySqlClient;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
@@ -79,28 +81,37 @@ namespace DbUp.Tests
                 .BDDfy();
         }
 
-        ExampleTable DatabaseExampleTable => new ExampleTable("Deploy to")
-                {
-                    new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) =>
-                    {
-                        builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, tableName));
-                        return builder;
-                    })),
-                    new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) =>
-                    {
-                        builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, tableName));
-                        return builder;
-                    })),
-                    new ExampleAction("Oracle", Deploy(to => to.OracleDatabaseWithDefaultDelimiter(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new OracleTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
+        private ExampleTable DatabaseExampleTable => new ExampleTable("Deploy to")
+        {
+            new ExampleAction("Sql Server", Deploy(to => to.SqlDatabase(string.Empty), (builder, schema, tableName) =>
+            {
+                builder.Configure(c => c.Journal = new SqlTableJournal(() => c.ConnectionManager, () => c.Log, schema, tableName));
+                return builder;
+            })),
+            new ExampleAction("SQLite", Deploy(to => to.SQLiteDatabase(string.Empty), (builder, schema, tableName) =>
+            {
+                builder.Configure(c => c.Journal = new SQLiteTableJournal(() => c.ConnectionManager, () => c.Log, tableName));
+                return builder;
+            })),
+            new ExampleAction("Oracle", Deploy(to => to.OracleDatabaseWithDefaultDelimiter(string.Empty), (builder, schema, tableName) =>
+            {
+                builder.Configure(c => c.Journal = new OracleTableJournal(() => c.ConnectionManager, () => c.Log, schema, tableName));
+                return builder;
+            })),
+            new ExampleAction("spanner", Deploy(to => to.SpannerDatabase(string.Empty, null), (builder, schema, tableName) =>
+            {
+                builder.Configure(c => c.Journal = new SpannerTableJournal(() => c.ConnectionManager, () => c.Log, schema, tableName));
+                return builder;
+            })),
 
 #if !NETCORE
                     new ExampleAction("Firebird", Deploy(to => to.FirebirdDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new FirebirdTableJournal(()=>c.ConnectionManager, ()=>c.Log, tableName)); return builder; })),
                     new ExampleAction("PostgreSQL", Deploy(to => to.PostgresqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new PostgresqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("Redshift", Deploy(to => to.RedshiftDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new RedshiftTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
                     new ExampleAction("SqlCe", Deploy(to => to.SqlCeDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new SqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; })),
-                    new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))                    
+                    new ExampleAction("MySql", Deploy(to => to.MySqlDatabase(string.Empty), (builder, schema, tableName) => { builder.Configure(c => c.Journal = new MySqlTableJournal(()=>c.ConnectionManager, ()=>c.Log, schema, tableName)); return builder; }))
 #endif
-                };
+        };
 
         void VariableSubstitutionIsSetup()
         {

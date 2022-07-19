@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -23,6 +23,11 @@ namespace DbUp.Tests.TestInfrastructure
             this.scalarResults = scalarResults;
             this.nonQueryResults = nonQueryResults;
             Parameters = new RecordingDataParameterCollection(logger);
+            var connection = new RecordingDbConnection(logger, schemaTableName)
+            {
+                ConnectionString = "Data Source=abc"
+            };
+            Connection = connection;
         }
 
         public void Dispose()
