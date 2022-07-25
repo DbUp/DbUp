@@ -8,15 +8,17 @@
     <description>This package exists to allow easy upgrades from pre-4.0 version This package was split into two packages dbup-core and dbup-sqlserver so that non SQL Server packages did not need to also
     reference the SQL Server code. Uninstall this package and install dbup-sqlserver, or the package for the server(s) you are targeting instead!</description>
     <language>en-US</language>
-    <licenseUrl>http://www.opensource.org/licenses/mit-license.php</licenseUrl>
+    <license type="expression">MIT</license>
+    <repository type="git" url="https://github.com/DbUp/DbUp.git" />
     <releaseNotes>https://github.com/DbUp/DbUp/releases</releaseNotes>
     <projectUrl>http://dbup.github.com</projectUrl>
-    <iconUrl>https://raw.github.com/DbUp/DbUp/master/src/Information/dbup-icon.png</iconUrl>
+    <icon>dbup-icon.png</icon>
     <dependencies>
       <dependency id="dbup-sqlserver" version="$version$" />
     </dependencies>
   </metadata>
   <files>
     <file src="shim.txt" target="" />
+    <file src="../../dbup-icon.png" target="" />
   </files>
 </package>

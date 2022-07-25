@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project>
+
+  <PropertyGroup>
+    <Authors>Paul Stovell;Jim Burger;Jake Ginnivan;Damian Maclennan</Authors>
+    <PackageReleaseNotes>https://github.com/DbUp/DbUp/releases</PackageReleaseNotes>
+    <PackageProjectUrl>https://dbup.github.io</PackageProjectUrl>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(TF_BUILD)' == 'true' Or '$(CI)' == 'true'">
+
+    <!-- Perform a deterministic build, so our binaries aren't impacted by build server environmental factors (e.g. file paths). -->
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+
+    <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+
+    <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+    <DebugType>embedded</DebugType>
+
+  </PropertyGroup>
+
+</Project>

@@ -1,0 +1,47 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all
+
+      - name: Setup .NET 2.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 2.0.x
+
+      - name: Setup .NET 6.0
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 6.0.x
+
+      - name: Install SQL CE 📅
+        shell: powershell
+        run: ./install-sql-ce.ps1
+
+      - name: Cake Build 🏗️
+        shell: powershell
+        run: ./build.ps1
+        env:
+          OCTOVERSION_CurrentBranch: ${{ github.ref }}
+          AssentNonInteractive: true
+
+      - name: Push NuGet packages to GitHub Packages ⬆️
+        working-directory: artifacts
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
+
+      - name: Test Report 🧪
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Tests
+          path: artifacts/TestResults/*.trx
+          reporter: dotnet-trx

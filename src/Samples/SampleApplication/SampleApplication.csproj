@@ -4,6 +4,8 @@
     <RootNamespace>SampleApplication</RootNamespace>
     <AssemblyName>SampleApplication</AssemblyName> 
     <OutputType>Exe</OutputType>
+    <NoWarn>$(NoWarn);NETSDK1138</NoWarn> <!-- Purposefully leaving an old version of netcoreapp to ensure we have compatibility. This never gets published -->
+    <IsPackable>false</IsPackable>
   </PropertyGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\dbup-sqlserver\dbup-sqlserver.csproj" />

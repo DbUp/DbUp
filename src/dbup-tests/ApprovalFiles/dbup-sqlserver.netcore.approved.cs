@@ -6,8 +6,6 @@ public static class AzureSqlServerExtensions
     public static DbUp.Builder.UpgradeEngineBuilder AzureSqlDatabaseWithIntegratedSecurity(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
     public static DbUp.Builder.UpgradeEngineBuilder AzureSqlDatabaseWithIntegratedSecurity(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, string resource) { }
     public static DbUp.Builder.UpgradeEngineBuilder AzureSqlDatabaseWithIntegratedSecurity(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, string resource, string tenantId, string azureAdInstance = "https://login.microsoftonline.com/") { }
-    [System.ObsoleteAttribute("Use "AzureSqlDatabaseWithIntegratedSecurity(this SupportedDatabases, string, string)" if passing "true" to "useAzureSqlIntegratedSecurity".")]
-    public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity) { }
 }
 public static class SqlServerExtensions
 {
@@ -15,6 +13,8 @@ public static class SqlServerExtensions
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, DbUp.Engine.Transactions.IConnectionManager connectionManager, string schema = null) { }
+    [System.ObsoleteAttribute("Use "AzureSqlDatabaseWithIntegratedSecurity(this SupportedDatabases, string, string)" if passing "true" to "useAzureSqlIntegratedSecurity".")]
+    public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition) { }
@@ -47,6 +47,8 @@ namespace DbUp.SqlServer
     public class SqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
         public SqlConnectionManager(string connectionString) { }
+        [System.ObsoleteAttribute("Use the "AzureSqlDatabaseWithIntegratedSecurity" extension method instead")]
+        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
