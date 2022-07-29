@@ -25,7 +25,7 @@ namespace DbUp.Oracle
         /// <param name="connectionString"></param>
         /// <returns></returns>
         public static UpgradeEngineBuilder OracleDatabaseWithDefaultDelimiter(this SupportedDatabases supported, string connectionString)
-            => OracleDatabase(supported, connectionString, '/');
+            => OracleDatabase(supported, connectionString, "/");
         
         /// <summary>
         /// Use ; as the delimiter between statements
@@ -34,9 +34,9 @@ namespace DbUp.Oracle
         /// <param name="connectionString"></param>
         /// <returns></returns>
         public static UpgradeEngineBuilder OracleDatabaseWithSemicolonDelimiter(this SupportedDatabases supported, string connectionString)
-            => OracleDatabase(supported, connectionString, ';');
+            => OracleDatabase(supported, connectionString, ";");
 
-        public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, char delimiter)
+        public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string delimiter)
         {
             foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
             {
@@ -46,20 +46,7 @@ namespace DbUp.Oracle
             return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)));
         }
 
-        /// <summary>
-        /// Creates an upgrader for Oracle databases.
-        /// </summary>
-        /// <param name="supported">Fluent helper type.</param>
-        /// <param name="connectionString">Oracle database connection string.</param>
-        /// <param name="schema">Which Oracle schema to check for changes</param>
-        /// <returns>
-        /// A builder for a database upgrader designed for Oracle databases.
-        /// </returns>
-        [Obsolete("Use the parameter that takes a delimiter instead, see https://github.com/DbUp/DbUp/pull/335")]
-        public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string schema)
-        {
-            return OracleDatabase(new OracleConnectionManager(connectionString), schema);
-        }
+         
 
         /// <summary>
         /// Creates an upgrader for Oracle databases.
@@ -72,7 +59,12 @@ namespace DbUp.Oracle
         /// </returns>
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string schema, string delimiter)
         {
-            return OracleDatabase(new OracleConnectionManager(connectionString), schema);
+            if (string.IsNullOrWhiteSpace(delimiter))
+            {
+                return OracleDatabase(new OracleConnectionManager(connectionString), schema);
+            }
+
+            return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)), schema);
         }
         
         /// <summary>
