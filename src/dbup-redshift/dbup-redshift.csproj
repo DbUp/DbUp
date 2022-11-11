@@ -4,7 +4,7 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds Amazon Redshift support.</Description>
     <Title>DbUp Redshift Support</Title>
     <Authors>$(Authors);Lars Brekken</Authors>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net35;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;netstandard2.0;net462</TargetFrameworks>
     <AssemblyName>dbup-redshift</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -17,17 +17,8 @@
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'net35'">
-    <DefineConstants>$(DefineConstants);NPGSQLv2</DefineConstants>
-  </PropertyGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net35'">
-    <PackageReference Include="Npgsql" Version="2.2.7" />
-    <!-- Last version that supports .NET 3.5 -->
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' != 'net35'">

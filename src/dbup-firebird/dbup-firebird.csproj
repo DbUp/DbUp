@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds Firebird support.</Description>
     <Title>DbUp Firebird Support</Title>
-    <TargetFrameworks>net40;net45</TargetFrameworks>
+    <TargetFrameworks>net462</TargetFrameworks>
     <AssemblyName>dbup-firebird</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -15,11 +15,6 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' ">
-    <Reference Include="System" />
-    <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
