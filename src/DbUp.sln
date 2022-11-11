@@ -5,14 +5,10 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		..\appveyor.yml = ..\appveyor.yml
-		..\Breaking changes.md = ..\Breaking changes.md
 		..\build.cake = ..\build.cake
 		..\build.ps1 = ..\build.ps1
-		dbup.nuspec = dbup.nuspec
 		Directory.Build.props = Directory.Build.props
-		..\GitVersionConfig.yaml = ..\GitVersionConfig.yaml
-		..\global.json = ..\global.json
+		..\GitVersion.yml = ..\GitVersion.yml
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
