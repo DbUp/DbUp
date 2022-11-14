@@ -8,6 +8,11 @@ on:
 jobs:
   build:
     runs-on: windows-latest
+
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Avoid pre-populating the NuGet package cache
+
     steps:
       - uses: actions/checkout@v3
         with:
