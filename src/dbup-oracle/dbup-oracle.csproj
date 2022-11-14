@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>netstandard2.0;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
   </PropertyGroup>
 
@@ -22,7 +22,7 @@
     </PackageReference>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net45'">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Oracle.ManagedDataAccess">
       <Version>12.2.1100</Version>
     </PackageReference>

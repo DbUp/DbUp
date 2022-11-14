@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SQLite support.</Description>
     <Title>DbUp SQLite Support</Title>
-    <TargetFrameworks>netstandard1.3;net40;net45</TargetFrameworks>
+    <TargetFrameworks>netstandard1.3;net462</TargetFrameworks>
     <AssemblyName>dbup-sqlite</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
@@ -19,15 +19,15 @@
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
     <PackageReference Include="Microsoft.Data.Sqlite" Version="1.0.1" />
   </ItemGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
     <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.98.1" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
