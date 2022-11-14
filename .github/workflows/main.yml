@@ -30,8 +30,11 @@ jobs:
           AssentNonInteractive: true
 
       - name: Push NuGet packages to GitHub Packages ⬆️
+        if: ${{ format('{0}', env.PACKAGE_KEY) != '' }}
         working-directory: artifacts
-        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
+        run: dotnet nuget push *.nupkg --api-key ${{ env.PACKAGE_KEY }} --source "https://nuget.pkg.github.com/DbUp/index.json"
+        env:
+            PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test Report 🧪
         uses: dorny/test-reporter@v1
