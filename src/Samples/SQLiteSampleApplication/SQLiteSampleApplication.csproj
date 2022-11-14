@@ -1,6 +1,6 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
+    <TargetFrameworks>net6.0</TargetFrameworks>
     <RootNamespace>SQLiteSampleApplication</RootNamespace>
     <AssemblyName>SQLiteSampleApplication</AssemblyName>
     <OutputType>Exe</OutputType>
