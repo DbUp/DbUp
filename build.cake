@@ -33,7 +33,7 @@ Task("Version")
 Task("Restore")
     .IsDependentOn("Version")
     .Does(() => {
-        DotNetCoreRestore("src", new DotNetCoreRestoreSettings() {
+        DotNetRestore("src", new DotNetRestoreSettings() {
             ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.SemVer)
         });
     });
@@ -56,7 +56,7 @@ Task("Build")
 Task("Test")
     .IsDependentOn("Build")
     .Does(() => {
-         DotNetCoreTest("./src/dbup-tests/dbup-tests.csproj", new DotNetCoreTestSettings
+         DotNetTest("./src/dbup-tests/dbup-tests.csproj", new DotNetTestSettings
         {
             Configuration = "Release",
             NoBuild = true,
