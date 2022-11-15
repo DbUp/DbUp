@@ -1,4 +1,5 @@
 ﻿#tool "nuget:?package=GitVersion.CommandLine&Version=5.10.1"
+#addin "nuget:?package=Cake.Json&version=7.0.1"
 
 var target = Argument("target", "Default");
 var outputDir = "./artifacts/";
@@ -17,8 +18,6 @@ Task("Clean")
         }
     });
 
-
-
 GitVersion versionInfo = null;
 Task("Version")
     .Does(() => {
@@ -27,6 +26,8 @@ Task("Version")
             OutputType = GitVersionOutput.BuildServer
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+
+        Information(SerializeJsonPretty(versionInfo));
     });
 
 Task("Restore")
