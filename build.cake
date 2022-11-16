@@ -28,6 +28,7 @@ Task("Version")
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
 
         Information(SerializeJsonPretty(versionInfo));
+        Information("::set-output name=BUILDVERSION::" + versionInfo.SemVer);
     });
 
 Task("Restore")
