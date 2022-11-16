@@ -34,7 +34,11 @@ namespace DbUp.Tests
             var assembly = type.Assembly;
             var result = GetPublicApi(assembly);
 
-            var framework = RuntimeInformation.FrameworkDescription.Contains(".NET Core") ? "netcore" : "netfx";
+#if NETFRAMEWORK
+            const string framework = "netfx";
+#else
+            const string framework = "netcore"; // "Core" is no longer a thing but maintain the identifier for compatibility.
+#endif
             var approvalPostfix = differByFramework ? $".{framework}" : "";
 
             var config = new Configuration()

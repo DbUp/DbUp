@@ -5,6 +5,7 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
+		dbup\dbup.nuspec = dbup\dbup.nuspec
 		Directory.Build.props = Directory.Build.props
 		..\GitVersion.yml = ..\GitVersion.yml
 		..\README.md = ..\README.md
@@ -45,6 +46,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE
 		..\build.cake = ..\build.cake
 		..\build.ps1 = ..\build.ps1
 		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
+		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
 	EndProjectSection
 EndProject
 Global
