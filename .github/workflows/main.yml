@@ -48,7 +48,7 @@ jobs:
         if: ${{ format('{0}', github.ref_name) == 'polish-build-and-release-pipelines' && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
-        run: gh release create --draft --title "${{ steps.cake-build.outputs.BUILDVERSION }}" "${{ steps.build-solution.outputs.BUILDVERSION }}" (Get-Item *.nupkg)
+        run: gh release create --draft --title "${{ steps.cake-build.outputs.BUILDVERSION }}" "${{ steps.cake-build.outputs.BUILDVERSION }}" (Get-Item *.nupkg)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
