@@ -42,6 +42,10 @@ jobs:
         env:
             PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: 'List Directory Contents'
+        shell: pwsh
+        run: dir
+
       - name: 'Create Draft Release'
         #if: ${{ format('{0}', github.ref_name) == 'master' }}
         # Use the following condition for a single test build only
