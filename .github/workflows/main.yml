@@ -43,9 +43,7 @@ jobs:
             PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
 
       - name: 'Create Draft Release'
-        #if: ${{ format('{0}', github.ref_name) == 'master' }}
-        # Use the following condition for a single test build only
-        if: ${{ format('{0}', github.ref_name) == 'polish-build-and-release-pipelines' && format('{0}', env.GITHUB_TOKEN) != '' }}
+        if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
