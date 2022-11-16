@@ -42,15 +42,12 @@ jobs:
         env:
             PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'List Directory Contents'
-        shell: pwsh
-        run: dir
-
       - name: 'Create Draft Release'
         #if: ${{ format('{0}', github.ref_name) == 'master' }}
         # Use the following condition for a single test build only
         if: ${{ format('{0}', github.ref_name) == 'polish-build-and-release-pipelines' && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
+        working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
         run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item *.nupkg)
         env:
