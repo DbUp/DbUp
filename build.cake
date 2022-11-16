@@ -28,7 +28,7 @@ Task("Version")
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
 
         Information(SerializeJsonPretty(versionInfo));
-        Information("::set-output name=BUILDVERSION::" + versionInfo.SemVer);
+        System.IO.File.WriteAllText(System.Environment.GetEnvironmentVariable("GITHUB_ENV"), "BUILDVERSION=" + versionInfo.SemVer)
     });
 
 Task("Restore")
