@@ -5,14 +5,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		..\appveyor.yml = ..\appveyor.yml
-		..\Breaking changes.md = ..\Breaking changes.md
-		..\build.cake = ..\build.cake
-		..\build.ps1 = ..\build.ps1
-		dbup.nuspec = dbup.nuspec
+		dbup\dbup.nuspec = dbup\dbup.nuspec
 		Directory.Build.props = Directory.Build.props
-		..\GitVersionConfig.yaml = ..\GitVersionConfig.yaml
-		..\global.json = ..\global.json
+		..\GitVersion.yml = ..\GitVersion.yml
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
@@ -46,7 +41,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteSampleApplication", "
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebirdSampleApplication", "Samples\FirebirdSampleApplication\FirebirdSampleApplication.csproj", "{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.Common", "Tests.Common\Tests.Common.csproj", "{FB720E8A-51FC-4B0B-A4BA-3560FA52BE12}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE-AF4F-4BC3-82FC-E9FEEA6D37A6}"
+	ProjectSection(SolutionItems) = preProject
+		..\build.cake = ..\build.cake
+		..\build.ps1 = ..\build.ps1
+		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
+		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

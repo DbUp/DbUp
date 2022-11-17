@@ -26,7 +26,7 @@ namespace DbUp.Oracle
         /// <returns></returns>
         public static UpgradeEngineBuilder OracleDatabaseWithDefaultDelimiter(this SupportedDatabases supported, string connectionString)
             => OracleDatabase(supported, connectionString, '/');
-        
+
         /// <summary>
         /// Use ; as the delimiter between statements
         /// </summary>
@@ -36,6 +36,7 @@ namespace DbUp.Oracle
         public static UpgradeEngineBuilder OracleDatabaseWithSemicolonDelimiter(this SupportedDatabases supported, string connectionString)
             => OracleDatabase(supported, connectionString, ';');
 
+#pragma warning disable IDE0060 // Remove unused parameter
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, char delimiter)
         {
             foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
@@ -45,6 +46,7 @@ namespace DbUp.Oracle
 
             return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)));
         }
+#pragma warning restore IDE0060 // Remove unused parameter
 
         /// <summary>
         /// Creates an upgrader for Oracle databases.
@@ -70,11 +72,13 @@ namespace DbUp.Oracle
         /// <returns>
         /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
+#pragma warning disable IDE0060 // Remove unused parameter
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string schema, string delimiter)
         {
             return OracleDatabase(new OracleConnectionManager(connectionString), schema);
         }
-        
+#pragma warning restore IDE0060 // Remove unused parameter
+
         /// <summary>
         /// Creates an upgrader for Oracle databases.
         /// </summary>
@@ -83,8 +87,12 @@ namespace DbUp.Oracle
         /// <returns>
         /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
+#pragma warning disable IDE0060 // Remove unused parameter
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
-            => OracleDatabase(connectionManager);
+        {
+            return OracleDatabase(connectionManager);
+        }
+#pragma warning restore IDE0060 // Remove unused parameter
 
         /// <summary>
         /// Creates an upgrader for Oracle databases.
