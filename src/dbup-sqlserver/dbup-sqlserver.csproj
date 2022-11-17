@@ -46,11 +46,11 @@
     <DefineConstants>$(DefineConstants);SUPPORTS_SQL_CONTEXT;SUPPORTS_AZURE_AD</DefineConstants>
   </PropertyGroup>
 
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net6.0'">
     <DefineConstants>$(DefineConstants);SUPPORTS_AZURE_AD</DefineConstants>
   </PropertyGroup>
   
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net6.0' ">
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net6.0'">
      <DefineConstants>$(DefineConstants);SUPPORTS_MICROSOFT_SQL_CLIENT</DefineConstants>
   </PropertyGroup>
 
