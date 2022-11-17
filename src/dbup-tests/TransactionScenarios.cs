@@ -2,6 +2,8 @@
 using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
+using DbUp.Tests.Common;
+using DbUp.Tests.Common.RecordingDb;
 using DbUp.Tests.TestInfrastructure;
 using TestStack.BDDfy;
 using Xunit;
@@ -22,7 +24,7 @@ namespace DbUp.Tests
         {
             logger = new CaptureLogsLogger();
 
-            // Automatically approve the change, make sure to check the result before committing 
+            // Automatically approve the change, make sure to check the result before committing
             // assentConfig = assentConfig.UsingReporter((received, approved) => File.Copy(received, approved, true));
         }
 

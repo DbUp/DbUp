@@ -2,7 +2,7 @@
 using System.Data;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.Tests.TestInfrastructure;
+using DbUp.Tests.Common;
 using NSubstitute;
 using Shouldly;
 using Xunit;

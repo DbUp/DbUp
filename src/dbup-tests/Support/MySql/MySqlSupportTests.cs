@@ -1,5 +1,6 @@
 ﻿using Assent;
-using DbUp.Tests.TestInfrastructure;
+using DbUp.Tests.Common;
+using DbUp.Tests.Common.RecordingDb;
 using Shouldly;
 using Xunit;
 
