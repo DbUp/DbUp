@@ -1,0 +1,8 @@
+ DbUp mySQL version 5.0
+========================
+
+Breaking Changes:
+
+ - Target Framework changes.
+   - Remove .NET Framework 3.5 and .NET Framework 4.5
+   - Add .NET Framework 4.6.2
