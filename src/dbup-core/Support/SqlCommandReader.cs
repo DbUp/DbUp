@@ -66,7 +66,7 @@ namespace DbUp.Support
             commandScriptBuilder.Length = 0;
         }
 
-        string GetCurrentCommandTextFromBuffer()
+        protected string GetCurrentCommandTextFromBuffer()
         {
             return commandScriptBuilder.ToString().Trim();
         }

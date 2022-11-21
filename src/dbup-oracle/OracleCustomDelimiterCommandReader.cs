@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Text;
 using DbUp.Support;
 
@@ -20,7 +20,8 @@ namespace DbUp.Oracle
         /// </summary>
         protected override bool IsCustomStatement
             => TryPeek(DelimiterKeyword.Length - 1, out var statement) &&
-               string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase);
+               string.Equals(DelimiterKeyword, CurrentChar + statement, StringComparison.OrdinalIgnoreCase) &&
+               string.IsNullOrEmpty(GetCurrentCommandTextFromBuffer());
 
         /// <summary>
         /// Read a custom statement
