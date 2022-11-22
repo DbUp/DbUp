@@ -17,7 +17,7 @@ namespace DbUp.Oracle
     }
     public class OracleConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
-        [System.ObsoleteAttribute()]
+        [System.ObsoleteAttribute("Use OracleConnectionManager(string, OracleCommandSplitter) and supply an appropriate command splitter instance.")]
         public OracleConnectionManager(string connectionString) { }
         public OracleConnectionManager(string connectionString, DbUp.Oracle.OracleCommandSplitter commandSplitter) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
@@ -31,13 +31,15 @@ namespace DbUp.Oracle
     public static class OracleExtensions
     {
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
-        [System.ObsoleteAttribute("Use OracleDatabaseWithSlashDelimiter, OracleDatabaseWithSemicolonDelimiter or the OracleDatabase with the delimiter parameter instead, see https://github.com/DbUp/DbUp/pull/335")]
+        [System.ObsoleteAttribute("Use OracleDatabaseWithDefaultDelimiter, OracleDatabaseWithSemicolonDelimiter or the OracleDatabase with the delimiter parameter instead, see https://github.com/DbUp/DbUp/pull/335")]
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, DbUp.Engine.Transactions.IConnectionManager connectionManager) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(DbUp.Engine.Transactions.IConnectionManager connectionManager, string schema) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, char delimiter) { }
         [System.ObsoleteAttribute("Use the parameter that takes a delimiter instead, see https://github.com/DbUp/DbUp/pull/335")]
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
+        public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, char delimiter) { }
+        [System.ObsoleteAttribute("Use OracleDatabaseWithDefaultDelimiter, OracleDatabaseWithSemicolonDelimiter or the OracleDatabase with the delimiter parameter instead, see https://github.com/DbUp/DbUp/pull/335")]
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, string delimiter) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabaseWithDefaultDelimiter(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
         public static DbUp.Builder.UpgradeEngineBuilder OracleDatabaseWithSemicolonDelimiter(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }

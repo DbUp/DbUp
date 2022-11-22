@@ -47,8 +47,6 @@ namespace DbUp.SqlServer
     public class SqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
         public SqlConnectionManager(string connectionString) { }
-        [System.ObsoleteAttribute("Use the "AzureSqlDatabaseWithIntegratedSecurity" extension method instead")]
-        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
@@ -75,7 +73,7 @@ namespace DbUp.SqlServer.Helpers
     public class TemporarySqlDatabase : System.IDisposable
     {
         public TemporarySqlDatabase(string name) { }
-        public TemporarySqlDatabase(System.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
+        public TemporarySqlDatabase(Microsoft.Data.SqlClient.SqlConnectionStringBuilder connectionStringBuilder) { }
         public TemporarySqlDatabase(string name, string instanceName) { }
         public DbUp.Helpers.AdHocSqlRunner AdHoc { get; }
         public string ConnectionString { get; }

@@ -48,8 +48,6 @@ namespace DbUp.SqlServer
     public class SqlConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
         public SqlConnectionManager(string connectionString) { }
-        [System.ObsoleteAttribute("Use the "AzureSqlDatabaseWithIntegratedSecurity" extension method instead")]
-        public SqlConnectionManager(string connectionString, bool useAzureSqlIntegratedSecurity) { }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class SqlScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
