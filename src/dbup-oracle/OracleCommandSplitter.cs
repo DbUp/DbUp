@@ -13,12 +13,12 @@ namespace DbUp.Oracle
         {
             this.commandReaderFactory = scriptContents => new OracleCommandReader(scriptContents);
         }
-        
+
         public OracleCommandSplitter(char delimiter)
         {
             this.commandReaderFactory = scriptContents => new OracleCustomDelimiterCommandReader(scriptContents, delimiter);
         }
-        
+
         /// <summary>
         /// Splits a script with multiple delimited commands into commands
         /// </summary>

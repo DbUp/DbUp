@@ -5,9 +5,26 @@ using DbUp.Engine.Transactions;
 
 namespace DbUp.Oracle
 {
+#pragma warning disable IDE0060 // Remove unused parameter - The "SupportedDatabases" parameter is never used.
     public static class OracleExtensions
     {
-        [Obsolete("Use OracleDatabaseWithSlashDelimiter, OracleDatabaseWithSemicolonDelimiter or the OracleDatabase with the delimiter parameter instead, see https://github.com/DbUp/DbUp/pull/335")]
+        /// <summary>
+        /// Create an upgrader for Oracle databases.
+        /// </summary>
+        /// <param name="supported">Fluent helper type.</param>
+        /// <param name="connectionString">The connection string.</param>
+        /// <returns>
+        /// A builder for a database upgrader designed for Oracle databases.
+        /// </returns>
+        /// <remarks>
+        /// This method is obsolete. One of these should be used instead:
+        /// <list type="bullet">
+        /// <item><see cref="OracleDatabaseWithDefaultDelimiter(SupportedDatabases, string)"/></item>
+        /// <item><see cref="OracleDatabaseWithSemicolonDelimiter(SupportedDatabases, string)"/></item>
+        /// <item><see cref="OracleDatabase(SupportedDatabases, string, char)"/></item>
+        /// </list>
+        /// </remarks>
+        [Obsolete("Use OracleDatabaseWithDefaultDelimiter, OracleDatabaseWithSemicolonDelimiter or the OracleDatabase with the delimiter parameter instead, see https://github.com/DbUp/DbUp/pull/335")]
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString)
         {
             foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
@@ -19,24 +36,36 @@ namespace DbUp.Oracle
         }
 
         /// <summary>
-        /// Use / as the delimiter between statements
+        /// Create an upgrader for Oracle databases that uses the <c>/</c> character as the delimiter between statements.
         /// </summary>
-        /// <param name="supported"></param>
-        /// <param name="connectionString"></param>
-        /// <returns></returns>
+        /// <param name="supported">Fluent helper type.</param>
+        /// <param name="connectionString">The connection string.</param>
+        /// <returns>
+        /// A builder for a database upgrader designed for Oracle databases.
+        /// </returns>
         public static UpgradeEngineBuilder OracleDatabaseWithDefaultDelimiter(this SupportedDatabases supported, string connectionString)
             => OracleDatabase(supported, connectionString, '/');
 
         /// <summary>
-        /// Use ; as the delimiter between statements
+        /// Create an upgrader for Oracle databases that uses the <c>;</c> character as the delimiter between statements.
         /// </summary>
-        /// <param name="supported"></param>
-        /// <param name="connectionString"></param>
-        /// <returns></returns>
+        /// <param name="supported">Fluent helper type.</param>
+        /// <param name="connectionString">The connection string.</param>
+        /// <returns>
+        /// A builder for a database upgrader designed for Oracle databases.
+        /// </returns>
         public static UpgradeEngineBuilder OracleDatabaseWithSemicolonDelimiter(this SupportedDatabases supported, string connectionString)
             => OracleDatabase(supported, connectionString, ';');
 
-#pragma warning disable IDE0060 // Remove unused parameter
+        /// <summary>
+        /// Create an upgrader for Oracle databases.
+        /// </summary>
+        /// <param name="supported">Fluent helper type.</param>
+        /// <param name="connectionString">The connection string.</param>
+        /// <param name="delimiter">Character to use as the delimiter between statements.</param>
+        /// <returns>
+        /// A builder for a database upgrader designed for Oracle databases.
+        /// </returns>
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, char delimiter)
         {
             foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
@@ -46,7 +75,20 @@ namespace DbUp.Oracle
 
             return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)));
         }
-#pragma warning restore IDE0060 // Remove unused parameter
+
+        /// <summary>
+        /// Create an upgrader for Oracle databases.
+        /// </summary>
+        /// <param name="supported">Fluent helper type.</param>
+        /// <param name="connectionString">The connection string.</param>
+        /// <param name="delimiter">Character to use as the delimiter between statements.</param>
+        /// <returns>
+        /// A builder for a database upgrader designed for Oracle databases.
+        /// </returns>
+        public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string schema, char delimiter)
+        {
+            return OracleDatabase(new OracleConnectionManager(connectionString, new OracleCommandSplitter(delimiter)), schema);
+        }
 
         /// <summary>
         /// Creates an upgrader for Oracle databases.
@@ -72,12 +114,19 @@ namespace DbUp.Oracle
         /// <returns>
         /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
-#pragma warning disable IDE0060 // Remove unused parameter
+        /// <remarks>
+        /// This method is obsolete. One of these should be used instead:
+        /// <list type="bullet">
+        /// <item><see cref="OracleDatabaseWithDefaultDelimiter(SupportedDatabases, string)"/></item>
+        /// <item><see cref="OracleDatabaseWithSemicolonDelimiter(SupportedDatabases, string)"/></item>
+        /// <item><see cref="OracleDatabase(SupportedDatabases, string, char)"/></item>
+        /// </list>
+        /// </remarks>
+        [Obsolete("Use OracleDatabaseWithDefaultDelimiter, OracleDatabaseWithSemicolonDelimiter or the OracleDatabase with the delimiter parameter instead, see https://github.com/DbUp/DbUp/pull/335")]
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, string connectionString, string schema, string delimiter)
         {
             return OracleDatabase(new OracleConnectionManager(connectionString), schema);
         }
-#pragma warning restore IDE0060 // Remove unused parameter
 
         /// <summary>
         /// Creates an upgrader for Oracle databases.
@@ -87,12 +136,10 @@ namespace DbUp.Oracle
         /// <returns>
         /// A builder for a database upgrader designed for Oracle databases.
         /// </returns>
-#pragma warning disable IDE0060 // Remove unused parameter
         public static UpgradeEngineBuilder OracleDatabase(this SupportedDatabases supported, IConnectionManager connectionManager)
         {
             return OracleDatabase(connectionManager);
         }
-#pragma warning restore IDE0060 // Remove unused parameter
 
         /// <summary>
         /// Creates an upgrader for Oracle databases.
@@ -124,4 +171,5 @@ namespace DbUp.Oracle
             return builder;
         }
     }
+#pragma warning restore IDE0060 // Remove unused parameter
 }
