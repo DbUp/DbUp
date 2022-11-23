@@ -17,6 +17,7 @@ using DbUp.SqlServer;
 // NOTE: DO NOT MOVE THIS TO A NAMESPACE
 // Since the class just contains extension methods, we leave it in the global:: namespace so that it is always available
 // ReSharper disable CheckNamespace
+#pragma warning disable CA1050 // Declare types in namespaces
 public static class SqlServerExtensions
 // ReSharper restore CheckNamespace
 {
