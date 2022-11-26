@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Shouldly;
 using Xunit;
@@ -7,44 +8,68 @@ namespace DbUp.Tests.Helpers
 {
     public class FilterFactoryTests
     {
-        [Fact(Skip = "Need to come up with a better way than current directory")]
+        [Fact]
         public void Should_Exclude_ScriptNames_Listed_In_File()
         {
-            var currentDir = System.IO.Directory.GetCurrentDirectory();
-            var excludeFile = System.IO.Path.Combine(currentDir, "TestFilterFiles", "ScriptNames.txt");
-            var filter = Filters.ExcludeScriptNamesInFile(excludeFile);
+            var tempExcludeFile = Path.GetTempFileName();
+            try
+            {
+                File.WriteAllText(tempExcludeFile, @"Script20110301_1_Test1.txt
+Script20130525_1_Test5.txt");
 
-            var testScripts = new List<string>
+                var filter = Filters.ExcludeScriptNamesInFile(tempExcludeFile);
+
+                var testScripts = new List<string>
             {
                 "Script20110301_1_Test1.txt",
                 "ShouldRemain.txt",
                 "Script20130525_1_Test5.txt"
             };
 
-            var scriptsToRun = testScripts.Where(filter);
+                var scriptsToRun = testScripts.Where(filter);
 
-            scriptsToRun.ShouldBe(new[] { "ShouldRemain.txt" });
+                scriptsToRun.ShouldBe(new[] { "ShouldRemain.txt" });
+            }
+            finally
+            {
+                if (File.Exists(tempExcludeFile))
+                {
+                    File.Delete(tempExcludeFile);
+                }
+            }
         }
 
-        [Fact(Skip = "Need to come up with a better way than current directory")]
+        [Fact]
         public void Should_Include_Only_ScriptNames_Listed_In_File()
         {
-            var currentDir = System.IO.Directory.GetCurrentDirectory();
-            var excludeFile = System.IO.Path.Combine(currentDir, "TestFilterFiles", "ScriptNames.txt");
-            var filter = Filters.OnlyIncludeScriptNamesInFile(excludeFile);
+            var tempIncludeFile = Path.GetTempFileName();
+            try
+            {
+                File.WriteAllText(tempIncludeFile, @"Script20110301_1_Test1.txt
+Script20130525_1_Test5.txt");
 
-            var testScripts = new List<string>
+                var filter = Filters.OnlyIncludeScriptNamesInFile(tempIncludeFile);
+
+                var testScripts = new List<string>
             {
                 "Script20110301_1_Test1.txt",
                 "ShouldNotRemain.txt",
                 "Script20130525_1_Test5.txt"
             };
 
-            var scriptsToRun = testScripts.Where(filter);
+                var scriptsToRun = testScripts.Where(filter);
 
-            scriptsToRun.ShouldNotBeNull();
-            scriptsToRun.Count().ShouldBe(2);
-            scriptsToRun.ShouldNotContain("ShouldNotRemain.txt");
+                scriptsToRun.ShouldNotBeNull();
+                scriptsToRun.Count().ShouldBe(2);
+                scriptsToRun.ShouldNotContain("ShouldNotRemain.txt");
+            }
+            finally
+            {
+                if (File.Exists(tempIncludeFile))
+                {
+                    File.Delete(tempIncludeFile);
+                }
+            }
         }
 
         [Fact]

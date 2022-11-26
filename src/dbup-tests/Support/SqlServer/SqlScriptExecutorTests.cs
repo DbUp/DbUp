@@ -6,6 +6,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SqlServer;
+using DbUp.Tests.Common;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;

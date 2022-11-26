@@ -8,6 +8,7 @@ using DbUp.SqlServer;
 // NOTE: DO NOT MOVE THIS TO A NAMESPACE
 // Since the class just contains extension methods, we leave it in the global:: namespace so that it is always available
 // ReSharper disable CheckNamespace
+#pragma warning disable CA1050 // Declare types in namespaces
 public static class AzureSqlServerExtensions
 {
     /// <summary>Creates an upgrader for Azure SQL Databases using Azure AD Integrated Security.</summary>
@@ -43,5 +44,6 @@ public static class AzureSqlServerExtensions
         return supported.SqlDatabase(new AzureSqlConnectionManager(connectionString, resource, tenantId, azureAdInstance), schema);
     }
 }
+#pragma warning restore CA1050 // Declare types in namespaces
 
 #endif
