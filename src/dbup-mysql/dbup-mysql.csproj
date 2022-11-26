@@ -31,7 +31,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3' OR '$(TargetFramework)' == 'netstandard2.0'">
-    <PackageReference Include="MySql.Data" Version="6.10.6" />
+    <PackageReference Include="MySql.Data" Version="8.0.31" />
   </ItemGroup>
 
   <ItemGroup>
