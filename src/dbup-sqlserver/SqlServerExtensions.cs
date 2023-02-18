@@ -234,12 +234,12 @@ public static class SqlServerExtensions
     /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <param name="azureDatabaseEdition">Azure edition to Create</param>
     /// <param name="collation">The collation name to set during database creation</param>
-    /// <param name="createDbSqlCommands">A list of custom SQL commands that will be used to create the database.</param>
+    /// <param name="createDbSqlCommandsFactory">A factory receiving the DB name, and returning a list of custom SQL commands that will be used to create the database.</param>
     /// <param name="checkOnly">If true, only checks whether the database would've been created but does not perform the creation.</param>
     /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
-    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout = -1, AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None, string collation = null, IList<string> createDbSqlCommands = null, bool checkOnly = false)
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout = -1, AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None, string collation = null, Func<string, IList<string>> createDbSqlCommandsFactory = null, bool checkOnly = false)
     {
-        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition, collation, createDbSqlCommands, checkOnly);
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition, collation, createDbSqlCommandsFactory, checkOnly);
     }
 
     /// <summary>
@@ -251,7 +251,7 @@ public static class SqlServerExtensions
     /// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <param name="azureDatabaseEdition">Use to indicate that the SQL server database is in Azure</param>
     /// <param name="collation">The collation name to set during database creation</param>
-    /// <param name="createDbSqlCommands">A list of custom SQL commands that will be used to create the database.</param>
+    /// <param name="createDbSqlCommandsFactory">A factory receiving the DB name, and returning a list of custom SQL commands that will be used to create the database.</param>
     /// <param name="checkOnly">If true, only checks whether the database would've been created but does not perform the creation.</param>
     /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
     public static bool SqlDatabase(
@@ -261,7 +261,7 @@ public static class SqlServerExtensions
         int timeout = -1,
         AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None,
         string collation = null,
-        IList<string> createDbSqlCommands = null,
+        Func<string, IList<string>> createDbSqlCommandsFactory = null,
         bool checkOnly = false)
     {
         GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
@@ -287,7 +287,8 @@ public static class SqlServerExtensions
             if (checkOnly)
                 return true;
 
-            if (createDbSqlCommands == null)
+            IList<string> createDbSqlCommands;
+            if (createDbSqlCommandsFactory == null)
             {
                 createDbSqlCommands = new List<string>();
                 var collationString = string.IsNullOrEmpty(collation) ? "" : $@" COLLATE {collation}";
@@ -310,6 +311,10 @@ public static class SqlServerExtensions
                 }
 
                 createDbSqlCommands.Add(sqlCommandText);
+            }
+            else
+            {
+                createDbSqlCommands = createDbSqlCommandsFactory(databaseName);
             }
 
 
