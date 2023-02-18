@@ -1,4 +1,4 @@
-[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
+﻿[assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("8190b40b-ac5b-414f-8a00-9b6a2c12b010")]
 
 public static class AzureSqlServerExtensions
@@ -10,23 +10,24 @@ public static class AzureSqlServerExtensions
 public static class SqlServerExtensions
 {
     public static DbUp.Builder.UpgradeEngineBuilder JournalToSqlTable(this DbUp.Builder.UpgradeEngineBuilder builder, string schema, string table) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, string collation) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, string collation) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition, string collation) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition, string collation) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout = -1, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition = 0, string collation = null, System.Collections.Generic.IList<string> createDbSqlCommands = null, bool checkOnly = false) { }
+    public static bool SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger, int timeout = -1, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition = 0, string collation = null, System.Collections.Generic.IList<string> createDbSqlCommands = null, bool checkOnly = false) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema) { }
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, DbUp.Engine.Transactions.IConnectionManager connectionManager, string schema = null) { }
     [System.ObsoleteAttribute("Use "AzureSqlDatabaseWithIntegratedSecurity(this SupportedDatabases, string, string)" if passing "true" to "useAzureSqlIntegratedSecurity".")]
     public static DbUp.Builder.UpgradeEngineBuilder SqlDatabase(this DbUp.Builder.SupportedDatabases supported, string connectionString, string schema, bool useAzureSqlIntegratedSecurity) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, string collation) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString, int commandTimeout) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, string collation) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition, string collation) { }
     public static void SqlDatabase(this DbUp.SupportedDatabasesForDropDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger, int timeout = -1) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition, string collation) { }
-    public static void SqlDatabase(this DbUp.SupportedDatabasesForEnsureDatabase supported, string connectionString, DbUp.Engine.Output.IUpgradeLog logger, int timeout = -1, DbUp.SqlServer.AzureDatabaseEdition azureDatabaseEdition = 0, string collation = null) { }
 }
 namespace DbUp.SqlServer
 {

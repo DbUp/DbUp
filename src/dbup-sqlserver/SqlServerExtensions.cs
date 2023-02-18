@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Data;
 #if SUPPORTS_MICROSOFT_SQL_CLIENT
 using Microsoft.Data.SqlClient;
@@ -130,10 +131,10 @@ public static class SqlServerExtensions
     /// </summary>
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString)
     {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog());
     }
 
     /// <summary>
@@ -142,10 +143,10 @@ public static class SqlServerExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <param name="azureDatabaseEdition">Azure edition to Create</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition)
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition)
     {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), -1, azureDatabaseEdition);
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), -1, azureDatabaseEdition);
     }
 
     /// <summary>
@@ -154,10 +155,10 @@ public static class SqlServerExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout)
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout)
     {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout);
     }
 
     /// <summary>
@@ -166,49 +167,10 @@ public static class SqlServerExtensions
     /// <param name="supported">Fluent helper type.</param>
     /// <param name="connectionString">The connection string.</param>
     /// <param name="collation">The collation name to set during database creation</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, string collation)
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, string collation)
     {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), collation: collation);
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
-    /// <param name="azureDatabaseEdition">Azure edition to Create</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, AzureDatabaseEdition azureDatabaseEdition)
-    {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition);
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
-    /// <param name="collation">The collation name to set during database creation</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, string collation)
-    {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, collation: collation);
-    }
-
-    /// <summary>
-    /// Ensures that the database specified in the connection string exists.
-    /// </summary>
-    /// <param name="supported">Fluent helper type.</param>
-    /// <param name="connectionString">The connection string.</param>
-    /// <param name="azureDatabaseEdition">Azure edition to Create</param>
-    /// <param name="collation">The collation name to set during database creation</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition, string collation)
-    {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), azureDatabaseEdition: azureDatabaseEdition, collation: collation);
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), collation: collation);
     }
 
     /// <summary>
@@ -218,11 +180,66 @@ public static class SqlServerExtensions
     /// <param name="connectionString">The connection string.</param>
     /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <param name="azureDatabaseEdition">Azure edition to Create</param>
-    /// <param name="collation">The collation name to set during database creation</param>
-    /// <returns></returns>
-    public static void SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, AzureDatabaseEdition azureDatabaseEdition, string collation)
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, AzureDatabaseEdition azureDatabaseEdition)
     {
-        SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition, collation);
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition);
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, string collation)
+    {
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, collation: collation);
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="azureDatabaseEdition">Azure edition to Create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, AzureDatabaseEdition azureDatabaseEdition, string collation)
+    {
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), azureDatabaseEdition: azureDatabaseEdition, collation: collation);
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <param name="azureDatabaseEdition">Azure edition to Create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout, AzureDatabaseEdition azureDatabaseEdition, string collation)
+    {
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition, collation);
+    }
+
+    /// <summary>
+    /// Ensures that the database specified in the connection string exists.
+    /// </summary>
+    /// <param name="supported">Fluent helper type.</param>
+    /// <param name="connectionString">The connection string.</param>
+    /// <param name="commandTimeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
+    /// <param name="azureDatabaseEdition">Azure edition to Create</param>
+    /// <param name="collation">The collation name to set during database creation</param>
+    /// <param name="createDbSqlCommands">A list of custom SQL commands that will be used to create the database.</param>
+    /// <param name="checkOnly">If true, only checks whether the database would've been created but does not perform the creation.</param>
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(this SupportedDatabasesForEnsureDatabase supported, string connectionString, int commandTimeout = -1, AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None, string collation = null, IList<string> createDbSqlCommands = null, bool checkOnly = false)
+    {
+        return SqlDatabase(supported, connectionString, new ConsoleUpgradeLog(), commandTimeout, azureDatabaseEdition, collation, createDbSqlCommands, checkOnly);
     }
 
     /// <summary>
@@ -234,14 +251,18 @@ public static class SqlServerExtensions
     /// <param name="timeout">Use this to set the command time out for creating a database in case you're encountering a time out in this operation.</param>
     /// <param name="azureDatabaseEdition">Use to indicate that the SQL server database is in Azure</param>
     /// <param name="collation">The collation name to set during database creation</param>
-    /// <returns></returns>
-    public static void SqlDatabase(
+    /// <param name="createDbSqlCommands">A list of custom SQL commands that will be used to create the database.</param>
+    /// <param name="checkOnly">If true, only checks whether the database would've been created but does not perform the creation.</param>
+    /// <returns>True if the database was (or would've been) created; otherwise false.</returns>
+    public static bool SqlDatabase(
         this SupportedDatabasesForEnsureDatabase supported,
         string connectionString,
         IUpgradeLog logger,
         int timeout = -1,
         AzureDatabaseEdition azureDatabaseEdition = AzureDatabaseEdition.None,
-        string collation = null)
+        string collation = null,
+        IList<string> createDbSqlCommands = null,
+        bool checkOnly = false)
     {
         GetMasterConnectionStringBuilder(connectionString, logger, out var masterConnectionString, out var databaseName);
 
@@ -255,49 +276,63 @@ public static class SqlServerExtensions
             {
                 // Failed to connect to master, lets try direct
                 if (DatabaseExistsIfConnectedToDirectly(logger, connectionString, databaseName))
-                    return;
+                    return false;
 
                 throw;
             }
 
             if (DatabaseExists(connection, databaseName))
-                return;
+                return false;
 
-            var collationString = string.IsNullOrEmpty(collation) ? "" : $@" COLLATE {collation}";
-            var sqlCommandText = $@"create database [{databaseName}]{collationString}";
+            if (checkOnly)
+                return true;
 
-            switch (azureDatabaseEdition)
+            if (createDbSqlCommands == null)
             {
-                case AzureDatabaseEdition.None:
-                    sqlCommandText += ";";
-                    break;
-                case AzureDatabaseEdition.Basic:
-                    sqlCommandText += " ( EDITION = ''basic'' );";
-                    break;
-                case AzureDatabaseEdition.Standard:
-                    sqlCommandText += " ( EDITION = ''standard'' );";
-                    break;
-                case AzureDatabaseEdition.Premium:
-                    sqlCommandText += " ( EDITION = ''premium'' );";
-                    break;
+                createDbSqlCommands = new List<string>();
+                var collationString = string.IsNullOrEmpty(collation) ? "" : $@" COLLATE {collation}";
+                var sqlCommandText = $@"create database [{databaseName}]{collationString}";
+
+                switch (azureDatabaseEdition)
+                {
+                    case AzureDatabaseEdition.None:
+                        sqlCommandText += ";";
+                        break;
+                    case AzureDatabaseEdition.Basic:
+                        sqlCommandText += " ( EDITION = ''basic'' );";
+                        break;
+                    case AzureDatabaseEdition.Standard:
+                        sqlCommandText += " ( EDITION = ''standard'' );";
+                        break;
+                    case AzureDatabaseEdition.Premium:
+                        sqlCommandText += " ( EDITION = ''premium'' );";
+                        break;
+                }
+
+                createDbSqlCommands.Add(sqlCommandText);
             }
 
 
             // Create the database...
-            using (var command = new SqlCommand(sqlCommandText, connection)
+            foreach (var sqlCommandText in createDbSqlCommands)
             {
-                CommandType = CommandType.Text
-            })
-            {
-                if (timeout >= 0)
+                using (var command = new SqlCommand(sqlCommandText, connection)
                 {
-                    command.CommandTimeout = timeout;
-                }
+                    CommandType = CommandType.Text
+                })
+                {
+                    if (timeout >= 0)
+                    {
+                        command.CommandTimeout = timeout;
+                    }
 
-                command.ExecuteNonQuery();
+                    command.ExecuteNonQuery();
+                }
             }
 
             logger.WriteInformation(@"Created database {0}", databaseName);
+
+            return true;
         }
     }
 
