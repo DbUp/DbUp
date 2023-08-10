@@ -1,4 +1,4 @@
-name: CI
+name: CI Pull Requests
 
 on:
   push:
@@ -36,22 +36,6 @@ jobs:
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
           AssentNonInteractive: true
-
-      - name: Push NuGet packages to GitHub Packages ⬆️
-        if: ${{ format('{0}', env.PACKAGE_KEY) != '' }}
-        working-directory: artifacts
-        run: dotnet nuget push *.nupkg --api-key ${{ env.PACKAGE_KEY }} --source "https://nuget.pkg.github.com/DbUp/index.json"
-        env:
-            PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Create Draft Release'
-        if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
-        shell: pwsh
-        working-directory: artifacts
-        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
-        run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item *.nupkg)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test Report 🧪
         uses: dorny/test-reporter@v1
