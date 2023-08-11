@@ -33,6 +33,12 @@ namespace DbUp.Firebird
             throw new NotSupportedException();
         }
 
+        /// <summary>
+        /// We have to run the JournalTable creation and updating of the Journal table in different transactions.
+        /// See this: https://stackoverflow.com/questions/66537195/i-cant-run-inserts-in-firebird-2-5-table-unknown
+        /// </summary>
+        protected override bool UseTheSameTransactionForJournalTableAndScripts => false;
+
         protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCommand)
         {
             try
