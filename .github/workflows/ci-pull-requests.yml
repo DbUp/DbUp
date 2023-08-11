@@ -1,10 +1,9 @@
 name: CI Pull Requests
 
 on:
-  push:
+  pull_request:
     branches:
       - master
-  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -39,7 +38,7 @@ jobs:
 
       - name: Test Report 🧪
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: success() || failure() # run this step even if previous step failed
         with:
           name: Tests
           path: artifacts/TestResults/*.trx

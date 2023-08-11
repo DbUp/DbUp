@@ -1,9 +1,9 @@
-name: Create Draft Release 
+name: Create Draft Release
 
 on:
-  push:
+  pull_request:
     branches:
-      - 'releases/**'
+      - "releases/**"
   workflow_dispatch:
 
 jobs:
@@ -41,9 +41,9 @@ jobs:
         working-directory: artifacts
         run: dotnet nuget push *.nupkg --api-key ${{ env.PACKAGE_KEY }} --source "https://nuget.pkg.github.com/DbUp/index.json"
         env:
-            PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
+          PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: 'Create Draft Release'
+      - name: "Create Draft Release"
         if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
@@ -54,7 +54,7 @@ jobs:
 
       - name: Test Report 🧪
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: success() || failure() # run this step even if previous step failed
         with:
           name: Tests
           path: artifacts/TestResults/*.trx
