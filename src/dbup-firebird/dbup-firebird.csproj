@@ -4,29 +4,17 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds Firebird support.</Description>
     <Title>DbUp Firebird Support</Title>
     <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
-    <AssemblyName>dbup-firebird</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>dbup-firebird</PackageId>
-    <PackageIcon>dbup-icon.png</PackageIcon>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="6.0.0" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
   </ItemGroup>
 
 </Project>

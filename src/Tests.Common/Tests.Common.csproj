@@ -5,10 +5,6 @@
     <AssemblyName>DbUp.Tests.Common</AssemblyName>
     <RootNamespace>DbUp.Tests.Common</RootNamespace>
     <Nullable>enable</Nullable>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-    <LangVersion>latest</LangVersion>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
-    <RepositoryUrl>https://github.com/DbUp/DbUp</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
