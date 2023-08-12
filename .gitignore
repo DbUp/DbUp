@@ -87,6 +87,9 @@ src/_NCrunch_DbUp
 *.received.cs
 dbup*.nupkg
 .idea
+*.ReSharper
+*.ncrunchsolution
+*.DotSettings
 
 src/.vs/
 project.lock.json
