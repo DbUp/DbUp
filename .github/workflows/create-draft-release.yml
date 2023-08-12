@@ -1,9 +1,9 @@
 name: Create Draft Release
 
 on:
-  pull_request:
-    branches:
-      - "releases/**"
+  push:
+    tags:
+      - "v*"
   workflow_dispatch:
 
 jobs:
