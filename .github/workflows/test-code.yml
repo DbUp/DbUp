@@ -12,6 +12,7 @@ jobs:
 
     env:
       DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Avoid pre-populating the NuGet package cache
 
     steps:
