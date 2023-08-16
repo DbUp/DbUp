@@ -21,6 +21,6 @@ To learn more about DbUp check out the [documentation](https://dbup.readthedocs.
 
 # Development
 
-For successfull unit tests install
+For successfull unit testing install
 
 - SQL Server Compact 4.0 SP1 https://www.microsoft.com/en-us/download/details.aspx?id=30709
