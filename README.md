@@ -23,4 +23,4 @@ To learn more about DbUp check out the [documentation](https://dbup.readthedocs.
 
 For successfull unit tests install
 
-- Sql CE 4.0 SP1 https://www.microsoft.com/en-us/download/details.aspx?id=30709
+- SQL Server Compact 4.0 SP1 https://www.microsoft.com/en-us/download/details.aspx?id=30709
