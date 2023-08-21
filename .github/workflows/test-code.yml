@@ -1,10 +1,14 @@
-name: CI
+name: Test Code
 
 on:
+  pull_request:
+    branches:
+      - develop
+      - master
   push:
     branches:
+      - develop
       - master
-  pull_request:
   workflow_dispatch:
 
 jobs:
@@ -13,6 +17,7 @@ jobs:
 
     env:
       DOTNET_NOLOGO: true
+      DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Avoid pre-populating the NuGet package cache
 
     steps:
@@ -37,14 +42,7 @@ jobs:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
           AssentNonInteractive: true
 
-      - name: Push NuGet packages to GitHub Packages ⬆️
-        if: ${{ format('{0}', env.PACKAGE_KEY) != '' }}
-        working-directory: artifacts
-        run: dotnet nuget push *.nupkg --api-key ${{ env.PACKAGE_KEY }} --source "https://nuget.pkg.github.com/DbUp/index.json"
-        env:
-            PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: 'Create Draft Release'
+      - name: "Create Draft Release"
         if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
@@ -55,7 +53,7 @@ jobs:
 
       - name: Test Report 🧪
         uses: dorny/test-reporter@v1
-        if: success() || failure()    # run this step even if previous step failed
+        if: success() || failure() # run this step even if previous step failed
         with:
           name: Tests
           path: artifacts/TestResults/*.trx
