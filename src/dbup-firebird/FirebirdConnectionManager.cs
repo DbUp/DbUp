@@ -34,5 +34,7 @@ namespace DbUp.Firebird
 
             return scriptStatements;
         }
+
+        protected override AllowedTransactionMode AllowedTransactionModes => AllowedTransactionMode.TransactionPerScript;
     }
 }

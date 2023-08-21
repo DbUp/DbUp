@@ -1,36 +1,37 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net46;netcoreapp2.0</TargetFrameworks>
-    <AssemblyName>dbup-tests</AssemblyName>
-    <PackageId>dbup-tests</PackageId>
+    <TargetFrameworks>net462;net7.0</TargetFrameworks>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
     <GenerateAssemblyConfigurationAttribute>false</GenerateAssemblyConfigurationAttribute>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(TargetFramework)' == 'netcoreapp2.0' ">
+
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net7.0'">
     <DefineConstants>$(DefineConstants);NETCORE</DefineConstants>
   </PropertyGroup>
+
   <ItemGroup>
+    <ProjectReference Include="..\Tests.Common\Tests.Common.csproj" />
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
     <ProjectReference Include="..\dbup-oracle\dbup-oracle.csproj" />
-    <ProjectReference Include="..\dbup-redshift\dbup-redshift.csproj" />
     <ProjectReference Include="..\dbup-sqlserver\dbup-sqlserver.csproj" />
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
     <ProjectReference Include="..\dbup-mysql\dbup-mysql.csproj" />
     <ProjectReference Include="..\dbup-postgresql\dbup-postgresql.csproj" />
-    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="15.5.0" />
-    <PackageReference Include="xunit" Version="2.3.1" />
-    <PackageReference Include="xunit.runner.visualstudio" Version="2.3.1" />
-    <PackageReference Include="Serilog" Version="2.6.0" />
-    <PackageReference Include="Shouldly" Version="2.8.1" />
-    <PackageReference Include="Assent" Version="1.2.1" />
-    <PackageReference Include="TestStack.BDDfy" Version="4.3.1" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
+    <PackageReference Include="xunit" Version="2.5.0" />
+    <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Serilog" Version="3.0.1" />
+    <PackageReference Include="Shouldly" Version="4.2.1" />
     <PackageReference Include="NSubstitute" Version="3.1.0" />
   </ItemGroup>
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net46' ">
+
+  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <ProjectReference Include="..\dbup-sqlce\dbup-sqlce.csproj" />
     <ProjectReference Include="..\dbup-firebird\dbup-firebird.csproj" />
     <ProjectReference Include="..\dbup-sqlanywhere\dbup-sqlanywhere.csproj" />
@@ -39,11 +40,12 @@
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
   </ItemGroup>
+
   <ItemGroup>
     <Compile Remove="**\*.received.cs" />
     <EmbeddedResource Include="TestScripts\**\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)" />
-    <Compile Remove="ApprovalFiles\*.cs" />
-    <None Include="ApprovalFiles\*.cs" />
+    <Compile Remove="**\ApprovalFiles\*.cs" />
+    <None Include="**\ApprovalFiles\*.cs" />
     <None Update="TestFilterFiles\ScriptNames.txt">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

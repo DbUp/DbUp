@@ -150,7 +150,7 @@ public static class PostgresqlExtensions
         var logMasterConnectionStringBuilder = new NpgsqlConnectionStringBuilder(masterConnectionStringBuilder.ConnectionString);
         if (!string.IsNullOrEmpty(logMasterConnectionStringBuilder.Password))
         {
-            logMasterConnectionStringBuilder.Password = string.Empty.PadRight(masterConnectionStringBuilder.Password.Length, '*');
+            logMasterConnectionStringBuilder.Password = "******";
         }
 
         logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
@@ -177,10 +177,10 @@ public static class PostgresqlExtensions
                 CommandType = CommandType.Text
             })
             {
-                var results = (int?)command.ExecuteScalar();
+                var results = Convert.ToInt32(command.ExecuteScalar());
 
                 // if the database exists, we're done here...
-                if (results.HasValue && results.Value == 1)
+                if (results == 1)
                 {
                     return;
                 }

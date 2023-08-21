@@ -1,4 +1,5 @@
-﻿#tool "nuget:?package=GitVersion.CommandLine"
+﻿#tool "nuget:?package=GitVersion.CommandLine&Version=5.10.1"
+#addin "nuget:?package=Cake.Json&version=7.0.1"
 
 var target = Argument("target", "Default");
 var outputDir = "./artifacts/";
@@ -7,11 +8,15 @@ Task("Clean")
     .Does(() => {
         if (DirectoryExists(outputDir))
         {
-            DeleteDirectory(outputDir, recursive:true);
+            DeleteDirectory(
+                outputDir,
+                new DeleteDirectorySettings {
+                    Recursive = true,
+                    Force = true
+                }
+            );
         }
     });
-
-
 
 GitVersion versionInfo = null;
 Task("Version")
@@ -21,13 +26,17 @@ Task("Version")
             OutputType = GitVersionOutput.BuildServer
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+
+        Information(SerializeJsonPretty(versionInfo));
+        Information(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT"));
+        System.IO.File.WriteAllText(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT"), "Version_Info_SemVer=" + versionInfo.SemVer, Encoding.UTF8);
     });
 
 Task("Restore")
     .IsDependentOn("Version")
     .Does(() => {
-        DotNetCoreRestore("src", new DotNetCoreRestoreSettings() {
-            ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.NuGetVersion)
+        DotNetRestore("src", new DotNetRestoreSettings() {
+            ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.SemVer)
         });
     });
 
@@ -38,8 +47,7 @@ Task("Build")
     .Does(() => {
         var settings =  new MSBuildSettings()
             .SetConfiguration("Release")
-            .UseToolVersion(MSBuildToolVersion.VS2017)
-            .WithProperty("Version", versionInfo.NuGetVersion)
+            .WithProperty("Version", versionInfo.SemVer)
             .WithProperty("PackageOutputPath", System.IO.Path.GetFullPath(outputDir))
             .WithTarget("Build")
             .WithTarget("Pack");
@@ -50,10 +58,12 @@ Task("Build")
 Task("Test")
     .IsDependentOn("Build")
     .Does(() => {
-         DotNetCoreTest("./src/dbup-tests/dbup-tests.csproj", new DotNetCoreTestSettings
+         DotNetTest("./src/dbup-tests/dbup-tests.csproj", new DotNetTestSettings
         {
             Configuration = "Release",
-            NoBuild = true
+            NoBuild = true,
+            Loggers = new[] {"console;verbosity=detailed", "trx" },
+            ResultsDirectory = $"{outputDir}/TestResults"
         });
     });
 
@@ -63,28 +73,8 @@ Task("Package")
 
         NuGetPack("./src/dbup/dbup.nuspec", new NuGetPackSettings() {
             OutputDirectory = System.IO.Path.GetFullPath(outputDir),
-            Version = versionInfo.NuGetVersion
+            Version = versionInfo.SemVer
         });
-
-        System.IO.File.WriteAllLines(outputDir + "artifacts", new[]
-        {
-            "core:dbup-core." + versionInfo.NuGetVersion + ".nupkg",
-            "firebird:dbup-firebird." + versionInfo.NuGetVersion + ".nupkg",
-            "mysql:dbup-mysql." + versionInfo.NuGetVersion + ".nupkg",
-            "postgresql:dbup-postgresql." + versionInfo.NuGetVersion + ".nupkg",
-            "redshift:dbup-redshift." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlce:dbup-sqlce." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlite:dbup-sqlite." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlite-mono:dbup-sqlite-mono." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlserver:dbup-sqlserver." + versionInfo.NuGetVersion + ".nupkg",
-            "sqlanywhere:dbup-sqlanywhere." + versionInfo.NuGetVersion + ".nupkg"
-        });
-
-        if (AppVeyor.IsRunningOnAppVeyor)
-        {
-            foreach (var file in GetFiles(outputDir + "**/*"))
-                AppVeyor.UploadArtifact(file.FullPath);
-        }
     });
 
 Task("Default")
