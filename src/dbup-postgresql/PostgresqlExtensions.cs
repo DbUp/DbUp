@@ -177,10 +177,10 @@ public static class PostgresqlExtensions
                 CommandType = CommandType.Text
             })
             {
-                var results = (int?)command.ExecuteScalar();
+                var results = Convert.ToInt32(command.ExecuteScalar());
 
                 // if the database exists, we're done here...
-                if (results.HasValue && results.Value == 1)
+                if (results == 1)
                 {
                     return;
                 }
