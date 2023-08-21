@@ -35,6 +35,7 @@ namespace DbUp.Support
                         case CharacterType.Command:
                         case CharacterType.SlashStarComment:
                         case CharacterType.DashComment:
+                        case CharacterType.HashTagComment:
                         case CharacterType.BracketedText:
                         case CharacterType.QuotedString:
                         case CharacterType.CustomStatement:
