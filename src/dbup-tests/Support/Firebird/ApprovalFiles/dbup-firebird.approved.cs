@@ -1,4 +1,4 @@
-[assembly: System.CLSCompliantAttribute(true)]
+﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("a0df89fb-5f3e-4690-af40-acf2816e89f1")]
 
@@ -13,6 +13,7 @@ namespace DbUp.Firebird
     public class FirebirdConnectionManager : DbUp.Engine.Transactions.DatabaseConnectionManager, DbUp.Engine.Transactions.IConnectionManager
     {
         public FirebirdConnectionManager(string connectionString) { }
+        protected override DbUp.Engine.Transactions.AllowedTransactionMode AllowedTransactionModes { get; }
         public override System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents) { }
     }
     public class FirebirdObjectParser : DbUp.Support.SqlObjectParser, DbUp.Engine.ISqlObjectParser
@@ -27,6 +28,7 @@ namespace DbUp.Firebird
     public class FirebirdScriptExecutor : DbUp.Support.ScriptExecutor, DbUp.Engine.IScriptExecutor
     {
         public FirebirdScriptExecutor(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManagerFactory, System.Func<DbUp.Engine.Output.IUpgradeLog> log, string schema, System.Func<bool> variablesEnabled, System.Collections.Generic.IEnumerable<DbUp.Engine.IScriptPreprocessor> scriptPreprocessors, System.Func<DbUp.Engine.IJournal> journal) { }
+        protected override bool UseTheSameTransactionForJournalTableAndScripts { get; }
         protected override void ExecuteCommandsWithinExceptionHandler(int index, DbUp.Engine.SqlScript script, System.Action executeCommand) { }
         protected override string GetVerifySchemaSql(string schema) { }
     }
