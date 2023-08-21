@@ -3,9 +3,11 @@ name: Test Code
 on:
   pull_request:
     branches:
+      - develop
       - master
   push:
     branches:
+      - develop
       - master
   workflow_dispatch:
 
