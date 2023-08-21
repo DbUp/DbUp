@@ -1,5 +1,6 @@
 ﻿using Assent;
-using DbUp.Tests.TestInfrastructure;
+using DbUp.Tests.Common;
+using DbUp.Tests.Common.RecordingDb;
 using Shouldly;
 using Xunit;
 
@@ -26,11 +27,11 @@ USE `test`$$
 CREATE PROCEDURE `testSproc`(
         IN   ssn                    VARCHAR(32)
      )
-BEGIN 
+BEGIN
 
-    SELECT id      
+    SELECT id
     FROM   customer as c
-    WHERE  c.ssn = ssn ; 
+    WHERE  c.ssn = ssn ;
 
 END$$").Build();
 

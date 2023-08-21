@@ -50,6 +50,7 @@ $databaseServer = $args[1]
 $scriptPath = $args[2]
 
 Add-Type -Path (Join-Path -Path $currentPath -ChildPath 'x:\location\of\DbUp.dll')
+Add-Type -Path (Join-Path -Path $currentPath -ChildPath 'x:\location\of\dbup-sqlserver.dll')
 
 $dbUp = [DbUp.DeployChanges]::To
 $dbUp = [SqlServerExtensions]::SqlDatabase($dbUp, "server=$databaseServer;database=$databaseName;Trusted_Connection=Yes;Connection Timeout=120;")

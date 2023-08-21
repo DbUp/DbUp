@@ -1,0 +1,62 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    env:
+      DOTNET_NOLOGO: true
+      DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Avoid pre-populating the NuGet package cache
+
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 0 # all
+
+      - name: Setup .NET 7.0
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: 7.0.x
+
+      - name: Install SQL CE 📅
+        shell: powershell
+        run: ./install-sql-ce.ps1
+
+      - name: Cake Build 🏗️
+        id: cake-build
+        shell: powershell
+        run: ./build.ps1
+        env:
+          OCTOVERSION_CurrentBranch: ${{ github.ref }}
+          AssentNonInteractive: true
+
+      - name: Push NuGet packages to GitHub Packages ⬆️
+        if: ${{ format('{0}', env.PACKAGE_KEY) != '' }}
+        working-directory: artifacts
+        run: dotnet nuget push *.nupkg --api-key ${{ env.PACKAGE_KEY }} --source "https://nuget.pkg.github.com/DbUp/index.json"
+        env:
+            PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: 'Create Draft Release'
+        if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
+        shell: pwsh
+        working-directory: artifacts
+        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
+        run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item *.nupkg)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Test Report 🧪
+        uses: dorny/test-reporter@v1
+        if: success() || failure()    # run this step even if previous step failed
+        with:
+          name: Tests
+          path: artifacts/TestResults/*.trx
+          reporter: dotnet-trx
