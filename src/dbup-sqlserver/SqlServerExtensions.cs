@@ -408,9 +408,10 @@ public static class SqlServerExtensions
         })
 
         {
-            var results = (int?)command.ExecuteScalar();
+            var results = Convert.ToInt32(command.ExecuteScalar());
 
-            if (results.HasValue && results.Value == 1)
+            // if the database exists, we're done here...
+            if (results == 1)
                 return true;
             else
                 return false;

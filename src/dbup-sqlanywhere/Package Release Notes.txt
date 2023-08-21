@@ -3,7 +3,7 @@
 
 Breaking Changes:
 
- - Remove Unsupported Target Frameworks (PR #655 - https://github.com/DbUp/DbUp/pull/665)
+ - Remove Unsupported Target Frameworks (PR #655 - https://github.com/DbUp/DbUp/pull/655)
    - Removed .NET Framework 3.5 and .NET Framework 4.5
    - Added .NET Framework 4.6.2
 
