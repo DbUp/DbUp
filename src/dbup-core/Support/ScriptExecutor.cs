@@ -83,6 +83,12 @@ namespace DbUp.Support
 
         protected abstract string GetVerifySchemaSql(string schema);
 
+        /// <summary>
+        /// Some database systems (e.g. Firebird) require that scripts run in a seperate transaction than those
+        /// creating the JournalTable. The default is true but can be changed when inheriting ScriptExecutor
+        /// </summary>
+        protected virtual bool UseTheSameTransactionForJournalTableAndScripts => true;
+
         protected virtual string PreprocessScriptContents(SqlScript script, IDictionary<string, string> variables)
         {
             if (variables == null)
@@ -148,8 +154,19 @@ namespace DbUp.Support
                         }
                     }
 
-                    journal.StoreExecutedScript(script, dbCommandFactory);
+                    if (UseTheSameTransactionForJournalTableAndScripts)
+                    {
+                        journal.StoreExecutedScript(script, dbCommandFactory);
+                    }
                 });
+                if (!UseTheSameTransactionForJournalTableAndScripts)
+                {
+                    connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
+                    {
+                        var journal = journalFactory();
+                        journal.StoreExecutedScript(script, dbCommandFactory);
+                    });
+                }
             }
             catch (DbException sqlException)
             {

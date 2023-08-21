@@ -29,10 +29,10 @@ namespace DbUp.Firebird
             return $@"CREATE SEQUENCE {GeneratorName(tableName)}";
         }
 
-        static string CreateTriggerSql(string tableName)
+        string CreateTriggerSql(string tableName)
         {
             return
-$@"CREATE TRIGGER {TriggerName(tableName)} FOR {tableName} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
+$@"CREATE TRIGGER {TriggerName(tableName)} FOR {FqSchemaTableName} ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
     if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id({GeneratorName(tableName)},1);
 END;";
         }
