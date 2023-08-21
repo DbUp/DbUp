@@ -4,16 +4,12 @@
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SQLite support for Mono.</Description>
     <Title>DbUp SQLite Support targeting Mono</Title>
     <TargetFrameworks>net462</TargetFrameworks>
-    <AssemblyName>dbup-sqlite-mono</AssemblyName>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>dbup-sqlite-mono</PackageId>
-    <PackageIcon>dbup-icon.png</PackageIcon>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
     <DefineConstants>$(DefineConstants);MONO</DefineConstants>
   </PropertyGroup>
 
@@ -30,14 +26,6 @@
   <ItemGroup>
     <Compile Remove="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs" />
     <Compile Include="..\dbup-sqlite\**\*.cs" Exclude="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs;bin\**;obj\**;**\*.xproj;packages\**" />
-    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>

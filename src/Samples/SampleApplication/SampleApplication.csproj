@@ -1,25 +1,16 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net6.0</TargetFrameworks>
-    <RootNamespace>SampleApplication</RootNamespace>
-    <AssemblyName>SampleApplication</AssemblyName> 
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <NoWarn>$(NoWarn);NETSDK1138</NoWarn> <!-- Purposefully leaving an old version of netcoreapp to ensure we have compatibility. This never gets published -->
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\dbup-sqlserver\dbup-sqlserver.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Scripts\*.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Remove="RunAlways\RunAlwaysScript0001 - CreateRole.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="RunAlways\RunAlwaysScript0001 - CreateRole.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
+    <EmbeddedResource Include="RunAlways\*.sql" />
   </ItemGroup>
 </Project>
