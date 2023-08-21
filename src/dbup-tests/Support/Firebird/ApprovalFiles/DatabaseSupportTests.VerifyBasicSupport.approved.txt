@@ -21,7 +21,7 @@ Info:         The "schemaversions" table has been created
 DB Operation: Execute non query command: CREATE SEQUENCE GEN_schemaversionsID
 DB Operation: Dispose command
 Info:         The GEN_schemaversionsID generator has been created
-DB Operation: Execute non query command: CREATE TRIGGER BI_schemaversionsID FOR schemaversions ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
+DB Operation: Execute non query command: CREATE TRIGGER BI_schemaversionsID FOR "schemaversions" ACTIVE BEFORE INSERT POSITION 0 AS BEGIN
     if (new.schemaversionsid is null or (new.schemaversionsid = 0)) then new.schemaversionsid = gen_id(GEN_schemaversionsID,1);
 END;
 DB Operation: Dispose command

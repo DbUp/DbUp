@@ -1,4 +1,4 @@
-[assembly: System.CLSCompliantAttribute(true)]
+﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("9f833e49-6e35-4e4d-b2a0-3d4fed527c89")]
 
@@ -311,10 +311,20 @@ namespace DbUp.Engine.Preprocessors
 }
 namespace DbUp.Engine.Transactions
 {
+    [System.FlagsAttribute()]
+    public enum AllowedTransactionMode : int
+    {
+        None = 0
+        SingleTransaction = 1
+        TransactionPerScript = 2
+        SingleTransactionAlwaysRollback = 4
+        All = 7
+    }
     public abstract class DatabaseConnectionManager : DbUp.Engine.Transactions.IConnectionManager
     {
         protected DatabaseConnectionManager(System.Func<DbUp.Engine.Output.IUpgradeLog, System.Data.IDbConnection> connectionFactory) { }
         protected DatabaseConnectionManager(DbUp.Engine.Transactions.IConnectionFactory connectionFactory) { }
+        protected virtual DbUp.Engine.Transactions.AllowedTransactionMode AllowedTransactionModes { get; }
         public bool IsScriptOutputLogged { get; set; }
         public DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
         public T ExecuteCommandsWithManagedConnection<T>(Func<System.Func<System.Data.IDbCommand>, T> actionWithResult) { }
@@ -440,6 +450,7 @@ namespace DbUp.Support
         public System.Nullable<int> ExecutionTimeoutSeconds { get; set; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         public string Schema { get; set; }
+        protected virtual bool UseTheSameTransactionForJournalTableAndScripts { get; }
         public virtual void Execute(DbUp.Engine.SqlScript script) { }
         public virtual void Execute(DbUp.Engine.SqlScript script, System.Collections.Generic.IDictionary<string, string> variables) { }
         protected virtual void ExecuteAndLogOutput(System.Data.IDbCommand command) { }
