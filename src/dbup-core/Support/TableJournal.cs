@@ -187,7 +187,7 @@ namespace DbUp.Support
             journalExists = true;
         }
 
-        protected bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
+        protected virtual bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
         {
             Log().WriteInformation("Checking whether journal table exists..");
             using (var command = dbCommandFactory())
