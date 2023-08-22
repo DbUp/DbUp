@@ -1,0 +1,12 @@
+ DbUp Core version 5.0
+=======================
+
+Breaking Changes:
+
+ - Remove Unsupported Target Frameworks (PR #655 - https://github.com/DbUp/DbUp/pull/655)
+   - Removed .NET Framework 3.5 and .NET Framework 4.5
+   - Added .NET Framework 4.6.2
+
+Fixes / Changes:
+
+ - NuGet packages were improved with Source Link and deterministic builds (PR #624 - https://github.com/DbUp/DbUp/pull/624)

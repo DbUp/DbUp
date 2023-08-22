@@ -60,7 +60,7 @@ namespace DbUp.ScriptProviders
             this.assembly = assembly;
             this.filter = codeScriptFilter ?? filter;
             this.sqlScriptOptions = sqlScriptOptions;
-            embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
+            embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions);
         }
 
         IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)

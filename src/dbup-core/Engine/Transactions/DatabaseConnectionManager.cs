@@ -16,6 +16,9 @@ namespace DbUp.Engine.Transactions
         IDbConnection upgradeConnection;
         IConnectionFactory connectionFactoryOverride;
 
+        //The allowed TransactionModes
+        protected virtual AllowedTransactionMode AllowedTransactionModes => AllowedTransactionMode.All;
+
         /// <summary>
         /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
         /// </summary>
@@ -54,6 +57,8 @@ namespace DbUp.Engine.Transactions
                 upgradeConnection.Open();
             if (transactionStrategy != null)
                 throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
+            if (!IsAllowed(TransactionMode))
+                throw new InvalidOperationException($"TransactionMode {TransactionMode} is not allowed for {GetType().Name}. Allowed modes are {AllowedTransactionModes}");
             transactionStrategy = transactionStrategyFactory[TransactionMode]();
             transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts, ExecutionTimeoutSeconds);
 
@@ -64,6 +69,21 @@ namespace DbUp.Engine.Transactions
                 transactionStrategy = null;
                 upgradeConnection = null;
             });
+        }
+
+        private bool IsAllowed(TransactionMode mode)
+        {
+            switch (mode)
+            {
+                case TransactionMode.SingleTransaction:
+                    return AllowedTransactionModes.HasFlag(AllowedTransactionMode.SingleTransaction);
+                case TransactionMode.SingleTransactionAlwaysRollback:
+                    return AllowedTransactionModes.HasFlag(AllowedTransactionMode.SingleTransactionAlwaysRollback);
+                case TransactionMode.TransactionPerScript:
+                    return AllowedTransactionModes.HasFlag(AllowedTransactionMode.TransactionPerScript);
+                default:
+                    return true;
+            }
         }
 
         /// <summary>
