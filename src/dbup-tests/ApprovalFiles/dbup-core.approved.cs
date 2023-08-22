@@ -546,7 +546,7 @@ namespace DbUp.Support
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public string[] GetExecutedScripts() { }
         protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);
-        protected System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
+        protected virtual System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
         protected System.Data.IDbCommand GetJournalEntriesCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected abstract string GetJournalEntriesSql();
         protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }

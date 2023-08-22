@@ -12,7 +12,7 @@ using DbUp.Helpers;
 namespace DbUp.Support
 {
     /// <summary>
-    /// A standard implementation of the IScriptExecutor interface that executes against a SQL Server 
+    /// A standard implementation of the IScriptExecutor interface that executes against a SQL Server
     /// database.
     /// </summary>
     public abstract class ScriptExecutor : IScriptExecutor

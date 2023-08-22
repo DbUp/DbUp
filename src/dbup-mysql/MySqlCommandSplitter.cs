@@ -3,7 +3,7 @@
 namespace DbUp.MySql
 {
     /// <summary>
-    /// 
+    ///
     /// </summary>
     public class MySqlCommandSplitter
     {

@@ -15,6 +15,5 @@ namespace DbUp
                 Console.WriteLine(script.Name);
             Console.WriteLine("##octopus[stdout-default]");
         }
-
     }
 }

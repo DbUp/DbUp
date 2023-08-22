@@ -1,4 +1,4 @@
-[assembly: System.CLSCompliantAttribute(true)]
+﻿[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("5ddc04cc-0bd3-421e-9ae4-9fd0e4f4ef04")]
 
@@ -43,6 +43,7 @@ namespace DbUp.Postgresql
         public PostgresqlTableJournal(System.Func<DbUp.Engine.Transactions.IConnectionManager> connectionManager, System.Func<DbUp.Engine.Output.IUpgradeLog> logger, string schema, string tableName) { }
         protected override string CreateSchemaTableSql(string quotedPrimaryKeyName) { }
         protected override string GetInsertJournalEntrySql(string scriptName, string applied) { }
+        protected override System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
         protected override string GetJournalEntriesSql() { }
     }
 }

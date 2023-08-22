@@ -282,7 +282,6 @@ public static class SqlServerExtensions
                     break;
             }
 
-
             // Create the database...
             using (var command = new SqlCommand(sqlCommandText, connection)
             {
@@ -408,9 +407,10 @@ public static class SqlServerExtensions
         })
 
         {
-            var results = (int?)command.ExecuteScalar();
+            var results = Convert.ToInt32(command.ExecuteScalar());
 
-            if (results.HasValue && results.Value == 1)
+            // if the database exists, we're done here...
+            if (results == 1)
                 return true;
             else
                 return false;

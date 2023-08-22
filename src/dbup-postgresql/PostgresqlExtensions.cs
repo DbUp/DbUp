@@ -170,17 +170,16 @@ public static class PostgresqlExtensions
                     databaseName
                 );
 
-
             // check to see if the database already exists..
             using (var command = new NpgsqlCommand(sqlCommandText, connection)
             {
                 CommandType = CommandType.Text
             })
             {
-                var results = (int?)command.ExecuteScalar();
+                var results = Convert.ToInt32(command.ExecuteScalar());
 
                 // if the database exists, we're done here...
-                if (results.HasValue && results.Value == 1)
+                if (results == 1)
                 {
                     return;
                 }
@@ -199,7 +198,6 @@ public static class PostgresqlExtensions
             })
             {
                 command.ExecuteNonQuery();
-
             }
 
             logger.WriteInformation(@"Created database {0}", databaseName);

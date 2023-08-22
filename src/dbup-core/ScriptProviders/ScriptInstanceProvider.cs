@@ -35,7 +35,7 @@ namespace DbUp.ScriptProviders
         /// </summary>
         /// <param name="scripts">The IScript instances to include</param>
         /// <param name="namer">A function that returns the name of the script</param>
-        /// <param name="sqlScriptOptions">The sql script options.</param>        
+        /// <param name="sqlScriptOptions">The sql script options.</param>
         public ScriptInstanceProvider(Func<IScript, string> namer, SqlScriptOptions sqlScriptOptions, params IScript[] scripts)
         {
             this.scripts = scripts;

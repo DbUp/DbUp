@@ -75,11 +75,10 @@ namespace DbUp.Tests.Support.MySql
                 "CREATE TABLE IF NOT EXISTS 'BAR';"
             });
         }
-        
+
         [Fact]
         public void DoesNotGetStuckInSkipWhitespace()
         {
-            
             var command = @"DELIMITER $$
 CREATE PROCEDURE TEST(IN statement TEXT)
 BEGIN

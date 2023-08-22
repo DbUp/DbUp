@@ -39,7 +39,6 @@ END$$").Build();
 
             result.Successful.ShouldBe(true);
             this.Assent(logger.Log, new Configuration().UsingSanitiser(Scrubbers.ScrubDates));
-
         }
     }
 }

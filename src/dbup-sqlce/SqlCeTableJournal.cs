@@ -7,7 +7,7 @@ using DbUp.Support;
 namespace DbUp.SqlCe
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a
     /// Sql Server Ce database using a table called dbo.SchemaVersions.
     /// </summary>
     public class SqlCeTableJournal : TableJournal
@@ -53,7 +53,6 @@ $@"create table {FqSchemaTableName} (
                 return $"SELECT count(*) FROM information_schema.tables WHERE table_name='{UnquotedSchemaTableName}'";
 
             return $"SELECT count(*) FROM information_schema.tables WHERE table_schema = '{SchemaTableSchema}'AND table_name = '{UnquotedSchemaTableName}')";
-
         }
     }
 }

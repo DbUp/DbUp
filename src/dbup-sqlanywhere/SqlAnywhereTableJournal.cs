@@ -4,11 +4,10 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 
-
 namespace DbUp.SqlAnywhere
 {
     /// <summary>
-    /// An implementation of the <see cref="Engine.IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="Engine.IJournal"/> interface which tracks version numbers for a
     /// Sql Anywhere database using a table called SchemaVersions.
     /// </summary>
     public class SqlAnywhereTableJournal : TableJournal
