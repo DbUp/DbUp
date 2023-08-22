@@ -24,3 +24,19 @@ To learn more about DbUp check out the [documentation](https://dbup.readthedocs.
 For successfull unit testing install
 
 - SQL Server Compact 4.0 SP1 https://www.microsoft.com/en-us/download/details.aspx?id=30709
+
+# Known Issues / Quirks
+
+## dbup-firebird 
+
+### Semi-colon Delimiter in multi statement scripts
+
+The delimiter in a multi statement script should be on a new-line. I.e:
+
+```sql
+ALTER TABLE "MyTable" ADD "foo" int default null
+;
+
+ALTER TABLE "MyTable" ADD "bar" int default null
+;
+```
