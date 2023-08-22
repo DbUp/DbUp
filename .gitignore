@@ -1,3 +1,5 @@
-src/.vs
+artifacts/
 bin/
 obj
+src/.vs
+tools/

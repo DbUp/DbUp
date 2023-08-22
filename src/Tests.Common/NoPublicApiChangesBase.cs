@@ -37,10 +37,17 @@ public abstract class NoPublicApiChangesBase
 #endif
         var approvalPostfix = differByFramework ? $".{framework}" : "";
 
+        var basepath = Environment.GetEnvironmentVariable("GITHUB_WORKSPACE");
+
         var config = new Configuration()
             .UsingExtension("cs")
-            .UsingNamer(m => Path.Combine(Path.GetDirectoryName(m.FilePath), "ApprovalFiles",
-                assembly.GetName().Name + approvalPostfix));
+            .UsingNamer(m =>
+            {
+                var directoryName = Path.GetDirectoryName(callerFilePath);
+                var assemblyName = assembly.GetName().Name;
+                var path = Path.Combine(directoryName, "ApprovalFiles", assemblyName + approvalPostfix);
+                return path;
+            });
 
         // Automatically approve the change, make sure to check the result before committing
         // config = config.UsingReporter((received, approved) => File.Copy(received, approved, true));
