@@ -40,7 +40,7 @@ namespace DbUp.Tests.Support.SqlServer
         }
 
         [Fact]
-        public void uses_variable_subtitute_preprocessor_when_running_scripts()
+        public void uses_variable_substitute_preprocessor_when_running_scripts()
         {
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();
@@ -72,7 +72,7 @@ namespace DbUp.Tests.Support.SqlServer
         }
 
         [Fact]
-        public void uses_variable_subtitute_preprocessor_when_running_scripts_with_one_line_comment()
+        public void uses_variable_substitute_preprocessor_when_running_scripts_with_one_line_comment()
         {
             var oneLineComment = @"/* from excel $A$6 */
                                   create $foo$.Table";
@@ -90,7 +90,7 @@ namespace DbUp.Tests.Support.SqlServer
         }
 
         [Fact]
-        public void uses_variable_subtitute_preprocessor_when_running_scripts_with_multi_line_comment()
+        public void uses_variable_substitute_preprocessor_when_running_scripts_with_multi_line_comment()
         {
             var multiLineComment = @"/* 
                                         some comment
@@ -115,7 +115,7 @@ namespace DbUp.Tests.Support.SqlServer
         }
 
         [Fact]
-        public void uses_variable_subtitute_preprocessor_when_running_scripts_with_nested_single_line_comment()
+        public void uses_variable_substitute_preprocessor_when_running_scripts_with_nested_single_line_comment()
         {
             var multiLineComment = @"/* 
                                         some comment
@@ -140,7 +140,7 @@ namespace DbUp.Tests.Support.SqlServer
         }
 
         [Fact]
-        public void uses_variable_subtitute_preprocessor_when_running_scripts_with_nested_comment()
+        public void uses_variable_substitute_preprocessor_when_running_scripts_with_nested_comment()
         {
             var multiLineComment = @"/* 
                                         some comment
@@ -165,7 +165,7 @@ namespace DbUp.Tests.Support.SqlServer
         }
 
         [Fact]
-        public void does_not_use_variable_subtitute_preprocessor_when_setting_false()
+        public void does_not_use_variable_substitute_preprocessor_when_setting_false()
         {
             var dbConnection = Substitute.For<IDbConnection>();
             var command = Substitute.For<IDbCommand>();

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Text;
@@ -24,7 +24,7 @@ namespace DbUp.Engine.Preprocessors
 
         /// <summary>
         /// Delimiter character for variables.
-        /// Defaults to `$` but can be overriden in derived classes.
+        /// Defaults to `$` but can be overridden in derived classes.
         /// </summary>
         protected virtual char VariableDelimiter => '$';
 
