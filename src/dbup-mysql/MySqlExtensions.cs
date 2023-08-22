@@ -87,7 +87,6 @@ public static class MySqlExtensions
         return builder;
     }
 
-
     /// <summary>
     /// Ensures that the database specified in the connection string exists.
     /// </summary>
@@ -181,7 +180,6 @@ public static class MySqlExtensions
                         databaseName,
                         collationString
                     );
-
 
             // Create the database...
             using (var command = new MySqlCommand(sqlCommandText, connection)

@@ -8,7 +8,7 @@ using DbUp.Support;
 namespace DbUp.Firebird
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a
     /// Firebird database using a table called SchemaVersions.
     /// </summary>
     public class FirebirdTableJournal : TableJournal

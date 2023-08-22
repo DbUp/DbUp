@@ -282,7 +282,6 @@ public static class SqlServerExtensions
                     break;
             }
 
-
             // Create the database...
             using (var command = new SqlCommand(sqlCommandText, connection)
             {

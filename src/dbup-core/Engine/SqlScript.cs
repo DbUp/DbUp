@@ -5,7 +5,7 @@ using System.Text;
 namespace DbUp.Engine
 {
     /// <summary>
-    /// Represents a script that comes from some source, e.g. an embedded resource in an assembly. 
+    /// Represents a script that comes from some source, e.g. an embedded resource in an assembly.
     /// </summary>
     [System.Diagnostics.DebuggerDisplay("{Name}")]
     public class SqlScript
@@ -24,7 +24,7 @@ namespace DbUp.Engine
         /// </summary>
         /// <param name="name">The name.</param>
         /// <param name="contents">The contents.</param>
-        /// <param name="sqlScriptOptions">The script options.</param>        
+        /// <param name="sqlScriptOptions">The script options.</param>
         public SqlScript(string name, string contents, SqlScriptOptions sqlScriptOptions)
         {
             Name = name ?? throw new ArgumentNullException(nameof(name));
@@ -83,8 +83,8 @@ namespace DbUp.Engine
         /// </summary>
         /// <param name="basePath">Root path that was searched</param>
         /// <param name="path">Path to the file</param>
-        /// <param name="encoding"></param>        
-        /// <param name="sqlScriptOptions">The script options</param>        
+        /// <param name="encoding"></param>
+        /// <param name="sqlScriptOptions">The script options</param>
         /// <returns></returns>
         public static SqlScript FromFile(string basePath, string path, Encoding encoding, SqlScriptOptions sqlScriptOptions)
         {
@@ -134,8 +134,8 @@ namespace DbUp.Engine
         /// </summary>
         /// <param name="scriptName"></param>
         /// <param name="stream"></param>
-        /// <param name="encoding"></param>  
-        /// <param name="sqlScriptOptions">The script options</param>        
+        /// <param name="encoding"></param>
+        /// <param name="sqlScriptOptions">The script options</param>
         /// <returns></returns>
         public static SqlScript FromStream(string scriptName, Stream stream, Encoding encoding, SqlScriptOptions sqlScriptOptions)
         {

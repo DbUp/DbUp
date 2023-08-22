@@ -52,6 +52,5 @@ namespace DbUp.MySql
                 throw;
             }
         }
-
     }
 }

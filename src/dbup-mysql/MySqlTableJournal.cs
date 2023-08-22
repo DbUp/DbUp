@@ -7,7 +7,7 @@ using DbUp.Support;
 namespace DbUp.MySql
 {
     /// <summary>
-    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="IJournal"/> interface which tracks version numbers for a
     /// MySql database using a table called SchemaVersions.
     /// </summary>
     public class MySqlTableJournal : TableJournal

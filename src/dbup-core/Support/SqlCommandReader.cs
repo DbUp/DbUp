@@ -45,7 +45,6 @@ namespace DbUp.Support
                         default:
                             throw new ArgumentOutOfRangeException(nameof(type), type, null);
                     }
-
                 };
                 CommandEnded += () =>
                 {

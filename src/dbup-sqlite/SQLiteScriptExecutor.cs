@@ -58,6 +58,5 @@ namespace DbUp.SQLite
                 throw;
             }
         }
-
     }
 }

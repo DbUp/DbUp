@@ -34,7 +34,7 @@
         /// <param name="assemblies">The assemblies to search.</param>
         /// <param name="filter">The filter.</param>
         /// <param name="encoding">The encoding.</param>
-        /// <param name="sqlScriptOptions">The sql script options.</param>        
+        /// <param name="sqlScriptOptions">The sql script options.</param>
         public EmbeddedScriptsProvider(Assembly[] assemblies, Func<string, bool> filter, Encoding encoding, SqlScriptOptions sqlScriptOptions)
         {
             this.assemblies = assemblies ?? throw new ArgumentNullException(nameof(assemblies));
