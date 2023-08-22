@@ -19,22 +19,25 @@ namespace DbUp.ScriptProviders
         readonly FileSystemScriptOptions options;
         readonly SqlScriptOptions sqlScriptOptions;
 
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
+        ///  <summary>
+        ///  Alternate <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts via a directory
+        /// </summary>
+        ///  <param name="directoryPath">Path to SQL upgrade scripts</param>
         public FileSystemScriptProvider(string directoryPath) : this(directoryPath, new FileSystemScriptOptions(), new SqlScriptOptions())
         {
         }
 
-        ///<summary>
-        ///</summary>
-        ///<param name="directoryPath">Path to SQL upgrade scripts</param>
-        ///<param name="options">Different options for the file system script provider</param>
+        ///  <summary>
+        ///  Alternate <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts via a directory
+        /// </summary>
+        ///  <param name="directoryPath">Path to SQL upgrade scripts</param>
+        /// <param name="options">Different options for the file system script provider</param>
         public FileSystemScriptProvider(string directoryPath, FileSystemScriptOptions options) : this(directoryPath, options, new SqlScriptOptions())
         {
         }
 
         /// <summary>
+        /// Alternate <see cref="IScriptProvider"/> implementation which retrieves upgrade scripts via a directory
         /// </summary>
         /// <param name="directoryPath">Path to SQL upgrade scripts</param>
         /// <param name="options">Different options for the file system script provider</param>

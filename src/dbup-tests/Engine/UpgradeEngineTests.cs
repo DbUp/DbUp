@@ -12,6 +12,7 @@ using Shouldly;
 
 namespace DbUp.Tests.Engine
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>")]
     public class UpgradeEngineTests
     {
         public class when_upgrading_a_database_with_variable_substitution : SpecificationFor<UpgradeEngine>

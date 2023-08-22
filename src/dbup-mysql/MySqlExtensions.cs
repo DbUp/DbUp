@@ -24,7 +24,7 @@ public static class MySqlExtensions
     /// </returns>
     public static UpgradeEngineBuilder MySqlDatabase(this SupportedDatabases supported, string connectionString)
     {
-        foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => pair[0].ToLower() == "database"))
+        foreach (var pair in connectionString.Split(';').Select(s => s.Split('=')).Where(pair => pair.Length == 2).Where(pair => string.Equals(pair[0], "database", StringComparison.CurrentCultureIgnoreCase)))
         {
             return MySqlDatabase(new MySqlConnectionManager(connectionString), pair[1]);
         }
