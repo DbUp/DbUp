@@ -70,7 +70,6 @@ namespace DbUp.SQLite.Helpers
         public TemporarySQLiteDatabase(string name) { }
         public DbUp.SQLite.Helpers.SharedConnection SharedConnection { get; }
         public DbUp.Helpers.AdHocSqlRunner SqlRunner { get; }
-        public void Create() { }
         public void Dispose() { }
     }
 }

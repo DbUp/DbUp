@@ -1,5 +1,4 @@
-﻿#if !NETCORE
-using System.Data;
+﻿using System.Data;
 using System.Data.SQLite;
 using DbUp.Engine;
 using DbUp.Engine.Output;
@@ -22,7 +21,7 @@ namespace DbUp.Tests.Support.SQLite
             var command = Substitute.For<IDbCommand>();
             dbConnection.CreateCommand().Returns(command);
             var connectionManager = Substitute.For<IConnectionManager>();
-            command.ExecuteScalar().Returns(x => { throw new SQLiteException("table not found"); });
+            command.ExecuteScalar().Returns(x => throw new SQLiteException("table not found"));
             var consoleUpgradeLog = new ConsoleUpgradeLog();
             var journal = new SQLiteTableJournal(() => connectionManager, () => consoleUpgradeLog, "SchemaVersions");
 
@@ -60,4 +59,3 @@ namespace DbUp.Tests.Support.SQLite
         }
     }
 }
-#endif

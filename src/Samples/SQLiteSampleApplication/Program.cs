@@ -11,10 +11,8 @@ namespace SQLiteSampleApplication
     {
         static void Main()
         {
-            using (var database = new TemporarySQLiteDatabase("test"))
+            using (var database = new TemporarySQLiteDatabase("test.db"))
             {
-                database.Create();
-
                 var upgrader =
                     DeployChanges.To
                     .SQLiteDatabase(database.SharedConnection)

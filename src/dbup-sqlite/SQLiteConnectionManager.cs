@@ -1,15 +1,9 @@
 ﻿using System.Collections.Generic;
+using System.Data.SQLite;
 using System.Linq;
 using System.Text.RegularExpressions;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite.Helpers;
-#if MONO
-using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
-#elif NETCORE
-using SQLiteConnection = Microsoft.Data.Sqlite.SqliteConnection;
-#else
-using System.Data.SQLite;
-#endif
 
 namespace DbUp.SQLite
 {

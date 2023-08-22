@@ -1,17 +1,7 @@
 ﻿using System;
+using System.Data.SQLite;
 using System.IO;
 using DbUp.Helpers;
-
-#if MONO
-using SQLiteConnection = Mono.Data.Sqlite.SqliteConnection;
-using SQLiteConnectionStringBuilder = Mono.Data.Sqlite.SqliteConnectionStringBuilder;
-using SQLiteJournalModeEnum = Mono.Data.Sqlite.SQLiteJournalModeEnum;
-#elif NETCORE
-using SQLiteConnection = Microsoft.Data.Sqlite.SqliteConnection;
-using SQLiteConnectionStringBuilder = Microsoft.Data.Sqlite.SqliteConnectionStringBuilder;
-#else
-using System.Data.SQLite;
-#endif
 
 namespace DbUp.SQLite.Helpers
 {
@@ -34,16 +24,6 @@ namespace DbUp.SQLite.Helpers
             var connectionStringBuilder = new SQLiteConnectionStringBuilder
             {
                 DataSource = name,
-#if !NETCORE
-                Version = 3,
-                DefaultTimeout = 5,
-#if MONO
-                JournalMode = SQLiteJournalModeEnum.Off,
-#else
-                JournalMode = SQLiteJournalModeEnum.Memory,
-#endif
-                UseUTF16Encoding = true
-#endif
             };
 
             sqLiteConnection = new SQLiteConnection(connectionStringBuilder.ConnectionString);
@@ -58,20 +38,6 @@ namespace DbUp.SQLite.Helpers
         public AdHocSqlRunner SqlRunner { get; }
 
         public SharedConnection SharedConnection { get; }
-
-        /// <summary>
-        /// Creates the database.
-        /// </summary>
-        public void Create()
-        {
-#if !NETCORE
-            var filePath = new FileInfo(dataSourcePath);
-            if (!filePath.Exists)
-            {
-                SQLiteConnection.CreateFile(dataSourcePath);
-            }
-#endif
-        }
 
         /// <summary>
         /// Deletes the database.

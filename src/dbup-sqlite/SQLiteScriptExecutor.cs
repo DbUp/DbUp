@@ -1,17 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SQLite;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
-
-#if MONO
-using SQLiteException = Mono.Data.Sqlite.SqliteException;
-#elif NETCORE
-using SQLiteException = Microsoft.Data.Sqlite.SqliteException;
-#else
-using System.Data.SQLite;
-#endif
 
 namespace DbUp.SQLite
 {
