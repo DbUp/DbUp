@@ -37,8 +37,6 @@ public abstract class NoPublicApiChangesBase
 #endif
         var approvalPostfix = differByFramework ? $".{framework}" : "";
 
-        var basepath = Environment.GetEnvironmentVariable("GITHUB_WORKSPACE");
-
         var config = new Configuration()
             .UsingExtension("cs")
             .UsingNamer(m =>
