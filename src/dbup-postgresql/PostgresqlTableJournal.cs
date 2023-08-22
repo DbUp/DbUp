@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Data;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
@@ -22,6 +23,30 @@ namespace DbUp.Postgresql
         public PostgresqlTableJournal(Func<IConnectionManager> connectionManager, Func<IUpgradeLog> logger, string schema, string tableName)
             : base(connectionManager, logger, new PostgresqlObjectParser(), schema, tableName)
         {
+        }
+
+        protected override IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        {
+            // EnableSqlRewriting is enabled by default, and needs to be explicitly disabled
+            bool enableSqlRewriting = !AppContext.TryGetSwitch("Npgsql.EnableSqlRewriting", out bool enabled) || enabled;
+
+            if (enableSqlRewriting)
+                return base.GetInsertScriptCommand(dbCommandFactory, script);
+
+            // Use positional parameters instead of named parameters
+            var command = dbCommandFactory();
+
+            var scriptNameParam = command.CreateParameter();
+            scriptNameParam.Value = script.Name;
+            command.Parameters.Add(scriptNameParam);
+
+            var appliedParam = command.CreateParameter();
+            appliedParam.Value = DateTime.Now;
+            command.Parameters.Add(appliedParam);
+
+            command.CommandText = GetInsertJournalEntrySql("$1", "$2");
+            command.CommandType = CommandType.Text;
+            return command;
         }
 
         protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
