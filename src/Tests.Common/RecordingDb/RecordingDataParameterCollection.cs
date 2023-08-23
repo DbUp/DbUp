@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Data;
@@ -32,7 +32,7 @@ namespace DbUp.Tests.Common.RecordingDb
         public bool IsSynchronized { get; private set; }
         public int Add(object value)
         {
-            logger.WriteInformation(string.Format("DB Operation: Add parameter to command: {0}", value));
+            logger.WriteInformation($"DB Operation: Add parameter to command: {value}");
             backingList.Add(value);
             return backingList.Count - 1;
         }
