@@ -40,7 +40,6 @@ jobs:
         run: ./build.ps1
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
-          AssentNonInteractive: true
 
       - name: "Create Draft Release"
         if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
