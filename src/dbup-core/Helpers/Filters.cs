@@ -6,7 +6,7 @@ namespace DbUp
     /// <summary>
     /// A factory class for filter methods.
     /// </summary>
-    // NOTE: DELIBRATELY LEFT IN THE ROOT NAMESPACE
+    // NOTE: DELIBERATELY LEFT IN THE ROOT NAMESPACE
     // Since this class is a helper class that is designed to be available when working with the DbUp Fluent API, 
     // we leave it in the root so that people don't have to manually add using statements to discover it.
     // ReSharper disable CheckNamespace

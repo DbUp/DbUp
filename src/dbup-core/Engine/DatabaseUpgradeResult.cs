@@ -25,7 +25,7 @@ namespace DbUp.Engine
         /// <param name="scripts">The scripts that were executed.</param>
         /// <param name="successful">if set to <c>true</c> [successful].</param>
         /// <param name="error">The error.</param>
-        /// <param name="errorScript">The script that was executing when the error occured</param>
+        /// <param name="errorScript">The script that was executing when the error occurred</param>
         public DatabaseUpgradeResult(IEnumerable<SqlScript> scripts, bool successful, Exception error, SqlScript errorScript)
         {
             this.scripts = new List<SqlScript>();
@@ -51,7 +51,7 @@ namespace DbUp.Engine
         public Exception Error => error;
 
         /// <summary>
-        /// Gets the script that was executing when an error occured.
+        /// Gets the script that was executing when an error occurred.
         /// </summary>
         public SqlScript ErrorScript => errorScript;
     }
