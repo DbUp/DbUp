@@ -3,7 +3,7 @@
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds MySql support.</Description>
     <Title>DbUp MySql Support</Title>
-    <TargetFrameworks>netstandard1.3;netstandard2.0;net462</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0;net462</TargetFrameworks>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
@@ -25,10 +25,6 @@
     <PackageReference Include="MySql.Data" Version="6.9.5" />
     <!-- last version to support < .NET 4.5.2. -->
   </ItemGroup>
-
-   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="MySql.Data" Version="6.10.9" />
-   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="MySql.Data" Version="8.0.33" />

@@ -1,7 +1,6 @@
-﻿using DbUp.Builder;
+﻿using System;
+using DbUp.Builder;
 using DbUp.Engine.Output;
-using Shouldly;
-using Xunit;
 
 namespace DbUp.Tests.Builder
 {
@@ -10,17 +9,22 @@ namespace DbUp.Tests.Builder
         [Fact]
         public void WhenNoLoggerIsAddedThenTheDefaultLoggerIsReturned()
         {
-            new UpgradeConfiguration()
-                .Log.ShouldNotBeNull();
+            var config = new UpgradeConfiguration();
+
+            config.Log.ShouldNotBeNull();
+            config.Log.ShouldBeOfType<AggregateLog>();
+            config.Log.HasLoggers.ShouldBeFalse();
+            config.Log.LoggerCount.ShouldBe(0);
         }
 
         [Fact]
         public void WhenASingleLoggerIsAddedThenItselfShouldBeReturned()
         {
             var config = new UpgradeConfiguration();
-            var addedLog = new NoOpUpgradeLog();
-            config.AddLog(addedLog);
-            config.Log.ShouldBe(addedLog);
+            config.AddLog(MicrosoftUpgradeLog.DevNull);
+
+            config.Log.HasLoggers.ShouldBeTrue();
+            config.Log.LoggerCount.ShouldBe(1);
         }
 
         [Fact]
@@ -31,46 +35,36 @@ namespace DbUp.Tests.Builder
             var log3 = new TestLog();
 
             var config = new UpgradeConfiguration();
+
             config.AddLog(log1);
             config.AddLog(log2);
             config.AddLog(log3);
-            config.Log.WriteInformation("Test");
 
-            config.Log.ShouldBeOfType<MultipleUpgradeLog>();
+            config.Log.HasLoggers.ShouldBeTrue();
+            config.Log.LoggerCount.ShouldBe(3);
+
+            config.Log.LogInformation("Test");
+
             log1.WasWritten.ShouldBe(true);
             log2.WasWritten.ShouldBe(true);
             log3.WasWritten.ShouldBe(true);
         }
 
-        [Fact]
-        public void WhenTheLoggerIsClearedThenTheDefaultLoggerReturns()
-        {
-            var config = new UpgradeConfiguration();
-            var defaultLog = config.Log;
-            config.AddLog(new NoOpUpgradeLog());
-            config.Log.ShouldNotBe(defaultLog);
-
-            config.Log = null;
-            config.Log.ShouldBe(defaultLog);
-        }
-
         class TestLog : IUpgradeLog
         {
             public bool WasWritten { get; private set; }
-            public void WriteInformation(string format, params object[] args)
-            {
-                WasWritten = true;
-            }
 
-            public void WriteError(string format, params object[] args)
-            {
-                WasWritten = true;
-            }
+            public void LogInformation(string format, params object[] args) => WasWritten = true;
 
-            public void WriteWarning(string format, params object[] args)
-            {
-                WasWritten = true;
-            }
+            public void LogError(string format, params object[] args) => WasWritten = true;
+
+            public void LogWarning(string format, params object[] args) => WasWritten = true;
+
+            public void LogTrace(string format, params object[] args) => WasWritten = true;
+
+            public void LogDebug(string format, params object[] args) => WasWritten = true;
+
+            public void LogError(Exception ex, string format, params object[] args) => WasWritten = true;
         }
     }
 }

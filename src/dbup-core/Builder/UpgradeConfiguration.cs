@@ -13,19 +13,11 @@ namespace DbUp.Builder
     /// </summary>
     public class UpgradeConfiguration
     {
-        readonly IUpgradeLog defaultLog;
-        IUpgradeLog log;
-
         /// <summary>
         /// Initializes a new instance of the <see cref="UpgradeConfiguration"/> class.
         /// </summary>
         public UpgradeConfiguration()
         {
-#if SUPPORTS_LIBLOG
-            defaultLog = new AutodetectUpgradeLog();
-#else
-            defaultLog = new TraceUpgradeLog();
-#endif
             VariablesEnabled = true;
         }
 
@@ -35,25 +27,26 @@ namespace DbUp.Builder
         public IConnectionManager ConnectionManager { get; set; }
 
         /// <summary>
-        /// Gets or sets a log which captures details about the upgrade.
+        /// Gets or sets an aggregate logger which captures details about the upgrade.
         /// </summary>
-        public IUpgradeLog Log
+        public IAggregateLog Log
         {
-            get => log ?? defaultLog;
-            set => log = value;
+            get => _log;
+            internal set => _log = value ?? new AggregateLog();
         }
+
+        private IAggregateLog _log = new AggregateLog();
 
         /// <summary>
         /// Adds additional log which captures details about the upgrade.
         /// </summary>
         /// <param name="additionalLog"></param>
-        public void AddLog(IUpgradeLog additionalLog)
+        public void AddLog(IUpgradeLog logger)
         {
-            additionalLog = additionalLog ?? throw new ArgumentNullException(nameof(additionalLog));
-
-            log = log == null
-                ? additionalLog
-                : new MultipleUpgradeLog(log, additionalLog);
+            if (logger is not null)
+            {
+                this.Log.AddLogger(logger);
+            }
         }
 
         /// <summary>
@@ -104,10 +97,10 @@ namespace DbUp.Builder
         /// </summary>
         public void Validate()
         {
-            if (Log == null) throw new ArgumentException("A log is required to build a database upgrader. Please use one of the logging extension methods");
-            if (ScriptExecutor == null) throw new ArgumentException("A ScriptExecutor is required");
-            if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build()");
-            if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build()");
+            if (Log == null) throw new ArgumentException("A log is required to build a database upgrader. Please use one of the logging extension methods.");
+            if (ScriptExecutor == null) throw new ArgumentException("A ScriptExecutor is required.");
+            if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build().");
+            if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build().");
             if (ConnectionManager == null) throw new ArgumentException("The ConnectionManager is null. What do you expect to upgrade?");
         }
 

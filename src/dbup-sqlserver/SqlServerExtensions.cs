@@ -296,7 +296,7 @@ public static class SqlServerExtensions
                 command.ExecuteNonQuery();
             }
 
-            logger.WriteInformation(@"Created database {0}", databaseName);
+            logger.LogInformation(@"Created database {0}", databaseName);
         }
     }
 
@@ -312,7 +312,7 @@ public static class SqlServerExtensions
         }
         catch
         {
-            logger.WriteInformation("Could not connect to the database directly");
+            logger.LogInformation("Could not connect to the database directly");
             return false;
         }
     }
@@ -364,7 +364,7 @@ public static class SqlServerExtensions
                 command.ExecuteNonQuery();
             }
 
-            logger.WriteInformation("Dropped database {0}", databaseName);
+            logger.LogInformation("Dropped database {0}", databaseName);
         }
     }
 
@@ -388,7 +388,7 @@ public static class SqlServerExtensions
             Password = "******"
         };
 
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
+        logger.LogInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
         masterConnectionString = masterConnectionStringBuilder.ConnectionString;
     }
 

@@ -95,7 +95,7 @@ namespace DbUp.Oracle
         {
             if (!journalExists && !DoesTableExist(dbCommandFactory))
             {
-                Log().WriteInformation(string.Format("Creating the {0} table", FqSchemaTableName));
+                Log().LogInformation(string.Format("Creating the {0} table", FqSchemaTableName));
 
                 // We will never change the schema of the initial table create.
                 using (var command = GetCreateTableSequence(dbCommandFactory))
@@ -115,7 +115,7 @@ namespace DbUp.Oracle
                     command.ExecuteNonQuery();
                 }
 
-                Log().WriteInformation(string.Format("The {0} table has been created", FqSchemaTableName));
+                Log().LogInformation(string.Format("The {0} table has been created", FqSchemaTableName));
 
                 OnTableCreated(dbCommandFactory);
             }

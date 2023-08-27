@@ -55,9 +55,9 @@ END;";
         {
             var unquotedTableName = UnquoteSqlObjectName(FqSchemaTableName);
             ExecuteCommand(dbCommandFactory, CreateGeneratorSql(unquotedTableName));
-            Log().WriteInformation($"The {GeneratorName(unquotedTableName)} generator has been created");
+            Log().LogInformation($"The {GeneratorName(unquotedTableName)} generator has been created");
             ExecuteCommand(dbCommandFactory, CreateTriggerSql(unquotedTableName));
-            Log().WriteInformation($"The {TriggerName(unquotedTableName)} trigger has been created");
+            Log().LogInformation($"The {TriggerName(unquotedTableName)} trigger has been created");
         }
 
         protected override string DoesTableExistSql()

@@ -41,9 +41,9 @@ namespace DbUp.SqlCe
             }
             catch (SqlCeException exception)
             {
-                Log().WriteInformation("SqlCe exception has occured in script: '{0}'", script.Name);
-                Log().WriteError("Script block number: {0}; Native Error: {1}; Message: {2}", index, exception.NativeError, exception.Message);
-                Log().WriteError(exception.ToString());
+                Log().LogInformation("SqlCe exception has occured in script: '{0}'", script.Name);
+                Log().LogError("Script block number: {0}; Native Error: {1}; Message: {2}", index, exception.NativeError, exception.Message);
+                Log().LogError(exception.ToString());
                 throw;
             }
         }

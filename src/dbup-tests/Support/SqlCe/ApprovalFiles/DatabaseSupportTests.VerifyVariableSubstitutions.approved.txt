@@ -1,11 +1,11 @@
 DB Operation: Open connection
 Info:         Beginning database upgrade
-Info:         Checking whether journal table exists..
+Info:         Checking whether journal table exists.
 DB Operation: Execute scalar command: SELECT count(*) FROM information_schema.tables WHERE table_name='SchemaVersions'
 DB Operation: Dispose command
 Info:         Journal table does not exist
 Info:         Executing Database Server script 'Script0001.sql'
-Info:         Checking whether journal table exists..
+Info:         Checking whether journal table exists.
 DB Operation: Execute scalar command: SELECT count(*) FROM information_schema.tables WHERE table_name='SchemaVersions'
 DB Operation: Dispose command
 Info:         Creating the [SchemaVersions] table

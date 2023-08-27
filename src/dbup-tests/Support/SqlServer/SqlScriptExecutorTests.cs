@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SqlServer;
@@ -10,8 +9,6 @@ using DbUp.Tests.Common;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
-using Shouldly;
-using Xunit;
 
 namespace DbUp.Tests.Support.SqlServer
 {
@@ -252,14 +249,14 @@ namespace DbUp.Tests.Support.SqlServer
             });
             dbConnection.CreateCommand().Returns(command);
             var logger = Substitute.For<IUpgradeLog>();
-            logger.WhenForAnyArgs(x => x.WriteError(null, null)).Do(x => Console.WriteLine(x.Arg<string>(), x.Arg<object[]>()));
+            logger.WhenForAnyArgs(x => x.LogError(default(string), null)).Do(x => Console.WriteLine(x.Arg<string>(), x.Arg<object[]>()));
 
             var executor = new SqlScriptExecutor(() => new TestConnectionManager(dbConnection, true), () => logger, null, () => true, null, () => Substitute.For<IJournal>());
 
             Action exec = () => executor.Execute(new SqlScript("Test", "create $schema$.Table"));
             exec.ShouldThrow<DbException>();
             command.Received().ExecuteNonQuery();
-            logger.ReceivedWithAnyArgs().WriteError("", null);
+            logger.ReceivedWithAnyArgs().LogError("", null);
         }
     }
 }

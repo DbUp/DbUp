@@ -1,4 +1,5 @@
-﻿using System.Diagnostics;
+﻿using System;
+using System.Diagnostics;
 
 namespace DbUp.Engine.Output
 {
@@ -7,34 +8,37 @@ namespace DbUp.Engine.Output
     /// </summary>
     public class TraceUpgradeLog : IUpgradeLog
     {
-        /// <summary>
-        /// Writes an informational message to the log.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
-        public void WriteInformation(string format, params object[] args)
-        {
-            Trace.WriteLine("INFO:  " + string.Format(format, args));
-        }
+        /// <inheritdoc/>
+        public void LogTrace(string format, params object[] args)
+            => Log(Constants.TraceLevel, format, args);
 
-        /// <summary>
-        /// Writes an error message to the log.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
-        public void WriteError(string format, params object[] args)
-        {
-            Trace.WriteLine("ERROR: " + string.Format(format, args));
-        }
+        /// <inheritdoc/>
+        public void LogDebug(string format, params object[] args)
+            => Log(Constants.DebugLevel, format, args);
 
-        /// <summary>
-        /// Writes a warning message to the log.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
-        public void WriteWarning(string format, params object[] args)
+        /// <inheritdoc/>
+        public void LogInformation(string format, params object[] args)
+            => Log(Constants.InfoLevel, format, args);
+
+        /// <inheritdoc/>
+        public void LogWarning(string format, params object[] args)
+            => Log(Constants.WarnLevel, format, args);
+
+        /// <inheritdoc/>
+        public void LogError(string format, params object[] args)
+            => Log(Constants.ErrorLevel, format, args);
+
+        /// <inheritdoc/>
+        public void LogError(Exception ex, string format, params object[] args)
+            => Log(Constants.ErrorLevel, format, args, ex);
+
+        static void Log(string level, string format, object[] args, Exception ex = null)
         {
-            Trace.WriteLine("WARN:  " + string.Format(format, args));
+            Trace.WriteLine($"{DateTimeOffset.Now.ToString(Constants.TimestampFormat)} [{level}] {string.Format(format, args)}");
+            if (ex != null)
+            {
+                Trace.WriteLine(ExceptionFormatter.Format(ex));
+            }
         }
     }
 }

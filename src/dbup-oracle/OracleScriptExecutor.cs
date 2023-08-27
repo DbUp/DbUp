@@ -47,10 +47,10 @@ namespace DbUp.Oracle
             }
             catch (OracleException exception)
             {
-                Log().WriteInformation("Oracle exception has occurred in script: '{0}'", script.Name);
+                Log().LogInformation("Oracle exception has occurred in script: '{0}'", script.Name);
                 // OracleException.Number is the actual oracle error code
-                Log().WriteError("Script block number: {0}; Oracle error code: {1}; Message: {2}", index, exception.Number, exception.Message);
-                Log().WriteError(exception.ToString());
+                Log().LogError("Script block number: {0}; Oracle error code: {1}; Message: {2}", index, exception.Number, exception.Message);
+                Log().LogError(exception.ToString());
                 throw;
             }
         }

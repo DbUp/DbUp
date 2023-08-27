@@ -153,7 +153,7 @@ public static class PostgresqlExtensions
             logMasterConnectionStringBuilder.Password = "******";
         }
 
-        logger.WriteInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
+        logger.LogInformation("Master ConnectionString => {0}", logMasterConnectionStringBuilder.ConnectionString);
 
         using (var connection = new NpgsqlConnection(masterConnectionStringBuilder.ConnectionString))
         {
@@ -200,7 +200,7 @@ public static class PostgresqlExtensions
                 command.ExecuteNonQuery();
             }
 
-            logger.WriteInformation(@"Created database {0}", databaseName);
+            logger.LogInformation(@"Created database {0}", databaseName);
         }
     }
 

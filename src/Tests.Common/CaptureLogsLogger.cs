@@ -14,7 +14,7 @@ namespace DbUp.Tests.Common
 
         public string Log => logBuilder.ToString();
 
-        public void WriteInformation(string format, params object[] args)
+        public void LogInformation(string format, params object[] args)
         {
             var formattedMsg = string.Format(format, args);
             var value = "Info:         " + formattedMsg;
@@ -23,7 +23,7 @@ namespace DbUp.Tests.Common
             InfoMessages.Add(formattedMsg);
         }
 
-        public void WriteWarning(string format, params object[] args)
+        public void LogWarning(string format, params object[] args)
         {
             var formattedValue = string.Format(format, args);
             var value = "Warn:         " + formattedValue;
@@ -32,7 +32,7 @@ namespace DbUp.Tests.Common
             WarnMessages.Add(formattedValue);
         }
 
-        public void WriteError(string format, params object[] args)
+        public void LogError(string format, params object[] args)
         {
             var formattedMessage = string.Format(format, args);
             var value = "Error:        " + formattedMessage;
@@ -46,6 +46,33 @@ namespace DbUp.Tests.Common
             var value = "DB Operation: " + operation;
             Console.WriteLine(value);
             logBuilder.AppendLine(value);
+        }
+
+        public void LogTrace(string format, params object[] args)
+        {
+            var formattedValue = string.Format(format, args);
+            var value = "Trace:         " + formattedValue;
+            Console.WriteLine(value);
+            logBuilder.AppendLine(value);
+            WarnMessages.Add(formattedValue);
+        }
+
+        public void LogDebug(string format, params object[] args)
+        {
+            var formattedValue = string.Format(format, args);
+            var value = "Debug:         " + formattedValue;
+            Console.WriteLine(value);
+            logBuilder.AppendLine(value);
+            WarnMessages.Add(formattedValue);
+        }
+
+        public void LogError(Exception ex, string format, params object[] args)
+        {
+            var formattedMessage = string.Format(format, args);
+            var value = "Error:        " + formattedMessage + " => " + ex.Message;
+            Console.WriteLine(value);
+            logBuilder.AppendLine(value);
+            ErrorMessages.Add(formattedMessage);
         }
     }
 }
