@@ -7,6 +7,9 @@ using Xunit;
 
 namespace DbUp.Tests.Support.SqlCe
 {
+    /// <summary>
+    /// This test requires the SQL Server Compact Edition 4.0 runtime to be installed.
+    /// </summary>
     public class SqlCeSupportTests
     {
         [Fact]

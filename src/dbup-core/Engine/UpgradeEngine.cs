@@ -65,7 +65,7 @@ namespace DbUp.Engine
             {
                 using (configuration.ConnectionManager.OperationStarting(configuration.Log, executed))
                 {
-                    configuration.Log.LogInformation("Beginning database upgrade.");
+                    configuration.Log.LogInformation("Beginning database upgrade");
 
                     var scriptsToExecute = GetScriptsToExecuteInsideOperation();
 
@@ -88,7 +88,7 @@ namespace DbUp.Engine
                         executed.Add(script);
                     }
 
-                    configuration.Log.LogInformation("Upgrade successful.");
+                    configuration.Log.LogInformation("Upgrade successful");
                     return new DatabaseUpgradeResult(executed, true, null, null);
                 }
             }

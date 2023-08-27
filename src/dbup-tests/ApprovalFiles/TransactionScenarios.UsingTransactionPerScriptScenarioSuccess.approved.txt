@@ -1,7 +1,7 @@
 ﻿DB Operation: Open connection
 Info:         Beginning database upgrade
 DB Operation: Begin transaction
-Info:         Checking whether journal table exists.
+Info:         Checking whether journal table exists
 DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions' and TABLE_SCHEMA = 'dbo'
 DB Operation: Dispose command
 Info:         Journal table does not exist
@@ -9,7 +9,7 @@ DB Operation: Commit transaction
 DB Operation: Dispose transaction
 Info:         Executing Database Server script 'Script0001.sql'
 DB Operation: Begin transaction
-Info:         Checking whether journal table exists.
+Info:         Checking whether journal table exists
 DB Operation: Execute scalar command: select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = 'SchemaVersions' and TABLE_SCHEMA = 'dbo'
 DB Operation: Dispose command
 Info:         Creating the [dbo].[SchemaVersions] table

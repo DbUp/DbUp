@@ -179,7 +179,7 @@ namespace DbUp.Support
                     command.ExecuteNonQuery();
                 }
 
-                Log().LogInformation(string.Format("The {0} table has been created.", FqSchemaTableName));
+                Log().LogInformation(string.Format("The {0} table has been created", FqSchemaTableName));
 
                 OnTableCreated(dbCommandFactory);
             }
@@ -189,7 +189,7 @@ namespace DbUp.Support
 
         protected virtual bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
         {
-            Log().LogInformation("Checking whether journal table exists.");
+            Log().LogInformation("Checking whether journal table exists");
             using (var command = dbCommandFactory())
             {
                 command.CommandText = DoesTableExistSql();
