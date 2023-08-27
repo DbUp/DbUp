@@ -8,14 +8,14 @@ namespace DbUp.Engine.Output
     public interface IUpgradeLog
     {
         /// <summary>
-        /// Writes an trace message to the log.
+        /// Writes a trace message to the log.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="args">The args.</param>
         void LogTrace(string format, params object[] args);
 
         /// <summary>
-        /// Writes an debug message to the log.
+        /// Writes a debug message to the log.
         /// </summary>
         /// <param name="format">The format.</param>
         /// <param name="args">The args.</param>
@@ -43,7 +43,7 @@ namespace DbUp.Engine.Output
         void LogError(string format, params object[] args);
 
         /// <summary>
-        /// Writes an error message to the log.
+        /// Writes an error message to the log and captures the <see cref="Exception"/> details.
         /// </summary>
         /// <param name="ex"></param>
         /// <param name="format">The format.</param>

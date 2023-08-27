@@ -7,7 +7,7 @@ namespace DbUp.Tests.Builder
     public class UpgradeConfigurationFixture
     {
         [Fact]
-        public void WhenNoLoggerIsAddedThenTheDefaultLoggerIsReturned()
+        public void Default_Logger_Has_No_Providers()
         {
             var config = new UpgradeConfiguration();
 
@@ -18,7 +18,7 @@ namespace DbUp.Tests.Builder
         }
 
         [Fact]
-        public void WhenASingleLoggerIsAddedThenItselfShouldBeReturned()
+        public void Adding_Logger_Increments_Providers()
         {
             var config = new UpgradeConfiguration();
             config.AddLog(MicrosoftUpgradeLog.DevNull);
@@ -28,7 +28,7 @@ namespace DbUp.Tests.Builder
         }
 
         [Fact]
-        public void WhenMultipleLoggersAreAddedThenAMultipleLoggerShouldBeReturnedAndLogsGoToAllDestinations()
+        public void Logger_Writes_To_All_Providers()
         {
             var log1 = new TestLog();
             var log2 = new TestLog();

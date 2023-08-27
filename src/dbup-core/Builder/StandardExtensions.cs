@@ -46,7 +46,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogTo(this UpgradeEngineBuilder builder, ILoggerFactory loggerFactory)
     {
-        builder.Configure(c => c.AddLog(new MicrosoftUpgradeLog(loggerFactory)));
+        builder.LogTo(new MicrosoftUpgradeLog(loggerFactory));
         return builder;
     }
 
@@ -60,7 +60,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogTo(this UpgradeEngineBuilder builder, ILogger logger)
     {
-        builder.Configure(c => c.AddLog(new MicrosoftUpgradeLog(logger)));
+        builder.LogTo(new MicrosoftUpgradeLog(logger));
         return builder;
     }
 
@@ -73,7 +73,8 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogToConsole(this UpgradeEngineBuilder builder)
     {
-        return LogTo(builder, new ConsoleUpgradeLog());
+        builder.LogTo(new ConsoleUpgradeLog());
+        return builder;
     }
 
     /// <summary>
@@ -85,7 +86,21 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogToNowhere(this UpgradeEngineBuilder builder)
     {
-        return LogTo(builder, new MicrosoftUpgradeLog(NullLogger.Instance));
+        builder.LogTo(new MicrosoftUpgradeLog(NullLogger.Instance));
+        return builder;
+    }
+
+    /// <summary>
+    /// Logs to System.Diagnostics.Trace.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToTrace(this UpgradeEngineBuilder builder)
+    {
+        builder.LogTo(new TraceUpgradeLog());
+        return builder;
     }
 
     /// <summary>
@@ -99,18 +114,6 @@ public static class StandardExtensions
     {
         builder.Configure(c => c.ConnectionManager.IsScriptOutputLogged = true);
         return builder;
-    }
-
-    /// <summary>
-    /// Logs to System.Diagnostics.Trace.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToTrace(this UpgradeEngineBuilder builder)
-    {
-        return LogTo(builder, new TraceUpgradeLog());
     }
 
     /// <summary>
