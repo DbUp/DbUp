@@ -10,7 +10,6 @@ using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 using DbUp.Support;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 
 /// <summary>
 /// Configuration extensions for the standard stuff.
@@ -74,19 +73,6 @@ public static class StandardExtensions
     public static UpgradeEngineBuilder LogToConsole(this UpgradeEngineBuilder builder)
     {
         builder.LogTo(new ConsoleUpgradeLog());
-        return builder;
-    }
-
-    /// <summary>
-    /// Discards all log messages.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToNowhere(this UpgradeEngineBuilder builder)
-    {
-        builder.LogTo(new MicrosoftUpgradeLog(NullLogger.Instance));
         return builder;
     }
 
