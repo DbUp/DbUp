@@ -1,5 +1,9 @@
 name: Test Code
 
+# This workflow is for testing the code.
+# Because of failed permissions all steps which are pushing code to github releases or nuget are removed.
+# For creating draft release launch workflow -Create Draft Release- manually.
+
 on:
   pull_request:
     branches:
@@ -20,8 +24,9 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Avoid pre-populating the NuGet package cache
 
+    # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
     permissions:
-      checks: write   #test-reporter https://github.com/dorny/test-reporter/issues/229
+      checks: write #test-reporter https://github.com/dorny/test-reporter/issues/229
 
     steps:
       - uses: actions/checkout@v3
@@ -43,15 +48,6 @@ jobs:
         run: ./build.ps1
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
-
-      - name: "Create Draft Release"
-        if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
-        shell: pwsh
-        working-directory: artifacts
-        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
-        run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item *.nupkg)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Test Report 🧪
         uses: dorny/test-reporter@v1
