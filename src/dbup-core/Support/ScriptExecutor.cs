@@ -12,7 +12,7 @@ using DbUp.Helpers;
 namespace DbUp.Support
 {
     /// <summary>
-    /// A standard implementation of the IScriptExecutor interface that executes against a SQL Server 
+    /// A standard implementation of the IScriptExecutor interface that executes against a SQL Server
     /// database.
     /// </summary>
     public abstract class ScriptExecutor : IScriptExecutor
@@ -84,7 +84,7 @@ namespace DbUp.Support
         protected abstract string GetVerifySchemaSql(string schema);
 
         /// <summary>
-        /// Some database systems (e.g. Firebird) require that scripts run in a seperate transaction than those
+        /// Some database systems (e.g. Firebird) require that scripts run in a separate transaction than those
         /// creating the JournalTable. The default is true but can be changed when inheriting ScriptExecutor
         /// </summary>
         protected virtual bool UseTheSameTransactionForJournalTableAndScripts => true;
@@ -170,14 +170,14 @@ namespace DbUp.Support
             }
             catch (DbException sqlException)
             {
-                Log().WriteInformation("DB exception has occured in script: '{0}'", script.Name);
+                Log().WriteInformation("DB exception has occurred in script: '{0}'", script.Name);
                 Log().WriteError("Script block number: {0}; Message: {1}", index, sqlException.Message);
                 Log().WriteError("{0}", sqlException.ToString());
                 throw;
             }
             catch (Exception ex)
             {
-                Log().WriteInformation("Exception has occured in script: '{0}'", script.Name);
+                Log().WriteInformation("Exception has occurred in script: '{0}'", script.Name);
                 Log().WriteError("{0}", ex.ToString());
                 throw;
             }

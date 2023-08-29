@@ -99,7 +99,7 @@ namespace DbUp.Support
             }
         }
 
-        protected IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        protected virtual IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {
             var command = dbCommandFactory();
 

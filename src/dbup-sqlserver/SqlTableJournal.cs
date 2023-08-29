@@ -6,7 +6,7 @@ using DbUp.Support;
 namespace DbUp.SqlServer
 {
     /// <summary>
-    /// An implementation of the <see cref="Engine.IJournal"/> interface which tracks version numbers for a 
+    /// An implementation of the <see cref="Engine.IJournal"/> interface which tracks version numbers for a
     /// SQL Server database using a table called dbo.SchemaVersions.
     /// </summary>
     public class SqlTableJournal : TableJournal

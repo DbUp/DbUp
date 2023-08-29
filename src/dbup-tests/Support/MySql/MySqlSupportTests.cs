@@ -1,15 +1,17 @@
-﻿using Assent;
+﻿using System.Threading.Tasks;
 using DbUp.Tests.Common;
 using DbUp.Tests.Common.RecordingDb;
 using Shouldly;
+using VerifyXunit;
 using Xunit;
 
 namespace DbUp.Tests.Support.MySql
 {
+    [UsesVerify]
     public class MySqlSupportTests
     {
         [Fact]
-        public void CanHandleDelimiter()
+        public Task CanHandleDelimiter()
         {
             var logger = new CaptureLogsLogger();
             var recordingDbConnection = new RecordingDbConnection(logger, "schemaversions");
@@ -38,8 +40,7 @@ END$$").Build();
             var result = upgrader.PerformUpgrade();
 
             result.Successful.ShouldBe(true);
-            this.Assent(logger.Log, new Configuration().UsingSanitiser(Scrubbers.ScrubDates));
-
+            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings());
         }
     }
 }

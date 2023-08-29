@@ -21,6 +21,8 @@
     <ProjectReference Include="..\dbup-mysql\dbup-mysql.csproj" />
     <ProjectReference Include="..\dbup-postgresql\dbup-postgresql.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.1" />
+    <PackageReference Include="Verify" Version="20.8.1" />
+    <PackageReference Include="Verify.Xunit" Version="20.8.1" />
     <PackageReference Include="xunit" Version="2.5.0" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.0">
       <PrivateAssets>all</PrivateAssets>

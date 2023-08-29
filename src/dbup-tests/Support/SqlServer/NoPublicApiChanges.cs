@@ -5,7 +5,7 @@ namespace DbUp.Tests.Providers.SqlServer;
 public class NoPublicApiChanges : NoPublicApiChangesBase
 {
     public NoPublicApiChanges()
-        : base(typeof(SqlServerExtensions).Assembly, true)
+        : base(typeof(SqlServerExtensions).Assembly)
     {
     }
 }

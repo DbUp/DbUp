@@ -11,7 +11,7 @@ namespace DbUp.Helpers
         /// This method will generate an HTML report which can be uploaded as an artifact to any deployment / build tool which supports artifacts.  Useful for getting approvals and seeing a history of what ran when
         /// </summary>
         /// <param name="upgradeEngine">The upgrade engine</param>
-        /// <param name="fullPath">The full path of the file which will be generated</param>        
+        /// <param name="fullPath">The full path of the file which will be generated</param>
         public static void GenerateUpgradeHtmlReport(this UpgradeEngine upgradeEngine, string fullPath)
         {
             GenerateUpgradeHtmlReport(upgradeEngine, fullPath, string.Empty, string.Empty);

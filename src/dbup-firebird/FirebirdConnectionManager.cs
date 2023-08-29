@@ -25,7 +25,7 @@ namespace DbUp.Firebird
         /// <param name="scriptContents">The contents of the script to split.</param>
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
-            //TODO: Possible Change - this is the PostGres version
+            // TODO: Possible Change - this is the PostGres version
             var scriptStatements =
                 Regex.Split(scriptContents, "^\\s*;\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
                     .Select(x => x.Trim())

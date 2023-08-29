@@ -20,7 +20,7 @@ namespace DbUp.Engine.Preprocessors
         }
 
         /// <summary>
-        /// Substitutes variables 
+        /// Substitutes variables
         /// </summary>
         /// <param name="contents"></param>
         public string Process(string contents)

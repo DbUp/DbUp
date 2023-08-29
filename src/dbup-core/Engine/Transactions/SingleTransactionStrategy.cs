@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
@@ -38,7 +38,7 @@ namespace DbUp.Engine.Transactions
         public T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult)
         {
             if (errorOccured)
-                throw new InvalidOperationException("Error occured on previous script execution");
+                throw new InvalidOperationException("Error occurred on previous script execution");
 
             try
             {
