@@ -46,7 +46,7 @@ namespace DbUp.MySql
 #else
                 var code = exception.Code;
 #endif
-                Log().WriteInformation("MySql exception has occured in script: '{0}'", script.Name);
+                Log().WriteInformation("MySql exception has occurred in script: '{0}'", script.Name);
                 Log().WriteError("Script block number: {0}; MySql error code: {1}; Number {2}; Message: {3}", index, code, exception.Number, exception.Message);
                 Log().WriteError(exception.ToString());
                 throw;

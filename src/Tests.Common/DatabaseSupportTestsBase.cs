@@ -1,9 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
+﻿using System.Collections.Generic;
 using System.Runtime.CompilerServices;
-using Assent;
-using Assent.Namers;
+using System.Threading.Tasks;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
@@ -11,20 +8,21 @@ using DbUp.Tests.Common.RecordingDb;
 using Shouldly;
 using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
+using VerifyXunit;
 
 namespace DbUp.Tests.Common
 {
+    [UsesVerify]
     public abstract class DatabaseSupportTestsBase
     {
         readonly string? parentFilePath;
         readonly IConnectionFactory testConnectionFactory;
         readonly List<SqlScript> scripts = new();
         readonly RecordingDbConnection recordingConnection;
-        readonly CaptureLogsLogger logger = new CaptureLogsLogger();
+        readonly CaptureLogsLogger logger = new ();
 
         DatabaseUpgradeResult? result;
         UpgradeEngineBuilder? upgradeEngineBuilder;
-
 
         public DatabaseSupportTestsBase([CallerFilePath] string? parentFilePath = null)
         {
@@ -42,7 +40,7 @@ namespace DbUp.Tests.Common
         );
 
         [BddfyFact]
-        public void VerifyBasicSupport()
+        public Task VerifyBasicSupport()
         {
             this
                 .Given(_ => DeployTo())
@@ -50,13 +48,12 @@ namespace DbUp.Tests.Common
                 .And(_ => SingleScriptExists())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(nameof(VerifyBasicSupport)),
-                    "Command log matches expected steps")
                 .BDDfy();
+            return CommandLogReflectsScript(nameof(VerifyBasicSupport));
         }
 
         [BddfyFact]
-        public void VerifyVariableSubstitutions()
+        public Task VerifyVariableSubstitutions()
         {
             this
                 .Given(_ => DeployTo())
@@ -65,13 +62,13 @@ namespace DbUp.Tests.Common
                 .And(_ => VariableSubstitutionIsSetup())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(nameof(VerifyVariableSubstitutions)),
-                    "Variables substituted correctly in command log")
                 .BDDfy();
+
+            return CommandLogReflectsScript(nameof(VerifyVariableSubstitutions));
         }
 
         [BddfyFact]
-        public void VerifyJournalCreationIfNameChanged()
+        public Task VerifyJournalCreationIfNameChanged()
         {
             this
                 .Given(_ => DeployTo())
@@ -80,9 +77,8 @@ namespace DbUp.Tests.Common
                 .And(_ => SingleScriptExists())
                 .When(_ => UpgradeIsPerformed())
                 .Then(_ => UpgradeIsSuccessful())
-                .And(_ => CommandLogReflectsScript(nameof(VerifyJournalCreationIfNameChanged)),
-                    "Command log matches expected steps")
                 .BDDfy();
+            return CommandLogReflectsScript(nameof(VerifyJournalCreationIfNameChanged));
         }
 
 
@@ -96,17 +92,9 @@ namespace DbUp.Tests.Common
             upgradeEngineBuilder = AddCustomNamedJournalToBuilder(upgradeEngineBuilder!, "test", "TestSchemaVersions");
         }
 
-
-        void CommandLogReflectsScript(string testName)
+        Task CommandLogReflectsScript(string testName)
         {
-            var configuration = new Configuration()
-                .UsingSanitiser(Scrubbers.ScrubDates)
-                .UsingNamer(new SubdirectoryNamer("ApprovalFiles"));
-
-            // Automatically approve the change, make sure to check the result before committing
-            // configuration = configuration.UsingReporter((received, approved) => File.Copy(received, approved, true));
-
-            this.Assent(logger.Log, configuration, testName, parentFilePath);
+            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings(), sourceFile: parentFilePath!);
         }
 
         void UpgradeIsSuccessful()

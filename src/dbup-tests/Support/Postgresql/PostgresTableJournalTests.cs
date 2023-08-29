@@ -10,7 +10,7 @@ using Xunit;
 
 namespace DbUp.Tests.Support.Postgresql;
 
-public class PostgresTableJournalTests
+public class PostgresTableJournalTests : IDisposable
 {
     [Fact]
     public void uses_named_parameters_when_sql_rewriting_not_specified()
@@ -91,5 +91,15 @@ public class PostgresTableJournalTests
         param2.ParameterName.ShouldBe("applied");
         command.CommandText.ShouldBe("""insert into "public"."SchemaVersions" (ScriptName, Applied) values (@scriptName, @applied)""");
         command.Received().ExecuteNonQuery();
+    }
+
+    public void Dispose()
+    {
+        ResetSqlRewritingToDefault();
+    }
+
+    private void ResetSqlRewritingToDefault()
+    {
+        AppContext.SetSwitch("Npgsql.EnableSqlRewriting", true);
     }
 }
