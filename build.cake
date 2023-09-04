@@ -1,4 +1,5 @@
-﻿#tool "nuget:?package=GitVersion.CommandLine&Version=5.10.1"
+﻿#tool "nuget:?package=GitVersion.CommandLine&Version=5.12.0"
+#tool "nuget:?package=NuGet.CommandLine&version=6.7.0"
 #addin "nuget:?package=Cake.Json&version=7.0.1"
 
 var target = Argument("target", "Default");
@@ -16,6 +17,7 @@ Task("Clean")
                 }
             );
         }
+        CreateDirectory(outputDir);
     });
 
 GitVersion versionInfo = null;
@@ -27,9 +29,11 @@ Task("Version")
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
 
+        Information("SemVer:Version_Info:");
         Information(SerializeJsonPretty(versionInfo));
+        Information("ENV:GITHUB_OUTPUT:");
         Information(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT"));
-        System.IO.File.WriteAllText(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT"), "Version_Info_SemVer=" + versionInfo.SemVer, Encoding.UTF8);
+        System.IO.File.WriteAllText(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT") ?? System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), "semver.txt"), "Version_Info_SemVer=" + versionInfo.SemVer, Encoding.UTF8);
     });
 
 Task("Restore")

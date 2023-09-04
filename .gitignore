@@ -3,3 +3,4 @@ bin/
 obj
 /artifacts/*
 /src/dbup-tests/**/*received.txt
+/tools/*

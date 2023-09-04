@@ -9,6 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-41
 		dbup\dbup.nuspec = dbup\dbup.nuspec
 		Directory.Build.props = Directory.Build.props
 		Directory.Build.targets = Directory.Build.targets
+		..\.config\dotnet-tools.json = ..\.config\dotnet-tools.json
 		..\GitVersion.yml = ..\GitVersion.yml
 		..\README.md = ..\README.md
 	EndProjectSection
@@ -47,6 +48,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE
 	ProjectSection(SolutionItems) = preProject
 		..\build.cake = ..\build.cake
 		..\build.ps1 = ..\build.ps1
+		..\install-sql-ce.ps1 = ..\install-sql-ce.ps1
 		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
 		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
 	EndProjectSection
