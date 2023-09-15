@@ -28,12 +28,15 @@ Task("Version")
             OutputType = GitVersionOutput.BuildServer
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
-
         Information("SemVer:Version_Info:");
         Information(SerializeJsonPretty(versionInfo));
         Information("ENV:GITHUB_OUTPUT:");
         Information(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT"));
-        System.IO.File.WriteAllText(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT") ?? System.IO.Path.Combine(System.IO.Path.GetFullPath(outputDir), "semver.txt"), "Version_Info_SemVer=" + versionInfo.SemVer, Encoding.UTF8);
+        string versionOutputDir = System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT") ?? System.IO.Path.GetFullPath(outputDir);
+        Information("SemVer:Output_Dir:");
+        Information(versionOutputDir);
+        System.IO.Directory.CreateDirectory(versionOutputDir);
+        System.IO.File.WriteAllText(System.IO.Path.Combine(versionOutputDir, "semver.txt"), $"Version_Info_SemVer={versionInfo.SemVer}", Encoding.UTF8);
     });
 
 Task("Restore")
