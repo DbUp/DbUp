@@ -35,7 +35,9 @@ Task("Version")
         string versionOutputDir = System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT") ?? System.IO.Path.GetFullPath(outputDir);
         Information("SemVer:Output_Dir:");
         Information(versionOutputDir);
-        System.IO.Directory.CreateDirectory(versionOutputDir);
+        if (!System.IO.Directory.Exists(versionOutputDir)) {
+            System.IO.Directory.CreateDirectory(versionOutputDir);
+        }
         System.IO.File.WriteAllText(System.IO.Path.Combine(versionOutputDir, "semver.txt"), $"Version_Info_SemVer={versionInfo.SemVer}", Encoding.UTF8);
     });
 
