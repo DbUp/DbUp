@@ -883,6 +883,20 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Adds all scripts found as embedded resources in the given assembly.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <param name="configure">Configure the options.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Action<EmbeddedScriptsOptions> configure)
+    {
+        return WithScriptsEmbeddedInAssemblies(builder, new[] { assembly }, configure);
+    }
+
+    /// <summary>
     /// Adds all scripts found as embedded resources in the given assemblies.
     /// </summary>
     /// <param name="builder">The builder.</param>
