@@ -296,7 +296,7 @@ namespace DbUp.Support
         /// </summary>
         void ReadQuotedString()
         {
-            var quoteChar = CurrentChar;
+            var currentQuoteChar = CurrentChar;
             ReadCharacter(CharacterType.QuotedString, CurrentChar);
             while (Read() != FailedRead)
             {
@@ -306,7 +306,7 @@ namespace DbUp.Support
                     Read();
                 }
                 ReadCharacter(CharacterType.QuotedString, CurrentChar);
-                if (CurrentChar == quoteChar)
+                if (CurrentChar == currentQuoteChar)
                 {
                     return;
                 }
