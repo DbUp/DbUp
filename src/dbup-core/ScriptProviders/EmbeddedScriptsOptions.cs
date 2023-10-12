@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Text;
 using DbUp.Engine;
 
@@ -27,23 +28,20 @@ namespace DbUp.ScriptProviders
         public SqlScriptOptions SqlScriptOptions { get; set; }
 
         /// <summary>
-        /// This will return the two last parts of the resource name: the fileName and extension.
-		/// So if the file name does not have an extension, this will not work correctly and it may even throw.
-		/// Examples:
-		/// resourceName: 'This.Is.The.Full.Resource.Name.AndTheLastTwoIsTheFileName.ThisIsTheFileName.extension' -> fileName: 'ThisIsTheFileName.extension'
-		/// resourceName: 'ThisIsTheFileName.extension' -> fileName: 'ThisIsTheFileName.extension'
-		/// resourceName: 'This.Is.The.Full.Resource.Name.AndTheLastTwoIsTheFileName.ThisIsTheFileName' -> fileName: 'AndTheLastTwoIsTheFileName.ThisIsTheFileName' (no extension give wrong result)
-		/// resourceName: 'ThisIsTheFileName' -> throws ArgumentException
+        /// Return the two last parts of the resource name: fileName and extension.
+        /// File name must have an extension for this to work correctly.
+        /// Examples:
+        /// 'Assembly.Namespace.FileName.ext' -> 'FileName.ext'
+        /// 'FileName.ext' -> 'FileName.ext'
+        /// 'FileName' -> 'FileName'
+        /// 'Assembly.Namespace.FileName' -> 'Namespace.FileName' (wrong)
         /// </summary>
         /// <param name="resourceName"></param>
         /// <returns></returns>
-        /// <exception cref="Exception"></exception>
         public static string FileNameFromResourceName(string resourceName)
         {
             var parts = resourceName.Split('.');
-            if (parts.Length < 2)
-                throw new ArgumentException(nameof(resourceName), "resourceName can not be split (no dot's)");
-            return string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]);
+            return parts.Length >= 2 ? string.Join(".", parts[parts.Length - 2], parts[parts.Length - 1]) : parts.Single();
         }
     }
 
