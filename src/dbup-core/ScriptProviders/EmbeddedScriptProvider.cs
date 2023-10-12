@@ -45,11 +45,11 @@ namespace DbUp.ScriptProviders
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The filter.</param>
-        /// <param name="scriptNameProvider">The script name provider.</param>
+        /// <param name="scriptNameFromResourceName">A function that returns the name of the script.</param>
         /// <param name="encoding">The encoding.</param>
         /// <param name="sqlScriptOptions">The sql script options</param>        
-        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Func<string, string> scriptNameProvider, Encoding encoding, SqlScriptOptions sqlScriptOptions) 
-            : base(new[] { assembly ?? throw new ArgumentNullException(nameof(assembly)) }, filter, scriptNameProvider, encoding, sqlScriptOptions)
+        public EmbeddedScriptProvider(Assembly assembly, Func<string, bool> filter, Func<string, string> scriptNameFromResourceName, Encoding encoding, SqlScriptOptions sqlScriptOptions) 
+            : base(new[] { assembly ?? throw new ArgumentNullException(nameof(assembly)) }, filter, scriptNameFromResourceName, encoding, sqlScriptOptions)
         {
         }
     }

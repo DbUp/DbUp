@@ -915,7 +915,7 @@ public static class StandardExtensions
 
         return WithScripts(builder, new EmbeddedScriptsProvider(assemblies,
             options.Filter ?? (s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase)),
-            options.ScriptNameProvider ?? (resourceName => resourceName),
+            options.ScriptNameFromResourceName ?? (resourceName => resourceName),
             options.Encoding ?? DbUpDefaults.DefaultEncoding,
             options.SqlScriptOptions ?? new()
             ));
