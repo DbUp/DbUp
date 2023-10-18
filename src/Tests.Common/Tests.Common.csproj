@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
@@ -13,7 +13,7 @@
     <PackageReference Include="TestStack.BDDfy.Xunit" Version="1.2.0" />
     <PackageReference Include="Shouldly" Version="4.2.1" />
     <PackageReference Include="Verify" Version="20.8.1" />
-    <PackageReference Include="Verify.Xunit" Version="20.8.1" />
+    <PackageReference Include="Verify.Xunit" Version="22.1.4" />
   </ItemGroup>
 
 </Project>
