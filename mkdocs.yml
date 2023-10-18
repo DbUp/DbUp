@@ -2,21 +2,21 @@ site_name: DbUp
 theme: readthedocs
 repo_url: https://github.com/DbUp/DbUp
 
-pages:
+nav:
 - Home: index.md
-- Breaking Changes: breaking-changes.md
+- 'Breaking Changes': breaking-changes.md
 - History: history.md
-- Philosophy Behind DbUp: philosophy-behind-dbup.md
+- 'Philosophy Behind DbUp': philosophy-behind-dbup.md
 - Usage: usage.md
-- Supported Databases: supported-databases.md
+- 'Supported Databases': supported-databases.md
 - FAQ: faq.md
 - Contributing: contributing.md
-- DBOps Powershell Module: dbops.md
+- 'DBOps Powershell Module': dbops.md
 
-- More Info:
-  - Script Providers: more-info/script-providers.md
+- 'More Info':
+  - 'Script Providers': more-info/script-providers.md
   - Transactions: more-info/transactions.md
   - Pre-Processors: more-info/preprocessors.md
   - Logging: more-info/logging.md
   - Journaling: more-info/journaling.md
-  - Variable Substitution: more-info/variable-substitution.md
+  - 'Variable Substitution': more-info/variable-substitution.md
