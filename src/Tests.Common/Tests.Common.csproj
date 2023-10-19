@@ -5,6 +5,7 @@
     <AssemblyName>DbUp.Tests.Common</AssemblyName>
     <RootNamespace>DbUp.Tests.Common</RootNamespace>
     <Nullable>enable</Nullable>
+    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
   </PropertyGroup>
 
   <ItemGroup>
