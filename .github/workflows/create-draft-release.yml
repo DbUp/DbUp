@@ -1,5 +1,8 @@
 name: Create Draft Release
 
+# The use of this workflow is to trigger it temporary.
+# In a later step this workflow should be merged back to workflow -Test Code-.
+
 on:
   push:
     tags:
@@ -14,6 +17,11 @@ jobs:
       DOTNET_NOLOGO: true
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Avoid pre-populating the NuGet package cache
+
+    # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
+    permissions:
+      checks: write #test-reporter https://github.com/dorny/test-reporter/issues/229
+      packages: write
 
     steps:
       - uses: actions/checkout@v3
@@ -35,13 +43,6 @@ jobs:
         run: ./build.ps1
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
-
-      - name: Push NuGet packages to GitHub Packages ⬆️
-        if: ${{ format('{0}', env.PACKAGE_KEY) != '' }}
-        working-directory: artifacts
-        run: dotnet nuget push *.nupkg --api-key ${{ env.PACKAGE_KEY }} --source "https://nuget.pkg.github.com/DbUp/index.json"
-        env:
-          PACKAGE_KEY: ${{ secrets.GITHUB_TOKEN }}
 
       - name: "Create Draft Release"
         if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
