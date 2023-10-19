@@ -12,6 +12,10 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
+  </PropertyGroup>
+
   <PropertyGroup Condition="'$(TargetFramework)' == 'net462'">
     <DefineConstants>$(DefineConstants);MY_SQL_DATA_6_9_5</DefineConstants>
   </PropertyGroup>

@@ -14,6 +14,10 @@
     <DefineConstants>$(DefineConstants);LIBLOG_PORTABLE;LIBLOG_PROVIDERS_ONLY;SUPPORTS_LIBLOG</DefineConstants>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
+  </PropertyGroup>
+
   <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
     <DefineConstants>$(DefineConstants);USE_TYPE_INFO</DefineConstants>
   </PropertyGroup>

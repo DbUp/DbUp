@@ -12,6 +12,10 @@
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
   </PropertyGroup>
 
+  <PropertyGroup>
+    <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
+  </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
     <PackageReference Include="FirebirdSql.Data.FirebirdClient" Version="9.1.1" />
