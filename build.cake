@@ -9,7 +9,7 @@ Task("Clean")
     .Does(() => {
         Information("ArtifactDirectory:");
         Information(outputDir);
-        if (!DirectoryExists(outputDir))
+        if (DirectoryExists(outputDir))
         {
             DeleteDirectory(
                 outputDir,
