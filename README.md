@@ -25,9 +25,24 @@ For successfull unit testing install
 
 - SQL Server Compact 4.0 SP1 https://www.microsoft.com/en-us/download/details.aspx?id=30709
 
+# Extensions by the community
+
+Mainteannce and support for the extenstions where not provided by the DbUp project. If you have questions to the extions, please ask the author of the extenstion.
+
+## DbUpX
+
+[https://github.com/fiscaltec/DbUpX](https://github.com/fiscaltec/DbUpX)
+
+Extensions to DbUp supporting easy filtering, ordering and versioning:
+
+- a journaling system that stores hashes of script contents, so we know if they need to rerun,
+- a concept of "dependency comments" in scripts that let you more easily control the ordering of scripts,
+- protection against code reorganisation affecting long script names,
+- utilities for sorting and filtering scripts in helpful ways.
+
 # Known Issues / Quirks
 
-## dbup-firebird 
+## dbup-firebird
 
 ### Semi-colon Delimiter in multi statement scripts
 

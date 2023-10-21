@@ -32,7 +32,7 @@ namespace DbUp.Tests.Common.RecordingDb
         public bool IsSynchronized { get; private set; }
         public int Add(object value)
         {
-            logger.LogInformation("DB Operation: Add parameter to command: {0}", value);
+            logger.LogInformation("DB Operation: Add parameter to command: {Value}", value);
             backingList.Add(value);
             return backingList.Count - 1;
         }

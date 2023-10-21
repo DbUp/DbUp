@@ -205,7 +205,7 @@ public static class PostgresqlExtensions
     }
 
     /// <summary>
-    /// Tracks the list of executed scripts in a SQL Server table.
+    /// Tracks the list of executed scripts in a PostgreSQL table.
     /// </summary>
     /// <param name="builder">The builder.</param>
     /// <param name="schema">The schema.</param>

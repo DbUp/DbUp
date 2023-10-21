@@ -49,9 +49,9 @@ namespace DbUp.Postgresql
             return command;
         }
 
-        protected override string GetInsertJournalEntrySql(string @scriptName, string @applied)
+        protected override string GetInsertJournalEntrySql(string scriptName, string applied)
         {
-            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({@scriptName}, {@applied})";
+            return $"insert into {FqSchemaTableName} (ScriptName, Applied) values ({scriptName}, {applied})";
         }
 
         protected override string GetJournalEntriesSql()
