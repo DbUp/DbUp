@@ -19,7 +19,7 @@ Task("Clean")
                 }
             );
         }
-        CreateDirectory(outputDir);
+        EnsureDirectoryExists(outputDir);
     });
 
 GitVersion versionInfo = null;
@@ -37,9 +37,7 @@ Task("Version")
         string versionOutputDir = System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT") ?? System.IO.Path.GetFullPath(outputDir);
         Information("SemVer:Output_Dir:");
         Information(versionOutputDir);
-        if (!DirectoryExists(versionOutputDir)) {
-            CreateDirectory(versionOutputDir);
-        }
+        EnsureDirectoryExists(versionOutputDir);
         System.IO.File.WriteAllText(System.IO.Path.Combine(versionOutputDir, "semver.txt"), $"Version_Info_SemVer={versionInfo.SemVer}", Encoding.UTF8);
     });
 
