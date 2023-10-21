@@ -30,6 +30,7 @@ Task("Version")
             OutputType = GitVersionOutput.BuildServer
         });
         string versionOutputDir = System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
+        string versionOutputPath = "semver.txt";
         bool isGitHubAction = !string.IsNullOrWhiteSpace(versionOutputDir);
         if (isGitHubAction)
         {
@@ -39,13 +40,15 @@ Task("Version")
         else {
             versionOutputDir = System.IO.Path.GetFullPath(outputDir);
             EnsureDirectoryExists(versionOutputDir);
+            versionOutputPath = System.IO.Path.Combine(versionOutputDir, versionOutputPath);
 		}
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
         Information("SemVer:Version_Info:");
         Information(SerializeJsonPretty(versionInfo));
-        Information("SemVer:Output_Dir:");
-        Information(versionOutputDir);
-        System.IO.File.WriteAllText(System.IO.Path.Combine(versionOutputDir, "semver.txt"), $"Version_Info_SemVer={versionInfo.SemVer}", Encoding.UTF8);
+        Information("SemVer:Output_Path:");
+        Information(versionOutputPath);
+        Information("Writing Version_Info to file.");
+        System.IO.File.WriteAllText(versionOutputPath, $"Version_Info_SemVer={versionInfo.SemVer}", Encoding.UTF8);
     });
 
 Task("Restore")
