@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
-using System.Text.RegularExpressions;
 using DbUp.Engine.Transactions;
 using Npgsql;
 
@@ -12,6 +11,11 @@ namespace DbUp.Postgresql
     /// </summary>
     public class PostgresqlConnectionManager : DatabaseConnectionManager
     {
+        /// <summary>
+        /// Disallow single quotes to be escaped with a backslash (\')
+        /// </summary>
+        public bool StandardConformingStrings { get; set; } = true;
+
         /// <summary>
         /// Creates a new PostgreSQL database connection.
         /// </summary>
@@ -35,7 +39,7 @@ namespace DbUp.Postgresql
 
                     return databaseConnection;
                 }
-                ))
+            ))
         {
         }
 
@@ -46,7 +50,7 @@ namespace DbUp.Postgresql
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
         {
             var scriptStatements =
-                Regex.Split(scriptContents, "^\\s*;\\s*$", RegexOptions.IgnoreCase | RegexOptions.Multiline)
+                PostgresqlQueryParser.ParseRawQuery(scriptContents, StandardConformingStrings)
                     .Select(x => x.Trim())
                     .Where(x => x.Length > 0)
                     .ToArray();
