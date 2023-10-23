@@ -12,5 +12,5 @@ To create your own pre-processor just implement the `IScriptPreprocessor` interf
 DeployChanges
   .To
   .SqlDatabase(..)
-  .WithPreProcessor(new MyPreprocessor());
+  .WithPreprocessor(new MyPreprocessor());
 ```
