@@ -29,26 +29,19 @@ Task("Version")
             UpdateAssemblyInfo = false,
             OutputType = GitVersionOutput.BuildServer
         });
-        string versionOutputDir = System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
-        string versionOutputPath = "semver.txt";
-        bool isGitHubAction = !string.IsNullOrWhiteSpace(versionOutputDir);
-        if (isGitHubAction)
-        {
-            Information("ENV:GITHUB_OUTPUT:");
-            Information(versionOutputDir);
-        }
-        else {
-            versionOutputDir = System.IO.Path.GetFullPath(outputDir);
-            EnsureDirectoryExists(versionOutputDir);
-            versionOutputPath = System.IO.Path.Combine(versionOutputDir, versionOutputPath);
-		}
+
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
         Information("SemVer:Version_Info:");
         Information(SerializeJsonPretty(versionInfo));
-        Information("SemVer:Output_Path:");
-        Information(versionOutputPath);
-        Information("Writing Version_Info to file.");
-        System.IO.File.WriteAllText(versionOutputPath, $"Version_Info_SemVer={versionInfo.SemVer}", Encoding.UTF8);
+
+        string githubOutput = System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT");
+        bool isGitHubAction = !string.IsNullOrWhiteSpace(githubOutput);
+        if (isGitHubAction)
+        {
+            Information("ENV:GITHUB_OUTPUT:");
+            Information(githubOutput);
+            System.IO.File.WriteAllText(githubOutput, "Version_Info_SemVer=" + versionInfo.SemVer, Encoding.UTF8);
+        }
     });
 
 Task("Restore")
