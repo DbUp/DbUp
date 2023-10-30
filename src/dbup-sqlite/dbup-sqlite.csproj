@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SQLite support.</Description>
@@ -17,7 +17,7 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="Microsoft.Data.Sqlite" Version="1.0.1" />
+    <PackageReference Include="Microsoft.Data.Sqlite" Version="7.0.13" />
   </ItemGroup>
 
   <PropertyGroup Condition="'$(TargetFramework)' == 'netstandard1.3'">
