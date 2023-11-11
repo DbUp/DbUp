@@ -540,7 +540,7 @@ namespace DbUp.Support
         protected string SchemaTableSchema { get; }
         protected string UnquotedSchemaTableName { get; }
         protected abstract string CreateSchemaTableSql(string quotedPrimaryKeyName);
-        protected bool DoesTableExist(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
+        protected virtual bool DoesTableExist(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected virtual string DoesTableExistSql() { }
         public virtual void EnsureTableExistsAndIsLatestVersion(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
