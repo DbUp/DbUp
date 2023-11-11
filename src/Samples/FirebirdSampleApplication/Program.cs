@@ -6,7 +6,7 @@ using DbUp;
 
 namespace FirebirdSampleApplication
 {
-    class Program
+    static class Program
     {
         static int Main()
         {

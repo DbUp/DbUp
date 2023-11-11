@@ -78,6 +78,10 @@ namespace JetBrains.Annotations
       AttributeTargets.Property | AttributeTargets.Delegate)]
     sealed class StringFormatMethodAttribute : Attribute
     {
+        /// <summary>
+        /// Indicates that the marked method builds string by format pattern and (optional) arguments.
+        /// Parameter, which contains format string, should be given in constructor.
+        /// </summary>
         /// <param name="formatParameterName">
         /// Specifies which parameter of an annotated method should be treated as format-string
         /// </param>
@@ -394,6 +398,7 @@ namespace JetBrains.Annotations
     /// which should not be removed and so is treated as used.
     /// </summary>
     [MeansImplicitUse(ImplicitUseTargetFlags.WithMembers)]
+    [AttributeUsage(AttributeTargets.All, AllowMultiple = false)]
     sealed class PublicAPIAttribute : Attribute
     {
         public PublicAPIAttribute() { }

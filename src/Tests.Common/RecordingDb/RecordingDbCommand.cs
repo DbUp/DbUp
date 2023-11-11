@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -137,6 +137,21 @@ namespace DbUp.Tests.Common.RecordingDb
 
         class TestDbException : DbException
         {
+            public TestDbException()
+            {
+            }
+
+            public TestDbException(string message) : base(message)
+            {
+            }
+
+            public TestDbException(string message, Exception innerException) : base(message, innerException)
+            {
+            }
+
+            protected TestDbException(string message, int errorCode) : base(message, errorCode)
+            {
+            }
         }
     }
 }

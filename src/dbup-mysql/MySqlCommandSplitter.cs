@@ -3,7 +3,7 @@
 namespace DbUp.MySql
 {
     /// <summary>
-    ///
+    /// Split script into commands
     /// </summary>
     public class MySqlCommandSplitter
     {

@@ -7,7 +7,7 @@ using DbUp.SQLite.Helpers;
 
 namespace SQLiteSampleApplication
 {
-    class Program
+    static class Program
     {
         static void Main()
         {

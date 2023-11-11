@@ -4,6 +4,7 @@ using Serilog.Events;
 
 namespace DbUp.Tests.Engine.Output
 {
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Design", "RCS1102:Make class static.", Justification = "<Pending>")]
     public class LoggingTests
     {
 #if SUPPORTS_LIBLOG
