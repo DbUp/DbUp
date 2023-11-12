@@ -10,7 +10,8 @@ using DbUp.Engine.Transactions;
 using DbUp.Support;
 
 #if SUPPORTS_AZURE_AD
-using Microsoft.Azure.Services.AppAuthentication;
+using Azure.Identity;
+using Azure.Core;
 
 namespace DbUp.SqlServer
 {
@@ -28,12 +29,15 @@ namespace DbUp.SqlServer
         public AzureSqlConnectionManager(string connectionString, string resource, string tenantId, string azureAdInstance = "https://login.microsoftonline.com/")
             : base(new DelegateConnectionFactory((log, dbManager) =>
             {
+                var tokenProvider = new DefaultAzureCredential();
+                var tokenContext = new TokenRequestContext(scopes: new string[] { resource + "/.default" });
                 var conn = new SqlConnection(connectionString)
                 {
-                    AccessToken = new AzureServiceTokenProvider(azureAdInstance: azureAdInstance).GetAccessTokenAsync(resource, tenantId)
-                                                                                                 .ConfigureAwait(false)
-                                                                                                 .GetAwaiter()
-                                                                                                 .GetResult()
+                    AccessToken = tokenProvider.GetTokenAsync(tokenContext)
+                                               .ConfigureAwait(false)
+                                               .GetAwaiter()
+                                               .GetResult()
+                                               .Token
                 };
 
                 if (dbManager.IsScriptOutputLogged)
