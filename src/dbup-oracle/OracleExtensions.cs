@@ -170,6 +170,19 @@ namespace DbUp.Oracle
             builder.WithPreprocessor(new OraclePreprocessor());
             return builder;
         }
+
+        /// <summary>
+        /// Tracks the list of executed scripts in an Oracle table.
+        /// </summary>
+        /// <param name="builder">The builder.</param>
+        /// <param name="schema">The schema.</param>
+        /// <param name="table">The table.</param>
+        /// <returns></returns>
+        public static UpgradeEngineBuilder JournalToOracleTable(this UpgradeEngineBuilder builder, string schema, string table)
+        {
+            builder.Configure(c => c.Journal = new OracleTableJournal(() => c.ConnectionManager, () => c.Log, schema, table));
+            return builder;
+        }
     }
 #pragma warning restore IDE0060 // Remove unused parameter
 }
