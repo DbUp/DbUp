@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFrameworks>net462;netstandard2.0</TargetFrameworks>
@@ -12,7 +12,7 @@
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <PackageReference Include="TestStack.BDDfy.Xunit" Version="1.2.0" />
     <PackageReference Include="Shouldly" Version="4.2.1" />
-    <PackageReference Include="Verify" Version="20.8.1" />
+    <PackageReference Include="Verify" Version="22.5.0" />
     <PackageReference Include="Verify.Xunit" Version="20.8.1" />
   </ItemGroup>
 
