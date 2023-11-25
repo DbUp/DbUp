@@ -3,38 +3,23 @@
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SqlCe support. It works with SQL CE 4.0 SP1, which can be downloaded from https://www.microsoft.com/en-us/download/details.aspx?id=30709</Description>
     <Title>DbUp SQL CE Support</Title>
-    <TargetFrameworks>net40;net45</TargetFrameworks>
-    <AssemblyName>dbup-sqlce</AssemblyName>
+    <TargetFrameworks>net462</TargetFrameworks>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>dbup-sqlce</PackageId>
-    <PackageIcon>dbup-icon.png</PackageIcon>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
+  <ItemGroup>
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="4.0.8876.1" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>

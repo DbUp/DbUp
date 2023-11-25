@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -75,11 +75,10 @@ namespace DbUp.Tests.Support.MySql
                 "CREATE TABLE IF NOT EXISTS 'BAR';"
             });
         }
-        
+
         [Fact]
         public void DoesNotGetStuckInSkipWhitespace()
         {
-            
             var command = @"DELIMITER $$
 CREATE PROCEDURE TEST(IN statement TEXT)
 BEGIN
@@ -87,8 +86,7 @@ END$$
 DELIMITER;
 ";
             var connectionManager = new MySqlConnectionManager("connectionstring");
-            var t = Task.Run(() => connectionManager.SplitScriptIntoCommands(command)).Wait(TimeSpan.FromSeconds(1));
-            t.ShouldBeTrue();
+            Should.CompleteIn(() => connectionManager.SplitScriptIntoCommands(command), TimeSpan.FromSeconds(1));
         }
     }
 }

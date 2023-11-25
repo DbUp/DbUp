@@ -65,7 +65,6 @@ namespace DbUp.Engine
             {
                 using (configuration.ConnectionManager.OperationStarting(configuration.Log, executed))
                 {
-
                     configuration.Log.WriteInformation("Beginning database upgrade");
 
                     var scriptsToExecute = GetScriptsToExecuteInsideOperation();
@@ -158,7 +157,7 @@ namespace DbUp.Engine
         public virtual DatabaseUpgradeResult MarkAsExecuted()
         {
             var marked = new List<SqlScript>();
-            SqlScript executedScript = null; 
+            SqlScript executedScript = null;
             using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked))
             {
                 try
@@ -188,7 +187,7 @@ namespace DbUp.Engine
         public virtual DatabaseUpgradeResult MarkAsExecuted(string latestScript)
         {
             var marked = new List<SqlScript>();
-            SqlScript executedScript = null; 
+            SqlScript executedScript = null;
             using (configuration.ConnectionManager.OperationStarting(configuration.Log, marked))
             {
                 try

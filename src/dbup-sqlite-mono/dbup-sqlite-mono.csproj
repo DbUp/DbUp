@@ -3,20 +3,13 @@
   <PropertyGroup>
     <Description>DbUp makes it easy to deploy and upgrade SQL Server databases. This package adds SQLite support for Mono.</Description>
     <Title>DbUp SQLite Support targeting Mono</Title>
-    <TargetFrameworks>net40;net45</TargetFrameworks>
-    <AssemblyName>dbup-sqlite-mono</AssemblyName>
+    <TargetFrameworks>net462</TargetFrameworks>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
     <PublicSign Condition=" '$(OS)' != 'Windows_NT' ">true</PublicSign>
-    <PackageId>dbup-sqlite-mono</PackageId>
-    <PackageIcon>dbup-icon.png</PackageIcon>
     <GenerateAssemblyCompanyAttribute>false</GenerateAssemblyCompanyAttribute>
     <GenerateAssemblyProductAttribute>false</GenerateAssemblyProductAttribute>
     <GenerateAssemblyCopyrightAttribute>false</GenerateAssemblyCopyrightAttribute>
-    <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-  </PropertyGroup>
-
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
     <DefineConstants>$(DefineConstants);MONO</DefineConstants>
   </PropertyGroup>
 
@@ -24,7 +17,7 @@
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
   </ItemGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'net40' OR '$(TargetFramework)' == 'net45' ">
+  <ItemGroup>
     <PackageReference Include="Mono.Data.Sqlite.Portable" Version="1.0.3.5" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
@@ -33,14 +26,6 @@
   <ItemGroup>
     <Compile Remove="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs" />
     <Compile Include="..\dbup-sqlite\**\*.cs" Exclude="..\dbup-sqlite\obj\**\*.cs;..\dbup-sqlite\Properties\**\*.cs;bin\**;obj\**;**\*.xproj;packages\**" />
-    <None Visible="false" Include="../../dbup-icon.png" Pack="True" PackagePath="" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
   </ItemGroup>
 
 </Project>

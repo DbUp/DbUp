@@ -7,12 +7,12 @@ namespace DbUp.Oracle
     public class OracleCommandSplitter
     {
         private readonly Func<string, SqlCommandReader> commandReaderFactory;
-        
+
         public OracleCommandSplitter(char delimiter)
         {
             this.commandReaderFactory = scriptContents => new OracleCommandReader(scriptContents, delimiter);
         }
-        
+
         /// <summary>
         /// Splits a script with multiple delimited commands into commands
         /// </summary>

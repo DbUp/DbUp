@@ -9,7 +9,6 @@ namespace DbUp.SqlServer
     /// </summary>
     public class SqlServerObjectParser : SqlObjectParser
     {
-
         public SqlServerObjectParser()
             : base("[", "]")
         {

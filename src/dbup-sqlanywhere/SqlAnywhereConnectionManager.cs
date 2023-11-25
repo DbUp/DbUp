@@ -5,7 +5,6 @@ using System.Text.RegularExpressions;
 using DbUp.Engine.Transactions;
 using Sap.Data.SQLAnywhere;
 
-
 namespace DbUp.SqlAnywhere
 {
     public class SqlAnywhereConnectionManager : DatabaseConnectionManager

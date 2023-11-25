@@ -99,7 +99,7 @@ namespace DbUp.Support
             }
         }
 
-        protected IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
+        protected virtual IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
         {
             var command = dbCommandFactory();
 
@@ -187,21 +187,15 @@ namespace DbUp.Support
             journalExists = true;
         }
 
-        protected bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
+        protected virtual bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
         {
             Log().WriteInformation("Checking whether journal table exists..");
             using (var command = dbCommandFactory())
             {
                 command.CommandText = DoesTableExistSql();
                 command.CommandType = CommandType.Text;
-                var executeScalar = command.ExecuteScalar();
-                if (executeScalar == null)
-                    return false;
-                if (executeScalar is long)
-                    return (long)executeScalar == 1;
-                if (executeScalar is decimal)
-                    return (decimal)executeScalar == 1;
-                return (int)executeScalar == 1;
+                var executeScalar = Convert.ToInt32(command.ExecuteScalar());
+                return executeScalar == 1;
             }
         }
 

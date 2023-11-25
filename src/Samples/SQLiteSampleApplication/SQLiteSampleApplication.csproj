@@ -1,19 +1,15 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp2.0</TargetFrameworks>
-    <RootNamespace>SQLiteSampleApplication</RootNamespace>
-    <AssemblyName>SQLiteSampleApplication</AssemblyName>
+    <TargetFrameworks>net7.0</TargetFrameworks>
     <OutputType>Exe</OutputType>
-    <NoWarn>$(NoWarn);NETSDK1138</NoWarn> <!-- Purposefully leaving an old version of netcoreapp to ensure we have compatibility. This never gets published -->
     <IsPackable>false</IsPackable>
   </PropertyGroup>
+
   <ItemGroup>
     <ProjectReference Include="..\..\dbup-sqlite\dbup-sqlite.csproj" />
   </ItemGroup>
+
   <ItemGroup>
     <EmbeddedResource Include="Scripts\*.sql" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Properties\" />
   </ItemGroup>
 </Project>

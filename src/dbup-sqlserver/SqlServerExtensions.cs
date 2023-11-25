@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Data;
+#if SUPPORTS_MICROSOFT_SQL_CLIENT
+using Microsoft.Data.SqlClient;
+#else
 using System.Data.SqlClient;
+#endif
 using DbUp;
 using DbUp.Builder;
 using DbUp.Engine.Output;
@@ -13,6 +17,7 @@ using DbUp.SqlServer;
 // NOTE: DO NOT MOVE THIS TO A NAMESPACE
 // Since the class just contains extension methods, we leave it in the global:: namespace so that it is always available
 // ReSharper disable CheckNamespace
+#pragma warning disable CA1050 // Declare types in namespaces
 public static class SqlServerExtensions
 // ReSharper restore CheckNamespace
 {
@@ -277,7 +282,6 @@ public static class SqlServerExtensions
                     break;
             }
 
-
             // Create the database...
             using (var command = new SqlCommand(sqlCommandText, connection)
             {
@@ -403,9 +407,10 @@ public static class SqlServerExtensions
         })
 
         {
-            var results = (int?)command.ExecuteScalar();
+            var results = Convert.ToInt32(command.ExecuteScalar());
 
-            if (results.HasValue && results.Value == 1)
+            // if the database exists, we're done here...
+            if (results == 1)
                 return true;
             else
                 return false;

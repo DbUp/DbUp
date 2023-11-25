@@ -288,7 +288,6 @@ namespace DbUp.Support
 
         bool IsEndOfSlashStarComment => CurrentChar == StarChar && Peek() == SlashChar;
 
-
         /// <summary>
         /// Reads a quoted string to the end, including quotes
         /// </summary>

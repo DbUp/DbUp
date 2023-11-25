@@ -1,4 +1,5 @@
 ﻿#tool "nuget:?package=GitVersion.CommandLine&Version=5.10.1"
+#addin "nuget:?package=Cake.Json&version=7.0.1"
 
 var target = Argument("target", "Default");
 var outputDir = "./artifacts/";
@@ -17,8 +18,6 @@ Task("Clean")
         }
     });
 
-
-
 GitVersion versionInfo = null;
 Task("Version")
     .Does(() => {
@@ -27,12 +26,16 @@ Task("Version")
             OutputType = GitVersionOutput.BuildServer
         });
         versionInfo = GitVersion(new GitVersionSettings{ OutputType = GitVersionOutput.Json });
+
+        Information(SerializeJsonPretty(versionInfo));
+        Information(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT"));
+        System.IO.File.WriteAllText(System.Environment.GetEnvironmentVariable("GITHUB_OUTPUT"), "Version_Info_SemVer=" + versionInfo.SemVer, Encoding.UTF8);
     });
 
 Task("Restore")
     .IsDependentOn("Version")
     .Does(() => {
-        DotNetCoreRestore("src", new DotNetCoreRestoreSettings() {
+        DotNetRestore("src", new DotNetRestoreSettings() {
             ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.SemVer)
         });
     });
@@ -55,7 +58,7 @@ Task("Build")
 Task("Test")
     .IsDependentOn("Build")
     .Does(() => {
-         DotNetCoreTest("./src/dbup-tests/dbup-tests.csproj", new DotNetCoreTestSettings
+         DotNetTest("./src/dbup-tests/dbup-tests.csproj", new DotNetTestSettings
         {
             Configuration = "Release",
             NoBuild = true,

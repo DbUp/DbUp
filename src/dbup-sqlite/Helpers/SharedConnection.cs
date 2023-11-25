@@ -5,9 +5,9 @@ namespace DbUp.SQLite.Helpers
 {
     /// <summary>
     /// A database connection wrapper to manage underlying connection as a shared connection
-    /// during database upgrade. 
+    /// during database upgrade.
     /// <remarks>
-    /// if underlying connection is already opened then it will be kept as opened and will not be closed 
+    /// if underlying connection is already opened then it will be kept as opened and will not be closed
     /// otherwise it will be opened when object is created and closed when object is disposed
     /// however it will not be disposed
     /// </remarks>

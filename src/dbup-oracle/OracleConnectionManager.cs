@@ -10,7 +10,7 @@ namespace DbUp.Oracle
         private readonly OracleCommandSplitter commandSplitter;
 
         /// <summary>
-        /// Creates a new Oracle database connection.
+        /// Creates a new Oracle database connection manager.
         /// </summary>
         /// <param name="connectionString">The Oracle connection string.</param>
         /// <param name="commandSplitter">Oracle command splitter instance.</param>

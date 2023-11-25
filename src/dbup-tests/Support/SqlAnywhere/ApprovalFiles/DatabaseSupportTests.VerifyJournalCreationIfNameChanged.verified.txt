@@ -1,0 +1,28 @@
+﻿DB Operation: Open connection
+Info:         Beginning database upgrade
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select cast(1 as Int) from systab t where t.table_name = 'TESTSCHEMAVERSIONS'
+DB Operation: Dispose command
+Info:         Journal table does not exist
+Info:         Executing Database Server script 'Script0001.sql'
+Info:         Checking whether journal table exists..
+DB Operation: Execute scalar command: select cast(1 as Int) from systab t where t.table_name = 'TESTSCHEMAVERSIONS'
+DB Operation: Dispose command
+Info:         Creating the [test].[TestSchemaVersions] table
+DB Operation: Execute non query command: create table [test].[TestSchemaVersions] (
+                    [Id] int identity not null constraint [PK_TestSchemaVersions_Id] primary key,
+                    [ScriptName] nvarchar(255) not null,
+                    [Applied] datetime not null
+                )
+DB Operation: Dispose command
+Info:         The [test].[TestSchemaVersions] table has been created
+DB Operation: Execute non query command: script1contents
+DB Operation: Dispose command
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: scriptName=Script0001.sql
+DB Operation: Create parameter
+Info:         DB Operation: Add parameter to command: applied=<date>
+DB Operation: Execute non query command: insert into [test].[TestSchemaVersions] (ScriptName, Applied) values (? ,?)
+DB Operation: Dispose command
+Info:         Upgrade successful
+DB Operation: Dispose connection

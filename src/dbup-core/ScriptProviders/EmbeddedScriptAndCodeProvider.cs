@@ -42,7 +42,7 @@ namespace DbUp.ScriptProviders
         /// </summary>
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script and code file filter.</param>
-        /// <param name="sqlScriptOptions">The sql script options.</param>  
+        /// <param name="sqlScriptOptions">The sql script options.</param>
         public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, SqlScriptOptions sqlScriptOptions)
             : this(assembly, filter, filter, sqlScriptOptions)
         {
@@ -54,13 +54,13 @@ namespace DbUp.ScriptProviders
         /// <param name="assembly">The assembly.</param>
         /// <param name="filter">The embedded script filter.</param>
         /// <param name="codeScriptFilter">The embedded script filter. If null, filter is used.</param>
-        /// <param name="sqlScriptOptions">The sql script options.</param>        
+        /// <param name="sqlScriptOptions">The sql script options.</param>
         public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, SqlScriptOptions sqlScriptOptions)
         {
             this.assembly = assembly;
             this.filter = codeScriptFilter ?? filter;
             this.sqlScriptOptions = sqlScriptOptions;
-            embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter);
+            embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions);
         }
 
         IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)

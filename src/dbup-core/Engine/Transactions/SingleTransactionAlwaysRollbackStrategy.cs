@@ -17,7 +17,7 @@ namespace DbUp.Engine.Transactions
         public void Execute(Action<Func<IDbCommand>> action)
         {
             if (errorOccured)
-                throw new InvalidOperationException("Error occured on previous script execution");
+                throw new InvalidOperationException("Error occurred on previous script execution");
 
             try
             {
@@ -38,7 +38,7 @@ namespace DbUp.Engine.Transactions
         public T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult)
         {
             if (errorOccured)
-                throw new InvalidOperationException("Error occured on previous script execution");
+                throw new InvalidOperationException("Error occurred on previous script execution");
 
             try
             {
@@ -70,11 +70,11 @@ namespace DbUp.Engine.Transactions
         {
             if (!errorOccured)
             {
-                log.WriteInformation("Success! No errors have occured when executing scripts, transaction will be rolled back");
+                log.WriteInformation("Success! No errors have occurred when executing scripts, transaction will be rolled back");
             }
             else
             {
-                log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
+                log.WriteWarning("Error occurred when executing scripts, transaction will be rolled back");
             }
 
             // Always rollback

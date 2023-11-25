@@ -5,14 +5,11 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-419B-BCA2-82A0512774F2}"
 	ProjectSection(SolutionItems) = preProject
 		.editorconfig = .editorconfig
-		..\appveyor.yml = ..\appveyor.yml
-		..\Breaking changes.md = ..\Breaking changes.md
-		..\build.cake = ..\build.cake
-		..\build.ps1 = ..\build.ps1
-		dbup.nuspec = dbup.nuspec
+		..\.gitignore = ..\.gitignore
+		dbup\dbup.nuspec = dbup\dbup.nuspec
 		Directory.Build.props = Directory.Build.props
-		..\GitVersionConfig.yaml = ..\GitVersionConfig.yaml
-		..\global.json = ..\global.json
+		Directory.Build.targets = Directory.Build.targets
+		..\GitVersion.yml = ..\GitVersion.yml
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
@@ -42,11 +39,19 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-oracle", "dbup-oracle\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlanywhere", "dbup-sqlanywhere\dbup-sqlanywhere.csproj", "{93F59A3B-70CB-44CA-AA41-B76889AA9D51}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-redshift", "dbup-redshift\dbup-redshift.csproj", "{7E77DD23-2E16-471A-897B-C67FB73C62C8}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FirebirdSampleApplication", "Samples\FirebirdSampleApplication\FirebirdSampleApplication.csproj", "{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE-AF4F-4BC3-82FC-E9FEEA6D37A6}"
+	ProjectSection(SolutionItems) = preProject
+		..\build.cake = ..\build.cake
+		..\build.ps1 = ..\build.ps1
+		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
+		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
+	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Common", "Tests.Common\Tests.Common.csproj", "{B25DA0B8-6A43-499F-84BE-91132AC433B5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -102,10 +107,6 @@ Global
 		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Release|Any CPU.Build.0 = Release|Any CPU
-		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{7E77DD23-2E16-471A-897B-C67FB73C62C8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -114,6 +115,10 @@ Global
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5FC18CC7-2C66-408C-9BEE-D9E9CFA8ECD0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B25DA0B8-6A43-499F-84BE-91132AC433B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B25DA0B8-6A43-499F-84BE-91132AC433B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B25DA0B8-6A43-499F-84BE-91132AC433B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B25DA0B8-6A43-499F-84BE-91132AC433B5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

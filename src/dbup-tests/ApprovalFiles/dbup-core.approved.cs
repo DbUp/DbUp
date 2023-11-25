@@ -311,10 +311,20 @@ namespace DbUp.Engine.Preprocessors
 }
 namespace DbUp.Engine.Transactions
 {
+    [System.FlagsAttribute()]
+    public enum AllowedTransactionMode : int
+    {
+        None = 0
+        SingleTransaction = 1
+        TransactionPerScript = 2
+        SingleTransactionAlwaysRollback = 4
+        All = 7
+    }
     public abstract class DatabaseConnectionManager : DbUp.Engine.Transactions.IConnectionManager
     {
         protected DatabaseConnectionManager(System.Func<DbUp.Engine.Output.IUpgradeLog, System.Data.IDbConnection> connectionFactory) { }
         protected DatabaseConnectionManager(DbUp.Engine.Transactions.IConnectionFactory connectionFactory) { }
+        protected virtual DbUp.Engine.Transactions.AllowedTransactionMode AllowedTransactionModes { get; }
         public bool IsScriptOutputLogged { get; set; }
         public DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
         public T ExecuteCommandsWithManagedConnection<T>(Func<System.Func<System.Data.IDbCommand>, T> actionWithResult) { }
@@ -440,6 +450,7 @@ namespace DbUp.Support
         public System.Nullable<int> ExecutionTimeoutSeconds { get; set; }
         protected System.Func<DbUp.Engine.Output.IUpgradeLog> Log { get; }
         public string Schema { get; set; }
+        protected virtual bool UseTheSameTransactionForJournalTableAndScripts { get; }
         public virtual void Execute(DbUp.Engine.SqlScript script) { }
         public virtual void Execute(DbUp.Engine.SqlScript script, System.Collections.Generic.IDictionary<string, string> variables) { }
         protected virtual void ExecuteAndLogOutput(System.Data.IDbCommand command) { }
@@ -535,7 +546,7 @@ namespace DbUp.Support
         protected System.Data.IDbCommand GetCreateTableCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         public string[] GetExecutedScripts() { }
         protected abstract string GetInsertJournalEntrySql(string scriptName, string applied);
-        protected System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
+        protected virtual System.Data.IDbCommand GetInsertScriptCommand(System.Func<System.Data.IDbCommand> dbCommandFactory, DbUp.Engine.SqlScript script) { }
         protected System.Data.IDbCommand GetJournalEntriesCommand(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
         protected abstract string GetJournalEntriesSql();
         protected virtual void OnTableCreated(System.Func<System.Data.IDbCommand> dbCommandFactory) { }
