@@ -24,10 +24,6 @@ jobs:
       DOTNET_CLI_TELEMETRY_OPTOUT: true
       DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true # Avoid pre-populating the NuGet package cache
 
-    # https://docs.github.com/en/actions/security-guides/automatic-token-authentication#permissions-for-the-github_token
-    permissions:
-      checks: write #test-reporter https://github.com/dorny/test-reporter/issues/229
-
     steps:
       - uses: actions/checkout@v3
         with:
@@ -49,10 +45,12 @@ jobs:
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
 
-      - name: Test Report 🧪
-        uses: dorny/test-reporter@v1
+      # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
+      - name: Upload Test Results
+        uses: actions/upload-artifact@v3 # upload test results
         if: success() || failure() # run this step even if previous step failed
         with:
-          name: Tests
+          name: test-results
           path: artifacts/TestResults/*.trx
-          reporter: dotnet-trx
+
+      # Moved Test report into separate workflow
