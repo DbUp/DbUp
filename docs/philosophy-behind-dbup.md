@@ -11,7 +11,7 @@ Even outside of production, a database is more than schema. A database "definiti
 * Sample master/transactional data (for developers/testers)
 * Security (roles, permissions, users)
 
-It may even include management job definitions (backup, shrink), though they tend to be left to DBA's.
+It may even include management job definitions (backup, shrink), though they tend to be left to DBAs.
 
 # Transitions, not States
 As each iteration progresses, we'll make changes to our database.
