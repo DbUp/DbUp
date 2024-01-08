@@ -16,7 +16,7 @@
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Oracle.ManagedDataAccess">
-      <Version>12.2.1100</Version>
+      <Version>21.13.0</Version>
     </PackageReference>
   </ItemGroup>
 
