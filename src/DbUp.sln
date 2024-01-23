@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-core", "dbup-core\dbup
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlserver", "dbup-sqlserver\dbup-sqlserver.csproj", "{8190B40B-AC5B-414F-8A00-9B6A2C12B010}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlce", "dbup-sqlce\dbup-sqlce.csproj", "{9C8519A1-2C06-4551-A9D4-016485EA0034}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-firebird", "dbup-firebird\dbup-firebird.csproj", "{9EA9C28D-0E52-4CB1-9E7B-F21705845486}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-mysql", "dbup-mysql\dbup-mysql.csproj", "{E8AF6499-332F-4468-883B-23E3DFB2D148}"
@@ -47,8 +45,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE
 	ProjectSection(SolutionItems) = preProject
 		..\build.cake = ..\build.cake
 		..\build.ps1 = ..\build.ps1
-		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
 		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
+		..\.github\workflows\create-draft-release.yml = ..\.github\workflows\create-draft-release.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Common", "Tests.Common\Tests.Common.csproj", "{B25DA0B8-6A43-499F-84BE-91132AC433B5}"
@@ -67,10 +65,6 @@ Global
 		{8190B40B-AC5B-414F-8A00-9B6A2C12B010}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8190B40B-AC5B-414F-8A00-9B6A2C12B010}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8190B40B-AC5B-414F-8A00-9B6A2C12B010}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9C8519A1-2C06-4551-A9D4-016485EA0034}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9C8519A1-2C06-4551-A9D4-016485EA0034}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9C8519A1-2C06-4551-A9D4-016485EA0034}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9C8519A1-2C06-4551-A9D4-016485EA0034}.Release|Any CPU.Build.0 = Release|Any CPU
 		{9EA9C28D-0E52-4CB1-9E7B-F21705845486}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{9EA9C28D-0E52-4CB1-9E7B-F21705845486}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EA9C28D-0E52-4CB1-9E7B-F21705845486}.Release|Any CPU.ActiveCfg = Release|Any CPU

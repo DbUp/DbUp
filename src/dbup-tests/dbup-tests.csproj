@@ -34,7 +34,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <ProjectReference Include="..\dbup-sqlce\dbup-sqlce.csproj" />
     <ProjectReference Include="..\dbup-firebird\dbup-firebird.csproj" />
     <ProjectReference Include="..\dbup-sqlanywhere\dbup-sqlanywhere.csproj" />
     <PackageReference Include="Microsoft.SqlServer.Compact" Version="4.0.8876.1" />
