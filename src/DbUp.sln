@@ -29,8 +29,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{ACA9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApplication", "Samples\SampleApplication\SampleApplication.csproj", "{397F41BC-1076-4D1B-9620-C6051E8104F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-oracle", "dbup-oracle\dbup-oracle.csproj", "{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlanywhere", "dbup-sqlanywhere\dbup-sqlanywhere.csproj", "{93F59A3B-70CB-44CA-AA41-B76889AA9D51}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
@@ -79,10 +77,6 @@ Global
 		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8DAD25CC-ACF6-4A3A-A008-090C55E8FFA0}.Release|Any CPU.Build.0 = Release|Any CPU
 		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
