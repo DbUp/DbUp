@@ -5,6 +5,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.SQLite;
+using DbUp.Tests.Common;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using Shouldly;

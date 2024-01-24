@@ -35,12 +35,16 @@ jobs:
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
 
+      - name: Push NuGet packages to GitHub Packages ⬆️
+        working-directory: artifacts
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
+
       - name: "Create Draft Release"
         if: ${{ format('{0}', github.ref_name) == 'master' && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
-        run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item *.nupkg)
+        run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item dbup-core.*.nupkg)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

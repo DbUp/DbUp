@@ -5,6 +5,7 @@ using System.Reflection;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.ScriptProviders;
+using DbUp.Tests.Common;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using Shouldly;
