@@ -17,8 +17,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-core", "dbup-core\dbup
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlserver", "dbup-sqlserver\dbup-sqlserver.csproj", "{8190B40B-AC5B-414F-8A00-9B6A2C12B010}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-postgresql", "dbup-postgresql\dbup-postgresql.csproj", "{3D5F0B68-6B3F-4624-8322-289C8E321593}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite", "dbup-sqlite\dbup-sqlite.csproj", "{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-tests", "dbup-tests\dbup-tests.csproj", "{854B6565-B423-4E2C-938B-406C6EAC9C0E}"
@@ -57,10 +55,6 @@ Global
 		{8190B40B-AC5B-414F-8A00-9B6A2C12B010}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8190B40B-AC5B-414F-8A00-9B6A2C12B010}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8190B40B-AC5B-414F-8A00-9B6A2C12B010}.Release|Any CPU.Build.0 = Release|Any CPU
-		{3D5F0B68-6B3F-4624-8322-289C8E321593}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{3D5F0B68-6B3F-4624-8322-289C8E321593}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{3D5F0B68-6B3F-4624-8322-289C8E321593}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{3D5F0B68-6B3F-4624-8322-289C8E321593}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Release|Any CPU.ActiveCfg = Release|Any CPU

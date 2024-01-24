@@ -18,7 +18,6 @@
     <ProjectReference Include="..\dbup-sqlserver\dbup-sqlserver.csproj" />
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
     <ProjectReference Include="..\dbup-mysql\dbup-mysql.csproj" />
-    <ProjectReference Include="..\dbup-postgresql\dbup-postgresql.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Verify" Version="20.8.2" />
     <PackageReference Include="Verify.Xunit" Version="20.8.2" />
