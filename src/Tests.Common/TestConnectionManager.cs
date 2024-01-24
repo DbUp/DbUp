@@ -4,7 +4,7 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.Common
 {
     public class TestConnectionManager : DatabaseConnectionManager
     {
