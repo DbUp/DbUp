@@ -8,7 +8,6 @@
         <PackageIcon>dbup-icon.png</PackageIcon>
         <LangVersion>latest</LangVersion>
         <TreatWarningsAsErrors>true</TreatWarningsAsErrors>
-        <NoWarn>NU1903</NoWarn>
     </PropertyGroup>
 
     <PropertyGroup Condition="'$(TF_BUILD)' == 'true' Or '$(CI)' == 'true'">
