@@ -15,7 +15,6 @@
   <ItemGroup>
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj" />
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
-    <ProjectReference Include="..\dbup-sqlserver\dbup-sqlserver.csproj" />
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Verify" Version="20.8.2" />
