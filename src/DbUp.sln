@@ -27,8 +27,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{ACA9
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SampleApplication", "Samples\SampleApplication\SampleApplication.csproj", "{397F41BC-1076-4D1B-9620-C6051E8104F4}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlanywhere", "dbup-sqlanywhere\dbup-sqlanywhere.csproj", "{93F59A3B-70CB-44CA-AA41-B76889AA9D51}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE-AF4F-4BC3-82FC-E9FEEA6D37A6}"
@@ -37,6 +35,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE
 		..\build.ps1 = ..\build.ps1
 		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
 		..\.github\workflows\create-draft-release.yml = ..\.github\workflows\create-draft-release.yml
+		..\.github\workflows\test-code.yml = ..\.github\workflows\test-code.yml
+		..\.github\workflows\test-report.yml = ..\.github\workflows\test-report.yml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tests.Common", "Tests.Common\Tests.Common.csproj", "{B25DA0B8-6A43-499F-84BE-91132AC433B5}"
@@ -71,10 +71,6 @@ Global
 		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{397F41BC-1076-4D1B-9620-C6051E8104F4}.Release|Any CPU.Build.0 = Release|Any CPU
-		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{93F59A3B-70CB-44CA-AA41-B76889AA9D51}.Release|Any CPU.Build.0 = Release|Any CPU
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.ActiveCfg = Release|Any CPU

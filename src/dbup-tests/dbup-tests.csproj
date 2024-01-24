@@ -17,7 +17,6 @@
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
     <ProjectReference Include="..\dbup-sqlserver\dbup-sqlserver.csproj" />
     <ProjectReference Include="..\dbup-sqlite\dbup-sqlite.csproj" />
-    <ProjectReference Include="..\dbup-mysql\dbup-mysql.csproj" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
     <PackageReference Include="Verify" Version="20.8.2" />
     <PackageReference Include="Verify.Xunit" Version="20.8.2" />
@@ -32,9 +31,6 @@
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <ProjectReference Include="..\dbup-firebird\dbup-firebird.csproj" />
-    <ProjectReference Include="..\dbup-sqlanywhere\dbup-sqlanywhere.csproj" />
-    <PackageReference Include="Microsoft.SqlServer.Compact" Version="4.0.8876.1" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0" />
     <Reference Include="System" />
     <Reference Include="Microsoft.CSharp" />
