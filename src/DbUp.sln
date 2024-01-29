@@ -15,15 +15,9 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_", "_", "{FA530374-E28B-41
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-core", "dbup-core\dbup-core.csproj", "{C98DE7C6-AF51-4901-904D-75FCCB17EE31}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite", "dbup-sqlite\dbup-sqlite.csproj", "{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-tests", "dbup-tests\dbup-tests.csproj", "{854B6565-B423-4E2C-938B-406C6EAC9C0E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-sqlite-mono", "dbup-sqlite-mono\dbup-sqlite-mono.csproj", "{CD122205-EEC4-4DB9-9EFA-976EADF80323}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Samples", "Samples", "{ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SQLiteSampleApplication", "Samples\SQLiteSampleApplication\SQLiteSampleApplication.csproj", "{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE-AF4F-4BC3-82FC-E9FEEA6D37A6}"
 	ProjectSection(SolutionItems) = preProject
@@ -47,10 +41,6 @@ Global
 		{C98DE7C6-AF51-4901-904D-75FCCB17EE31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{C98DE7C6-AF51-4901-904D-75FCCB17EE31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C98DE7C6-AF51-4901-904D-75FCCB17EE31}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BCE32C14-27E3-4E0D-BC1F-EC9CCB128F00}.Release|Any CPU.Build.0 = Release|Any CPU
 		{854B6565-B423-4E2C-938B-406C6EAC9C0E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{854B6565-B423-4E2C-938B-406C6EAC9C0E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{854B6565-B423-4E2C-938B-406C6EAC9C0E}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -59,10 +49,6 @@ Global
 		{CD122205-EEC4-4DB9-9EFA-976EADF80323}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CD122205-EEC4-4DB9-9EFA-976EADF80323}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CD122205-EEC4-4DB9-9EFA-976EADF80323}.Release|Any CPU.Build.0 = Release|Any CPU
-		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{B25DA0B8-6A43-499F-84BE-91132AC433B5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{B25DA0B8-6A43-499F-84BE-91132AC433B5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B25DA0B8-6A43-499F-84BE-91132AC433B5}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -72,7 +58,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{FD894CD2-4D67-4BD8-8E3C-CDA4BD7A00A3} = {ACA9F575-BFC0-4FE1-BAB6-AE59FD8E5C26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6807402B-EE7A-4324-A615-28F3499B1E9F}
