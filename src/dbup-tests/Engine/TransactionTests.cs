@@ -3,6 +3,7 @@ using System.Data;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.Tests.Common;
+using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using Shouldly;
 using Xunit;
@@ -18,9 +19,10 @@ namespace DbUp.Tests.Engine
         {
             var connectionFactory = new TransactionCountingConnectionFactory();
 
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase("")
-                .OverrideConnectionFactory(connectionFactory)
+            var testProvider = new TestProvider();
+            testProvider.Builder.Configure(c => c.ConnectionManager = new TestConnectionManager(connectionFactory));
+            
+            var upgradeEngine = testProvider.Builder
                 .WithScript("testscript1", "SELECT 1")
                 .WithScript("testscript2", "SELECT 1")
                 .WithTransactionPerScript()
@@ -32,7 +34,7 @@ namespace DbUp.Tests.Engine
 
             connectionFactory.TransactionWasOpened.ShouldBeTrue("BeginTransaction was never called");
         }
-
+        
         class TransactionCountingConnectionFactory : IConnectionFactory
         {
             int transactionCount;

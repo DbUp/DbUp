@@ -6,25 +6,19 @@ using DbUp.Engine;
 
 namespace DbUp.Tests.Common.RecordingDb
 {
-    class RecordingDbCommand : IDbCommand
+    public class RecordingDbCommand : IDbCommand
     {
         readonly CaptureLogsLogger logger;
-        readonly SqlScript[]? runScripts;
-        readonly string schemaTableName;
         readonly Dictionary<string?, Func<object>> scalarResults;
         readonly Dictionary<string?, Func<int>> nonQueryResults;
 
         public RecordingDbCommand(
             CaptureLogsLogger logger,
-            SqlScript[]? runScripts,
-            string schemaTableName,
             Dictionary<string?, Func<object>> scalarResults,
             Dictionary<string?, Func<int>> nonQueryResults
         )
         {
             this.logger = logger;
-            this.runScripts = runScripts;
-            this.schemaTableName = schemaTableName;
             this.scalarResults = scalarResults;
             this.nonQueryResults = nonQueryResults;
             Parameters = new RecordingDataParameterCollection(logger);
@@ -78,12 +72,6 @@ namespace DbUp.Tests.Common.RecordingDb
             if (CommandText == "error")
                 ThrowError();
 
-            // Reading SchemaVersions
-            if (CommandText.IndexOf(schemaTableName, StringComparison.OrdinalIgnoreCase) != -1)
-            {
-                return new ScriptReader(runScripts);
-            }
-
             return new EmptyReader();
         }
 
@@ -103,10 +91,8 @@ namespace DbUp.Tests.Common.RecordingDb
                 ThrowError();
 
             // Are we checking if schemaversions exists
-            if (CommandText.IndexOf(schemaTableName, StringComparison.OrdinalIgnoreCase) != -1)
+            if (CommandText.IndexOf("SchemaVersions", StringComparison.OrdinalIgnoreCase) != -1)
             {
-                if (runScripts != null)
-                    return 1;
                 return 0;
             }
 

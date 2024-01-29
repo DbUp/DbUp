@@ -8,10 +8,15 @@ namespace DbUp.Tests.Common
 {
     public class TestConnectionManager : DatabaseConnectionManager
     {
-        public TestConnectionManager(IDbConnection connection, bool startUpgrade = false) : base(l => connection)
+        public TestConnectionManager(IConnectionFactory connectionFactory)
+            : base(connectionFactory)
         {
-            if (startUpgrade)
-                OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+            
+        }
+        
+        public TestConnectionManager(IDbConnection connection) 
+            : base(l => connection)
+        {
         }
 
         public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)

@@ -7,17 +7,16 @@ namespace DbUp.Tests.Common.RecordingDb
 {
     public class RecordingDbConnection : IDbConnection
     {
-        readonly Dictionary<string?, Func<object>> scalarResults = new Dictionary<string?, Func<object>>();
-        readonly Dictionary<string?, Func<int>> nonQueryResults = new Dictionary<string?, Func<int>>();
+        readonly Dictionary<string?, Func<object>> scalarResults = new();
+        readonly Dictionary<string?, Func<int>> nonQueryResults = new();
         readonly CaptureLogsLogger logger;
-        readonly string schemaTableName;
-        private SqlScript[]? runScripts;
 
-        public RecordingDbConnection(CaptureLogsLogger logger, string schemaTableName)
+        public RecordingDbConnection(CaptureLogsLogger logger)
         {
             this.logger = logger;
-            this.schemaTableName = schemaTableName;
         }
+
+        public List<RecordingDbCommand> CommandsIssued { get; } = new();
 
         public IDbTransaction BeginTransaction()
         {
@@ -43,7 +42,9 @@ namespace DbUp.Tests.Common.RecordingDb
 
         public IDbCommand CreateCommand()
         {
-            return new RecordingDbCommand(logger, runScripts, schemaTableName, scalarResults, nonQueryResults);
+            var cmd = new RecordingDbCommand(logger, scalarResults, nonQueryResults);
+            CommandsIssued.Add(cmd);
+            return cmd;
         }
 
         public void Open()
@@ -63,11 +64,6 @@ namespace DbUp.Tests.Common.RecordingDb
         public string? Database { get; private set; }
 
         public ConnectionState State { get; private set; }
-
-        public void SetupRunScripts(params SqlScript[] runScripts)
-        {
-            this.runScripts = runScripts;
-        }
 
         public void SetupScalarResult(string? sql, Func<object> action)
         {

@@ -28,7 +28,7 @@ namespace DbUp.Tests.Common
         {
             this.parentFilePath = parentFilePath;
             testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
-            recordingConnection = new RecordingDbConnection(logger, "SchemaVersions");
+            recordingConnection = new RecordingDbConnection(logger);
         }
 
         protected abstract UpgradeEngineBuilder DeployTo(SupportedDatabases to);
@@ -125,8 +125,9 @@ namespace DbUp.Tests.Common
         {
             upgradeEngineBuilder = DeployTo(DeployChanges.To)
                 .WithScripts(scripts)
-                .OverrideConnectionFactory(testConnectionFactory)
                 .LogTo(logger);
+            
+            upgradeEngineBuilder.Configure(c => c.ConnectionManager = new TestConnectionManager(testConnectionFactory));
         }
     }
 }

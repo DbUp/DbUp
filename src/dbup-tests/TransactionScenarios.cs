@@ -13,17 +13,15 @@ namespace DbUp.Tests
     [UsesVerify]
     public class TransactionScenarios
     {
-        UpgradeEngineBuilder upgradeEngineBuilder;
-        RecordingDbConnection testConnection;
-        SqlScript[] scripts;
-        readonly CaptureLogsLogger logger = new();
-
+        private readonly TestProvider testProvider = new();
+        
         [Fact]
         public Task UsingNoTransactionsScenario()
         {
             this
-                .Given(_ => DbUpSetupToNotUseTransactions())
-                .When(_ => UpgradeIsPerformedExecutingTwoScripts())
+                .Given(_ => _.GivenDbUpSetupToNotUseTransactions())
+                .And(_ => _.GivenTwoValidScriptsAreProvided())
+                .When(_ => _.WhenUpgradeIsPerformed())
                 .BDDfy();
 
             return ShouldExecuteScriptsWithoutUsingATransaction(nameof(UsingNoTransactionsScenario));
@@ -33,8 +31,9 @@ namespace DbUp.Tests
         public Task UsingNoTransactionsScenarioScriptFails()
         {
             this
-                .Given(_ => DbUpSetupToNotUseTransactions())
-                .When(_ => UpgradeIsPerformedWithFirstOfTwoScriptsFails())
+                .Given(_ => _.GivenDbUpSetupToNotUseTransactions())
+                .And(_ => _.GivenTwoValidScriptsAreProvided())
+                .When(_ => _.WhenUpgradeIsPerformed())
                 .BDDfy();
             return ShouldStopExecution(nameof(UsingNoTransactionsScenarioScriptFails));
         }
@@ -43,8 +42,9 @@ namespace DbUp.Tests
         public Task UsingTransactionPerScriptScenarioSuccess()
         {
             this
-                .Given(_ => DbUpSetupToUseTransactionPerScript())
-                .When(_ => UpgradeIsPerformedExecutingTwoScripts())
+                .Given(_ => _.GivenDbUpSetupToUseTransactionPerScript())
+                .And(_ => _.GivenTwoValidScriptsAreProvided())
+                .When(_ => _.WhenUpgradeIsPerformed())
                 .BDDfy();
             return ShouldHaveExecutedEachScriptInATransaction(nameof(UsingTransactionPerScriptScenarioSuccess));
         }
@@ -53,8 +53,9 @@ namespace DbUp.Tests
         public Task UsingTransactionPerScriptScenarioScriptFails()
         {
             this
-                .Given(_ => DbUpSetupToUseTransactionPerScript())
-                .When(_ => UpgradeIsPerformedWithFirstOfTwoScriptsFails())
+                .Given(_ => _.GivenDbUpSetupToUseTransactionPerScript())
+                .And(_ => _.GivenTwoValidScriptsAreProvided())
+                .When(_ => _.WhenUpgradeIsPerformed())
                 .BDDfy();
             return ShouldRollbackFailedScriptAndStopExecution(nameof(UsingTransactionPerScriptScenarioScriptFails));
         }
@@ -63,8 +64,10 @@ namespace DbUp.Tests
         public Task UsingSingleTransactionScenarioSuccess()
         {
             this
-                .Given(_ => DbUpSetupToUseSingleTransaction())
-                .When(_ => UpgradeIsPerformedExecutingTwoScripts())
+                .Given(_ => GivenDbUpSetupToUseSingleTransaction())
+                .And(_ => _.GivenAScriptIsProvided("Script0001.sql", "print 'script1'"))
+                .And(_ => _.GivenAScriptIsProvided("Script0002.sql", "print 'script2'"))
+                .When(_ => _.WhenUpgradeIsPerformed())
                 .BDDfy();
             return ShouldExecuteAllScriptsInASingleTransaction(nameof(UsingSingleTransactionScenarioSuccess));
         }
@@ -73,89 +76,58 @@ namespace DbUp.Tests
         public Task UsingSingleTransactionScenarioSuccessScriptFails()
         {
             this
-                .Given(_ => DbUpSetupToUseSingleTransaction())
-                .When(_ => UpgradeIsPerformedWithFirstOfTwoScriptsFails())
+                .Given(_ => _.GivenDbUpSetupToUseSingleTransaction())
+                .And(_ => _.GivenAScriptIsProvided("Script0001.sql", "error"))
+                .And(_ => _.GivenAScriptIsProvided("Script0002.sql", "print 'script2'"))
+                .When(_ => _.WhenUpgradeIsPerformed())
                 .BDDfy();
             return ShouldRollbackFailedScriptAndStopExecution(nameof(UsingSingleTransactionScenarioSuccessScriptFails));
         }
 
-        void UpgradeIsPerformedWithFirstOfTwoScriptsFails()
-        {
-            scripts = new[]
-            {
-                new SqlScript("Script0001.sql", "error"),
-                new SqlScript("Script0002.sql", "print 'script2'")
-            };
-            upgradeEngineBuilder
-                .WithScripts(scripts)
-                .Build()
-                .PerformUpgrade();
-        }
-
         Task ShouldStopExecution(string testName)
         {
-            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings());
+            return Verifier.Verify(testProvider.Log.Log, VerifyHelper.GetVerifySettings());
         }
 
         Task ShouldRollbackFailedScriptAndStopExecution(string testName)
         {
-            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings());
+            return Verifier.Verify(testProvider.Log.Log, VerifyHelper.GetVerifySettings());
         }
 
         Task ShouldExecuteAllScriptsInASingleTransaction(string testName)
         {
-            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings());
+            return Verifier.Verify(testProvider.Log.Log, VerifyHelper.GetVerifySettings());
         }
 
         Task ShouldHaveExecutedEachScriptInATransaction(string testName)
         {
-            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings());
+            return Verifier.Verify(testProvider.Log.Log, VerifyHelper.GetVerifySettings());
         }
 
         Task ShouldExecuteScriptsWithoutUsingATransaction(string testName)
         {
-            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings());
+            return Verifier.Verify(testProvider.Log.Log, VerifyHelper.GetVerifySettings());
         }
 
-        void DbUpSetupToUseSingleTransaction()
-        {
-            testConnection = new RecordingDbConnection(logger, "SchemaVersions");
-            upgradeEngineBuilder = DeployChanges.To
-                .TestDatabase(testConnection)
-                .JournalToSqlTable("dbo", "SchemaVersions")
-                .WithTransaction();
-        }
+        void GivenDbUpSetupToUseSingleTransaction()
+            => testProvider.Builder.WithTransaction();
 
-        void DbUpSetupToNotUseTransactions()
-        {
-            testConnection = new RecordingDbConnection(logger, "SchemaVersions");
-            upgradeEngineBuilder = DeployChanges.To
-                .TestDatabase(testConnection)
-                .JournalToSqlTable("dbo", "SchemaVersions")
-                .WithoutTransaction();
-        }
-
-        void DbUpSetupToUseTransactionPerScript()
-        {
-            testConnection = new RecordingDbConnection(logger, "SchemaVersions");
-            upgradeEngineBuilder = DeployChanges.To
-                .TestDatabase(testConnection)
-                .JournalToSqlTable("dbo", "SchemaVersions")
-                .WithTransactionPerScript();
-        }
-
-        void UpgradeIsPerformedExecutingTwoScripts()
-        {
-            scripts = new[]
-            {
+        void GivenTwoValidScriptsAreProvided()
+            => testProvider.Builder.WithScripts(
                 new SqlScript("Script0001.sql", "print 'script1'"),
                 new SqlScript("Script0002.sql", "print 'script2'")
-            };
-            var result = upgradeEngineBuilder
-               .WithScripts(scripts)
-               .LogTo(logger)
-               .Build()
-               .PerformUpgrade();
-        }
+            );
+
+        void GivenAScriptIsProvided(string name, string contents)
+            => testProvider.Builder.WithScript(name, contents);
+
+        void GivenDbUpSetupToNotUseTransactions()
+            => testProvider.Builder.WithoutTransaction();
+
+        void GivenDbUpSetupToUseTransactionPerScript()
+            => testProvider.Builder.WithTransactionPerScript();
+
+        void WhenUpgradeIsPerformed()
+            => testProvider.Builder.Build().PerformUpgrade();
     }
 }

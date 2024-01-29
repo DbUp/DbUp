@@ -1,10 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
-using DbUp.Tests.Common;
-using DbUp.Tests.Common.RecordingDb;
+using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
@@ -18,13 +16,10 @@ namespace DbUp.Tests
     public class UpgradeDatabaseScenarios
     {
         readonly List<SqlScript> scripts;
-        readonly UpgradeEngineBuilder upgradeEngineBuilder;
-        readonly CaptureLogsLogger logger;
-        readonly DelegateConnectionFactory testConnectionFactory;
-        readonly RecordingDbConnection recordingConnection;
         DatabaseUpgradeResult upgradeResult;
         UpgradeEngine upgradeEngine;
         bool isUpgradeRequired;
+        readonly TestProvider testProvider;
 
         public UpgradeDatabaseScenarios()
         {
@@ -36,15 +31,8 @@ namespace DbUp.Tests
                 new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')")
             };
 
-            logger = new CaptureLogsLogger();
-            recordingConnection = new RecordingDbConnection(logger, "SchemaVersions");
-            testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
-
-            upgradeEngineBuilder = DeployChanges.To
-                .SqlDatabase("testconn")
-                .WithScripts(new TestScriptProvider(scripts))
-                .OverrideConnectionFactory(testConnectionFactory)
-                .LogTo(logger);
+            testProvider = new TestProvider();
+            testProvider.Builder.WithScripts(new TestScriptProvider(scripts));
         }
 
         [Fact]
@@ -115,12 +103,12 @@ namespace DbUp.Tests
 
         void AndErrorMessageShouldBeLogged()
         {
-            logger.Log.ShouldContain("Upgrade failed due to an unexpected exception:");
+            testProvider.Log.Log.ShouldContain("Upgrade failed due to an unexpected exception:");
         }
 
         void ConfiguredToUseTransaction()
         {
-            upgradeEngineBuilder.WithTransaction();
+            testProvider.Builder.WithTransaction();
         }
 
         void AndShouldHaveFailedResult()
@@ -131,7 +119,7 @@ namespace DbUp.Tests
         void AndTheFourthScriptToRunHasAnError()
         {
             var errorSql = "slect * from Oops";
-            recordingConnection.SetupNonQueryResult(errorSql, () => throw new TestSqlException());
+            testProvider.Connection.SetupNonQueryResult(errorSql, () => throw new TestSqlException());
             scripts.Add(new SqlScript("ScriptWithError.sql", errorSql));
         }
 
@@ -148,8 +136,8 @@ namespace DbUp.Tests
 
         void AndShouldLogInformation()
         {
-            logger.InfoMessages.ShouldContain("Beginning database upgrade");
-            logger.InfoMessages.ShouldContain("Upgrade successful");
+            testProvider.Log.InfoMessages.ShouldContain("Beginning database upgrade");
+            testProvider.Log.InfoMessages.ShouldContain("Upgrade successful");
         }
 
         void AndShouldHaveRunAllScriptsInOrder()
@@ -176,18 +164,18 @@ namespace DbUp.Tests
 
         void GivenAnUpToDateDatabase()
         {
-            recordingConnection.SetupRunScripts(scripts[0], scripts[1], scripts[2]);
+            testProvider.Journal.AddScriptsAsPreviouslyExecuted(scripts);
         }
 
         void WhenCheckIfDatabaseUpgradeIsRequired()
         {
-            upgradeEngine = upgradeEngineBuilder.Build();
+            upgradeEngine = testProvider.Builder.Build();
             isUpgradeRequired = upgradeEngine.IsUpgradeRequired();
         }
 
         void WhenDatabaseIsUpgraded()
         {
-            upgradeEngine = upgradeEngineBuilder.Build();
+            upgradeEngine = testProvider.Builder.Build();
             upgradeResult = upgradeEngine.PerformUpgrade();
         }
 

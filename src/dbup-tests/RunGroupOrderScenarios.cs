@@ -1,11 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
-using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
-using DbUp.Tests.Common;
-using DbUp.Tests.Common.RecordingDb;
+using DbUp.Tests.TestInfrastructure;
 using Shouldly;
 using TestStack.BDDfy;
 using Xunit;
@@ -18,33 +16,18 @@ namespace DbUp.Tests
          SoThat = "So that my application's database is up to date")]
     public class RunGroupOrderScenarios
     {
-        readonly List<SqlScript> scripts;
-        readonly UpgradeEngineBuilder upgradeEngineBuilder;
-        readonly CaptureLogsLogger logger;
-        readonly DelegateConnectionFactory testConnectionFactory;
-        readonly RecordingDbConnection recordingConnection;
-        DatabaseUpgradeResult upgradeResult;
-        UpgradeEngine upgradeEngine;
+        DatabaseUpgradeResult result;
+        private readonly TestProvider testProvider;
 
         public RunGroupOrderScenarios()
         {
-            upgradeResult = null;
-            scripts = new List<SqlScript>
-            {
-                new SqlScript("ZZZScript1.sql", "create table Foo (Id int identity)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder}),
-                new SqlScript("ZZZScript2.sql", "alter table Foo add column Name varchar(255)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder}),
-                new SqlScript("AAAScript3.sql", "insert into Foo (Name) values ('test')", new SqlScriptOptions { ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1})
-            };
+            testProvider = new TestProvider();
 
-            logger = new CaptureLogsLogger();
-            recordingConnection = new RecordingDbConnection(logger, "SchemaVersions");
-            testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
-
-            upgradeEngineBuilder = DeployChanges.To
-                .SqlDatabase("testconn")
-                .WithScripts(new TestScriptProvider(scripts))
-                .OverrideConnectionFactory(testConnectionFactory)
-                .LogTo(logger);
+            testProvider.Builder.WithScripts(
+                new SqlScript("ZZZScript1.sql", "create table Foo (Id int identity)", new SqlScriptOptions {ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder}),
+                new SqlScript("ZZZScript2.sql", "alter table Foo add column Name varchar(255)", new SqlScriptOptions {ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder}),
+                new SqlScript("AAAScript3.sql", "insert into Foo (Name) values ('test')", new SqlScriptOptions {ScriptType = ScriptType.RunOnce, RunGroupOrder = DbUpDefaults.DefaultRunGroupOrder + 1})
+            );
         }
 
         [Fact]
@@ -60,21 +43,21 @@ namespace DbUp.Tests
 
         void AndShouldLogInformation()
         {
-            logger.InfoMessages.ShouldContain("Beginning database upgrade");
-            logger.InfoMessages.ShouldContain("Upgrade successful");
+            testProvider.Log.InfoMessages.ShouldContain("Beginning database upgrade");
+            testProvider.Log.InfoMessages.ShouldContain("Upgrade successful");
         }
 
         void AndShouldHaveRunAllScriptsInOrder()
         {
             // Check both results and journal
-            upgradeResult.Scripts
+            result.Scripts
                 .Select(s => s.Name)
                 .ShouldBe(new[] { "ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql" });
         }
 
         void ThenShouldHaveSuccessfulResult()
         {
-            upgradeResult.Successful.ShouldBeTrue();
+            result.Successful.ShouldBeTrue();
         }
 
         void GivenAnOutOfDateDatabase()
@@ -83,8 +66,8 @@ namespace DbUp.Tests
 
         void WhenDatabaseIsUpgraded()
         {
-            upgradeEngine = upgradeEngineBuilder.Build();
-            upgradeResult = upgradeEngine.PerformUpgrade();
+            var upgradeEngine = testProvider.Builder.Build();
+            result = upgradeEngine.PerformUpgrade();
         }
 
         public class TestScriptProvider : IScriptProvider

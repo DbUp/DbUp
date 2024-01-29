@@ -1,4 +1,5 @@
 ﻿#if !NETCORE
+using System.Collections.Generic;
 using System.Data;
 using System.Data.SQLite;
 using DbUp.Engine;
@@ -40,7 +41,9 @@ namespace DbUp.Tests.Support.SQLite
         {
             // Given
             var dbConnection = Substitute.For<IDbConnection>();
-            var connectionManager = new TestConnectionManager(dbConnection, true);
+            var connectionManager = new TestConnectionManager(dbConnection);
+            connectionManager.OperationStarting(new ConsoleUpgradeLog(), new List<SqlScript>());
+
             var command = Substitute.For<IDbCommand>();
             var param1 = Substitute.For<IDbDataParameter>();
             var param2 = Substitute.For<IDbDataParameter>();

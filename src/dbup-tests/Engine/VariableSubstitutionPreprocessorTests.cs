@@ -1,187 +1,111 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using DbUp.Engine;
-using NSubstitute;
+using DbUp.Tests.TestInfrastructure;
 using Shouldly;
+using TestStack.BDDfy;
 using Xunit;
-#pragma warning disable 618
 
 namespace DbUp.Tests.Engine
 {
     public class VariableSubstitutionPreprocessorTests
     {
+        readonly TestProvider testProvider = new TestProvider();
+        private DatabaseUpgradeResult result;
+
+        void GivenAScript(string contents)
+            => testProvider.Builder.WithScript("testscript", contents);
+
+        void GivenAVariable(string name, string value)
+            => testProvider.Builder.WithVariable(name, value);
+
+        void WhenUpgradeIsPerformed()
+            => result = testProvider.Builder.Build().PerformUpgrade();
+
+        void ThenTheUpgradeWasSuccessful()
+            => result.Successful.ShouldBeTrue();
+        
+        void ThenTheUpgradeWasUnsuccessful()
+            => result.Successful.ShouldBeFalse();
+        
+        void ThenTheCommandWasIssuedWithText(string commandText)
+            => testProvider.Log.WriteDbOperations.ShouldContain($"Execute non query command: {commandText}");
+
+        void ThenTheErrorWasAnInvalidOperationException()
+            => result.Error.ShouldBeOfType<InvalidOperationException>();
+        
         [Fact]
-        public void substitutes_variables_in_body()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "something $somevar$ something")
-                .JournalTo(journal)
-                .WithVariable("somevar", "coriander")
-                .Build();
-
-            upgradeEngine.PerformUpgrade();
-
-            command.CommandText.ShouldBe("something coriander something");
-        }
-
-        [Fact]
-        public void substitutes_variables_in_quoted_text()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "'$somevar$'")
-                .JournalTo(journal)
-                .WithVariable("somevar", "coriander")
-                .Build();
-
-            upgradeEngine.PerformUpgrade();
-
-            command.CommandText.ShouldBe("'coriander'");
-        }
+        public void substitutes_variables_in_body() 
+            => this.Given(_ => _.GivenAScript("something $somevar$ something"))
+                .And(_ => GivenAVariable("somevar", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasSuccessful())
+                .And(_ => _.ThenTheCommandWasIssuedWithText("something coriander something"))
+                .BDDfy();
 
         [Fact]
-        public void ignores_undefined_variables_in_comments()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "/*$somevar$*/")
-                .JournalTo(journal)
-                .WithVariable("beansprouts", "coriander")
-                .Build();
-
-            upgradeEngine.PerformUpgrade();
-
-            command.CommandText.ShouldBe("/*$somevar$*/");
-        }
+        public void substitutes_variables_in_quoted_text() 
+            => this.Given(_ => _.GivenAScript("'$somevar$'"))
+                .And(_ => GivenAVariable("somevar", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasSuccessful())
+                .And(_ => _.ThenTheCommandWasIssuedWithText("'coriander'"))
+                .BDDfy();
+        
+        [Fact]
+        public void ignores_undefined_variables_in_comments() 
+            => this.Given(_ => _.GivenAScript("/*$somevar$*/"))
+                .And(_ => GivenAVariable("beansprouts", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasSuccessful())
+                .And(_ => _.ThenTheCommandWasIssuedWithText("/*$somevar$*/"))
+                .BDDfy();
+        
 
         [Fact]
-        public void ignores_undefined_variables_in_complex_comments()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var commands = new List<IDbCommand>();
-
-            _ = connection.CreateCommand()
-                          .Returns(ci =>
-                          {
-                              var command = Substitute.For<IDbCommand>();
-                              commands.Add(command);
-                              return command;
-                          });
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "/*/**/$somevar$*/")
-                .JournalTo(journal)
-                .WithVariable("beansprouts", "coriander")
-                .Build();
-
-            var result = upgradeEngine.PerformUpgrade();
-
-            commands.ShouldNotBeNull();
-            commands.ShouldNotBeEmpty();
-            commands[0].CommandText.ShouldBe("IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'Db') Exec('CREATE SCHEMA [Db]')");
-            commands[1].CommandText.ShouldBe("/*/**/$somevar$*/");
-        }
+        public void ignores_undefined_variables_in_complex_comments() 
+            => this.Given(_ => _.GivenAScript("/*/**/$somevar$*/"))
+                .And(_ => GivenAVariable("beansprouts", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasSuccessful())
+                .And(_ => _.ThenTheCommandWasIssuedWithText("/*/**/$somevar$*/"))
+                .BDDfy();
 
         [Fact]
-        public void ignores_undefined_variable_in_line_comment()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "--$somevar$")
-                .JournalTo(journal)
-                .WithVariable("beansprouts", "coriander")
-                .Build();
-
-            var result = upgradeEngine.PerformUpgrade();
-
-            result.Successful.ShouldBeTrue();
-            command.CommandText.ShouldBe("--$somevar$");
-        }
+        public void ignores_undefined_variable_in_line_comment() 
+            => this.Given(_ => _.GivenAScript("--$somevar$"))
+                .And(_ => GivenAVariable("beansprouts", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasSuccessful())
+                .And(_ => _.ThenTheCommandWasIssuedWithText("--$somevar$"))
+                .BDDfy();
 
         [Fact]
-        public void throws_for_undefined_variable()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "$somevar$")
-                .JournalTo(journal)
-                .WithVariable("beansprouts", "coriander")
-                .Build();
-
-            var result = upgradeEngine.PerformUpgrade();
-
-            result.Successful.ShouldBeFalse();
-            result.Error.ShouldBeOfType<InvalidOperationException>();
-        }
+        public void throws_for_undefined_variable() 
+            => this.Given(_ => _.GivenAScript("$somevar$"))
+                .And(_ => GivenAVariable("beansprouts", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasUnsuccessful())
+                .And(_ => _.ThenTheErrorWasAnInvalidOperationException())
+                .BDDfy();
 
         [Fact]
-        public void ignores_if_whitespace_between_dollars()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "$some var$")
-                .JournalTo(journal)
-                .WithVariable("some var", "coriander")
-                .Build();
-
-            var result = upgradeEngine.PerformUpgrade();
-
-            result.Successful.ShouldBeTrue();
-            command.CommandText.ShouldBe("$some var$");
-        }
+        public void ignores_if_whitespace_between_dollars() 
+            => this.Given(_ => _.GivenAScript("$some var$"))
+                .And(_ => GivenAVariable("some var", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasSuccessful())
+                .And(_ => _.ThenTheCommandWasIssuedWithText("$some var$"))
+                .BDDfy();
+        
 
         [Fact]
-        public void ignores_if_newline_between_dollars()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
+        public void ignores_if_newline_between_dollars() 
+            => this.Given(_ => _.GivenAScript("$some\nvar$"))
+                .And(_ => GivenAVariable("somevar", "coriander"))
+                .When(_ => _.WhenUpgradeIsPerformed())
+                .Then(_ => _.ThenTheUpgradeWasSuccessful())
+                .And(_ => _.ThenTheCommandWasIssuedWithText("$some\nvar$"))
+                .BDDfy();
 
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "$some\nvar$")
-                .JournalTo(journal)
-                .WithVariable("somevar", "coriander")
-                .Build();
-
-            var result = upgradeEngine.PerformUpgrade();
-
-            result.Successful.ShouldBeTrue();
-        }
     }
 }

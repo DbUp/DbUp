@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DbUp.Engine.Output;
 
@@ -11,6 +12,7 @@ namespace DbUp.Tests.Common
         public List<string> InfoMessages { get; } = new List<string>();
         public List<string> WarnMessages { get; } = new List<string>();
         public List<string> ErrorMessages { get; } = new List<string>();
+        public List<string> WriteDbOperations { get; } = new List<string>();
 
         public string Log => logBuilder.ToString();
 
@@ -35,6 +37,13 @@ namespace DbUp.Tests.Common
         public void WriteError(string format, params object[] args)
         {
             var formattedMessage = string.Format(format, args);
+            
+            // Remove stack trace information
+            formattedMessage = string.Join(
+                "\n",
+                formattedMessage.Split('\n').Where(l => !l.StartsWith("   at "))
+            ).Trim();
+            
             var value = "Error:        " + formattedMessage;
             Console.WriteLine(value);
             logBuilder.AppendLine(value);
@@ -46,6 +55,7 @@ namespace DbUp.Tests.Common
             var value = "DB Operation: " + operation;
             Console.WriteLine(value);
             logBuilder.AppendLine(value);
+            WriteDbOperations.Add(operation);
         }
     }
 }

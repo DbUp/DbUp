@@ -34,10 +34,6 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
-      - name: Install SQL CE 📅
-        shell: powershell
-        run: ./install-sql-ce.ps1
-
       - name: Cake Build 🏗️
         id: cake-build
         shell: powershell

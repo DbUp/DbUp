@@ -1,5 +1,6 @@
 ﻿using DbUp.Builder;
 using DbUp.Engine.Output;
+using DbUp.Tests.Common;
 using Shouldly;
 using Xunit;
 
@@ -26,9 +27,9 @@ namespace DbUp.Tests.Builder
         [Fact]
         public void WhenMultipleLoggersAreAddedThenAMultipleLoggerShouldBeReturnedAndLogsGoToAllDestinations()
         {
-            var log1 = new TestLog();
-            var log2 = new TestLog();
-            var log3 = new TestLog();
+            var log1 = new CaptureLogsLogger();
+            var log2 = new CaptureLogsLogger();
+            var log3 = new CaptureLogsLogger();
 
             var config = new UpgradeConfiguration();
             config.AddLog(log1);
@@ -37,9 +38,9 @@ namespace DbUp.Tests.Builder
             config.Log.WriteInformation("Test");
 
             config.Log.ShouldBeOfType<MultipleUpgradeLog>();
-            log1.WasWritten.ShouldBe(true);
-            log2.WasWritten.ShouldBe(true);
-            log3.WasWritten.ShouldBe(true);
+            log1.InfoMessages.ShouldContain("Test");
+            log2.InfoMessages.ShouldContain("Test");
+            log3.InfoMessages.ShouldContain("Test");
         }
 
         [Fact]
@@ -52,25 +53,6 @@ namespace DbUp.Tests.Builder
 
             config.Log = null;
             config.Log.ShouldBe(defaultLog);
-        }
-
-        class TestLog : IUpgradeLog
-        {
-            public bool WasWritten { get; private set; }
-            public void WriteInformation(string format, params object[] args)
-            {
-                WasWritten = true;
-            }
-
-            public void WriteError(string format, params object[] args)
-            {
-                WasWritten = true;
-            }
-
-            public void WriteWarning(string format, params object[] args)
-            {
-                WasWritten = true;
-            }
         }
     }
 }

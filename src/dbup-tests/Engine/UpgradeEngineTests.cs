@@ -5,7 +5,8 @@ using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
-using DbUp.SqlServer;
+using DbUp.Helpers;
+using DbUp.Support;
 using DbUp.Tests.Common;
 using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
@@ -17,28 +18,20 @@ namespace DbUp.Tests.Engine
     {
         public class when_upgrading_a_database_with_variable_substitution : SpecificationFor<UpgradeEngine>
         {
-            IJournal versionTracker;
-            IScriptProvider scriptProvider;
-            IScriptExecutor scriptExecutor;
-            IDbConnection dbConnection;
             IDbCommand dbCommand;
 
             public override UpgradeEngine Given()
             {
-                scriptProvider = Substitute.For<IScriptProvider>();
-                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
-                versionTracker = Substitute.For<IJournal>();
-                dbConnection = Substitute.For<IDbConnection>();
+                var dbConnection = Substitute.For<IDbConnection>();
                 dbCommand = Substitute.For<IDbCommand>();
                 dbConnection.CreateCommand().Returns(dbCommand);
                 var connectionManager = new TestConnectionManager(dbConnection);
-                scriptExecutor = new SqlScriptExecutor(() => connectionManager, () => Substitute.For<IUpgradeLog>(), null, () => true, null, () => versionTracker);
 
                 var builder = new UpgradeEngineBuilder()
                     .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
-                    .JournalTo(versionTracker)
+                    .JournalTo(new NullJournal())
                     .WithVariable("var", "sub");
-                builder.Configure(c => c.ScriptExecutor = scriptExecutor);
+                builder.Configure(c => c.ScriptExecutor = new TestScriptExecutor(c, "dbo"));
                 builder.Configure(c => c.ConnectionManager = connectionManager);
 
                 var upgrader = builder.Build();
@@ -66,14 +59,11 @@ namespace DbUp.Tests.Engine
             public override UpgradeEngine Given()
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
-                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> { new SqlScript("1234", "foo") });
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> {new SqlScript("1234", "foo")});
                 versionTracker = Substitute.For<IJournal>();
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
-                var config = new UpgradeConfiguration
-                {
-                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
-                };
+                var config = new UpgradeConfiguration {ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())};
                 config.ScriptProviders.Add(scriptProvider);
                 config.ScriptExecutor = scriptExecutor;
                 config.Journal = versionTracker;
@@ -111,13 +101,10 @@ namespace DbUp.Tests.Engine
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
                 versionTracker = Substitute.For<IJournal>();
-                versionTracker.GetExecutedScripts().Returns(new[] { "#1", "#2", "#3" });
+                versionTracker.GetExecutedScripts().Returns(new[] {"#1", "#2", "#3"});
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
-                var config = new UpgradeConfiguration
-                {
-                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
-                };
+                var config = new UpgradeConfiguration {ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())};
                 config.ScriptProviders.Add(scriptProvider);
                 config.ScriptExecutor = scriptExecutor;
                 config.Journal = versionTracker;
@@ -134,7 +121,7 @@ namespace DbUp.Tests.Engine
             [Then]
             public void discovered_scripts_are_returned()
             {
-                discoveredScripts.ShouldBe(new[] { "#1", "#2", "#3" });
+                discoveredScripts.ShouldBe(new[] {"#1", "#2", "#3"});
             }
         }
 
@@ -148,19 +135,12 @@ namespace DbUp.Tests.Engine
             public override UpgradeEngine Given()
             {
                 scriptProvider = Substitute.For<IScriptProvider>();
-                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript>
-                {
-                    new SqlScript("#1", "Content of #1"),
-                    new SqlScript("#3", "Content of #3"),
-                });
+                scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> {new SqlScript("#1", "Content of #1"), new SqlScript("#3", "Content of #3"),});
                 versionTracker = Substitute.For<IJournal>();
-                versionTracker.GetExecutedScripts().Returns(new[] { "#1", "#2", "#3" });
+                versionTracker.GetExecutedScripts().Returns(new[] {"#1", "#2", "#3"});
                 scriptExecutor = Substitute.For<IScriptExecutor>();
 
-                var config = new UpgradeConfiguration
-                {
-                    ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())
-                };
+                var config = new UpgradeConfiguration {ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())};
                 config.ScriptProviders.Add(scriptProvider);
                 config.ScriptExecutor = scriptExecutor;
                 config.Journal = versionTracker;
@@ -177,7 +157,7 @@ namespace DbUp.Tests.Engine
             [Then]
             public void discovered_scripts_are_returned()
             {
-                discoveredScripts.ShouldBe(new[] { "#2" });
+                discoveredScripts.ShouldBe(new[] {"#2"});
             }
         }
     }
