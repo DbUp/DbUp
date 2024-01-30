@@ -35,7 +35,7 @@ Task("Version")
 Task("Restore")
     .IsDependentOn("Version")
     .Does(() => {
-        DotNetRestore("src", new DotNetRestoreSettings() {
+        DotNetRestore("./src/DbUp.sln", new DotNetRestoreSettings() {
             ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.SemVer)
         });
     });
