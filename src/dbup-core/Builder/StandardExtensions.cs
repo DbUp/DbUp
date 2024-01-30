@@ -881,4 +881,44 @@ public static class StandardExtensions
     {
         return WithScripts(builder, new EmbeddedScriptsProvider(assemblies, filter, encoding, sqlScriptOptions));
     }
+
+    /// <summary>
+    /// Adds all scripts found as embedded resources in the given assembly.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <param name="configure">Configure the options.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Action<EmbeddedScriptsOptions> configure)
+    {
+        return WithScriptsEmbeddedInAssemblies(builder, new[] { assembly }, configure);
+    }
+
+    /// <summary>
+    /// Adds all scripts found as embedded resources in the given assemblies.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="assemblies">The assemblies.</param>
+    /// <param name="configure">Configure the options.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder WithScriptsEmbeddedInAssemblies(this UpgradeEngineBuilder builder, Assembly[] assemblies, Action<EmbeddedScriptsOptions> configure)
+    {
+        if (configure == null)
+            throw new ArgumentNullException(nameof(configure));
+
+        var options = new EmbeddedScriptsOptions();
+        configure(options);
+
+        return WithScripts(builder, new EmbeddedScriptsProvider(assemblies,
+            options.Filter ?? (s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase)),
+            options.ScriptNameFromResourceName ?? (resourceName => resourceName),
+            options.Encoding ?? DbUpDefaults.DefaultEncoding,
+            options.SqlScriptOptions ?? new()
+            ));
+    }
+
 }
