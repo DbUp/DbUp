@@ -67,17 +67,7 @@ Task("Test")
         });
     });
 
-Task("Package")
-    .IsDependentOn("Test")
-    .Does(() => {
-
-        NuGetPack("./src/dbup/dbup.nuspec", new NuGetPackSettings() {
-            OutputDirectory = System.IO.Path.GetFullPath(outputDir),
-            Version = versionInfo.SemVer
-        });
-    });
-
 Task("Default")
-    .IsDependentOn("Package");
+    .IsDependentOn("Test");
 
 RunTarget(target);
