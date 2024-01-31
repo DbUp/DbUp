@@ -14,8 +14,8 @@ namespace DbUp.Tests.Common;
 [UsesVerify]
 public abstract class NoPublicApiChangesBase
 {
-    private readonly Assembly assembly;
-    private readonly string? callerFilePath;
+    readonly Assembly assembly;
+    readonly string? callerFilePath;
 
     public NoPublicApiChangesBase(Assembly assembly, [CallerFilePath] string? callerFilePath = null)
     {

@@ -17,7 +17,7 @@ namespace DbUp.Tests
     public class RunGroupOrderScenarios
     {
         DatabaseUpgradeResult result;
-        private readonly TestProvider testProvider;
+        readonly TestProvider testProvider;
 
         public RunGroupOrderScenarios()
         {

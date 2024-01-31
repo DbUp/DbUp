@@ -66,7 +66,7 @@ namespace DbUp.Engine.Transactions
             });
         }
 
-        private bool IsAllowed(TransactionMode mode)
+        bool IsAllowed(TransactionMode mode)
         {
             switch (mode)
             {

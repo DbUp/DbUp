@@ -10,7 +10,7 @@ namespace DbUp.Tests.Engine
     public class VariableSubstitutionPreprocessorTests
     {
         readonly TestProvider testProvider = new TestProvider();
-        private DatabaseUpgradeResult result;
+        DatabaseUpgradeResult result;
 
         void GivenAScript(string contents)
             => testProvider.Builder.WithScript("testscript", contents);

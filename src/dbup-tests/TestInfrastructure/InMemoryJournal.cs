@@ -9,8 +9,8 @@ namespace DbUp.Tests.TestInfrastructure;
 
 public class InMemoryJournal : IJournal
 {
-    private readonly IUpgradeLog log;
-    private readonly List<string> executedScripts = new();
+    readonly IUpgradeLog log;
+    readonly List<string> executedScripts = new();
 
     public InMemoryJournal(IUpgradeLog log)
     {
