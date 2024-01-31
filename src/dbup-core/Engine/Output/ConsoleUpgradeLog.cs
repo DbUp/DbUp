@@ -11,9 +11,7 @@ public class ConsoleUpgradeLog : IUpgradeLog
     public void LogTrace(string format, params object[] args)
         => Log(Constants.TraceLevel, ConsoleColor.Gray, format, args);
 
-    /// </summary>
-    /// <param name="format">The format.</param>
-    /// <param name="args">The args.</param>
+    /// <inheritdoc/>
     public void LogDebug(string format, params object[] args)
         => Log(Constants.DebugLevel, ConsoleColor.Magenta, format, args);
 
@@ -21,21 +19,15 @@ public class ConsoleUpgradeLog : IUpgradeLog
     public void LogInformation(string format, params object[] args)
         => Log(Constants.InfoLevel, ConsoleColor.White, format, args);
 
-    /// <summary>
+    /// <inheritdoc/>
     public void LogWarning(string format, params object[] args)
         => Log(Constants.WarnLevel, ConsoleColor.Yellow, format, args);
 
-    /// </summary>
-    /// <param name="format">The format.</param>
-    /// <param name="args">The args.</param>
+    /// <inheritdoc/>
     public void LogError(string format, params object[] args)
         => Log(Constants.ErrorLevel, ConsoleColor.Red, format, args);
 
-    /// <summary>
-    /// Writes a warning message to the log.
-    /// </summary>
-    /// <param name="format">The format.</param>
-    /// <param name="args">The args.</param>
+    /// <inheritdoc/>
     public void LogError(Exception ex, string format, params object[] args)
         => Log(Constants.ErrorLevel, ConsoleColor.Red, format, args, ex);
 

@@ -27,7 +27,7 @@ public class UpgradeConfiguration
     public IConnectionManager ConnectionManager { get; set; }
 
     /// <summary>
-    /// Gets or sets a log which captures details about the upgrade.
+    /// Gets or sets an aggregate logger which captures details about the upgrade.
     /// </summary>
     public IAggregateLog Log
     {

@@ -12,7 +12,7 @@ public class TraceUpgradeLog : IUpgradeLog
     public void LogTrace(string format, params object[] args)
         => Log(Constants.TraceLevel, format, args);
 
-    /// </summary>
+    /// <inheritdoc/>
     public void LogDebug(string format, params object[] args)
         => Log(Constants.DebugLevel, format, args);
 
