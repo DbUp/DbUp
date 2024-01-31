@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net462;net7.0</TargetFrameworks>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
@@ -8,8 +8,6 @@
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj"/>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2"/>
-    <PackageReference Include="Verify" Version="20.8.2"/>
-    <PackageReference Include="Verify.Xunit" Version="20.8.2"/>
     <PackageReference Include="xunit" Version="2.5.3"/>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
       <PrivateAssets>all</PrivateAssets>

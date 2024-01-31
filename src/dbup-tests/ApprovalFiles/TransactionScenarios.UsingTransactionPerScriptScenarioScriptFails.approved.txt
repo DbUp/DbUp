@@ -1,4 +1,4 @@
-﻿DB Operation: Open connection
+DB Operation: Open connection
 Info:         Beginning database upgrade
 DB Operation: Begin transaction
 DB Operation: Execute non query command: IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'dbo') Exec('CREATE SCHEMA [dbo]')

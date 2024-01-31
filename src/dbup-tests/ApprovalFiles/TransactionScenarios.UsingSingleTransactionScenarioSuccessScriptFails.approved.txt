@@ -1,4 +1,4 @@
-﻿DB Operation: Open connection
+DB Operation: Open connection
 Info:         Beginning transaction
 DB Operation: Begin transaction
 Info:         Beginning database upgrade

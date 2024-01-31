@@ -1,4 +1,6 @@
-﻿DB Operation: Open connection
+DB Operation: Open connection
+Info:         Beginning transaction
+DB Operation: Begin transaction
 Info:         Beginning database upgrade
 DB Operation: Execute non query command: IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'dbo') Exec('CREATE SCHEMA [dbo]')
 DB Operation: Dispose command
@@ -11,4 +13,6 @@ Info:         Ensuring tables exists and is latest version
 DB Operation: Execute non query command: print 'script2'
 DB Operation: Dispose command
 Info:         Upgrade successful
+DB Operation: Commit transaction
+DB Operation: Dispose transaction
 DB Operation: Dispose connection
