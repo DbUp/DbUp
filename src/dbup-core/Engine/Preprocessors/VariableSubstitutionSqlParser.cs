@@ -106,6 +106,7 @@ public class VariableSubstitutionSqlParser : SqlParser
             {
                 OnReadCharacter(CharacterType.Command, c);
             }
+
             OnReadCharacter(CharacterType.Command, CurrentChar);
         }
     }

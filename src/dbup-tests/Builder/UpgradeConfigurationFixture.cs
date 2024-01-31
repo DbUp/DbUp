@@ -1,57 +1,70 @@
-﻿using DbUp.Builder;
+﻿using System;
+using DbUp.Builder;
 using DbUp.Engine.Output;
 using DbUp.Tests.Common;
-using Shouldly;
-using Xunit;
 
 namespace DbUp.Tests.Builder;
 
 public class UpgradeConfigurationFixture
 {
     [Fact]
-    public void WhenNoLoggerIsAddedThenTheDefaultLoggerIsReturned()
+    public void Default_Logger_Has_No_Providers()
     {
-            new UpgradeConfiguration()
-                .Log.ShouldNotBeNull();
-        }
+        var config = new UpgradeConfiguration();
+
+        config.Log.ShouldNotBeNull();
+        config.Log.ShouldBeOfType<AggregateLog>();
+        config.Log.HasLoggers.ShouldBeFalse();
+        config.Log.LoggerCount.ShouldBe(0);
+    }
 
     [Fact]
-    public void WhenASingleLoggerIsAddedThenItselfShouldBeReturned()
+    public void Adding_Logger_Increments_Providers()
     {
-            var config = new UpgradeConfiguration();
-            var addedLog = new NoOpUpgradeLog();
-            config.AddLog(addedLog);
-            config.Log.ShouldBe(addedLog);
-        }
+        var config = new UpgradeConfiguration();
+        config.AddLog(MicrosoftUpgradeLog.DevNull);
+
+        config.Log.HasLoggers.ShouldBeTrue();
+        config.Log.LoggerCount.ShouldBe(1);
+    }
 
     [Fact]
-    public void WhenMultipleLoggersAreAddedThenAMultipleLoggerShouldBeReturnedAndLogsGoToAllDestinations()
+    public void Logger_Writes_To_All_Providers()
     {
-            var log1 = new CaptureLogsLogger();
-            var log2 = new CaptureLogsLogger();
-            var log3 = new CaptureLogsLogger();
+        var log1 = new CaptureLogsLogger();
+        var log2 = new CaptureLogsLogger();
+        var log3 = new CaptureLogsLogger();
 
-            var config = new UpgradeConfiguration();
-            config.AddLog(log1);
-            config.AddLog(log2);
-            config.AddLog(log3);
-            config.Log.WriteInformation("Test");
+        var config = new UpgradeConfiguration();
 
-            config.Log.ShouldBeOfType<MultipleUpgradeLog>();
-            log1.InfoMessages.ShouldContain("Test");
-            log2.InfoMessages.ShouldContain("Test");
-            log3.InfoMessages.ShouldContain("Test");
-        }
+        config.AddLog(log1);
+        config.AddLog(log2);
+        config.AddLog(log3);
 
-    [Fact]
-    public void WhenTheLoggerIsClearedThenTheDefaultLoggerReturns()
+        config.Log.HasLoggers.ShouldBeTrue();
+        config.Log.LoggerCount.ShouldBe(3);
+
+        config.Log.LogInformation("Test");
+
+        log1.InfoMessages.ShouldContain("Test");
+        log2.InfoMessages.ShouldContain("Test");
+        log3.InfoMessages.ShouldContain("Test");
+    }
+
+    class TestLog : IUpgradeLog
     {
-            var config = new UpgradeConfiguration();
-            var defaultLog = config.Log;
-            config.AddLog(new NoOpUpgradeLog());
-            config.Log.ShouldNotBe(defaultLog);
+        public bool WasWritten { get; private set; }
 
-            config.Log = null;
-            config.Log.ShouldBe(defaultLog);
-        }
+        public void LogInformation(string format, params object[] args) => WasWritten = true;
+
+        public void LogError(string format, params object[] args) => WasWritten = true;
+
+        public void LogWarning(string format, params object[] args) => WasWritten = true;
+
+        public void LogTrace(string format, params object[] args) => WasWritten = true;
+
+        public void LogDebug(string format, params object[] args) => WasWritten = true;
+
+        public void LogError(Exception ex, string format, params object[] args) => WasWritten = true;
+    }
 }

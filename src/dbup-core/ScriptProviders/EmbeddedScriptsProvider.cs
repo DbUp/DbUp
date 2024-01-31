@@ -50,11 +50,7 @@ public class EmbeddedScriptsProvider : IScriptProvider
     public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
     {
         return assemblies
-            .Select(assembly => new
-            {
-                Assembly = assembly,
-                ResourceNames = assembly.GetManifestResourceNames().Where(filter).ToArray()
-            })
+            .Select(assembly => new {Assembly = assembly, ResourceNames = assembly.GetManifestResourceNames().Where(filter).ToArray()})
             .SelectMany(x => x.ResourceNames.Select(resourceName => SqlScript.FromStream(resourceName, x.Assembly.GetManifestResourceStream(resourceName), encoding, sqlScriptOptions)))
             .OrderBy(sqlScript => sqlScript.Name)
             .ToList();

@@ -24,19 +24,14 @@ public class UpgradeDatabaseScenarios
     public UpgradeDatabaseScenarios()
     {
         upgradeResult = null;
-        scripts = new List<SqlScript>
-        {
-            new("Script1.sql", "create table Foo (Id int identity)"),
-            new("Script2.sql", "alter table Foo add column Name varchar(255)"),
-            new("Script3.sql", "insert into Foo (Name) values ('test')")
-        };
+        scripts = new List<SqlScript> {new("Script1.sql", "create table Foo (Id int identity)"), new("Script2.sql", "alter table Foo add column Name varchar(255)"), new("Script3.sql", "insert into Foo (Name) values ('test')")};
 
         testProvider = new TestProvider();
         testProvider.Builder.WithScripts(new TestScriptProvider(scripts));
     }
 
     [Fact]
-    public void AttemptingToUpgradeAnUptoDateDatabase()
+    public void AttemptingToUpgradeAnUpToDateDatabase()
     {
         this.Given(t => t.GivenAnUpToDateDatabase())
             .When(t => t.WhenDatabaseIsUpgraded())
@@ -57,7 +52,7 @@ public class UpgradeDatabaseScenarios
     }
 
     [Fact]
-    public void IsUpdateRequestedForAnUptoDateDatabase()
+    public void IsUpdateRequestedForAnUpToDateDatabase()
     {
         this.Given(t => t.GivenAnUpToDateDatabase())
             .When(t => t.WhenDatabaseIsUpgraded())
@@ -145,7 +140,7 @@ public class UpgradeDatabaseScenarios
         // Check both results and journal
         upgradeResult.Scripts
             .Select(s => s.Name)
-            .ShouldBe(new[] { "Script1.sql", "Script2.sql", "Script3.sql" });
+            .ShouldBe(new[] {"Script1.sql", "Script2.sql", "Script3.sql"});
     }
 
     void ThenShouldNotRunAnyScripts()

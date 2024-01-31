@@ -1,13 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFrameworks>net462;net7.0</TargetFrameworks>
+    <RootNamespace>DbUp.Tests</RootNamespace>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\Tests.Common\Tests.Common.csproj" />
     <ProjectReference Include="..\dbup-core\dbup-core.csproj" />
+    <PackageReference Include="Serilog.Extensions.Logging" Version="7.0.0" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0" />
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2" />
+    <PackageReference Include="Serilog.Sinks.InMemory" Version="0.11.0" />
     <PackageReference Include="Verify" Version="20.8.2" />
     <PackageReference Include="Verify.Xunit" Version="20.8.2" />
     <PackageReference Include="xunit" Version="2.5.3" />

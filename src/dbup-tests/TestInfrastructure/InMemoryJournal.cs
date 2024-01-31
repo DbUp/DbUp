@@ -16,14 +16,14 @@ public class InMemoryJournal : IJournal
     {
         this.log = log;
     }
-    
+
     public string[] GetExecutedScripts() => executedScripts.ToArray();
 
     public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory) => executedScripts.Add(script.Name);
 
     public void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)
     {
-        log.WriteInformation("Ensuring tables exists and is latest version");
+        log.LogInformation("Ensuring tables exists and is latest version");
     }
 
     public void AddScriptsAsPreviouslyExecuted(IReadOnlyList<SqlScript> scripts)

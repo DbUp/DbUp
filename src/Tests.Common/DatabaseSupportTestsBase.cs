@@ -19,7 +19,7 @@ public abstract class DatabaseSupportTestsBase
     readonly IConnectionFactory testConnectionFactory;
     readonly List<SqlScript> scripts = new();
     readonly RecordingDbConnection recordingConnection;
-    readonly CaptureLogsLogger logger = new ();
+    readonly CaptureLogsLogger logger = new();
 
     DatabaseUpgradeResult? result;
     UpgradeEngineBuilder? upgradeEngineBuilder;
@@ -126,7 +126,7 @@ public abstract class DatabaseSupportTestsBase
         upgradeEngineBuilder = DeployTo(DeployChanges.To)
             .WithScripts(scripts)
             .LogTo(logger);
-            
+
         upgradeEngineBuilder.Configure(c => c.ConnectionManager = new TestConnectionManager(testConnectionFactory));
     }
 }

@@ -14,5 +14,4 @@ Error:        DbUp.Tests.Common.RecordingDb.RecordingDbCommand+TestDbException (
 Warn:         Error occured when executing scripts, transaction will be rolled back
 DB Operation: Dispose transaction
 DB Operation: Dispose connection
-Error:        Upgrade failed due to an unexpected exception:
-DbUp.Tests.Common.RecordingDb.RecordingDbCommand+TestDbException (0x80004005): External component has thrown an exception.
+Error:        Upgrade failed due to an unexpected exception: DbUp.Tests.Common.RecordingDb.RecordingDbCommand+TestDbException (0x80004005): External component has thrown an exception. => External component has thrown an exception.

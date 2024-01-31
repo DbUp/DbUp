@@ -14,8 +14,9 @@ public class FileSystemScriptOptions
     public FileSystemScriptOptions()
     {
         Encoding = DbUpDefaults.DefaultEncoding;
-        Extensions = new[] { "*.sql" };
+        Extensions = new[] {"*.sql"};
     }
+
     /// <summary>
     /// The provider will look in subdirectories for scripts files.
     /// </summary>

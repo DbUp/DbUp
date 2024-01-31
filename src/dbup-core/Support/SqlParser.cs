@@ -92,6 +92,7 @@ public abstract class SqlParser : StringReader
                 ReadCharacter(CharacterType.Command, CurrentChar);
             }
         }
+
         CommandEnded?.Invoke();
     }
 
@@ -267,6 +268,7 @@ public abstract class SqlParser : StringReader
             {
                 return false;
             }
+
             return Peek() == DashChar;
         }
     }
@@ -301,6 +303,7 @@ public abstract class SqlParser : StringReader
                 ReadCustomStatement();
                 Read();
             }
+
             ReadCharacter(CharacterType.QuotedString, CurrentChar);
             if (IsQuote)
             {
@@ -322,6 +325,7 @@ public abstract class SqlParser : StringReader
                 ReadCustomStatement();
                 Read();
             }
+
             ReadCharacter(CharacterType.BracketedText, CurrentChar);
             if (IsEndOfBracketedText)
             {
@@ -355,9 +359,9 @@ public abstract class SqlParser : StringReader
             {
                 break;
             }
+
             ReadCharacter(CharacterType.DashComment, CurrentChar);
-        }
-        while (!IsEndOfLine);
+        } while (!IsEndOfLine);
     }
 
     void ReadSlashStarComment()
@@ -449,16 +453,22 @@ public abstract class SqlParser : StringReader
     {
         /// <summary>Character belongs to a command</summary>
         Command,
+
         /// <summary>Character belongs to a /* comment</summary>
         SlashStarComment,
+
         /// <summary>Character belongs to a -- comment</summary>
         DashComment,
+
         /// <summary>Character belongs to [bracketed] text</summary>
         BracketedText,
+
         /// <summary>Character belongs to "quoted" text</summary>
         QuotedString,
+
         /// <summary>Character belongs do a delimiter (like GO)</summary>
         Delimiter,
+
         /// <summary>Character is a custom statement (open for new implementation)</summary>
         CustomStatement,
     }

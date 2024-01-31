@@ -123,6 +123,7 @@ public class AdHocSqlRunner
                             value = value == DBNull.Value ? null : value.ToString();
                             line.Add(name, (string)value);
                         }
+
                         results.Add(line);
                     }
                 }
