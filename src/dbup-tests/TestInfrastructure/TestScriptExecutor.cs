@@ -12,14 +12,14 @@ public class TestScriptExecutor : ScriptExecutor
         new TestSqlObjectParser(),
         () => c.Log,
         schema,
-        () => c.VariablesEnabled, 
+        () => c.VariablesEnabled,
         c.ScriptPreprocessors,
         () => c.Journal
     )
     {
     }
 
-    protected override string GetVerifySchemaSql(string schema) 
+    protected override string GetVerifySchemaSql(string schema)
         => string.Format(@"IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'{0}') Exec('CREATE SCHEMA [{0}]')", Schema);
 
     protected override void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCallback) => executeCallback();

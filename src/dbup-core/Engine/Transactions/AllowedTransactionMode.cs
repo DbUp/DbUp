@@ -14,14 +14,16 @@ public enum AllowedTransactionMode
     /// Its allowed to run single transactions for an entire run
     /// </summary>
     SingleTransaction = 1,
+
     /// <summary>
     /// Its allowed to run transactions pr. script
     /// </summary>
     TransactionPerScript = 2,
+
     /// <summary>
     /// Its allowed to run a single transaction that rolls back at the end
     /// </summary>
     SingleTransactionAlwaysRollback = 4,
 
-    All = SingleTransaction | TransactionPerScript | SingleTransactionAlwaysRollback 
+    All = SingleTransaction | TransactionPerScript | SingleTransactionAlwaysRollback
 }

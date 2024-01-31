@@ -14,8 +14,8 @@ public class TraceUpgradeLog : IUpgradeLog
     /// <param name="args">The args.</param>
     public void WriteInformation(string format, params object[] args)
     {
-            Trace.WriteLine("INFO:  " + string.Format(format, args));
-        }
+        Trace.WriteLine("INFO:  " + string.Format(format, args));
+    }
 
     /// <summary>
     /// Writes an error message to the log.
@@ -24,8 +24,8 @@ public class TraceUpgradeLog : IUpgradeLog
     /// <param name="args">The args.</param>
     public void WriteError(string format, params object[] args)
     {
-            Trace.WriteLine("ERROR: " + string.Format(format, args));
-        }
+        Trace.WriteLine("ERROR: " + string.Format(format, args));
+    }
 
     /// <summary>
     /// Writes a warning message to the log.
@@ -34,6 +34,6 @@ public class TraceUpgradeLog : IUpgradeLog
     /// <param name="args">The args.</param>
     public void WriteWarning(string format, params object[] args)
     {
-            Trace.WriteLine("WARN:  " + string.Format(format, args));
-        }
+        Trace.WriteLine("WARN:  " + string.Format(format, args));
+    }
 }

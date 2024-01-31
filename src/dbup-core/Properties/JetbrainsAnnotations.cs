@@ -101,8 +101,7 @@ sealed class ValueProviderAttribute : Attribute
         Name = name;
     }
 
-    [NotNull]
-    public string Name { get; private set; }
+    [NotNull] public string Name { get; private set; }
 }
 
 /// <summary>
@@ -161,6 +160,7 @@ sealed class InvokerParameterNameAttribute : Attribute;
 sealed class NotifyPropertyChangedInvocatorAttribute : Attribute
 {
     public NotifyPropertyChangedInvocatorAttribute() { }
+
     public NotifyPropertyChangedInvocatorAttribute(string parameterName)
     {
         ParameterName = parameterName;
@@ -217,7 +217,8 @@ sealed class ContractAnnotationAttribute : Attribute
 {
     public ContractAnnotationAttribute([NotNull] string contract)
         : this(contract, false)
-    { }
+    {
+    }
 
     public ContractAnnotationAttribute([NotNull] string contract, bool forceFullStates)
     {
@@ -242,6 +243,7 @@ sealed class ContractAnnotationAttribute : Attribute
 sealed class LocalizationRequiredAttribute : Attribute
 {
     public LocalizationRequiredAttribute() : this(true) { }
+
     public LocalizationRequiredAttribute(bool required)
     {
         Required = required;
@@ -293,8 +295,7 @@ sealed class BaseTypeRequiredAttribute : Attribute
         BaseType = baseType;
     }
 
-    [NotNull]
-    public Type BaseType { get; private set; }
+    [NotNull] public Type BaseType { get; private set; }
 }
 
 /// <summary>
@@ -306,15 +307,18 @@ sealed class UsedImplicitlyAttribute : Attribute
 {
     public UsedImplicitlyAttribute()
         : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
-    { }
+    {
+    }
 
     public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags)
         : this(useKindFlags, ImplicitUseTargetFlags.Default)
-    { }
+    {
+    }
 
     public UsedImplicitlyAttribute(ImplicitUseTargetFlags targetFlags)
         : this(ImplicitUseKindFlags.Default, targetFlags)
-    { }
+    {
+    }
 
     public UsedImplicitlyAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
@@ -335,15 +339,18 @@ sealed class MeansImplicitUseAttribute : Attribute
 {
     public MeansImplicitUseAttribute()
         : this(ImplicitUseKindFlags.Default, ImplicitUseTargetFlags.Default)
-    { }
+    {
+    }
 
     public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags)
         : this(useKindFlags, ImplicitUseTargetFlags.Default)
-    { }
+    {
+    }
 
     public MeansImplicitUseAttribute(ImplicitUseTargetFlags targetFlags)
         : this(ImplicitUseKindFlags.Default, targetFlags)
-    { }
+    {
+    }
 
     public MeansImplicitUseAttribute(ImplicitUseKindFlags useKindFlags, ImplicitUseTargetFlags targetFlags)
     {
@@ -351,25 +358,27 @@ sealed class MeansImplicitUseAttribute : Attribute
         TargetFlags = targetFlags;
     }
 
-    [UsedImplicitly]
-    public ImplicitUseKindFlags UseKindFlags { get; private set; }
-    [UsedImplicitly]
-    public ImplicitUseTargetFlags TargetFlags { get; private set; }
+    [UsedImplicitly] public ImplicitUseKindFlags UseKindFlags { get; private set; }
+    [UsedImplicitly] public ImplicitUseTargetFlags TargetFlags { get; private set; }
 }
 
 [Flags]
 enum ImplicitUseKindFlags
 {
     Default = Access | Assign | InstantiatedWithFixedConstructorSignature,
+
     /// <summary>Only entity marked with attribute considered used.</summary>
     Access = 1,
+
     /// <summary>Indicates implicit assignment to a member.</summary>
     Assign = 2,
+
     /// <summary>
     /// Indicates implicit instantiation of a type with fixed constructor signature.
     /// That means any unused constructor parameters won't be reported as such.
     /// </summary>
     InstantiatedWithFixedConstructorSignature = 4,
+
     /// <summary>Indicates implicit instantiation of a type.</summary>
     InstantiatedNoFixedConstructorSignature = 8,
 }
@@ -383,8 +392,10 @@ enum ImplicitUseTargetFlags
 {
     Default = Itself,
     Itself = 1,
+
     /// <summary>Members of entity marked with attribute are considered used.</summary>
     Members = 2,
+
     /// <summary>Entity marked with attribute and all its members considered used.</summary>
     WithMembers = Itself | Members
 }
@@ -397,6 +408,7 @@ enum ImplicitUseTargetFlags
 sealed class PublicAPIAttribute : Attribute
 {
     public PublicAPIAttribute() { }
+
     public PublicAPIAttribute([NotNull] string comment)
     {
         Comment = comment;
@@ -434,6 +446,7 @@ sealed class PureAttribute : Attribute;
 sealed class MustUseReturnValueAttribute : Attribute
 {
     public MustUseReturnValueAttribute() { }
+
     public MustUseReturnValueAttribute([NotNull] string justification)
     {
         Justification = justification;
@@ -470,6 +483,7 @@ sealed class ProvidesContextAttribute : Attribute;
 sealed class PathReferenceAttribute : Attribute
 {
     public PathReferenceAttribute() { }
+
     public PathReferenceAttribute([PathReference] string basePath)
     {
         BasePath = basePath;
@@ -634,6 +648,7 @@ sealed class AspMvcViewLocationFormatAttribute : Attribute
 sealed class AspMvcActionAttribute : Attribute
 {
     public AspMvcActionAttribute() { }
+
     public AspMvcActionAttribute(string anonymousProperty)
     {
         AnonymousProperty = anonymousProperty;
@@ -651,6 +666,7 @@ sealed class AspMvcActionAttribute : Attribute
 sealed class AspMvcAreaAttribute : Attribute
 {
     public AspMvcAreaAttribute() { }
+
     public AspMvcAreaAttribute(string anonymousProperty)
     {
         AnonymousProperty = anonymousProperty;
@@ -669,6 +685,7 @@ sealed class AspMvcAreaAttribute : Attribute
 sealed class AspMvcControllerAttribute : Attribute
 {
     public AspMvcControllerAttribute() { }
+
     public AspMvcControllerAttribute(string anonymousProperty)
     {
         AnonymousProperty = anonymousProperty;
@@ -771,6 +788,7 @@ sealed class AspMvcActionSelectorAttribute : Attribute;
 sealed class HtmlElementAttributesAttribute : Attribute
 {
     public HtmlElementAttributesAttribute() { }
+
     public HtmlElementAttributesAttribute(string name)
     {
         Name = name;
@@ -787,8 +805,7 @@ sealed class HtmlAttributeValueAttribute : Attribute
         Name = name;
     }
 
-    [NotNull]
-    public string Name { get; private set; }
+    [NotNull] public string Name { get; private set; }
 }
 
 /// <summary>
@@ -819,10 +836,13 @@ enum CollectionAccessType
 {
     /// <summary>Method does not use or modify content of the collection.</summary>
     None = 0,
+
     /// <summary>Method only reads content of the collection but does not modify it.</summary>
     Read = 1,
+
     /// <summary>Method can change content of the collection but does not add new elements.</summary>
     ModifyExistingContent = 2,
+
     /// <summary>Method can add new elements to the collection.</summary>
     UpdatedContent = ModifyExistingContent | 4
 }
@@ -859,10 +879,13 @@ enum AssertionConditionType
 {
     /// <summary>Marked parameter should be evaluated to true.</summary>
     IS_TRUE = 0,
+
     /// <summary>Marked parameter should be evaluated to false.</summary>
     IS_FALSE = 1,
+
     /// <summary>Marked parameter should be evaluated to null value.</summary>
     IS_NULL = 2,
+
     /// <summary>Marked parameter should be evaluated to not null value.</summary>
     IS_NOT_NULL = 3,
 }

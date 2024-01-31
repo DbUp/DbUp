@@ -27,7 +27,7 @@ public abstract class NoPublicApiChangesBase
     public Task Run()
     {
         var result = GetPublicApi(assembly);
-        return Verifier.Verify(result, "cs", VerifyHelper.GetVerifySettings(uniqueForFramework:true), sourceFile: callerFilePath!);
+        return Verifier.Verify(result, "cs", VerifyHelper.GetVerifySettings(uniqueForFramework: true), sourceFile: callerFilePath!);
     }
 
     static string GetPublicApi(Assembly assembly)
@@ -417,7 +417,7 @@ public abstract class NoPublicApiChangesBase
                 sb.Append("out ");
             if (parameter.IsIn)
                 sb.Append("in ");
-            if (parameter.IsDefined(typeof (ParamArrayAttribute), false))
+            if (parameter.IsDefined(typeof(ParamArrayAttribute), false))
                 sb.Append("params ");
 
             sb.Append(GetTypeName(parameter.ParameterType))

@@ -11,7 +11,7 @@ Even outside of production, a database is more than schema. A database "definiti
 * Sample master/transactional data (for developers/testers)
 * Security (roles, permissions, users)
 
-It may even include management job definitions (backup, shrink), though they tend to be left to DBA's.
+It may even include management job definitions (backup, shrink), though they tend to be left to DBAs.
 
 # Transitions, not States
 As each iteration progresses, we'll make changes to our database.
@@ -83,6 +83,6 @@ Most of these principles apply to document databases too. In fact, in some ways 
 # Migration libraries
 Rails popularized the approach of [using a DSL to describe data migrations](http://guides.rubyonrails.org/migrations.html). There are a number of .NET ports of this concept, like [Fluent Migrator](https://github.com/schambers/fluentmigrator) and [Machine.Migrations](http://blog.eleutian.com/2008/04/25/AFirstLookAtMachineMigrations.aspx).
 
-Personally, I actually find T-SQL a perfectly good DSL for describing data migrations. I love my ORM's, but for schema work, T-SQL is perfectly adequate.
+Personally, I actually find T-SQL a perfectly good DSL for describing data migrations. I love my ORMs, but for schema work, T-SQL is perfectly adequate.
 
 Again, these libraries focus on transitions (create table, add column), not states, so they're useful, unlike Visual Studio Database Edition, which isn't.

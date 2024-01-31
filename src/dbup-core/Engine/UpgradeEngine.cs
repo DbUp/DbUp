@@ -98,6 +98,7 @@ public class UpgradeEngine
             {
                 ex.Data["Error occurred in script: "] = executedScript.Name;
             }
+
             configuration.Log.WriteError("Upgrade failed due to an unexpected exception:\r\n{0}", ex.ToString());
             return new DatabaseUpgradeResult(executed, false, ex, executedScript);
         }

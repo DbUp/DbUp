@@ -1,14 +1,14 @@
 <Project>
 
-  <PropertyGroup Condition="'$(IsPackable)' == 'true'">
-    <PackageReadmeFile>README.md</PackageReadmeFile>
-    <PackageReleaseNotes Condition="Exists('$(MSBuildProjectDirectory)/Package Release Notes.txt')">$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/Package Release Notes.txt"))</PackageReleaseNotes>
-  </PropertyGroup>
+    <PropertyGroup Condition="'$(IsPackable)' == 'true'">
+        <PackageReadmeFile>README.md</PackageReadmeFile>
+        <PackageReleaseNotes Condition="Exists('$(MSBuildProjectDirectory)/Package Release Notes.txt')">$([System.IO.File]::ReadAllText("$(MSBuildProjectDirectory)/Package Release Notes.txt"))</PackageReleaseNotes>
+    </PropertyGroup>
 
-  <ItemGroup Condition="'$(IsPackable)' == 'true'">
-    <None Include="..\..\dbup-icon.png" Pack="true" PackagePath="\" Visible="false" />
-    <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false" />
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All" />
-  </ItemGroup>
+    <ItemGroup Condition="'$(IsPackable)' == 'true'">
+        <None Include="..\..\dbup-icon.png" Pack="true" PackagePath="\" Visible="false"/>
+        <None Include="..\..\README.md" Pack="true" PackagePath="\" Visible="false"/>
+        <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1" PrivateAssets="All"/>
+    </ItemGroup>
 
 </Project>

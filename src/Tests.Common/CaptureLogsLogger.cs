@@ -37,13 +37,13 @@ public class CaptureLogsLogger : IUpgradeLog
     public void WriteError(string format, params object[] args)
     {
         var formattedMessage = string.Format(format, args);
-            
+
         // Remove stack trace information
         formattedMessage = string.Join(
             "\n",
             formattedMessage.Split('\n').Where(l => !l.StartsWith("   at "))
         ).Trim();
-            
+
         var value = "Error:        " + formattedMessage;
         Console.WriteLine(value);
         logBuilder.AppendLine(value);

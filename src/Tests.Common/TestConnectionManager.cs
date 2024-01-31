@@ -11,16 +11,15 @@ public class TestConnectionManager : DatabaseConnectionManager
     public TestConnectionManager(IConnectionFactory connectionFactory)
         : base(connectionFactory)
     {
-            
-        }
-        
-    public TestConnectionManager(IDbConnection connection) 
+    }
+
+    public TestConnectionManager(IDbConnection connection)
         : base(_ => connection)
     {
-        }
+    }
 
     public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
     {
-            return new[] { scriptContents };
-        }
+        return new[] {scriptContents};
+    }
 }
