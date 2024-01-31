@@ -62,7 +62,7 @@ class SingleTransactionStrategy : ITransactionStrategy
         executedScriptsListBeforeExecution = executedScripts.ToArray();
         connection = dbConnection;
         log = upgradeLog;
-        upgradeLog.WriteInformation("Beginning transaction");
+            upgradeLog.LogInformation("Beginning transaction");
         transaction = connection.BeginTransaction();
     }
 
@@ -74,7 +74,7 @@ class SingleTransactionStrategy : ITransactionStrategy
         }
         else
         {
-            log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
+                log.LogWarning("Error occured when executing scripts, transaction will be rolled back");
             //Restore the executed scripts collection
             executedScriptsCollection.Clear();
             executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);

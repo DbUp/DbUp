@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Data;
 using DbUp.Engine.Output;
 
@@ -9,12 +9,12 @@ namespace DbUp.Tests.Common.RecordingDb;
 class RecordingDataParameterCollection : IDataParameterCollection
 {
     readonly IUpgradeLog logger;
-    readonly List<object> backingList;
+        readonly ConcurrentBag<object> backingList;
 
     public RecordingDataParameterCollection(IUpgradeLog logger)
     {
         this.logger = logger;
-        backingList = new List<object>();
+            backingList = new ConcurrentBag<object>();
     }
 
     public IEnumerator GetEnumerator()
@@ -32,7 +32,7 @@ class RecordingDataParameterCollection : IDataParameterCollection
     public bool IsSynchronized { get; private set; }
     public int Add(object value)
     {
-        logger.WriteInformation($"DB Operation: Add parameter to command: {value}");
+            logger.LogInformation("DB Operation: Add parameter to command: {0}", value);
         backingList.Add(value);
         return backingList.Count - 1;
     }

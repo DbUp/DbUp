@@ -9,6 +9,7 @@ using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 using DbUp.Support;
+using Microsoft.Extensions.Logging;
 
 /// <summary>
 /// Configuration extensions for the standard stuff.
@@ -35,6 +36,34 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Logs to a Microsoft <see cref="ILoggerFactory"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="loggerFactory">The logger.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogTo(this UpgradeEngineBuilder builder, ILoggerFactory loggerFactory)
+    {
+        builder.LogTo(new MicrosoftUpgradeLog(loggerFactory));
+        return builder;
+    }
+
+    /// <summary>
+    /// Logs to a Microsoft <see cref="ILogger"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="logger">The logger.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogTo(this UpgradeEngineBuilder builder, ILogger logger)
+    {
+        builder.LogTo(new MicrosoftUpgradeLog(logger));
+        return builder;
+    }
+
+    /// <summary>
     /// Logs to the console using pretty colors.
     /// </summary>
     /// <param name="builder">The builder.</param>
@@ -43,45 +72,7 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogToConsole(this UpgradeEngineBuilder builder)
     {
-        return LogTo(builder, new ConsoleUpgradeLog());
-    }
-
-    /// <summary>
-    /// Discards all log messages
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToNowhere(this UpgradeEngineBuilder builder)
-    {
-        return LogTo(builder, new NoOpUpgradeLog());
-    }
-
-#if SUPPORTS_LIBLOG
-    /// <summary>
-    /// Logs to a automatically detected globally configured logger supported by LibLog.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogToAutodetectedLog(this UpgradeEngineBuilder builder)
-    {
-        return LogTo(builder, new AutodetectUpgradeLog());
-    }
-#endif
-
-    /// <summary>
-    /// Logs to the console using pretty colors.
-    /// </summary>
-    /// <param name="builder">The builder.</param>
-    /// <returns>
-    /// The same builder
-    /// </returns>
-    public static UpgradeEngineBuilder LogScriptOutput(this UpgradeEngineBuilder builder)
-    {
-        builder.Configure(c => c.ConnectionManager.IsScriptOutputLogged = true);
+        builder.LogTo(new ConsoleUpgradeLog());
         return builder;
     }
 
@@ -94,7 +85,21 @@ public static class StandardExtensions
     /// </returns>
     public static UpgradeEngineBuilder LogToTrace(this UpgradeEngineBuilder builder)
     {
-        return LogTo(builder, new TraceUpgradeLog());
+        builder.LogTo(new TraceUpgradeLog());
+        return builder;
+    }
+
+    /// <summary>
+    /// Enabled script output logging.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogScriptOutput(this UpgradeEngineBuilder builder)
+    {
+        builder.Configure(c => c.ConnectionManager.IsScriptOutputLogged = true);
+        return builder;
     }
 
     /// <summary>

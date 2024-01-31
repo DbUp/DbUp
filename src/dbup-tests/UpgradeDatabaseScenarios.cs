@@ -36,7 +36,7 @@ public class UpgradeDatabaseScenarios
     }
 
     [Fact]
-    public void AttemptingToUpgradeAnUptoDateDatabase()
+        public void AttemptingToUpgradeAnUpToDateDatabase()
     {
         this.Given(t => t.GivenAnUpToDateDatabase())
             .When(t => t.WhenDatabaseIsUpgraded())
@@ -57,7 +57,7 @@ public class UpgradeDatabaseScenarios
     }
 
     [Fact]
-    public void IsUpdateRequestedForAnUptoDateDatabase()
+        public void IsUpdateRequestedForAnUpToDateDatabase()
     {
         this.Given(t => t.GivenAnUpToDateDatabase())
             .When(t => t.WhenDatabaseIsUpgraded())

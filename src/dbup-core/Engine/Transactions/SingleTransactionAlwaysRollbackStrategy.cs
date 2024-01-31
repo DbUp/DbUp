@@ -62,7 +62,7 @@ class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
         executedScriptsListBeforeExecution = executedScripts.ToArray();
         connection = dbConnection;
         log = upgradeLog;
-        upgradeLog.WriteInformation("Beginning transaction");
+            upgradeLog.LogInformation("Beginning transaction");
         transaction = connection.BeginTransaction();
     }
 
@@ -70,11 +70,11 @@ class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
     {
         if (!errorOccured)
         {
-            log.WriteInformation("Success! No errors have occurred when executing scripts, transaction will be rolled back");
+                log.LogInformation("Success! No errors have occurred when executing scripts, transaction will be rolled back");
         }
         else
         {
-            log.WriteWarning("Error occurred when executing scripts, transaction will be rolled back");
+                log.LogWarning("Error occurred when executing scripts, transaction will be rolled back");
         }
 
         // Always rollback
