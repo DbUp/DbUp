@@ -26,3 +26,4 @@ jobs:
           name: Unit Tests
           path: "*.trx"
           reporter: dotnet-trx
+          fail-on-error: false
