@@ -22,7 +22,7 @@ public class EmbeddedScriptAndCodeProviderTests
         {
             var assembly = typeof(EmbeddedScriptAndCodeProviderTests).GetTypeInfo().Assembly;
 
-            return new EmbeddedScriptAndCodeProvider(assembly, s => true);
+            return new EmbeddedScriptAndCodeProvider(assembly, _ => true);
         }
 
         protected override void When()

@@ -15,7 +15,7 @@ public class TestConnectionManager : DatabaseConnectionManager
         }
         
     public TestConnectionManager(IDbConnection connection) 
-        : base(l => connection)
+        : base(_ => connection)
     {
         }
 

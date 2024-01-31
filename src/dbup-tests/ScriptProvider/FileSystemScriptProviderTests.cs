@@ -88,7 +88,7 @@ public class FileSystemScriptProviderTests
             // Given a filter is provided..
             options = new FileSystemScriptOptions()
             {
-                Filter = (a) =>
+                Filter = (_) =>
                 {
                     filterExecuted = true;
                     return true;

@@ -42,7 +42,7 @@ public class VariableSubstitutionSqlParser : SqlParser
 
         var sb = new StringBuilder();
 
-        ReadCharacter += (type, c) => sb.Append(c);
+        ReadCharacter += (_, c) => sb.Append(c);
 
         ReadVariableName += (name) =>
         {
