@@ -2,10 +2,10 @@
 using Serilog.Core;
 using Serilog.Events;
 
-namespace DbUp.Tests.Engine.Output
+namespace DbUp.Tests.Engine.Output;
+
+public class LoggingTests
 {
-    public class LoggingTests
-    {
 #if SUPPORTS_LIBLOG
         [Fact]
         public void WhenNoLoggerIsSpecified_LoggingShouldGoToAutodiscoveredLogger()
@@ -35,10 +35,9 @@ namespace DbUp.Tests.Engine.Output
         }
 #endif
 
-        class InMemorySink : ILogEventSink
-        {
-            public List<LogEvent> Events { get; } = new List<LogEvent>();
-            public void Emit(LogEvent logEvent) => Events.Add(logEvent);
-        }
+    class InMemorySink : ILogEventSink
+    {
+        public List<LogEvent> Events { get; } = new List<LogEvent>();
+        public void Emit(LogEvent logEvent) => Events.Add(logEvent);
     }
 }

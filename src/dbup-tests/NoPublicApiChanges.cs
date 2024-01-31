@@ -2,14 +2,13 @@
 using DbUp.Engine;
 using DbUp.Tests.Common;
 
-namespace DbUp.Tests
+namespace DbUp.Tests;
+
+public class NoPublicApiChanges : NoPublicApiChangesBase
 {
-    public class NoPublicApiChanges : NoPublicApiChangesBase
+    public NoPublicApiChanges()
+        : base(typeof(UpgradeEngine).Assembly)
     {
-        public NoPublicApiChanges()
-            : base(typeof(UpgradeEngine).Assembly)
-        {
 
         }
-    }
 }

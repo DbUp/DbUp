@@ -5,19 +5,18 @@ using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace DbUp.Tests.Helpers
-{
-    public class NullJournalTests
-    {
-        [Fact]
-        public void shouldnt_journal_anything()
-        {
-            var command = Substitute.For<IDbCommand>();
+namespace DbUp.Tests.Helpers;
 
-            var journal = new NullJournal();
+public class NullJournalTests
+{
+    [Fact]
+    public void shouldnt_journal_anything()
+    {
+        var command = Substitute.For<IDbCommand>();
+
+        var journal = new NullJournal();
                 
-            journal.StoreExecutedScript(new SqlScript("testscript", "SELECT * FROM BLAH"), () => command);
-            journal.GetExecutedScripts().ShouldBeEmpty();
-        }
+        journal.StoreExecutedScript(new SqlScript("testscript", "SELECT * FROM BLAH"), () => command);
+        journal.GetExecutedScripts().ShouldBeEmpty();
     }
 }

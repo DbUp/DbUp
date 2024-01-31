@@ -7,13 +7,13 @@ using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace DbUp.Tests
+namespace DbUp.Tests;
+
+public class DeployChangesBuilderTests
 {
-    public class DeployChangesBuilderTests
+    [Fact]
+    public void can_use_variables_with_builder()
     {
-        [Fact]
-        public void can_use_variables_with_builder()
-        {
             var testProvider = new TestProvider("Db");
             
             testProvider.Builder
@@ -25,9 +25,9 @@ namespace DbUp.Tests
             testProvider.Connection.CommandsIssued.ShouldContain(c => c.CommandText == "[Db]Up is awesome");
         }
 
-        [Fact]
-        public void WithExecutionTimeout_Should_Set_CommandTimeout_Property_To_Given_Value()
-        {
+    [Fact]
+    public void WithExecutionTimeout_Should_Set_CommandTimeout_Property_To_Given_Value()
+    {
             var testProvider = new TestProvider();
 
             var upgradeEngine = testProvider.Builder
@@ -41,9 +41,9 @@ namespace DbUp.Tests
             testProvider.Connection.CommandsIssued.Last().CommandTimeout.ShouldBe(45);
         }
 
-        [Fact]
-        public void WithExecutionTimeout_Should_Not_Set_CommandTimeout_Property_For_Null()
-        {
+    [Fact]
+    public void WithExecutionTimeout_Should_Not_Set_CommandTimeout_Property_For_Null()
+    {
             var testProvider = new TestProvider();
             var upgradeEngine = testProvider.Builder
                 .WithScript("testscript", "test")
@@ -56,9 +56,9 @@ namespace DbUp.Tests
             testProvider.Connection.CommandsIssued.Last().CommandTimeout.ShouldBe(0);
         }
 
-        [Fact]
-        public void WithExecutionTimeout_Should_Not_Allow_Negative_Timeout_Values()
-        {
+    [Fact]
+    public void WithExecutionTimeout_Should_Not_Allow_Negative_Timeout_Values()
+    {
             Should.Throw<ArgumentOutOfRangeException>(() =>
             {
                 var testProvider = new TestProvider();
@@ -68,5 +68,4 @@ namespace DbUp.Tests
                     .Build();
             });
         }
-    }
 }

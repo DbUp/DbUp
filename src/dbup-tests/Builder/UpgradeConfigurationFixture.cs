@@ -4,29 +4,29 @@ using DbUp.Tests.Common;
 using Shouldly;
 using Xunit;
 
-namespace DbUp.Tests.Builder
+namespace DbUp.Tests.Builder;
+
+public class UpgradeConfigurationFixture
 {
-    public class UpgradeConfigurationFixture
+    [Fact]
+    public void WhenNoLoggerIsAddedThenTheDefaultLoggerIsReturned()
     {
-        [Fact]
-        public void WhenNoLoggerIsAddedThenTheDefaultLoggerIsReturned()
-        {
             new UpgradeConfiguration()
                 .Log.ShouldNotBeNull();
         }
 
-        [Fact]
-        public void WhenASingleLoggerIsAddedThenItselfShouldBeReturned()
-        {
+    [Fact]
+    public void WhenASingleLoggerIsAddedThenItselfShouldBeReturned()
+    {
             var config = new UpgradeConfiguration();
             var addedLog = new NoOpUpgradeLog();
             config.AddLog(addedLog);
             config.Log.ShouldBe(addedLog);
         }
 
-        [Fact]
-        public void WhenMultipleLoggersAreAddedThenAMultipleLoggerShouldBeReturnedAndLogsGoToAllDestinations()
-        {
+    [Fact]
+    public void WhenMultipleLoggersAreAddedThenAMultipleLoggerShouldBeReturnedAndLogsGoToAllDestinations()
+    {
             var log1 = new CaptureLogsLogger();
             var log2 = new CaptureLogsLogger();
             var log3 = new CaptureLogsLogger();
@@ -43,9 +43,9 @@ namespace DbUp.Tests.Builder
             log3.InfoMessages.ShouldContain("Test");
         }
 
-        [Fact]
-        public void WhenTheLoggerIsClearedThenTheDefaultLoggerReturns()
-        {
+    [Fact]
+    public void WhenTheLoggerIsClearedThenTheDefaultLoggerReturns()
+    {
             var config = new UpgradeConfiguration();
             var defaultLog = config.Log;
             config.AddLog(new NoOpUpgradeLog());
@@ -54,5 +54,4 @@ namespace DbUp.Tests.Builder
             config.Log = null;
             config.Log.ShouldBe(defaultLog);
         }
-    }
 }

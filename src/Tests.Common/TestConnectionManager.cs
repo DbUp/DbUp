@@ -4,24 +4,23 @@ using DbUp.Engine;
 using DbUp.Engine.Output;
 using DbUp.Engine.Transactions;
 
-namespace DbUp.Tests.Common
+namespace DbUp.Tests.Common;
+
+public class TestConnectionManager : DatabaseConnectionManager
 {
-    public class TestConnectionManager : DatabaseConnectionManager
+    public TestConnectionManager(IConnectionFactory connectionFactory)
+        : base(connectionFactory)
     {
-        public TestConnectionManager(IConnectionFactory connectionFactory)
-            : base(connectionFactory)
-        {
             
         }
         
-        public TestConnectionManager(IDbConnection connection) 
-            : base(l => connection)
-        {
+    public TestConnectionManager(IDbConnection connection) 
+        : base(l => connection)
+    {
         }
 
-        public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
-        {
+    public override IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
+    {
             return new[] { scriptContents };
         }
-    }
 }

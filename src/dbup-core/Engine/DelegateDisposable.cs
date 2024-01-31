@@ -1,16 +1,15 @@
 ﻿using System;
 
-namespace DbUp.Engine
+namespace DbUp.Engine;
+
+class DelegateDisposable : IDisposable
 {
-    class DelegateDisposable : IDisposable
+    readonly Action dispose;
+
+    public DelegateDisposable(Action dispose)
     {
-        readonly Action dispose;
-
-        public DelegateDisposable(Action dispose)
-        {
-            this.dispose = dispose;
-        }
-
-        public void Dispose() => dispose();
+        this.dispose = dispose;
     }
+
+    public void Dispose() => dispose();
 }

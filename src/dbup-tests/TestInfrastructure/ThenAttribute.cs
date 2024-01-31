@@ -1,8 +1,7 @@
 using Xunit;
 
-namespace DbUp.Tests.TestInfrastructure
+namespace DbUp.Tests.TestInfrastructure;
+
+public class ThenAttribute : FactAttribute
 {
-    public class ThenAttribute : FactAttribute
-    {
-    }
 }

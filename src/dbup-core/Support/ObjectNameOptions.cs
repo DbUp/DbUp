@@ -1,15 +1,14 @@
-﻿namespace DbUp.Support
-{
-    public enum ObjectNameOptions
-    {
-        /// <summary>
-        /// No options are set.
-        /// </summary>
-        None,
+﻿namespace DbUp.Support;
 
-        /// <summary>
-        /// Remove starting and ending white space from the object name.
-        /// </summary>
-        Trim
-    }
+public enum ObjectNameOptions
+{
+    /// <summary>
+    /// No options are set.
+    /// </summary>
+    None,
+
+    /// <summary>
+    /// Remove starting and ending white space from the object name.
+    /// </summary>
+    Trim
 }

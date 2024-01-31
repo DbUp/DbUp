@@ -1,16 +1,15 @@
 ﻿using System.Collections.Generic;
 using DbUp.Engine.Transactions;
 
-namespace DbUp.Engine
+namespace DbUp.Engine;
+
+/// <summary>
+/// Provides scripts to be executed.
+/// </summary>
+public interface IScriptProvider
 {
     /// <summary>
-    /// Provides scripts to be executed.
+    /// Gets all scripts that should be executed.
     /// </summary>
-    public interface IScriptProvider
-    {
-        /// <summary>
-        /// Gets all scripts that should be executed.
-        /// </summary>
-        IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager);
-    }
+    IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager);
 }

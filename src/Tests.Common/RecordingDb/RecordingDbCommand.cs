@@ -4,125 +4,124 @@ using System.Data;
 using System.Data.Common;
 using DbUp.Engine;
 
-namespace DbUp.Tests.Common.RecordingDb
+namespace DbUp.Tests.Common.RecordingDb;
+
+public class RecordingDbCommand : IDbCommand
 {
-    public class RecordingDbCommand : IDbCommand
+    readonly CaptureLogsLogger logger;
+    readonly Dictionary<string?, Func<object>> scalarResults;
+    readonly Dictionary<string?, Func<int>> nonQueryResults;
+
+    public RecordingDbCommand(
+        CaptureLogsLogger logger,
+        Dictionary<string?, Func<object>> scalarResults,
+        Dictionary<string?, Func<int>> nonQueryResults
+    )
     {
-        readonly CaptureLogsLogger logger;
-        readonly Dictionary<string?, Func<object>> scalarResults;
-        readonly Dictionary<string?, Func<int>> nonQueryResults;
+        this.logger = logger;
+        this.scalarResults = scalarResults;
+        this.nonQueryResults = nonQueryResults;
+        Parameters = new RecordingDataParameterCollection(logger);
+    }
 
-        public RecordingDbCommand(
-            CaptureLogsLogger logger,
-            Dictionary<string?, Func<object>> scalarResults,
-            Dictionary<string?, Func<int>> nonQueryResults
-        )
+    public void Dispose()
+    {
+        logger.WriteDbOperation("Dispose command");
+    }
+
+    public void Prepare()
+    {
+        throw new NotImplementedException();
+    }
+
+    public void Cancel()
+    {
+        throw new NotImplementedException();
+    }
+
+    public IDbDataParameter CreateParameter()
+    {
+        logger.WriteDbOperation("Create parameter");
+        return new RecordingDbDataParameter();
+    }
+
+    public int ExecuteNonQuery()
+    {
+        logger.WriteDbOperation($"Execute non query command: {CommandText}");
+
+        if (CommandText == "error")
+            ThrowError();
+
+        if (nonQueryResults.ContainsKey(CommandText))
+            return nonQueryResults[CommandText]();
+        return 0;
+    }
+
+    void ThrowError()
+    {
+        throw new TestDbException();
+    }
+
+    public IDataReader ExecuteReader()
+    {
+        logger.WriteDbOperation($"Execute reader command: {CommandText}");
+
+        if (CommandText == null)
+            throw new InvalidOperationException("CommandText must be set before calling");
+
+        if (CommandText == "error")
+            ThrowError();
+
+        return new EmptyReader();
+    }
+
+    public IDataReader ExecuteReader(CommandBehavior behavior)
+    {
+        throw new NotImplementedException();
+    }
+
+    public object? ExecuteScalar()
+    {
+        logger.WriteDbOperation($"Execute scalar command: {CommandText}");
+
+        if (CommandText == null)
+            throw new InvalidOperationException("CommandText must be set before calling");
+
+        if (CommandText == "error")
+            ThrowError();
+
+        // Are we checking if schemaversions exists
+        if (CommandText.IndexOf("SchemaVersions", StringComparison.OrdinalIgnoreCase) != -1)
         {
-            this.logger = logger;
-            this.scalarResults = scalarResults;
-            this.nonQueryResults = nonQueryResults;
-            Parameters = new RecordingDataParameterCollection(logger);
-        }
-
-        public void Dispose()
-        {
-            logger.WriteDbOperation("Dispose command");
-        }
-
-        public void Prepare()
-        {
-            throw new NotImplementedException();
-        }
-
-        public void Cancel()
-        {
-            throw new NotImplementedException();
-        }
-
-        public IDbDataParameter CreateParameter()
-        {
-            logger.WriteDbOperation("Create parameter");
-            return new RecordingDbDataParameter();
-        }
-
-        public int ExecuteNonQuery()
-        {
-            logger.WriteDbOperation($"Execute non query command: {CommandText}");
-
-            if (CommandText == "error")
-                ThrowError();
-
-            if (nonQueryResults.ContainsKey(CommandText))
-                return nonQueryResults[CommandText]();
             return 0;
         }
 
-        void ThrowError()
+        if (scalarResults.ContainsKey(CommandText))
         {
-            throw new TestDbException();
+            return scalarResults[CommandText]();
         }
 
-        public IDataReader ExecuteReader()
-        {
-            logger.WriteDbOperation($"Execute reader command: {CommandText}");
+        return null;
+    }
 
-            if (CommandText == null)
-                throw new InvalidOperationException("CommandText must be set before calling");
+    public IDbConnection? Connection { get; set; }
 
-            if (CommandText == "error")
-                ThrowError();
+    public IDbTransaction? Transaction { get; set; }
 
-            return new EmptyReader();
-        }
+    /// <summary>
+    /// Set to 'error' to throw when executed
+    /// </summary>
+    public string? CommandText { get; set; }
 
-        public IDataReader ExecuteReader(CommandBehavior behavior)
-        {
-            throw new NotImplementedException();
-        }
+    public int CommandTimeout { get; set; }
 
-        public object? ExecuteScalar()
-        {
-            logger.WriteDbOperation($"Execute scalar command: {CommandText}");
+    public CommandType CommandType { get; set; }
 
-            if (CommandText == null)
-                throw new InvalidOperationException("CommandText must be set before calling");
+    public IDataParameterCollection Parameters { get; }
 
-            if (CommandText == "error")
-                ThrowError();
+    public UpdateRowSource UpdatedRowSource { get; set; }
 
-            // Are we checking if schemaversions exists
-            if (CommandText.IndexOf("SchemaVersions", StringComparison.OrdinalIgnoreCase) != -1)
-            {
-                return 0;
-            }
-
-            if (scalarResults.ContainsKey(CommandText))
-            {
-                return scalarResults[CommandText]();
-            }
-
-            return null;
-        }
-
-        public IDbConnection? Connection { get; set; }
-
-        public IDbTransaction? Transaction { get; set; }
-
-        /// <summary>
-        /// Set to 'error' to throw when executed
-        /// </summary>
-        public string? CommandText { get; set; }
-
-        public int CommandTimeout { get; set; }
-
-        public CommandType CommandType { get; set; }
-
-        public IDataParameterCollection Parameters { get; }
-
-        public UpdateRowSource UpdatedRowSource { get; set; }
-
-        class TestDbException : DbException
-        {
-        }
+    class TestDbException : DbException
+    {
     }
 }
