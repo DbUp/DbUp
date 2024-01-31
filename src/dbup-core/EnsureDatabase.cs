@@ -8,5 +8,5 @@ public static class EnsureDatabase
     /// <summary>
     /// Returns the databases supported by DbUp's EnsureDatabase feature.
     /// </summary>
-    public static SupportedDatabasesForEnsureDatabase For { get; } = new SupportedDatabasesForEnsureDatabase();
+    public static SupportedDatabasesForEnsureDatabase For { get; } = new();
 }

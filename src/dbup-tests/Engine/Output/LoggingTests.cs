@@ -37,7 +37,7 @@ public class LoggingTests
 
     class InMemorySink : ILogEventSink
     {
-        public List<LogEvent> Events { get; } = new List<LogEvent>();
+        public List<LogEvent> Events { get; } = new();
         public void Emit(LogEvent logEvent) => Events.Add(logEvent);
     }
 }

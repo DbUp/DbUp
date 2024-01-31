@@ -26,9 +26,9 @@ public class UpgradeDatabaseScenarios
         upgradeResult = null;
         scripts = new List<SqlScript>
         {
-            new SqlScript("Script1.sql", "create table Foo (Id int identity)"),
-            new SqlScript("Script2.sql", "alter table Foo add column Name varchar(255)"),
-            new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')")
+            new("Script1.sql", "create table Foo (Id int identity)"),
+            new("Script2.sql", "alter table Foo add column Name varchar(255)"),
+            new("Script3.sql", "insert into Foo (Name) values ('test')")
         };
 
         testProvider = new TestProvider();

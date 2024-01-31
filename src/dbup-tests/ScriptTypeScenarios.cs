@@ -27,9 +27,9 @@ public class ScriptTypeScenarios
         upgradeResult = null;
         scripts = new List<SqlScript>
         {
-            new SqlScript("Script1.sql", "create table Foo (Id int identity)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce}),
-            new SqlScript("Script2.sql", "alter table Foo add column Name varchar(255)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce}),
-            new SqlScript("Script3.sql", "insert into Foo (Name) values ('test')", new SqlScriptOptions { ScriptType = ScriptType.RunAlways})
+            new("Script1.sql", "create table Foo (Id int identity)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce}),
+            new("Script2.sql", "alter table Foo add column Name varchar(255)", new SqlScriptOptions { ScriptType = ScriptType.RunOnce}),
+            new("Script3.sql", "insert into Foo (Name) values ('test')", new SqlScriptOptions { ScriptType = ScriptType.RunAlways})
         };
 
         testProvider = new TestProvider();

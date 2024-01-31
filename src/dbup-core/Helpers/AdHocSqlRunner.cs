@@ -14,7 +14,7 @@ namespace DbUp.Helpers;
 public class AdHocSqlRunner
 {
     readonly IScriptPreprocessor[] additionalScriptPreprocessors;
-    readonly Dictionary<string, string> variables = new Dictionary<string, string>();
+    readonly Dictionary<string, string> variables = new();
     readonly Func<IDbCommand> commandFactory;
     readonly Func<bool> variablesEnabled;
     readonly ISqlObjectParser sqlObjectParser;

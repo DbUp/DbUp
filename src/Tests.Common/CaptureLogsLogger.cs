@@ -8,11 +8,11 @@ namespace DbUp.Tests.Common;
 
 public class CaptureLogsLogger : IUpgradeLog
 {
-    readonly StringBuilder logBuilder = new StringBuilder();
-    public List<string> InfoMessages { get; } = new List<string>();
-    public List<string> WarnMessages { get; } = new List<string>();
-    public List<string> ErrorMessages { get; } = new List<string>();
-    public List<string> WriteDbOperations { get; } = new List<string>();
+    readonly StringBuilder logBuilder = new();
+    public List<string> InfoMessages { get; } = new();
+    public List<string> WarnMessages { get; } = new();
+    public List<string> ErrorMessages { get; } = new();
+    public List<string> WriteDbOperations { get; } = new();
 
     public string Log => logBuilder.ToString();
 

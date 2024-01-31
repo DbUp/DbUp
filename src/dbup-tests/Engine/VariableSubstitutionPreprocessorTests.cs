@@ -9,7 +9,7 @@ namespace DbUp.Tests.Engine;
 
 public class VariableSubstitutionPreprocessorTests
 {
-    readonly TestProvider testProvider = new TestProvider();
+    readonly TestProvider testProvider = new();
     DatabaseUpgradeResult result;
 
     void GivenAScript(string contents)

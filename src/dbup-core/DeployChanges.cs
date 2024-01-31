@@ -7,7 +7,7 @@ namespace DbUp;
 /// </summary>
 public static class DeployChanges
 {
-    static readonly SupportedDatabases Instance = new SupportedDatabases();
+    static readonly SupportedDatabases Instance = new();
 
     /// <summary>
     /// Returns the databases supported by DbUp.

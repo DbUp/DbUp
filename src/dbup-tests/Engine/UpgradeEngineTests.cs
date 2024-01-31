@@ -59,7 +59,7 @@ public class UpgradeEngineTests
         public override UpgradeEngine Given()
         {
             scriptProvider = Substitute.For<IScriptProvider>();
-            scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> {new SqlScript("1234", "foo")});
+            scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> {new("1234", "foo")});
             versionTracker = Substitute.For<IJournal>();
             scriptExecutor = Substitute.For<IScriptExecutor>();
 
@@ -135,7 +135,7 @@ public class UpgradeEngineTests
         public override UpgradeEngine Given()
         {
             scriptProvider = Substitute.For<IScriptProvider>();
-            scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> {new SqlScript("#1", "Content of #1"), new SqlScript("#3", "Content of #3"),});
+            scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript> {new("#1", "Content of #1"), new("#3", "Content of #3"),});
             versionTracker = Substitute.For<IJournal>();
             versionTracker.GetExecutedScripts().Returns(new[] {"#1", "#2", "#3"});
             scriptExecutor = Substitute.For<IScriptExecutor>();

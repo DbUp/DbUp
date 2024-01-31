@@ -59,12 +59,12 @@ public class UpgradeConfiguration
     /// <summary>
     /// Gets a mutable list of script providers.
     /// </summary>
-    public List<IScriptProvider> ScriptProviders { get; } = new List<IScriptProvider>();
+    public List<IScriptProvider> ScriptProviders { get; } = new();
 
     /// <summary>
     /// Gets a mutable list of script pre-processors.
     /// </summary>
-    public List<IScriptPreprocessor> ScriptPreprocessors { get; } = new List<IScriptPreprocessor>();
+    public List<IScriptPreprocessor> ScriptPreprocessors { get; } = new();
 
     /// <summary>
     /// Gets or sets the journal, which tracks the scripts that have already been run.
@@ -82,7 +82,7 @@ public class UpgradeConfiguration
     /// By implementing your own comparer you can make the matching and ordering case insensitive,
     /// change how numbers are handled or support the renaming of scripts
     /// </summary>
-    public ScriptNameComparer ScriptNameComparer { get; set; } = new ScriptNameComparer(StringComparer.Ordinal);
+    public ScriptNameComparer ScriptNameComparer { get; set; } = new(StringComparer.Ordinal);
 
     /// <summary>
     /// Gets or sets the script filter, which filters the scripts before execution
@@ -92,7 +92,7 @@ public class UpgradeConfiguration
     /// <summary>
     /// A collection of variables to be replaced in scripts before they are run
     /// </summary>
-    public Dictionary<string, string> Variables { get; } = new Dictionary<string, string>();
+    public Dictionary<string, string> Variables { get; } = new();
 
     /// <summary>
     /// Determines if variables should be replaced in scripts before they are run.
