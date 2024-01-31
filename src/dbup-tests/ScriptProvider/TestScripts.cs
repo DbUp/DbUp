@@ -24,6 +24,7 @@ static class TestScripts
                     writer.Flush();
                     writer.Dispose();
                 }
+
                 stream.Dispose();
             }
         }
@@ -36,6 +37,7 @@ static class TestScripts
         {
             return Path.Combine(dir.Groups[1].Value, scriptName.Replace(dir.Value, ""));
         }
+
         return scriptName;
     }
 

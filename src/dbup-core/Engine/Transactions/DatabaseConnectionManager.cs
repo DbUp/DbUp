@@ -33,13 +33,7 @@ public abstract class DatabaseConnectionManager : IConnectionManager
     {
         this.connectionFactory = connectionFactory;
         TransactionMode = TransactionMode.NoTransaction;
-        transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
-        {
-            {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},
-            {TransactionMode.SingleTransaction, ()=>new SingleTransactionStrategy()},
-            {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy()},
-            {TransactionMode.SingleTransactionAlwaysRollback, ()=>new SingleTransactionAlwaysRollbackStrategy()}
-        };
+        transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>> {{TransactionMode.NoTransaction, () => new NoTransactionStrategy()}, {TransactionMode.SingleTransaction, () => new SingleTransactionStrategy()}, {TransactionMode.TransactionPerScript, () => new TransactionPerScriptStrategy()}, {TransactionMode.SingleTransactionAlwaysRollback, () => new SingleTransactionAlwaysRollbackStrategy()}};
     }
 
     /// <summary>

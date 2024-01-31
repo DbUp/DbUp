@@ -18,7 +18,7 @@ public sealed class DatabaseUpgradeResult
         : this(scripts, successful, error, null)
     {
     }
-        
+
     /// <summary>
     /// Initializes a new instance of the <see cref="DatabaseUpgradeResult"/> class.
     /// </summary>

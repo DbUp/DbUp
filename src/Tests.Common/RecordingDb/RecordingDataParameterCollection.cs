@@ -30,6 +30,7 @@ class RecordingDataParameterCollection : IDataParameterCollection
     public int Count { get; private set; }
     public object? SyncRoot { get; private set; }
     public bool IsSynchronized { get; private set; }
+
     public int Add(object value)
     {
         logger.WriteInformation($"DB Operation: Add parameter to command: {value}");
@@ -75,6 +76,7 @@ class RecordingDataParameterCollection : IDataParameterCollection
 
     public bool IsReadOnly { get; private set; }
     public bool IsFixedSize { get; private set; }
+
     public bool Contains(string parameterName)
     {
         throw new NotImplementedException();

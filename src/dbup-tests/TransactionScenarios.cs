@@ -14,7 +14,7 @@ namespace DbUp.Tests;
 public class TransactionScenarios
 {
     readonly TestProvider testProvider = new();
-        
+
     [Fact]
     public Task UsingNoTransactionsScenario()
     {

@@ -14,11 +14,11 @@ public class SqlCommandSplitter
     /// <returns></returns>
     public virtual IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
     {
-            using (var reader = new SqlCommandReader(scriptContents))
-            {
-                var commands = new List<string>();
-                reader.ReadAllCommands(c => commands.Add(c));
-                return commands;
-            }
+        using (var reader = new SqlCommandReader(scriptContents))
+        {
+            var commands = new List<string>();
+            reader.ReadAllCommands(c => commands.Add(c));
+            return commands;
         }
+    }
 }

@@ -52,7 +52,7 @@ public class RunGroupOrderScenarios
         // Check both results and journal
         result.Scripts
             .Select(s => s.Name)
-            .ShouldBe(new[] { "ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql" });
+            .ShouldBe(new[] {"ZZZScript1.sql", "ZZZScript2.sql", "AAAScript3.sql"});
     }
 
     void ThenShouldHaveSuccessfulResult()
