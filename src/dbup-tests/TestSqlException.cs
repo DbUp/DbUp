@@ -2,6 +2,4 @@
 
 namespace DbUp.Tests;
 
-class TestSqlException : Exception
-{
-}
+class TestSqlException : Exception;

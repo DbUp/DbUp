@@ -25,7 +25,7 @@ namespace JetBrains.Annotations;
 [AttributeUsage(
     AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
     AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
-sealed class CanBeNullAttribute : Attribute { }
+sealed class CanBeNullAttribute : Attribute;
 
 /// <summary>
 /// Indicates that the value of the marked element could never be <c>null</c>.
@@ -38,7 +38,7 @@ sealed class CanBeNullAttribute : Attribute { }
 [AttributeUsage(
     AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
     AttributeTargets.Delegate | AttributeTargets.Field | AttributeTargets.Event)]
-sealed class NotNullAttribute : Attribute { }
+sealed class NotNullAttribute : Attribute;
 
 /// <summary>
 /// Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
@@ -48,7 +48,7 @@ sealed class NotNullAttribute : Attribute { }
 [AttributeUsage(
     AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
     AttributeTargets.Delegate | AttributeTargets.Field)]
-sealed class ItemNotNullAttribute : Attribute { }
+sealed class ItemNotNullAttribute : Attribute;
 
 /// <summary>
 /// Can be applied to symbols of types derived from IEnumerable as well as to symbols of Task
@@ -58,7 +58,7 @@ sealed class ItemNotNullAttribute : Attribute { }
 [AttributeUsage(
     AttributeTargets.Method | AttributeTargets.Parameter | AttributeTargets.Property |
     AttributeTargets.Delegate | AttributeTargets.Field)]
-sealed class ItemCanBeNullAttribute : Attribute { }
+sealed class ItemCanBeNullAttribute : Attribute;
 
 /// <summary>
 /// Indicates that the marked method builds string by format pattern and (optional) arguments.
@@ -117,7 +117,7 @@ sealed class ValueProviderAttribute : Attribute
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class InvokerParameterNameAttribute : Attribute { }
+sealed class InvokerParameterNameAttribute : Attribute;
 
 /// <summary>
 /// Indicates that the method is contained in a type that implements
@@ -271,7 +271,7 @@ sealed class LocalizationRequiredAttribute : Attribute
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Interface | AttributeTargets.Class | AttributeTargets.Struct)]
-sealed class CannotApplyEqualityOperatorAttribute : Attribute { }
+sealed class CannotApplyEqualityOperatorAttribute : Attribute;
 
 /// <summary>
 /// When applied to a target attribute, specifies a requirement for any type marked
@@ -411,7 +411,7 @@ sealed class PublicAPIAttribute : Attribute
 /// If the parameter is an enumerable, indicates that it is enumerated while the method is executed.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class InstantHandleAttribute : Attribute { }
+sealed class InstantHandleAttribute : Attribute;
 
 /// <summary>
 /// Indicates that a method does not make any observable state changes.
@@ -425,7 +425,7 @@ sealed class InstantHandleAttribute : Attribute { }
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Method)]
-sealed class PureAttribute : Attribute { }
+sealed class PureAttribute : Attribute;
 
 /// <summary>
 /// Indicates that the return value of method invocation must be used.
@@ -460,7 +460,7 @@ sealed class MustUseReturnValueAttribute : Attribute
 [AttributeUsage(
     AttributeTargets.Field | AttributeTargets.Property | AttributeTargets.Parameter |
     AttributeTargets.Method)]
-sealed class ProvidesContextAttribute : Attribute { }
+sealed class ProvidesContextAttribute : Attribute;
 
 /// <summary>
 /// Indicates that a parameter is a path to a file or a folder within a web project.
@@ -502,7 +502,7 @@ sealed class PathReferenceAttribute : Attribute
 /// </code>
 /// </example>
 [AttributeUsage(AttributeTargets.Method)]
-sealed class SourceTemplateAttribute : Attribute { }
+sealed class SourceTemplateAttribute : Attribute;
 
 /// <summary>
 /// Allows specifying a macro for a parameter of a <see cref="SourceTemplateAttribute">source template</see>.
@@ -682,14 +682,14 @@ sealed class AspMvcControllerAttribute : Attribute
 /// for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, String)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class AspMvcMasterAttribute : Attribute { }
+sealed class AspMvcMasterAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC model type. Use this attribute
 /// for custom wrappers similar to <c>System.Web.Mvc.Controller.View(String, Object)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class AspMvcModelTypeAttribute : Attribute { }
+sealed class AspMvcModelTypeAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter is an MVC
@@ -698,13 +698,13 @@ sealed class AspMvcModelTypeAttribute : Attribute { }
 /// <c>System.Web.Mvc.Html.RenderPartialExtensions.RenderPartial(HtmlHelper, String)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-sealed class AspMvcPartialViewAttribute : Attribute { }
+sealed class AspMvcPartialViewAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Allows disabling inspections for MVC views within a class or a method.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class | AttributeTargets.Method)]
-sealed class AspMvcSuppressViewErrorAttribute : Attribute { }
+sealed class AspMvcSuppressViewErrorAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC display template.
@@ -712,7 +712,7 @@ sealed class AspMvcSuppressViewErrorAttribute : Attribute { }
 /// <c>System.Web.Mvc.Html.DisplayExtensions.DisplayForModel(HtmlHelper, String)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class AspMvcDisplayTemplateAttribute : Attribute { }
+sealed class AspMvcDisplayTemplateAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC editor template.
@@ -720,7 +720,7 @@ sealed class AspMvcDisplayTemplateAttribute : Attribute { }
 /// <c>System.Web.Mvc.Html.EditorExtensions.EditorForModel(HtmlHelper, String)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class AspMvcEditorTemplateAttribute : Attribute { }
+sealed class AspMvcEditorTemplateAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. Indicates that a parameter is an MVC template.
@@ -728,7 +728,7 @@ sealed class AspMvcEditorTemplateAttribute : Attribute { }
 /// <c>System.ComponentModel.DataAnnotations.UIHintAttribute(System.String)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class AspMvcTemplateAttribute : Attribute { }
+sealed class AspMvcTemplateAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
@@ -737,21 +737,21 @@ sealed class AspMvcTemplateAttribute : Attribute { }
 /// <c>System.Web.Mvc.Controller.View(Object)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-sealed class AspMvcViewAttribute : Attribute { }
+sealed class AspMvcViewAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
 /// is an MVC view component name.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class AspMvcViewComponentAttribute : Attribute { }
+sealed class AspMvcViewComponentAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. If applied to a parameter, indicates that the parameter
 /// is an MVC view component view. If applied to a method, the MVC view component view name is default.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-sealed class AspMvcViewComponentViewAttribute : Attribute { }
+sealed class AspMvcViewComponentViewAttribute : Attribute;
 
 /// <summary>
 /// ASP.NET MVC attribute. When applied to a parameter of an attribute,
@@ -765,7 +765,7 @@ sealed class AspMvcViewComponentViewAttribute : Attribute { }
 /// }
 /// </code></example>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property)]
-sealed class AspMvcActionSelectorAttribute : Attribute { }
+sealed class AspMvcActionSelectorAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Property | AttributeTargets.Field)]
 sealed class HtmlElementAttributesAttribute : Attribute
@@ -797,7 +797,7 @@ sealed class HtmlAttributeValueAttribute : Attribute
 /// <c>System.Web.WebPages.WebPageBase.RenderSection(String)</c>.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter | AttributeTargets.Method)]
-sealed class RazorSectionAttribute : Attribute { }
+sealed class RazorSectionAttribute : Attribute;
 
 /// <summary>
 /// Indicates how method, constructor invocation or property access
@@ -833,7 +833,7 @@ enum CollectionAccessType
 /// <see cref="AssertionConditionAttribute"/> attribute.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
-sealed class AssertionMethodAttribute : Attribute { }
+sealed class AssertionMethodAttribute : Attribute;
 
 /// <summary>
 /// Indicates the condition parameter of the assertion method. The method itself should be
@@ -873,7 +873,7 @@ enum AssertionConditionType
 /// </summary>
 [Obsolete("Use [ContractAnnotation('=> halt')] instead")]
 [AttributeUsage(AttributeTargets.Method)]
-sealed class TerminatesProgramAttribute : Attribute { }
+sealed class TerminatesProgramAttribute : Attribute;
 
 /// <summary>
 /// Indicates that method is pure LINQ method, with postponed enumeration (like Enumerable.Select,
@@ -881,26 +881,26 @@ sealed class TerminatesProgramAttribute : Attribute { }
 /// of delegate type by analyzing LINQ method chains.
 /// </summary>
 [AttributeUsage(AttributeTargets.Method)]
-sealed class LinqTunnelAttribute : Attribute { }
+sealed class LinqTunnelAttribute : Attribute;
 
 /// <summary>
 /// Indicates that IEnumerable, passed as parameter, is not enumerated.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class NoEnumerationAttribute : Attribute { }
+sealed class NoEnumerationAttribute : Attribute;
 
 /// <summary>
 /// Indicates that parameter is regular expression pattern.
 /// </summary>
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class RegexPatternAttribute : Attribute { }
+sealed class RegexPatternAttribute : Attribute;
 
 /// <summary>
 /// XAML attribute. Indicates the type that has <c>ItemsSource</c> property and should be treated
 /// as <c>ItemsControl</c>-derived type, to enable inner items <c>DataContext</c> type resolve.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class)]
-sealed class XamlItemsControlAttribute : Attribute { }
+sealed class XamlItemsControlAttribute : Attribute;
 
 /// <summary>
 /// XAML attribute. Indicates the property of some <c>BindingBase</c>-derived type, that
@@ -912,7 +912,7 @@ sealed class XamlItemsControlAttribute : Attribute { }
 /// marked with the <see cref="XamlItemsControlAttribute"/> attribute.
 /// </remarks>
 [AttributeUsage(AttributeTargets.Property)]
-sealed class XamlItemBindingOfItemsControlAttribute : Attribute { }
+sealed class XamlItemBindingOfItemsControlAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 sealed class AspChildControlTypeAttribute : Attribute
@@ -928,13 +928,13 @@ sealed class AspChildControlTypeAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-sealed class AspDataFieldAttribute : Attribute { }
+sealed class AspDataFieldAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Property | AttributeTargets.Method)]
-sealed class AspDataFieldsAttribute : Attribute { }
+sealed class AspDataFieldsAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Property)]
-sealed class AspMethodPropertyAttribute : Attribute { }
+sealed class AspMethodPropertyAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true)]
 sealed class AspRequiredAttributeAttribute : Attribute
@@ -983,19 +983,19 @@ sealed class RazorInjectionAttribute : Attribute
 }
 
 [AttributeUsage(AttributeTargets.Method)]
-sealed class RazorHelperCommonAttribute : Attribute { }
+sealed class RazorHelperCommonAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Property)]
-sealed class RazorLayoutAttribute : Attribute { }
+sealed class RazorLayoutAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Method)]
-sealed class RazorWriteLiteralMethodAttribute : Attribute { }
+sealed class RazorWriteLiteralMethodAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Method)]
-sealed class RazorWriteMethodAttribute : Attribute { }
+sealed class RazorWriteMethodAttribute : Attribute;
 
 [AttributeUsage(AttributeTargets.Parameter)]
-sealed class RazorWriteMethodParameterAttribute : Attribute { }
+sealed class RazorWriteMethodParameterAttribute : Attribute;
 
 /// <summary>
 /// Prevents the Member Reordering feature from tossing members of the marked class.
@@ -1004,4 +1004,4 @@ sealed class RazorWriteMethodParameterAttribute : Attribute { }
 /// The attribute must be mentioned in your member reordering patterns
 /// </remarks>
 [AttributeUsage(AttributeTargets.All)]
-sealed class NoReorder : Attribute { }
+sealed class NoReorder : Attribute;

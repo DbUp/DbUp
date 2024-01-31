@@ -121,7 +121,5 @@ public class RecordingDbCommand : IDbCommand
 
     public UpdateRowSource UpdatedRowSource { get; set; }
 
-    class TestDbException : DbException
-    {
-    }
+    class TestDbException : DbException;
 }
