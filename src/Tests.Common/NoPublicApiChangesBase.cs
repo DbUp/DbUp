@@ -16,19 +16,18 @@ namespace DbUp.Tests.Common;
 public abstract class NoPublicApiChangesBase
 {
     private readonly Assembly assembly;
-    private readonly bool differByFramework;
-    private readonly string? callerFilePath;
+    readonly string? callerFilePath;
 
-    public NoPublicApiChangesBase(Assembly assembly, bool differByFramework = false, [CallerFilePath] string? callerFilePath = null)
+    public NoPublicApiChangesBase(Assembly assembly, [CallerFilePath] string? callerFilePath = null)
     {
         this.assembly = assembly;
-        this.differByFramework = differByFramework;
         this.callerFilePath = callerFilePath;
     }
 
     [Fact]
     public void Run()
     {
+        Console.WriteLine($"Caller File Path {callerFilePath}");
         var result = GetPublicApi(assembly);
 
         var config = new Configuration()
