@@ -232,7 +232,7 @@ public abstract class ScriptExecutor : IScriptExecutor
                 for (var i = 0; i < reader.FieldCount; i++)
                 {
                     var value = reader.GetValue(i);
-                    value = value == DBNull.Value ? null : value.ToString();
+                    value = (value is null || value == DBNull.Value) ? null : value.ToString();
                     line.Add((string)value);
                 }
 

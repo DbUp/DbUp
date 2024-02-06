@@ -120,7 +120,7 @@ public class AdHocSqlRunner
                         {
                             var name = reader.GetName(i);
                             var value = reader.GetValue(i);
-                            value = value == DBNull.Value ? null : value.ToString();
+                            value = (value is null || value == DBNull.Value) ? null : value.ToString();
                             line.Add(name, (string)value);
                         }
 
