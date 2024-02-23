@@ -19,16 +19,11 @@ Script20130525_1_Test5.txt");
 
             var filter = Filters.ExcludeScriptNamesInFile(tempExcludeFile);
 
-            var testScripts = new List<string>
-            {
-                "Script20110301_1_Test1.txt",
-                "ShouldRemain.txt",
-                "Script20130525_1_Test5.txt"
-            };
+            var testScripts = new List<string> {"Script20110301_1_Test1.txt", "ShouldRemain.txt", "Script20130525_1_Test5.txt"};
 
             var scriptsToRun = testScripts.Where(filter);
 
-            scriptsToRun.ShouldBe(new[] { "ShouldRemain.txt" });
+            scriptsToRun.ShouldBe(new[] {"ShouldRemain.txt"});
         }
         finally
         {
@@ -50,12 +45,7 @@ Script20130525_1_Test5.txt");
 
             var filter = Filters.OnlyIncludeScriptNamesInFile(tempIncludeFile);
 
-            var testScripts = new List<string>
-            {
-                "Script20110301_1_Test1.txt",
-                "ShouldNotRemain.txt",
-                "Script20130525_1_Test5.txt"
-            };
+            var testScripts = new List<string> {"Script20110301_1_Test1.txt", "ShouldNotRemain.txt", "Script20130525_1_Test5.txt"};
 
             var scriptsToRun = testScripts.Where(filter);
 
@@ -75,12 +65,7 @@ Script20130525_1_Test5.txt");
     [Fact]
     public void Should_Exclude_ScriptNames()
     {
-        var testScripts = new List<string>
-        {
-            "Script20110301_1_Test1.txt",
-            "ShouldRemain.txt",
-            "Script20130525_1_Test5.txt"
-        };
+        var testScripts = new List<string> {"Script20110301_1_Test1.txt", "ShouldRemain.txt", "Script20130525_1_Test5.txt"};
 
         var filter = Filters.ExcludeScripts("Script20110301_1_Test1.txt", "Script20130525_1_Test5.txt");
         var scriptsToRun = testScripts.Where(filter);
@@ -93,12 +78,7 @@ Script20130525_1_Test5.txt");
     [Fact]
     public void Should_Include_ScriptNames()
     {
-        var testScripts = new List<string>
-        {
-            "Script20110301_1_Test1.txt",
-            "ShouldNotRemain.txt",
-            "Script20130525_1_Test5.txt"
-        };
+        var testScripts = new List<string> {"Script20110301_1_Test1.txt", "ShouldNotRemain.txt", "Script20130525_1_Test5.txt"};
 
         var filter = Filters.OnlyIncludeScripts("Script20110301_1_Test1.txt", "Script20130525_1_Test5.txt");
         var scriptsToRun = testScripts.Where(filter);

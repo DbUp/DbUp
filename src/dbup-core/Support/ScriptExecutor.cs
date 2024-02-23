@@ -146,6 +146,7 @@ public abstract class ScriptExecutor : IScriptExecutor
                         {
                             executeAction = ExecuteNonQuery;
                         }
+
                         // Execute within a wrapper that allows a provider specific derived class to handle provider specific exception.
                         ExecuteCommandsWithinExceptionHandler(index, script, () =>
                         {
@@ -234,6 +235,7 @@ public abstract class ScriptExecutor : IScriptExecutor
                     value = value == DBNull.Value ? null : value.ToString();
                     line.Add((string)value);
                 }
+
                 lines.Add(line);
             }
 
@@ -245,6 +247,7 @@ public abstract class ScriptExecutor : IScriptExecutor
                 format += " {" + i + ", " + maxLength + "} |";
                 totalLength += (maxLength + 3);
             }
+
             format = "|" + format;
             totalLength += 1;
 
@@ -256,6 +259,7 @@ public abstract class ScriptExecutor : IScriptExecutor
             {
                 Log().WriteInformation(string.Format(format, line.ToArray()));
             }
+
             Log().WriteInformation(delimiterLine);
             Log().WriteInformation("\r\n");
         } while (reader.NextResult());

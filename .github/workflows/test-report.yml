@@ -5,7 +5,7 @@ name: Test Report
 
 on:
   workflow_run:
-    workflows: ["Create Draft Release", "Test Code"]
+    workflows: [ "Create Draft Release", "Test Code" ]
     types:
       - completed
 

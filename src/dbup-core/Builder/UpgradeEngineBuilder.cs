@@ -18,8 +18,8 @@ public class UpgradeEngineBuilder
     /// <param name="configuration">The configuration.</param>
     public virtual void Configure(Action<UpgradeConfiguration> configuration)
     {
-            callbacks.Add(configuration);
-        }
+        callbacks.Add(configuration);
+    }
 
     /// <summary>
     /// Creates an UpgradeConfiguration based on this configuration.
@@ -27,16 +27,16 @@ public class UpgradeEngineBuilder
     /// <returns></returns>
     public virtual UpgradeConfiguration BuildConfiguration()
     {
-            var config = new UpgradeConfiguration();
-            foreach (var callback in callbacks)
-            {
-                callback(config);
-            }
-
-            config.Validate();
-
-            return config;
+        var config = new UpgradeConfiguration();
+        foreach (var callback in callbacks)
+        {
+            callback(config);
         }
+
+        config.Validate();
+
+        return config;
+    }
 
     /// <summary>
     /// Creates an UpgradeEngine based on this configuration.
@@ -44,7 +44,7 @@ public class UpgradeEngineBuilder
     /// <returns></returns>
     public virtual UpgradeEngine Build()
     {
-            var config = BuildConfiguration();
-            return new UpgradeEngine(config);
-        }
+        var config = BuildConfiguration();
+        return new UpgradeEngine(config);
+    }
 }

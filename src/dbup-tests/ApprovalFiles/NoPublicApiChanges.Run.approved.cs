@@ -1,4 +1,4 @@
-﻿[assembly: System.CLSCompliantAttribute(true)]
+[assembly: System.CLSCompliantAttribute(true)]
 [assembly: System.Runtime.InteropServices.ComVisibleAttribute(false)]
 [assembly: System.Runtime.InteropServices.GuidAttribute("9f833e49-6e35-4e4d-b2a0-3d4fed527c89")]
 

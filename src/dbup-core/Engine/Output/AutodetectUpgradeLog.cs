@@ -41,6 +41,7 @@ public class AutodetectUpgradeLog : IUpgradeLog
         {
             Console.ForegroundColor = oldColor;
         }
+
         return true;
     }
 }

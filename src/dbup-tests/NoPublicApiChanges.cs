@@ -9,6 +9,5 @@ public class NoPublicApiChanges : NoPublicApiChangesBase
     public NoPublicApiChanges()
         : base(typeof(UpgradeEngine).Assembly)
     {
-
-        }
+    }
 }

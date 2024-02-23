@@ -21,7 +21,7 @@ public class TransactionTests
 
         var testProvider = new TestProvider();
         testProvider.Builder.Configure(c => c.ConnectionManager = new TestConnectionManager(connectionFactory));
-            
+
         var upgradeEngine = testProvider.Builder
             .WithScript("testscript1", "SELECT 1")
             .WithScript("testscript2", "SELECT 1")
@@ -34,7 +34,7 @@ public class TransactionTests
 
         connectionFactory.TransactionWasOpened.ShouldBeTrue("BeginTransaction was never called");
     }
-        
+
     class TransactionCountingConnectionFactory : IConnectionFactory
     {
         int transactionCount;

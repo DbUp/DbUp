@@ -15,18 +15,24 @@
     <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(CI)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild> <!-- Perform a deterministic build, so our binaries aren't impacted by build server environmental factors (e.g. file paths). -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources> <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <DebugType>embedded</DebugType> <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
+  </PropertyGroup>
+
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0" />
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0"/>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
   </ItemGroup>
 
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Microsoft.CSharp"/>
   </ItemGroup>
 
   <ItemGroup>
-    <PackageReference Include="System.Net.Http" Version="4.3.4" />
-    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1" />
+    <PackageReference Include="System.Net.Http" Version="4.3.4"/>
+    <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1"/>
   </ItemGroup>
 
 </Project>

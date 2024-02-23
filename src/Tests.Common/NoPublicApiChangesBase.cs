@@ -1,20 +1,21 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
-using System.Threading.Tasks;
-using VerifyXunit;
+using Assent;
+using Assent.Namers;
 using Xunit;
 
 namespace DbUp.Tests.Common;
 
-[UsesVerify]
 public abstract class NoPublicApiChangesBase
 {
-    readonly Assembly assembly;
+    private readonly Assembly assembly;
     readonly string? callerFilePath;
 
     public NoPublicApiChangesBase(Assembly assembly, [CallerFilePath] string? callerFilePath = null)
@@ -24,10 +25,19 @@ public abstract class NoPublicApiChangesBase
     }
 
     [Fact]
-    public Task Run()
+    public void Run()
     {
+        Console.WriteLine($"Caller File Path {callerFilePath}");
         var result = GetPublicApi(assembly);
-        return Verifier.Verify(result, "cs", VerifyHelper.GetVerifySettings(uniqueForFramework:true), sourceFile: callerFilePath!);
+
+        var config = new Configuration()
+            .UsingExtension("cs")
+            .UsingNamer(new SubdirectoryNamer("ApprovalFiles"));
+
+        // Automatically approve the change, make sure to check the result before committing
+        // config = config.UsingReporter((received, approved) => File.Copy(received, approved, true));
+
+        this.Assent(result, config,  filePath: callerFilePath);
     }
 
     static string GetPublicApi(Assembly assembly)
@@ -417,7 +427,7 @@ public abstract class NoPublicApiChangesBase
                 sb.Append("out ");
             if (parameter.IsIn)
                 sb.Append("in ");
-            if (parameter.IsDefined(typeof (ParamArrayAttribute), false))
+            if (parameter.IsDefined(typeof(ParamArrayAttribute), false))
                 sb.Append("params ");
 
             sb.Append(GetTypeName(parameter.ParameterType))

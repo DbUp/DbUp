@@ -15,7 +15,7 @@ public class NullJournalTests
         var command = Substitute.For<IDbCommand>();
 
         var journal = new NullJournal();
-                
+
         journal.StoreExecutedScript(new SqlScript("testscript", "SELECT * FROM BLAH"), () => command);
         journal.GetExecutedScripts().ShouldBeEmpty();
     }

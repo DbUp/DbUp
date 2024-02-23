@@ -16,7 +16,7 @@ public class InMemoryJournal : IJournal
     {
         this.log = log;
     }
-    
+
     public string[] GetExecutedScripts() => executedScripts.ToArray();
 
     public void StoreExecutedScript(SqlScript script, Func<IDbCommand> dbCommandFactory) => executedScripts.Add(script.Name);
