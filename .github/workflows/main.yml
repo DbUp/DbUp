@@ -25,6 +25,15 @@ jobs:
         with:
           fetch-depth: 0 # all
 
+
+      - name: Display head_ref
+        run: |
+          echo "head_ref: ${{ github.head_ref }}"
+
+      - name: Display ref
+        run: |
+          echo "ref: ${{ github.ref }}"
+      
       - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v3
         with:
@@ -71,12 +80,9 @@ jobs:
           name: test-results
           path: artifacts/TestResults/*.trx
 
-      - name: Display Refname
-        run: |
-          echo "ref_name: ${{ github.ref_name }}"
-          
+      
       - name: Create Draft Release
-        if: ${{ (github.ref_name == 'main' || startsWith(github.ref_name, 'release')) && format('{0}', env.GITHUB_TOKEN) != '' }}
+        if: ${{ (github.head_ref == 'refs/heads/main' || startsWith(github.head_ref, 'refs/heads/release')) && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
