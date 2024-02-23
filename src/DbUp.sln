@@ -18,10 +18,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "dbup-tests", "dbup-tests\db
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE-AF4F-4BC3-82FC-E9FEEA6D37A6}"
 	ProjectSection(SolutionItems) = preProject
-		..\build.cake = ..\build.cake
-		..\build.ps1 = ..\build.ps1
 		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
-		..\.github\workflows\create-draft-release.yml = ..\.github\workflows\create-draft-release.yml
 		..\.github\workflows\test-report.yml = ..\.github\workflows\test-report.yml
 		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
 	EndProjectSection

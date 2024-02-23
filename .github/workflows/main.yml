@@ -7,9 +7,8 @@ name: CI
 on:
   pull_request:
     branches:
-      - develop
+      - 'release/**'
       - main
-  push:
   workflow_dispatch:
 
 jobs:
@@ -30,14 +29,39 @@ jobs:
         uses: actions/setup-dotnet@v3
         with:
           dotnet-version: 8.0.x
+          
+      - name: Install GitVersion
+        uses: gittools/actions/gitversion/setup@v0
+        with:
+          versionSpec: '5.x'
 
-      - name: Cake Build 🏗️
-        id: cake-build
-        shell: powershell
-        run: ./build.ps1
-        env:
-          OCTOVERSION_CurrentBranch: ${{ github.ref }}
-          AssentNonInteractive: true
+      - name: Run GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+        
+      - name: Display SemVer
+        run: |
+          echo "SemVer: $env:GitVersion_SemVer"
+          
+      - name: Restore
+        run: dotnet restore DbUp.sln
+        working-directory: src
+
+      - name: Build
+        run: dotnet build -c Release --no-restore /p:Version=$env:GitVersion_SemVer DbUp.sln
+        working-directory: src
+
+      - name: Test
+        run: dotnet test --no-build -c Release --logger trx --logger "console;verbosity=detailed" --results-directory ../artifacts/TestResults DbUp.sln
+        working-directory: src
+
+      - name: Pack
+        run: dotnet pack --no-build -c Release -o ../artifacts /p:Version=$env:GitVersion_SemVer DbUp.sln
+        working-directory: src  
+
+      - name: Push NuGet packages to GitHub Packages ⬆️
+        working-directory: artifacts
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
 
       # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
       - name: Upload Test Results
@@ -47,4 +71,11 @@ jobs:
           name: test-results
           path: artifacts/TestResults/*.trx
 
-      # Moved Test report into separate workflow
+      - name: Create Draft Release
+        if: ${{ (github.ref_name == 'main' || startsWith(github.ref_name, 'release')) && format('{0}', env.GITHUB_TOKEN) != '' }}
+        shell: pwsh
+        working-directory: artifacts
+        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
+        run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item dbup-core.*.nupkg)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
