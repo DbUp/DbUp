@@ -9,7 +9,6 @@ on:
     branches:
       - develop
       - main
-  push:
   workflow_dispatch:
 
 jobs:
@@ -45,19 +44,19 @@ jobs:
           echo "SemVer: $env:GitVersion_SemVer"
           
       - name: Restore
-        run: dotnet restore
+        run: dotnet restore DbUp.sln
         working-directory: src
 
       - name: Build
-        run: dotnet build -c Release --no-restore /p:Version=$env:GitVersion_SemVer
+        run: dotnet build -c Release --no-restore /p:Version=$env:GitVersion_SemVer DbUp.sln
         working-directory: src
 
       - name: Test
-        run: dotnet test --no-build -c Release --logger trx --logger "console;verbosity=detailed" --results-directory ../artifacts/TestResults
+        run: dotnet test --no-build -c Release --logger trx --logger "console;verbosity=detailed" --results-directory ../artifacts/TestResults DbUp.sln
         working-directory: src
 
       - name: Pack
-        run: dotnet pack --no-build -c Release -o ../artifacts /p:Version=$env:GitVersion_SemVer
+        run: dotnet pack --no-build -c Release -o ../artifacts /p:Version=$env:GitVersion_SemVer DbUp.sln
         working-directory: src  
 
       - name: Push NuGet packages to GitHub Packages ⬆️
