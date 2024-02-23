@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
 
@@ -9,12 +10,12 @@ namespace DbUp.Tests.Common.RecordingDb;
 class RecordingDataParameterCollection : IDataParameterCollection
 {
     readonly IUpgradeLog logger;
-    readonly List<object> backingList;
+    readonly ConcurrentBag<object?> backingList;
 
     public RecordingDataParameterCollection(IUpgradeLog logger)
     {
         this.logger = logger;
-        backingList = new List<object>();
+        backingList = new ConcurrentBag<object?>();
     }
 
     public IEnumerator GetEnumerator()
