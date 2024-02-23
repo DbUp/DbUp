@@ -103,7 +103,7 @@ public abstract class NoPublicApiChangesBase
         var isFirst = true;
         sb.Append("(");
 
-        void Append(object argumentValue, string? argumentName = null)
+        void Append(object? argumentValue, string? argumentName = null)
         {
             if (!isFirst)
                 sb.Append(", ");
@@ -246,7 +246,7 @@ public abstract class NoPublicApiChangesBase
 
         sb.Append(' ', indent)
             .Append(ctor.IsPublic ? "public " : "protected ")
-            .Append(ctor.DeclaringType.Name);
+            .Append(ctor.DeclaringType?.Name);
 
         AppendParameters(sb, null, ctor.GetParameters());
 
@@ -287,22 +287,22 @@ public abstract class NoPublicApiChangesBase
     {
         AppendAttributes(sb, indent, evt.GetCustomAttributesData(), false);
 
-        var isClass = evt.DeclaringType.IsClass;
+        var isClass = evt.DeclaringType?.IsClass;
 
-        var add = evt.GetAddMethod(true);
+        var add = evt.GetAddMethod(true)!;
         if (!add.IsPublic && !add.IsFamily)
             return;
 
         sb.Append(' ', indent);
 
-        if (isClass)
+        if (isClass == true)
             sb.Append(add.IsPublic ? "public " : "protected ");
 
         if (add.IsStatic)
             sb.Append("static ");
 
         sb.Append("event ")
-            .Append(GetTypeName(evt.EventHandlerType))
+            .Append(GetTypeName(evt.EventHandlerType!))
             .Append(" ")
             .Append(evt.Name)
             .AppendLine(";");
@@ -312,7 +312,7 @@ public abstract class NoPublicApiChangesBase
     {
         AppendAttributes(sb, indent, property.GetCustomAttributesData(), false);
 
-        var isClass = property.DeclaringType.IsClass;
+        var isClass = property.DeclaringType!.IsClass;
         var get = property.GetGetMethod(true);
         var set = property.GetSetMethod(true);
         var showGet = get != null && (get.IsPublic || get.IsFamily);
@@ -357,7 +357,7 @@ public abstract class NoPublicApiChangesBase
     {
         AppendAttributes(sb, indent, method.GetCustomAttributesData(), false);
 
-        var isClass = method.DeclaringType.IsClass;
+        var isClass = method.DeclaringType!.IsClass;
 
         sb.Append(' ', indent);
 
@@ -444,7 +444,7 @@ public abstract class NoPublicApiChangesBase
         sb.Append(")");
     }
 
-    static string FormatValue(object value)
+    static string FormatValue(object? value)
     {
         if (value == null)
             return "null";
@@ -461,13 +461,13 @@ public abstract class NoPublicApiChangesBase
     static string GetTypeName(Type type)
     {
         if (type.IsArray)
-            return GetTypeName(type.GetElementType()) + "[]";
+            return GetTypeName(type.GetElementType()!) + "[]";
 
         if (type.IsGenericParameter)
             return type.Name;
 
         if (type.IsByRef)
-            return GetTypeName(type.GetElementType());
+            return GetTypeName(type.GetElementType()!);
 
         if (type == typeof(string))
             return "string";
