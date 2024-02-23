@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+    <TargetFramework>net8</TargetFramework>
     <AssemblyName>DbUp.Tests.Common</AssemblyName>
     <RootNamespace>DbUp.Tests.Common</RootNamespace>
     <Nullable>enable</Nullable>
@@ -16,7 +16,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj"/>
-    <PackageReference Include="Assent" Version="1.9.3"/>
+    <PackageReference Include="Assent" Version="2.3.2" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0"/>
     <PackageReference Include="TestStack.BDDfy.Xunit" Version="1.2.0"/>
     <PackageReference Include="Shouldly" Version="4.2.1"/>
