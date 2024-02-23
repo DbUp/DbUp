@@ -31,13 +31,33 @@ jobs:
         with:
           dotnet-version: 7.0.x
 
-      - name: Cake Build 🏗️
-        id: cake-build
-        shell: powershell
-        run: ./build.ps1
-        env:
-          OCTOVERSION_CurrentBranch: ${{ github.ref }}
-          AssentNonInteractive: true
+      - name: Run GitVersion
+        id: gitversion
+        uses: gittools/actions/gitversion/execute@v0
+        
+      - name: Display SemVer
+        run: |
+          echo "SemVer: $env:GitVersion_SemVer"
+          
+      - name: Restore
+        run: dotnet restore
+        working-directory: src
+
+      - name: Build
+        run: dotnet build -c Release --no-restore /p:Version=$env:GitVersion_SemVer
+        working-directory: src
+
+      - name: Test
+        run: dotnet test --no-build -c Release --logger trx --logger "console;verbosity=detailed" --results-directory ../artifacts/TestResults
+        working-directory: src
+
+      - name: Pack
+        run: dotnet pack --no-build -c Release -o ../artifacts /p:Version=$env:GitVersion_SemVer
+        working-directory: src  
+
+      - name: Push NuGet packages to GitHub Packages ⬆️
+        working-directory: artifacts
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
 
       # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
       - name: Upload Test Results
@@ -46,5 +66,3 @@ jobs:
         with:
           name: test-results
           path: artifacts/TestResults/*.trx
-
-      # Moved Test report into separate workflow
