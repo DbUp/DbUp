@@ -1,6 +1,6 @@
-name: Test Code
+name: CI
 
-# This workflow is for testing the code.
+# This workflow builds and tests the code
 # Because of failed permissions all steps which are pushing code to github releases or nuget are removed.
 # For creating draft release launch workflow -Create Draft Release- manually.
 
@@ -10,9 +10,6 @@ on:
       - develop
       - main
   push:
-    branches:
-      - develop
-      - main
   workflow_dispatch:
 
 jobs:
@@ -29,10 +26,10 @@ jobs:
         with:
           fetch-depth: 0 # all
 
-      - name: Setup .NET 7.0
+      - name: Setup .NET 8.0
         uses: actions/setup-dotnet@v3
         with:
-          dotnet-version: 7.0.x
+          dotnet-version: 8.0.x
 
       - name: Cake Build 🏗️
         id: cake-build
@@ -40,6 +37,7 @@ jobs:
         run: ./build.ps1
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
+          AssentNonInteractive: true
 
       # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
       - name: Upload Test Results

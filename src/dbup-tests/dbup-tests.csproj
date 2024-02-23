@@ -1,6 +1,6 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net462;net7.0</TargetFrameworks>
+    <TargetFramework>net8.0</TargetFramework>
     <RootNamespace>DbUp.Tests</RootNamespace>
     <GenerateRuntimeConfigurationFiles>true</GenerateRuntimeConfigurationFiles>
   </PropertyGroup>
@@ -12,8 +12,6 @@
     <PackageReference Include="Serilog.Sinks.Console" Version="4.1.0"/>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.7.2"/>
     <PackageReference Include="Serilog.Sinks.InMemory" Version="0.11.0" />
-    <PackageReference Include="Verify" Version="20.8.2"/>
-    <PackageReference Include="Verify.Xunit" Version="20.8.2"/>
     <PackageReference Include="xunit" Version="2.5.3"/>
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3">
       <PrivateAssets>all</PrivateAssets>
@@ -24,19 +22,10 @@
     <PackageReference Include="NSubstitute" Version="5.1.0"/>
   </ItemGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0"/>
-    <Reference Include="System"/>
-    <Reference Include="Microsoft.CSharp"/>
-  </ItemGroup>
-
   <ItemGroup>
     <Compile Remove="**\*.received.cs"/>
     <EmbeddedResource Include="TestScripts\**\*.sql" Exclude="bin\**;obj\**;**\*.xproj;packages\**;@(EmbeddedResource)"/>
     <Compile Remove="**\ApprovalFiles\*.cs"/>
     <None Include="**\ApprovalFiles\*.cs"/>
-    <None Update="TestFilterFiles\ScriptNames.txt">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
   </ItemGroup>
 </Project>
