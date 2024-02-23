@@ -1,5 +1,5 @@
 name: Test Report
-run-name: Generate Test Report for ${{ inputs.workflow_run.workflow_run.name }} or ${{ inputs.workflow_run.name }}
+run-name: Generate Test Report for ${{ inputs.name }}
   
 # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
 # This workflow is for test report
