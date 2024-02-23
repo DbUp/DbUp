@@ -6,7 +6,7 @@
     <Company>DbUp Contributors</Company>
     <Product>DbUp</Product>
     <Copyright>Copyright © DbUp Contributors 2015</Copyright>
-    <TargetFrameworks>net462;netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.0</TargetFrameworks>
     <RootNamespace>DbUp</RootNamespace>
     <PackageId>dbup-core</PackageId>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
@@ -21,16 +21,9 @@
     <DebugType>embedded</DebugType> <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
   </PropertyGroup>
 
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net6.0'">
+  <ItemGroup>
     <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0"/>
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="Microsoft.CSharp"/>
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="System.Net.Http" Version="4.3.4"/>
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1"/>
   </ItemGroup>
