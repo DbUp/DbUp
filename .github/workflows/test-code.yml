@@ -40,6 +40,7 @@ jobs:
         run: ./build.ps1
         env:
           OCTOVERSION_CurrentBranch: ${{ github.ref }}
+          AssentNonInteractive: true
 
       # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
       - name: Upload Test Results

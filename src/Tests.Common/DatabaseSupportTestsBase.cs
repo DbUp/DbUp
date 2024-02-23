@@ -1,6 +1,9 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
 using System.Runtime.CompilerServices;
-using System.Threading.Tasks;
+using Assent;
+using Assent.Namers;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
@@ -8,11 +11,9 @@ using DbUp.Tests.Common.RecordingDb;
 using Shouldly;
 using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
-using VerifyXunit;
 
 namespace DbUp.Tests.Common;
 
-[UsesVerify]
 public abstract class DatabaseSupportTestsBase
 {
     readonly string? parentFilePath;
@@ -23,6 +24,7 @@ public abstract class DatabaseSupportTestsBase
 
     DatabaseUpgradeResult? result;
     UpgradeEngineBuilder? upgradeEngineBuilder;
+
 
     public DatabaseSupportTestsBase([CallerFilePath] string? parentFilePath = null)
     {
@@ -40,7 +42,7 @@ public abstract class DatabaseSupportTestsBase
     );
 
     [BddfyFact]
-    public Task VerifyBasicSupport()
+    public void VerifyBasicSupport()
     {
         this
             .Given(_ => DeployTo())
@@ -48,12 +50,13 @@ public abstract class DatabaseSupportTestsBase
             .And(_ => SingleScriptExists())
             .When(_ => UpgradeIsPerformed())
             .Then(_ => UpgradeIsSuccessful())
+            .And(_ => CommandLogReflectsScript(nameof(VerifyBasicSupport)),
+                "Command log matches expected steps")
             .BDDfy();
-        return CommandLogReflectsScript(nameof(VerifyBasicSupport));
     }
 
     [BddfyFact]
-    public Task VerifyVariableSubstitutions()
+    public void VerifyVariableSubstitutions()
     {
         this
             .Given(_ => DeployTo())
@@ -62,13 +65,13 @@ public abstract class DatabaseSupportTestsBase
             .And(_ => VariableSubstitutionIsSetup())
             .When(_ => UpgradeIsPerformed())
             .Then(_ => UpgradeIsSuccessful())
+            .And(_ => CommandLogReflectsScript(nameof(VerifyVariableSubstitutions)),
+                "Variables substituted correctly in command log")
             .BDDfy();
-
-        return CommandLogReflectsScript(nameof(VerifyVariableSubstitutions));
     }
 
     [BddfyFact]
-    public Task VerifyJournalCreationIfNameChanged()
+    public void VerifyJournalCreationIfNameChanged()
     {
         this
             .Given(_ => DeployTo())
@@ -77,8 +80,9 @@ public abstract class DatabaseSupportTestsBase
             .And(_ => SingleScriptExists())
             .When(_ => UpgradeIsPerformed())
             .Then(_ => UpgradeIsSuccessful())
+            .And(_ => CommandLogReflectsScript(nameof(VerifyJournalCreationIfNameChanged)),
+                "Command log matches expected steps")
             .BDDfy();
-        return CommandLogReflectsScript(nameof(VerifyJournalCreationIfNameChanged));
     }
 
 
@@ -92,9 +96,17 @@ public abstract class DatabaseSupportTestsBase
         upgradeEngineBuilder = AddCustomNamedJournalToBuilder(upgradeEngineBuilder!, "test", "TestSchemaVersions");
     }
 
-    Task CommandLogReflectsScript(string testName)
+
+    void CommandLogReflectsScript(string testName)
     {
-        return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings(), sourceFile: parentFilePath!);
+        var configuration = new Configuration()
+            .UsingSanitiser(Scrubbers.ScrubDates)
+            .UsingNamer(new SubdirectoryNamer("ApprovalFiles"));
+
+        // Automatically approve the change, make sure to check the result before committing
+        // configuration = configuration.UsingReporter((received, approved) => File.Copy(received, approved, true));
+
+        this.Assent(logger.Log, configuration, testName, parentFilePath);
     }
 
     void UpgradeIsSuccessful()
