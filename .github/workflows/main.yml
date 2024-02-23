@@ -1,6 +1,6 @@
-name: Test Code
+name: CI
 
-# This workflow is for testing the code.
+# This workflow builds and tests the code
 # Because of failed permissions all steps which are pushing code to github releases or nuget are removed.
 # For creating draft release launch workflow -Create Draft Release- manually.
 
@@ -10,9 +10,6 @@ on:
       - develop
       - main
   push:
-    branches:
-      - develop
-      - main
   workflow_dispatch:
 
 jobs:
