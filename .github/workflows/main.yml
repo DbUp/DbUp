@@ -7,7 +7,7 @@ name: CI
 on:
   pull_request:
     branches:
-      - develop
+      - 'release/**'
       - main
   workflow_dispatch:
 
