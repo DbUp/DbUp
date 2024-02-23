@@ -19,7 +19,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Build", "Build", "{7BA5C1AE-AF4F-4BC3-82FC-E9FEEA6D37A6}"
 	ProjectSection(SolutionItems) = preProject
 		..\.github\workflows\publish-release.yml = ..\.github\workflows\publish-release.yml
-		..\.github\workflows\create-draft-release.yml = ..\.github\workflows\create-draft-release.yml
 		..\.github\workflows\test-report.yml = ..\.github\workflows\test-report.yml
 		..\.github\workflows\main.yml = ..\.github\workflows\main.yml
 	EndProjectSection

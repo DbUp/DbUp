@@ -70,3 +70,12 @@ jobs:
         with:
           name: test-results
           path: artifacts/TestResults/*.trx
+
+      - name: Create Draft Release
+        if: ${{ (github.ref_name == 'main' || startsWith(github.ref_name, 'release')) && format('{0}', env.GITHUB_TOKEN) != '' }}
+        shell: pwsh
+        working-directory: artifacts
+        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
+        run: gh release create --draft --title "${{ steps.cake-build.outputs.Version_Info_SemVer }}" "${{ steps.cake-build.outputs.Version_Info_SemVer }}" (Get-Item dbup-core.*.nupkg)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
