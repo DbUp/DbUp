@@ -1,5 +1,5 @@
 name: Test Report
-run-name: Generate Test Report for ${{ inputs.name }}
+run-name: Generate Test Report for ${{ github.event.workflow_run.name }} branch ${{ github.event.workflow_run.head_branch }}
   
 # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
 # This workflow is for test report
