@@ -5,10 +5,7 @@ name: CI
 # For creating draft release launch workflow -Create Draft Release- manually.
 
 on:
-  pull_request:
-    branches:
-      - 'release/**'
-      - main
+  push:
   workflow_dispatch:
 
 jobs:
@@ -38,7 +35,7 @@ jobs:
       - name: Run GitVersion
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0
-        
+     
       - name: Display SemVer
         run: |
           echo "SemVer: $env:GitVersion_SemVer"
@@ -70,13 +67,30 @@ jobs:
         with:
           name: test-results
           path: artifacts/TestResults/*.trx
-
-      
-      - name: Create Draft Release
-        if: ${{ (github.head_ref == 'main' || startsWith(github.head_ref, 'release/')) && format('{0}', env.GITHUB_TOKEN) != '' }}
+          
+      - name: Tag Commit
+        if: ${{ (github.ref_name == 'main' || startsWith(github.ref_name, 'release/')) && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
         run: gh release create --draft --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create Draft Release for main Branch
+        if: ${{ github.ref_name == 'main && format('{0}', env.GITHUB_TOKEN) != '' }}
+        shell: pwsh
+        working-directory: artifacts
+        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
+        run: gh release create --draft --target $env:GITHUB_REF --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
+      - name: Create Release for Release Branches
+        if: ${{ startsWith(github.ref_name, 'release/') && format('{0}', env.GITHUB_TOKEN) != '' }}
+        shell: pwsh
+        working-directory: artifacts
+        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
+        run: gh release create --prerelease --target $env:GITHUB_REF --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
