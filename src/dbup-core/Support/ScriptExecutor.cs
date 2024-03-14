@@ -155,12 +155,12 @@ public abstract class ScriptExecutor : IScriptExecutor
                     }
                 }
 
-                if (UseTheSameTransactionForJournalTableAndScripts)
+                if (UseTheSameTransactionForJournalTableAndScripts && ShouldJournalScript(script))
                 {
                     journal.StoreExecutedScript(script, dbCommandFactory);
                 }
             });
-            if (!UseTheSameTransactionForJournalTableAndScripts)
+            if (!UseTheSameTransactionForJournalTableAndScripts && ShouldJournalScript(script))
             {
                 connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory =>
                 {
@@ -182,6 +182,16 @@ public abstract class ScriptExecutor : IScriptExecutor
             Log().LogError("{0}", ex.ToString());
             throw;
         }
+    }
+
+    /// <summary>
+    /// Scripts should only be journaled if they are only to be run once.
+    /// Scripts which need to run every time should not be recorded.
+    /// </summary>
+    /// <param name="script"></param>
+    bool ShouldJournalScript(SqlScript script)
+    {
+        return script.SqlScriptOptions.ScriptType == ScriptType.RunOnce;
     }
 
     protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCallback);
