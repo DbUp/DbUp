@@ -115,7 +115,7 @@ public abstract class ScriptExecutor : IScriptExecutor
     public virtual void Execute(SqlScript script, IDictionary<string, string> variables)
     {
         var contents = PreprocessScriptContents(script, variables);
-        Log().WriteInformation("Executing Database Server script '{0}'", script.Name);
+        Log().LogInformation("Executing Database Server script '{0}'", script.Name);
 
         var connectionManager = connectionManagerFactory();
         var scriptStatements = connectionManager.SplitScriptIntoCommands(contents);
@@ -171,15 +171,15 @@ public abstract class ScriptExecutor : IScriptExecutor
         }
         catch (DbException sqlException)
         {
-            Log().WriteInformation("DB exception has occurred in script: '{0}'", script.Name);
-            Log().WriteError("Script block number: {0}; Message: {1}", index, sqlException.Message);
-            Log().WriteError("{0}", sqlException.ToString());
+            Log().LogInformation("DB exception has occurred in script: '{0}'", script.Name);
+            Log().LogError("Script block number: {0}; Message: {1}", index, sqlException.Message);
+            Log().LogError("{0}", sqlException.ToString());
             throw;
         }
         catch (Exception ex)
         {
-            Log().WriteInformation("Exception has occurred in script: '{0}'", script.Name);
-            Log().WriteError("{0}", ex.ToString());
+            Log().LogInformation("Exception has occurred in script: '{0}'", script.Name);
+            Log().LogError("{0}", ex.ToString());
             throw;
         }
     }
@@ -225,7 +225,7 @@ public abstract class ScriptExecutor : IScriptExecutor
             if (reader.FieldCount == 0)
             {
                 if (reader.RecordsAffected >= 0)
-                    Log().WriteInformation("RecordsAffected: {0}", reader.RecordsAffected);
+                    Log().LogInformation("RecordsAffected: {0}", reader.RecordsAffected);
                 return;
             }
 
@@ -262,16 +262,16 @@ public abstract class ScriptExecutor : IScriptExecutor
             totalLength += 1;
 
             var delimiterLine = new string('-', totalLength);
-            Log().WriteInformation(delimiterLine);
-            Log().WriteInformation(string.Format(format, names.ToArray()));
-            Log().WriteInformation(delimiterLine);
+            Log().LogInformation(delimiterLine);
+            Log().LogInformation(string.Format(format, names.ToArray()));
+            Log().LogInformation(delimiterLine);
             foreach (var line in lines)
             {
-                Log().WriteInformation(string.Format(format, line.ToArray()));
+                Log().LogInformation(string.Format(format, line.ToArray()));
             }
 
-            Log().WriteInformation(delimiterLine);
-            Log().WriteInformation("\r\n");
+            Log().LogInformation(delimiterLine);
+            Log().LogInformation("\r\n");
         } while (reader.NextResult());
     }
 

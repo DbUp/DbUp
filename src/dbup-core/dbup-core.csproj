@@ -6,39 +6,24 @@
     <Company>DbUp Contributors</Company>
     <Product>DbUp</Product>
     <Copyright>Copyright © DbUp Contributors 2015</Copyright>
-    <TargetFrameworks>netstandard1.3;net462;netstandard2.0;net6.0</TargetFrameworks>
+    <TargetFramework>netstandard2.0</TargetFramework>
     <RootNamespace>DbUp</RootNamespace>
     <PackageId>dbup-core</PackageId>
     <AssemblyOriginatorKeyFile>../dbup.snk</AssemblyOriginatorKeyFile>
     <SignAssembly>true</SignAssembly>
-    <DefineConstants>$(DefineConstants);LIBLOG_PORTABLE;LIBLOG_PROVIDERS_ONLY;SUPPORTS_LIBLOG</DefineConstants>
     <RepositoryUrl>https://github.com/DbUp/DbUp.git</RepositoryUrl>
   </PropertyGroup>
 
-  <PropertyGroup Condition=" '$(TargetFramework)' == 'netstandard1.3' ">
-    <DefineConstants>$(DefineConstants);USE_TYPE_INFO</DefineConstants>
+  <PropertyGroup Condition="'$(CI)' == 'true'">
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild> <!-- Perform a deterministic build, so our binaries aren't impacted by build server environmental factors (e.g. file paths). -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources> <!-- Embed source files that are not tracked by the source control manager in the PDB -->
+    <DebugType>embedded</DebugType> <!-- Recommended: Embed symbols containing Source Link in the main file (exe/dll) -->
   </PropertyGroup>
 
-  <ItemGroup Condition=" '$(TargetFramework)' == 'netstandard1.3'">
-    <PackageReference Include="System.Data.Common" Version="4.3.0"/>
-    <PackageReference Include="System.Linq.Expressions" Version="4.3.0"/>
-    <PackageReference Include="System.Reflection" Version="4.3.0"/>
-    <PackageReference Include="System.Reflection.TypeExtensions" Version="4.7.0"/>
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0"/>
-    <PackageReference Include="System.Dynamic.Runtime" Version="4.3.0"/>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0' Or '$(TargetFramework)' == 'net6.0'">
-    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0"/>
-    <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
-  </ItemGroup>
-
-  <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
-    <Reference Include="Microsoft.CSharp"/>
-  </ItemGroup>
-
   <ItemGroup>
+    <PackageReference Include="System.Diagnostics.TraceSource" Version="4.3.0"/>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0"/>
+    <PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="8.0.0" />
     <PackageReference Include="System.Net.Http" Version="4.3.4"/>
     <PackageReference Include="System.Text.RegularExpressions" Version="4.3.1"/>
   </ItemGroup>

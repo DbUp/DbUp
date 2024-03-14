@@ -8,8 +8,10 @@ class RecordingDbDataParameter : IDbDataParameter
     public DbType DbType { get; set; }
     public ParameterDirection Direction { get; set; }
     public bool IsNullable { get; private set; }
+#pragma warning disable CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
     public string? ParameterName { get; set; }
     public string? SourceColumn { get; set; }
+#pragma warning restore CS8766 // Nullability of reference types in return type doesn't match implicitly implemented member (possibly because of nullability attributes).
     public DataRowVersion SourceVersion { get; set; }
     public object? Value { get; set; }
     public byte Precision { get; set; }
