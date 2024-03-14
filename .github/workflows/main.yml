@@ -78,7 +78,7 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create Draft Release for main Branch
-        if: ${{ github.ref_name == 'main && format('{0}', env.GITHUB_TOKEN) != '' }}
+        if: ${{ github.ref_name == 'main' && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
