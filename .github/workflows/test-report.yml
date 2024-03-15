@@ -1,11 +1,12 @@
 name: Test Report
-
+run-name: Generate Test Report for workflow ${{ github.event.workflow_run.name }} run ${{ github.event.workflow_run.run_number }} branch ${{ github.event.workflow_run.head_branch }}
+  
 # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
 # This workflow is for test report
 
 on:
   workflow_run:
-    workflows: [ "Create Draft Release", "Test Code" ]
+    workflows: [ "Create Draft Release", "CI" ]
     types:
       - completed
 
@@ -25,3 +26,4 @@ jobs:
           name: Unit Tests
           path: "*.trx"
           reporter: dotnet-trx
+          fail-on-error: false
