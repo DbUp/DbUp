@@ -741,6 +741,7 @@ public static class StandardExtensions
         if (timeout == null)
         {
             builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = null);
+            builder.Configure(c => c.ConnectionManager.ExecutionTimeoutSeconds = null);
             return builder;
         }
 
@@ -749,6 +750,7 @@ public static class StandardExtensions
         if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException("timeout", timeout, string.Format("The timeout value must be a value between 0 and {0} seconds", int.MaxValue));
 
         builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
+        builder.Configure(c => c.ConnectionManager.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
         return builder;
     }
 

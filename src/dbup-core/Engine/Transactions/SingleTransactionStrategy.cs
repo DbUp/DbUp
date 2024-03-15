@@ -8,6 +8,7 @@ namespace DbUp.Engine.Transactions;
 class SingleTransactionStrategy : ITransactionStrategy
 {
     IDbConnection connection;
+    int? commandTimeout;
     IDbTransaction transaction;
     bool errorOccured;
     IUpgradeLog log;
@@ -24,6 +25,11 @@ class SingleTransactionStrategy : ITransactionStrategy
             action(() =>
             {
                 var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
+                {
+                    command.CommandTimeout = commandTimeout.Value;
+                }
+
                 command.Transaction = transaction;
                 return command;
             });
@@ -45,6 +51,11 @@ class SingleTransactionStrategy : ITransactionStrategy
             return actionWithResult(() =>
             {
                 var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
+                {
+                    command.CommandTimeout = commandTimeout.Value;
+                }
+
                 command.Transaction = transaction;
                 return command;
             });
@@ -56,11 +67,17 @@ class SingleTransactionStrategy : ITransactionStrategy
         }
     }
 
-    public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+    public void Initialise(
+        IDbConnection dbConnection,
+        IUpgradeLog upgradeLog,
+        List<SqlScript> executedScripts,
+        int? executionTimeoutSeconds
+    )
     {
         executedScriptsCollection = executedScripts;
         executedScriptsListBeforeExecution = executedScripts.ToArray();
         connection = dbConnection;
+        commandTimeout = executionTimeoutSeconds;
         log = upgradeLog;
         upgradeLog.LogInformation("Beginning transaction");
         transaction = connection.BeginTransaction();

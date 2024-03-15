@@ -350,6 +350,7 @@ namespace DbUp.Engine.Transactions
         protected DatabaseConnectionManager(System.Func<DbUp.Engine.Output.IUpgradeLog, System.Data.IDbConnection> connectionFactory) { }
         protected DatabaseConnectionManager(DbUp.Engine.Transactions.IConnectionFactory connectionFactory) { }
         protected virtual DbUp.Engine.Transactions.AllowedTransactionMode AllowedTransactionModes { get; }
+        public System.Nullable<int> ExecutionTimeoutSeconds { get; set; }
         public bool IsScriptOutputLogged { get; set; }
         public DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
         public T ExecuteCommandsWithManagedConnection<T>(Func<System.Func<System.Data.IDbCommand>, T> actionWithResult) { }
@@ -371,6 +372,7 @@ namespace DbUp.Engine.Transactions
     }
     public interface IConnectionManager
     {
+        System.Nullable<int> ExecutionTimeoutSeconds { get; set; }
         bool IsScriptOutputLogged { get; set; }
         DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
         T ExecuteCommandsWithManagedConnection<T>(Func<System.Func<System.Data.IDbCommand>, T> actionWithResult);
@@ -383,7 +385,7 @@ namespace DbUp.Engine.Transactions
     {
         T Execute<T>(Func<System.Func<System.Data.IDbCommand>, T> actionWithResult);
         void Execute(System.Action<System.Func<System.Data.IDbCommand>> action);
-        void Initialise(System.Data.IDbConnection dbConnection, DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts);
+        void Initialise(System.Data.IDbConnection dbConnection, DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts, System.Nullable<int> executionTimeoutSeconds);
     }
     public enum TransactionMode : int
     {
