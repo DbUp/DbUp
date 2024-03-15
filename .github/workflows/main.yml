@@ -5,6 +5,10 @@ name: CI
 # For creating draft release launch workflow -Create Draft Release- manually.
 
 on:
+  pull_request:
+    branches:
+      - 'release/**'
+      - main
   push:
   workflow_dispatch:
 
