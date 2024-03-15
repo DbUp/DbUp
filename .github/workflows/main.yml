@@ -61,11 +61,9 @@ jobs:
         working-directory: src  
 
       - name: Push NuGet packages to GitHub Packages ⬆️
-        if: ${{ format('{0}', env.GITHUB_TOKEN) != '' && startsWith(github.repository, 'DbUp/') }}
+        if: ${{ format('{0}', secrets.GITHUB_TOKEN) != '' && startsWith(github.repository, 'DbUp/') }}
         working-directory: artifacts
         run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
       # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
       - name: Upload Test Results
