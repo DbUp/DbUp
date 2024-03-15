@@ -3,52 +3,52 @@ using System.IO;
 using System.Text;
 using DbUp.Engine;
 
-namespace DbUp.Helpers
+namespace DbUp.Helpers;
+
+public static class UpgradeEngineHtmlReport
 {
-    public static class UpgradeEngineHtmlReport
+    /// <summary>
+    /// This method will generate an HTML report which can be uploaded as an artifact to any deployment / build tool which supports artifacts.  Useful for getting approvals and seeing a history of what ran when
+    /// </summary>
+    /// <param name="upgradeEngine">The upgrade engine</param>
+    /// <param name="fullPath">The full path of the file which will be generated</param>
+    public static void GenerateUpgradeHtmlReport(this UpgradeEngine upgradeEngine, string fullPath)
     {
-        /// <summary>
-        /// This method will generate an HTML report which can be uploaded as an artifact to any deployment / build tool which supports artifacts.  Useful for getting approvals and seeing a history of what ran when
-        /// </summary>
-        /// <param name="upgradeEngine">The upgrade engine</param>
-        /// <param name="fullPath">The full path of the file which will be generated</param>        
-        public static void GenerateUpgradeHtmlReport(this UpgradeEngine upgradeEngine, string fullPath)
+        GenerateUpgradeHtmlReport(upgradeEngine, fullPath, string.Empty, string.Empty);
+    }
+
+    /// <summary>
+    /// This method will generate an HTML report which can be uploaded as an artifact to any deployment / build tool which supports artifacts.  Useful for getting approvals and seeing a history of what ran when
+    /// </summary>
+    /// <param name="upgradeEngine">The upgrade engine</param>
+    /// <param name="fullPath">The full path of the file which will be generated</param>
+    /// <param name="serverName">The name of the server being connected to</param>
+    /// <param name="databaseName">The name of the database being upgraded</param>
+    public static void GenerateUpgradeHtmlReport(this UpgradeEngine upgradeEngine, string fullPath, string serverName, string databaseName)
+    {
+        var scriptsToRunList = upgradeEngine.GetScriptsToExecute();
+        var htmlReport = new StringBuilder();
+
+        htmlReport.Append(GetHtmlHeader(serverName, databaseName));
+
+        for (var i = 0; i < scriptsToRunList.Count; i++)
         {
-            GenerateUpgradeHtmlReport(upgradeEngine, fullPath, string.Empty, string.Empty);
+            htmlReport.Append(GetHtmlForScript(scriptsToRunList[i], i));
         }
 
-        /// <summary>
-        /// This method will generate an HTML report which can be uploaded as an artifact to any deployment / build tool which supports artifacts.  Useful for getting approvals and seeing a history of what ran when
-        /// </summary>
-        /// <param name="upgradeEngine">The upgrade engine</param>
-        /// <param name="fullPath">The full path of the file which will be generated</param>
-        /// <param name="serverName">The name of the server being connected to</param>
-        /// <param name="databaseName">The name of the database being upgraded</param>
-        public static void GenerateUpgradeHtmlReport(this UpgradeEngine upgradeEngine, string fullPath, string serverName, string databaseName)
+        htmlReport.Append(GetHtmlFooter());
+
+        if (File.Exists(fullPath))
         {
-            var scriptsToRunList = upgradeEngine.GetScriptsToExecute();
-            var htmlReport = new StringBuilder();
-
-            htmlReport.Append(GetHtmlHeader(serverName, databaseName));
-
-            for (var i = 0; i < scriptsToRunList.Count; i++)
-            {
-                htmlReport.Append(GetHtmlForScript(scriptsToRunList[i], i));
-            }
-
-            htmlReport.Append(GetHtmlFooter());
-
-            if (File.Exists(fullPath))
-            {
-                File.Delete(fullPath);
-            }
-
-            File.WriteAllText(fullPath, htmlReport.ToString(), DbUpDefaults.DefaultEncoding);
+            File.Delete(fullPath);
         }
 
-        static string GetHtmlHeader(string serverName, string databaseName)
-        {
-            return $@"<!DOCTYPE html>
+        File.WriteAllText(fullPath, htmlReport.ToString(), DbUpDefaults.DefaultEncoding);
+    }
+
+    static string GetHtmlHeader(string serverName, string databaseName)
+    {
+        return $@"<!DOCTYPE html>
 <html>
 <head>
     <meta charset=""utf-8"">
@@ -75,11 +75,11 @@ namespace DbUp.Helpers
 
     <div class=""accordion"" id=""accordion"">
 ";
-        }
+    }
 
-        static string GetHtmlForScript(SqlScript sqlScript, int counter)
-        {
-            return $@"<div class=""card"">
+    static string GetHtmlForScript(SqlScript sqlScript, int counter)
+    {
+        return $@"<div class=""card"">
 			<div class=""card-header"" id=""script{counter}"">
 				<h5>
 					<button class=""btn btn-link"" type=""button"" data-toggle=""collapse"" data-target=""#script-contents{counter}"">
@@ -98,11 +98,11 @@ namespace DbUp.Helpers
 			  </div>
 			</div>
 		</div>";
-        }
+    }
 
-        static string GetHtmlFooter()
-        {
-            return @"
+    static string GetHtmlFooter()
+    {
+        return @"
     </div>
     <script src=""https://code.jquery.com/jquery-3.3.1.slim.min.js"" integrity=""sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"" crossorigin=""anonymous""></script>
     <script src=""https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js"" integrity=""sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49"" crossorigin=""anonymous""></script>
@@ -126,6 +126,5 @@ namespace DbUp.Helpers
     </script>
   </body>
 </html>";
-        }
     }
 }

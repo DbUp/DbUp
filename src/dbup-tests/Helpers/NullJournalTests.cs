@@ -1,31 +1,22 @@
 ﻿using System.Data;
+using DbUp.Engine;
 using DbUp.Helpers;
 using NSubstitute;
 using Shouldly;
 using Xunit;
-#pragma warning disable 618
 
-namespace DbUp.Tests.Helpers
+namespace DbUp.Tests.Helpers;
+
+public class NullJournalTests
 {
-    public class NullJournalTests
+    [Fact]
+    public void shouldnt_journal_anything()
     {
-        [Fact]
-        public void shouldnt_journal_anything_executed()
-        {
-            var journal = new NullJournal();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
+        var command = Substitute.For<IDbCommand>();
 
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "SELECT * FROM BLAH")
-                .JournalTo(journal)
-                .Build();
+        var journal = new NullJournal();
 
-            upgradeEngine.PerformUpgrade();
-
-            journal.GetExecutedScripts().ShouldBeEmpty();
-        }
+        journal.StoreExecutedScript(new SqlScript("testscript", "SELECT * FROM BLAH"), () => command);
+        journal.GetExecutedScripts().ShouldBeEmpty();
     }
 }

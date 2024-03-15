@@ -2,50 +2,49 @@
 using System.Collections.Generic;
 using DbUp.Engine;
 
-namespace DbUp.Builder
+namespace DbUp.Builder;
+
+/// <summary>
+/// Builds a UpgradeEngine by accepting a list of callbacks to execute. For custom configuration, you should 
+/// implement extension methods on top of this class.
+/// </summary>
+public class UpgradeEngineBuilder
 {
+    protected readonly List<Action<UpgradeConfiguration>> callbacks = new();
+
     /// <summary>
-    /// Builds a UpgradeEngine by accepting a list of callbacks to execute. For custom configuration, you should 
-    /// implement extension methods on top of this class.
+    /// Adds a callback that will be run to configure the upgrader when Build is called.
     /// </summary>
-    public class UpgradeEngineBuilder
+    /// <param name="configuration">The configuration.</param>
+    public virtual void Configure(Action<UpgradeConfiguration> configuration)
     {
-        protected readonly List<Action<UpgradeConfiguration>> callbacks = new List<Action<UpgradeConfiguration>>();
+        callbacks.Add(configuration);
+    }
 
-        /// <summary>
-        /// Adds a callback that will be run to configure the upgrader when Build is called.
-        /// </summary>
-        /// <param name="configuration">The configuration.</param>
-        public virtual void Configure(Action<UpgradeConfiguration> configuration)
+    /// <summary>
+    /// Creates an UpgradeConfiguration based on this configuration.
+    /// </summary>
+    /// <returns></returns>
+    public virtual UpgradeConfiguration BuildConfiguration()
+    {
+        var config = new UpgradeConfiguration();
+        foreach (var callback in callbacks)
         {
-            callbacks.Add(configuration);
+            callback(config);
         }
 
-        /// <summary>
-        /// Creates an UpgradeConfiguration based on this configuration.
-        /// </summary>
-        /// <returns></returns>
-        public virtual UpgradeConfiguration BuildConfiguration()
-        {
-            var config = new UpgradeConfiguration();
-            foreach (var callback in callbacks)
-            {
-                callback(config);
-            }
+        config.Validate();
 
-            config.Validate();
+        return config;
+    }
 
-            return config;
-        }
-
-        /// <summary>
-        /// Creates an UpgradeEngine based on this configuration.
-        /// </summary>
-        /// <returns></returns>
-        public virtual UpgradeEngine Build()
-        {
-            var config = BuildConfiguration();
-            return new UpgradeEngine(config);
-        }
+    /// <summary>
+    /// Creates an UpgradeEngine based on this configuration.
+    /// </summary>
+    /// <returns></returns>
+    public virtual UpgradeEngine Build()
+    {
+        var config = BuildConfiguration();
+        return new UpgradeEngine(config);
     }
 }

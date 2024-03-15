@@ -1,25 +1,24 @@
 ﻿using System.Collections.Generic;
 
-namespace DbUp.Support
+namespace DbUp.Support;
+
+/// <summary>
+/// Responsible for splitting SQL text into a list of commands.
+/// </summary>
+public class SqlCommandSplitter
 {
     /// <summary>
-    /// Responsible for splitting SQL text into a list of commands.
+    /// Returns the separate executable SQL commands within the SQL script.
     /// </summary>
-    public class SqlCommandSplitter
+    /// <param name="scriptContents"></param>
+    /// <returns></returns>
+    public virtual IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
     {
-        /// <summary>
-        /// Returns the separate executable SQL commands within the SQL script.
-        /// </summary>
-        /// <param name="scriptContents"></param>
-        /// <returns></returns>
-        public virtual IEnumerable<string> SplitScriptIntoCommands(string scriptContents)
+        using (var reader = new SqlCommandReader(scriptContents))
         {
-            using (var reader = new SqlCommandReader(scriptContents))
-            {
-                var commands = new List<string>();
-                reader.ReadAllCommands(c => commands.Add(c));
-                return commands;
-            }
+            var commands = new List<string>();
+            reader.ReadAllCommands(c => commands.Add(c));
+            return commands;
         }
     }
 }

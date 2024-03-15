@@ -1,12 +1,11 @@
 using System.Text.RegularExpressions;
 
-namespace DbUp.Tests.Common
+namespace DbUp.Tests.Common;
+
+public static class Scrubbers
 {
-    public static class Scrubbers
+    public static string ScrubDates(string arg)
     {
-        public static string ScrubDates(string arg)
-        {
-            return Regex.Replace(arg, @"\d?\d/\d?\d/\d?\d?\d\d \d?\d:\d\d:\d\d", "<date>");
-        }
+        return Regex.Replace(arg, @"\d?\d/\d?\d/\d?\d?\d\d \d?\d:\d\d:\d\d", "<date>");
     }
 }

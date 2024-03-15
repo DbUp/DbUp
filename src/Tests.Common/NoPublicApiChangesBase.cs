@@ -8,6 +8,7 @@ using System.Runtime.InteropServices;
 using System.Runtime.Versioning;
 using System.Text;
 using Assent;
+using Assent.Namers;
 using Xunit;
 
 namespace DbUp.Tests.Common;
@@ -15,37 +16,28 @@ namespace DbUp.Tests.Common;
 public abstract class NoPublicApiChangesBase
 {
     private readonly Assembly assembly;
-    private readonly bool differByFramework;
-    private readonly string? callerFilePath;
+    readonly string? callerFilePath;
 
-    public NoPublicApiChangesBase(Assembly assembly, bool differByFramework = false, [CallerFilePath] string? callerFilePath = null)
+    public NoPublicApiChangesBase(Assembly assembly, [CallerFilePath] string? callerFilePath = null)
     {
         this.assembly = assembly;
-        this.differByFramework = differByFramework;
         this.callerFilePath = callerFilePath;
     }
 
     [Fact]
     public void Run()
     {
+        Console.WriteLine($"Caller File Path {callerFilePath}");
         var result = GetPublicApi(assembly);
-
-#if NETFRAMEWORK
-            const string framework = "netfx";
-#else
-        const string framework = "netcore"; // "Core" is no longer a thing but maintain the identifier for compatibility.
-#endif
-        var approvalPostfix = differByFramework ? $".{framework}" : "";
 
         var config = new Configuration()
             .UsingExtension("cs")
-            .UsingNamer(m => Path.Combine(Path.GetDirectoryName(m.FilePath), "ApprovalFiles",
-                assembly.GetName().Name + approvalPostfix));
+            .UsingNamer(new SubdirectoryNamer("ApprovalFiles"));
 
         // Automatically approve the change, make sure to check the result before committing
         // config = config.UsingReporter((received, approved) => File.Copy(received, approved, true));
 
-        this.Assent(result, config, "NoPublicApiChanges", callerFilePath);
+        this.Assent(result, config,  filePath: callerFilePath);
     }
 
     static string GetPublicApi(Assembly assembly)
@@ -111,7 +103,7 @@ public abstract class NoPublicApiChangesBase
         var isFirst = true;
         sb.Append("(");
 
-        void Append(object argumentValue, string? argumentName = null)
+        void Append(object? argumentValue, string? argumentName = null)
         {
             if (!isFirst)
                 sb.Append(", ");
@@ -254,7 +246,7 @@ public abstract class NoPublicApiChangesBase
 
         sb.Append(' ', indent)
             .Append(ctor.IsPublic ? "public " : "protected ")
-            .Append(ctor.DeclaringType.Name);
+            .Append(ctor.DeclaringType?.Name);
 
         AppendParameters(sb, null, ctor.GetParameters());
 
@@ -295,22 +287,22 @@ public abstract class NoPublicApiChangesBase
     {
         AppendAttributes(sb, indent, evt.GetCustomAttributesData(), false);
 
-        var isClass = evt.DeclaringType.IsClass;
+        var isClass = evt.DeclaringType?.IsClass;
 
-        var add = evt.GetAddMethod(true);
+        var add = evt.GetAddMethod(true)!;
         if (!add.IsPublic && !add.IsFamily)
             return;
 
         sb.Append(' ', indent);
 
-        if (isClass)
+        if (isClass == true)
             sb.Append(add.IsPublic ? "public " : "protected ");
 
         if (add.IsStatic)
             sb.Append("static ");
 
         sb.Append("event ")
-            .Append(GetTypeName(evt.EventHandlerType))
+            .Append(GetTypeName(evt.EventHandlerType!))
             .Append(" ")
             .Append(evt.Name)
             .AppendLine(";");
@@ -320,7 +312,7 @@ public abstract class NoPublicApiChangesBase
     {
         AppendAttributes(sb, indent, property.GetCustomAttributesData(), false);
 
-        var isClass = property.DeclaringType.IsClass;
+        var isClass = property.DeclaringType!.IsClass;
         var get = property.GetGetMethod(true);
         var set = property.GetSetMethod(true);
         var showGet = get != null && (get.IsPublic || get.IsFamily);
@@ -365,7 +357,7 @@ public abstract class NoPublicApiChangesBase
     {
         AppendAttributes(sb, indent, method.GetCustomAttributesData(), false);
 
-        var isClass = method.DeclaringType.IsClass;
+        var isClass = method.DeclaringType!.IsClass;
 
         sb.Append(' ', indent);
 
@@ -435,7 +427,7 @@ public abstract class NoPublicApiChangesBase
                 sb.Append("out ");
             if (parameter.IsIn)
                 sb.Append("in ");
-            if (parameter.IsDefined(typeof (ParamArrayAttribute), false))
+            if (parameter.IsDefined(typeof(ParamArrayAttribute), false))
                 sb.Append("params ");
 
             sb.Append(GetTypeName(parameter.ParameterType))
@@ -452,7 +444,7 @@ public abstract class NoPublicApiChangesBase
         sb.Append(")");
     }
 
-    static string FormatValue(object value)
+    static string FormatValue(object? value)
     {
         if (value == null)
             return "null";
@@ -469,13 +461,13 @@ public abstract class NoPublicApiChangesBase
     static string GetTypeName(Type type)
     {
         if (type.IsArray)
-            return GetTypeName(type.GetElementType()) + "[]";
+            return GetTypeName(type.GetElementType()!) + "[]";
 
         if (type.IsGenericParameter)
             return type.Name;
 
         if (type.IsByRef)
-            return GetTypeName(type.GetElementType());
+            return GetTypeName(type.GetElementType()!);
 
         if (type == typeof(string))
             return "string";

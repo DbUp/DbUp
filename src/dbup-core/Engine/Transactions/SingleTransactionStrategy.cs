@@ -3,94 +3,100 @@ using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
 
-namespace DbUp.Engine.Transactions
+namespace DbUp.Engine.Transactions;
+
+class SingleTransactionStrategy : ITransactionStrategy
 {
-    class SingleTransactionStrategy : ITransactionStrategy
+    IDbConnection connection;
+    int? commandTimeout;
+    IDbTransaction transaction;
+    bool errorOccured;
+    IUpgradeLog log;
+    SqlScript[] executedScriptsListBeforeExecution;
+    List<SqlScript> executedScriptsCollection;
+
+    public void Execute(Action<Func<IDbCommand>> action)
     {
-        IDbConnection connection;
-        int? commandTimeout;
-        IDbTransaction transaction;
-        bool errorOccured;
-        IUpgradeLog log;
-        SqlScript[] executedScriptsListBeforeExecution;
-        List<SqlScript> executedScriptsCollection;
+        if (errorOccured)
+            throw new InvalidOperationException("Error occured on previous script execution");
 
-        public void Execute(Action<Func<IDbCommand>> action)
+        try
         {
-            if (errorOccured)
-                throw new InvalidOperationException("Error occured on previous script execution");
-
-            try
+            action(() =>
             {
-                action(() =>
+                var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
                 {
-                    var command = connection.CreateCommand();
-                    if (commandTimeout.HasValue)
-                    {
-                        command.CommandTimeout = commandTimeout.Value;
-                    }
-                    command.Transaction = transaction;
-                    return command;
-                });
-            }
-            catch (Exception)
-            {
-                errorOccured = true;
-                throw;
-            }
+                    command.CommandTimeout = commandTimeout.Value;
+                }
+
+                command.Transaction = transaction;
+                return command;
+            });
         }
-
-        public T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult)
+        catch (Exception)
         {
-            if (errorOccured)
-                throw new InvalidOperationException("Error occured on previous script execution");
+            errorOccured = true;
+            throw;
+        }
+    }
 
-            try
+    public T Execute<T>(Func<Func<IDbCommand>, T> actionWithResult)
+    {
+        if (errorOccured)
+            throw new InvalidOperationException("Error occurred on previous script execution");
+
+        try
+        {
+            return actionWithResult(() =>
             {
-                return actionWithResult(() =>
+                var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
                 {
-                    var command = connection.CreateCommand();
-                    if (commandTimeout.HasValue)
-                    {
-                        command.CommandTimeout = commandTimeout.Value;
-                    }
-                    command.Transaction = transaction;
-                    return command;
-                });
-            }
-            catch (Exception)
-            {
-                errorOccured = true;
-                throw;
-            }
-        }
+                    command.CommandTimeout = commandTimeout.Value;
+                }
 
-        public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts, int? executionTimeoutSeconds)
+                command.Transaction = transaction;
+                return command;
+            });
+        }
+        catch (Exception)
         {
-            executedScriptsCollection = executedScripts;
-            executedScriptsListBeforeExecution = executedScripts.ToArray();
-            connection = dbConnection;
-            commandTimeout = executionTimeoutSeconds;
-            log = upgradeLog;
-            upgradeLog.WriteInformation("Beginning transaction");
-            transaction = connection.BeginTransaction();
+            errorOccured = true;
+            throw;
         }
+    }
 
-        public void Dispose()
+    public void Initialise(
+        IDbConnection dbConnection,
+        IUpgradeLog upgradeLog,
+        List<SqlScript> executedScripts,
+        int? executionTimeoutSeconds
+    )
+    {
+        executedScriptsCollection = executedScripts;
+        executedScriptsListBeforeExecution = executedScripts.ToArray();
+        connection = dbConnection;
+        commandTimeout = executionTimeoutSeconds;
+        log = upgradeLog;
+        upgradeLog.LogInformation("Beginning transaction");
+        transaction = connection.BeginTransaction();
+    }
+
+    public void Dispose()
+    {
+        if (!errorOccured)
         {
-            if (!errorOccured)
-            {
-                transaction.Commit();
-            }
-            else
-            {
-                log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
-                //Restore the executed scripts collection
-                executedScriptsCollection.Clear();
-                executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);
-            }
-
-            transaction.Dispose();
+            transaction.Commit();
         }
+        else
+        {
+            log.LogWarning("Error occured when executing scripts, transaction will be rolled back");
+            //Restore the executed scripts collection
+            executedScriptsCollection.Clear();
+            executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);
+        }
+
+        transaction.Dispose();
     }
 }

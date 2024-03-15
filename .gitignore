@@ -1,3 +1,8 @@
 src/.vs
 bin/
 obj
+/artifacts/*
+/src/dbup-tests/**/*received.txt
+tools
+.idea
+DbUp.sln.DotSettings.user

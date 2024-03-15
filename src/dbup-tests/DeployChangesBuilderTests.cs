@@ -1,93 +1,71 @@
 ﻿using System;
 using System.Data;
+using System.Linq;
 using DbUp.Engine;
+using DbUp.Tests.TestInfrastructure;
 using NSubstitute;
 using Shouldly;
 using Xunit;
 
-namespace DbUp.Tests
+namespace DbUp.Tests;
+
+public class DeployChangesBuilderTests
 {
-#pragma warning disable CS0618 // Type or member is obsolete
-    public class DeployChangesBuilderTests
+    [Fact]
+    public void can_use_variables_with_builder()
     {
-        [Fact]
-        public void can_use_variables_with_builder()
+        var testProvider = new TestProvider("Db");
+
+        testProvider.Builder
+            .WithScript("testscript", "$schema$Up $somevar$")
+            .WithVariable("somevar", "is awesome");
+
+        testProvider.Builder.Build().PerformUpgrade();
+
+        testProvider.Connection.CommandsIssued.ShouldContain(c => c.CommandText == "[Db]Up is awesome");
+    }
+
+    [Fact]
+    public void WithExecutionTimeout_Should_Set_CommandTimeout_Property_To_Given_Value()
+    {
+        var testProvider = new TestProvider();
+
+        var upgradeEngine = testProvider.Builder
+            .WithScript("testscript", "test")
+            .WithExecutionTimeout(TimeSpan.FromSeconds(45))
+            .Build();
+
+        upgradeEngine.PerformUpgrade();
+
+        testProvider.Connection.CommandsIssued.Count.ShouldNotBe(0);
+        testProvider.Connection.CommandsIssued.Last().CommandTimeout.ShouldBe(45);
+    }
+
+    [Fact]
+    public void WithExecutionTimeout_Should_Not_Set_CommandTimeout_Property_For_Null()
+    {
+        var testProvider = new TestProvider();
+        var upgradeEngine = testProvider.Builder
+            .WithScript("testscript", "test")
+            .WithExecutionTimeout(null)
+            .Build();
+
+        upgradeEngine.PerformUpgrade();
+
+        testProvider.Connection.CommandsIssued.Count.ShouldNotBe(0);
+        testProvider.Connection.CommandsIssued.Last().CommandTimeout.ShouldBe(0);
+    }
+
+    [Fact]
+    public void WithExecutionTimeout_Should_Not_Allow_Negative_Timeout_Values()
+    {
+        Should.Throw<ArgumentOutOfRangeException>(() =>
         {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection), "Db")
-                .WithScript("testscript", "$schema$Up $somevar$")
-                .JournalTo(journal)
-                .WithVariable("somevar", "is awesome")
-                .Build();
-
-            upgradeEngine.PerformUpgrade();
-
-            command.CommandText.ShouldBe("[Db]Up is awesome");
-        }
-
-        [Fact]
-        public void WithExecutionTimeout_Should_Set_CommandTimeout_Property_To_Given_Value()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection))
+            var testProvider = new TestProvider();
+            var upgradeEngine = testProvider.Builder
                 .WithScript("testscript", "test")
-                .JournalTo(journal)
-                .WithExecutionTimeout(TimeSpan.FromSeconds(45))
+                .WithExecutionTimeout(TimeSpan.FromSeconds(-5))
                 .Build();
-
-            upgradeEngine.PerformUpgrade();
-
-            command.CommandTimeout.ShouldBe(45);
-        }
-
-        [Fact]
-        public void WithExecutionTimeout_Should_Not_Set_CommandTimeout_Property_For_Null()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            var upgradeEngine = DeployChanges.To
-                .SqlDatabase(new SubstitutedConnectionConnectionManager(connection))
-                .WithScript("testscript", "test")
-                .JournalTo(journal)
-                .WithExecutionTimeout(null)
-                .Build();
-
-            upgradeEngine.PerformUpgrade();
-
-            command.CommandTimeout.ShouldBe(0);
-        }
-
-        [Fact]
-        public void WithExecutionTimeout_Should_Not_Allow_Negative_Timeout_Values()
-        {
-            var journal = Substitute.For<IJournal>();
-            var connection = Substitute.For<IDbConnection>();
-            var command = Substitute.For<IDbCommand>();
-            connection.CreateCommand().Returns(command);
-
-            Should.Throw<ArgumentOutOfRangeException>(() =>
-            {
-                var upgradeEngine = DeployChanges.To
-                    .SqlDatabase(new SubstitutedConnectionConnectionManager(connection))
-                    .WithScript("testscript", "test")
-                    .JournalTo(journal)
-                    .WithExecutionTimeout(TimeSpan.FromSeconds(-5))
-                    .Build();
-            });
-        }
+        });
     }
 }
-#pragma warning restore CS0618 // Type or member is obsolete
