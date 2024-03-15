@@ -58,7 +58,7 @@ jobs:
 
       - name: Push NuGet packages to GitHub Packages ⬆️
         working-directory: artifacts
-        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json" --skip-duplicate
+        run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
 
       # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
       - name: Upload Test Results
@@ -68,20 +68,11 @@ jobs:
           name: test-results
           path: artifacts/TestResults/*.trx
 
-      - name: Create Draft Release for main Branch
-        if: ${{ github.ref_name == 'main' && format('{0}', env.GITHUB_TOKEN) != '' }}
+      - name: Create GitHub Release
+        if: ${{ (github.ref_name == 'main' || startsWith(github.ref_name, 'release/')) && format('{0}', env.GITHUB_TOKEN) != '' }}
         shell: pwsh
         working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
-        run: gh release create --draft --target $env:GITHUB_REF --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          
-      - name: Create Release for Release Branches
-        if: ${{ startsWith(github.ref_name, 'release/') && format('{0}', env.GITHUB_TOKEN) != '' }}
-        shell: pwsh
-        working-directory: artifacts
-        # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
-        run: gh release create --prerelease --target $env:GITHUB_REF --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
+        run: gh release create --draft ${{ github.ref_name == 'main' && '' || '--prerelease' }}  --target $env:GITHUB_REF --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
