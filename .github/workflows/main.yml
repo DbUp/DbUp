@@ -73,6 +73,6 @@ jobs:
         shell: pwsh
         working-directory: artifacts
         # Can't just use wildcard in this command due to https://github.com/cli/cli/issues/5099 so use Get-Item
-        run: gh release create --draft ${{ github.ref_name == 'main' && '' || '--prerelease' }}  --target $env:GITHUB_REF --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
+        run: gh release create --draft ${{ github.ref_name == 'main' && '' || '--prerelease' }}  --target ${{ github.ref_name }} --title $env:GitVersion_SemVer $env:GitVersion_SemVer (Get-Item dbup-core.*.nupkg)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
