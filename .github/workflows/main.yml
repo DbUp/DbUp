@@ -44,6 +44,10 @@ jobs:
         run: |
           echo "SemVer: $env:GitVersion_SemVer"
           
+      - name: GITHUB_REPOSITORY
+        run: |
+          echo "SemVer: $env:GITHUB_REPOSITORY"
+
       - name: Restore
         run: dotnet restore DbUp.sln
         working-directory: src
