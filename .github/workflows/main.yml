@@ -46,8 +46,10 @@ jobs:
           
       - name: GITHUB_REPOSITORY
         run: |
-          echo "SemVer: $env:GITHUB_REPOSITORY"
-
+          echo "GITHUB_REPOSITORY: $env:GITHUB_REPOSITORY, GITHUB_REPOSITORY2: ${{ env.GITHUB_REPOSITORY }}, StartsWith: ${{ startsWith(env.GITHUB_REPOSITORY, 'DbUp/') }}, HasToken: ${{ format('{0}', env.GITHUB_TOKEN) != '' }} "
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       - name: Restore
         run: dotnet restore DbUp.sln
         working-directory: src
@@ -68,7 +70,9 @@ jobs:
         if: ${{ format('{0}', env.GITHUB_TOKEN) != '' && startsWith(env.GITHUB_REPOSITORY, 'DbUp/') }}
         working-directory: artifacts
         run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
-
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          
       # https://github.com/dorny/test-reporter#recommended-setup-for-public-repositories
       - name: Upload Test Results
         uses: actions/upload-artifact@v3 # upload test results
