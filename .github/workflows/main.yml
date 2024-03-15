@@ -46,7 +46,7 @@ jobs:
           
       - name: GITHUB_REPOSITORY
         run: |
-          echo "GITHUB_REPOSITORY: $env:GITHUB_REPOSITORY, GITHUB_REPOSITORY2: ${{ env.GITHUB_REPOSITORY }}, StartsWith: ${{ startsWith(env.GITHUB_REPOSITORY, 'DbUp/') }}, HasToken: ${{ format('{0}', env.GITHUB_TOKEN) != '' }} "
+          echo "GITHUB_REPOSITORY2: ${{ github.repository }}, StartsWith: ${{ startsWith(github.repository, 'DbUp/') }}, HasToken: ${{ format('{0}', env.GITHUB_TOKEN) != '' }} "
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           
@@ -67,7 +67,7 @@ jobs:
         working-directory: src  
 
       - name: Push NuGet packages to GitHub Packages ⬆️
-        if: ${{ format('{0}', env.GITHUB_TOKEN) != '' && startsWith(env.GITHUB_REPOSITORY, 'DbUp/') }}
+        if: ${{ format('{0}', env.GITHUB_TOKEN) != '' && startsWith(github.repository, 'DbUp/') }}
         working-directory: artifacts
         run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
         env:
