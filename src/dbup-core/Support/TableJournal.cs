@@ -62,7 +62,7 @@ public abstract class TableJournal : IJournal
         {
             if (journalExists || DoesTableExist(dbCommandFactory))
             {
-                Log().WriteInformation("Fetching list of already executed scripts.");
+                Log().LogInformation("Fetching list of already executed scripts.");
 
                 var scripts = new List<string>();
 
@@ -79,7 +79,7 @@ public abstract class TableJournal : IJournal
             }
             else
             {
-                Log().WriteInformation("Journal table does not exist");
+                Log().LogInformation("Journal table does not exist");
                 return new string[0];
             }
         });
@@ -172,14 +172,14 @@ public abstract class TableJournal : IJournal
     {
         if (!journalExists && !DoesTableExist(dbCommandFactory))
         {
-            Log().WriteInformation(string.Format("Creating the {0} table", FqSchemaTableName));
+            Log().LogInformation(string.Format("Creating the {0} table", FqSchemaTableName));
             // We will never change the schema of the initial table create.
             using (var command = GetCreateTableCommand(dbCommandFactory))
             {
                 command.ExecuteNonQuery();
             }
 
-            Log().WriteInformation(string.Format("The {0} table has been created", FqSchemaTableName));
+            Log().LogInformation(string.Format("The {0} table has been created", FqSchemaTableName));
 
             OnTableCreated(dbCommandFactory);
         }
@@ -189,7 +189,7 @@ public abstract class TableJournal : IJournal
 
     protected virtual bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
     {
-        Log().WriteInformation("Checking whether journal table exists..");
+        Log().LogInformation("Checking whether journal table exists");
         using (var command = dbCommandFactory())
         {
             command.CommandText = DoesTableExistSql();
