@@ -8,6 +8,14 @@ Start by creating a simple C# console project in Visual Studio, and adding your 
 
 ![DbUp Sample](./images/add-scripts.png)
 
+Or so you don't ever forget you can just add the folowing to the project file:
+
+```
+<ItemGroup>
+    <EmbeddedResource Include="**/*.sql" />
+</ItemGroup>
+```
+
 Next, use NuGet to install the DbUp package:
 
 ```
