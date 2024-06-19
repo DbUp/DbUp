@@ -17,7 +17,7 @@ public class DeployChangesBuilderTests
         var testProvider = new TestProvider("Db");
 
         testProvider.Builder
-            .WithScript("testscript", "$schema$Up $somevar$")
+            .WithScript("testscript", "!schema!Up !somevar!")
             .WithVariable("somevar", "is awesome");
 
         testProvider.Builder.Build().PerformUpgrade();
