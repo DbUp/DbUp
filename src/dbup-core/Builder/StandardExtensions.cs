@@ -747,7 +747,8 @@ public static class StandardExtensions
 
         var totalSeconds = timeout.Value.TotalSeconds;
 
-        if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException("timeout", timeout, string.Format("The timeout value must be a value between 0 and {0} seconds", int.MaxValue));
+        if ((0 > totalSeconds) || (totalSeconds > int.MaxValue)) throw new ArgumentOutOfRangeException("timeout", timeout,
+            $"The timeout value must be a value between 0 and {int.MaxValue} seconds");
 
         builder.Configure(c => c.ScriptExecutor.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));
         builder.Configure(c => c.ConnectionManager.ExecutionTimeoutSeconds = Convert.ToInt32(totalSeconds));

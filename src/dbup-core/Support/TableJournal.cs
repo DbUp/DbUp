@@ -172,14 +172,14 @@ public abstract class TableJournal : IJournal
     {
         if (!journalExists && !DoesTableExist(dbCommandFactory))
         {
-            Log().LogInformation(string.Format("Creating the {0} table", FqSchemaTableName));
+            Log().LogInformation("Creating the {0} table", FqSchemaTableName);
             // We will never change the schema of the initial table create.
             using (var command = GetCreateTableCommand(dbCommandFactory))
             {
                 command.ExecuteNonQuery();
             }
 
-            Log().LogInformation(string.Format("The {0} table has been created", FqSchemaTableName));
+            Log().LogInformation("The {0} table has been created", FqSchemaTableName);
 
             OnTableCreated(dbCommandFactory);
         }
@@ -204,7 +204,7 @@ public abstract class TableJournal : IJournal
     protected virtual string DoesTableExistSql()
     {
         return string.IsNullOrEmpty(SchemaTableSchema)
-            ? string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}'", UnquotedSchemaTableName)
-            : string.Format("select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{0}' and TABLE_SCHEMA = '{1}'", UnquotedSchemaTableName, SchemaTableSchema);
+            ? $"select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{UnquotedSchemaTableName}'"
+            : $"select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{UnquotedSchemaTableName}' and TABLE_SCHEMA = '{SchemaTableSchema}'";
     }
 }
