@@ -289,15 +289,18 @@ namespace DbUp.Engine.Output
     }
     public class MicrosoftUpgradeLog : DbUp.Engine.Output.IUpgradeLog
     {
-        public MicrosoftUpgradeLog(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory = null) { }
+        public MicrosoftUpgradeLog(Microsoft.Extensions.Logging.ILoggerFactory loggerFactory) { }
         public MicrosoftUpgradeLog(Microsoft.Extensions.Logging.ILogger logger) { }
-        public static DbUp.Engine.Output.IUpgradeLog DevNull { get; }
         public void LogDebug(string message, params object[] args) { }
         public void LogError(string message, params object[] args) { }
         public void LogError(System.Exception ex, string message, params object[] args) { }
         public void LogInformation(string message, params object[] args) { }
         public void LogTrace(string message, params object[] args) { }
         public void LogWarning(string message, params object[] args) { }
+    }
+    public class NoOpUpgradeLog : DbUp.Engine.Output.MicrosoftUpgradeLog, DbUp.Engine.Output.IUpgradeLog
+    {
+        public NoOpUpgradeLog() { }
     }
     public class TraceUpgradeLog : DbUp.Engine.Output.IUpgradeLog
     {

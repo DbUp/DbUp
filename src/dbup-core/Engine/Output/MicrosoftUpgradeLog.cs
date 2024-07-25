@@ -1,4 +1,5 @@
 ﻿using System;
+using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 
@@ -9,24 +10,20 @@ namespace DbUp.Engine.Output
     /// </summary>
     public class MicrosoftUpgradeLog : IUpgradeLog
     {
-        public MicrosoftUpgradeLog(ILoggerFactory loggerFactory = null)
+        public MicrosoftUpgradeLog([NotNull] ILoggerFactory loggerFactory)
         {
-            loggerFactory ??= NullLoggerFactory.Instance;
-            _logger = loggerFactory?.CreateLogger<UpgradeEngine>()
-                      ?? throw new ArgumentNullException(nameof(loggerFactory));
+            if (loggerFactory == null)
+                throw new ArgumentNullException(nameof(loggerFactory));
+
+            _logger = loggerFactory.CreateLogger<UpgradeEngine>();
         }
 
-        public MicrosoftUpgradeLog(ILogger logger)
+        public MicrosoftUpgradeLog([NotNull] ILogger logger)
         {
-            _logger = logger ?? NullLogger.Instance;
+            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
         }
 
-        private readonly ILogger _logger;
-
-        /// <summary>
-        /// A logger that does nothing.
-        /// </summary>
-        public static IUpgradeLog DevNull => new Lazy<IUpgradeLog>(() => new MicrosoftUpgradeLog(NullLoggerFactory.Instance)).Value;
+        readonly ILogger _logger;
 
         /// <inheritdoc/>
         public void LogTrace(string message, params object[] args) =>
