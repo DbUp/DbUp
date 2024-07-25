@@ -75,7 +75,19 @@ public static class StandardExtensions
         builder.LogTo(new ConsoleUpgradeLog());
         return builder;
     }
-
+    
+    /// <summary>
+    /// Discards all log messages
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <returns>
+    /// The same builder
+    /// </returns>
+    public static UpgradeEngineBuilder LogToNowhere(this UpgradeEngineBuilder builder)
+    {
+        return LogTo(builder, new NoOpUpgradeLog());
+    }
+    
     /// <summary>
     /// Logs to System.Diagnostics.Trace.
     /// </summary>
