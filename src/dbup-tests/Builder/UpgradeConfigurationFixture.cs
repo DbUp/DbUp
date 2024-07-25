@@ -22,7 +22,7 @@ public class UpgradeConfigurationFixture
     public void Adding_Logger_Increments_Providers()
     {
         var config = new UpgradeConfiguration();
-        config.AddLog(MicrosoftUpgradeLog.DevNull);
+        config.AddLog(new NoOpUpgradeLog());
 
         config.Log.HasLoggers.ShouldBeTrue();
         config.Log.LoggerCount.ShouldBe(1);

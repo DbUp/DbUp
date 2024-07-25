@@ -7,7 +7,7 @@ namespace DbUp.Tests.Engine.Output
     {
         /// <inheritdoc/>
         protected override IUpgradeLog CreateLogger()
-            => new AggregateLog(new IUpgradeLog[] {new ConsoleUpgradeLog(), new TraceUpgradeLog(), MicrosoftUpgradeLog.DevNull});
+            => new AggregateLog(new IUpgradeLog[] {new ConsoleUpgradeLog(), new TraceUpgradeLog(), new NoOpUpgradeLog()});
 
         [Fact]
         public void Logs_Silently_When_No_Loggers_Are_Added()
