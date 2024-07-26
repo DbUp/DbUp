@@ -20,3 +20,4 @@
     - .NET Framework 4.6.1
 - All dependencies have been updated to the latest available release version
 - SqlServer Provider: Replaced `System.Data.SqlClient` with `Microsoft.Data.SqlClient`
+- MySql Provider: [Use `MySqlConnector` instead of `System.Data.SqlClient`](https://github.com/DbUp/dbup-mysql/pull/9)
