@@ -19,3 +19,4 @@
     - .NET Core 2.0 and later
     - .NET Framework 4.6.1
 - All dependencies have been updated to the latest available release version
+- SqlServer Provider: Replaced `System.Data.SqlClient` with `Microsoft.Data.SqlClient`
