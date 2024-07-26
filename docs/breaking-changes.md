@@ -7,8 +7,7 @@
  - `IJournal` now has a new method `EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)`
  - The `protected void EnsureTableIsLatestVersion()` method in `TableJournal` has changed to `public virtual void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)`
 
-
- # 6.0.0
+# 6.0.0
 
 - LibLog has been replaced by the standard .NET ILogger abstraction
     - The Autodetect logger feature provided by LibLog is removed
