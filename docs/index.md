@@ -5,20 +5,6 @@ If you are upgrading from version 3 to 4, see [breaking changes](./breaking-chan
 
 ## Getting started
 
-### Visual studio
-
-Start by creating a simple C# console project in Visual Studio, and adding your SQL scripts to it. From the Properties window, mark them as Embedded Resources:
-
-![DbUp Sample](./images/add-scripts.png)
-
-Next, use NuGet to install the DbUp package:
-
-```
-Install-Package DbUp
-```
-
-### Visual studio code
-
 Create a simple console application
 
 ```ps1
