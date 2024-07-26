@@ -1,51 +1,60 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Text;
 using DbUp.Engine.Output;
 
-namespace DbUp.Tests.Common
+namespace DbUp.Tests.Common;
+
+public class CaptureLogsLogger : IUpgradeLog
 {
-    public class CaptureLogsLogger : IUpgradeLog
+    readonly StringBuilder logBuilder = new();
+    public List<string> InfoMessages { get; } = new();
+    public List<string> WarnMessages { get; } = new();
+    public List<string> ErrorMessages { get; } = new();
+    public List<string> WriteDbOperations { get; } = new();
+
+    public string Log => logBuilder.ToString();
+
+    public void WriteInformation(string format, params object[] args)
     {
-        readonly StringBuilder logBuilder = new StringBuilder();
-        public List<string> InfoMessages { get; } = new List<string>();
-        public List<string> WarnMessages { get; } = new List<string>();
-        public List<string> ErrorMessages { get; } = new List<string>();
+        var formattedMsg = string.Format(format, args);
+        var value = "Info:         " + formattedMsg;
+        Console.WriteLine(value);
+        logBuilder.AppendLine(value);
+        InfoMessages.Add(formattedMsg);
+    }
 
-        public string Log => logBuilder.ToString();
+    public void WriteWarning(string format, params object[] args)
+    {
+        var formattedValue = string.Format(format, args);
+        var value = "Warn:         " + formattedValue;
+        Console.WriteLine(value);
+        logBuilder.AppendLine(value);
+        WarnMessages.Add(formattedValue);
+    }
 
-        public void WriteInformation(string format, params object[] args)
-        {
-            var formattedMsg = string.Format(format, args);
-            var value = "Info:         " + formattedMsg;
-            Console.WriteLine(value);
-            logBuilder.AppendLine(value);
-            InfoMessages.Add(formattedMsg);
-        }
+    public void WriteError(string format, params object[] args)
+    {
+        var formattedMessage = string.Format(format, args);
 
-        public void WriteWarning(string format, params object[] args)
-        {
-            var formattedValue = string.Format(format, args);
-            var value = "Warn:         " + formattedValue;
-            Console.WriteLine(value);
-            logBuilder.AppendLine(value);
-            WarnMessages.Add(formattedValue);
-        }
+        // Remove stack trace information
+        formattedMessage = string.Join(
+            "\n",
+            formattedMessage.Split('\n').Where(l => !l.StartsWith("   at "))
+        ).Trim();
 
-        public void WriteError(string format, params object[] args)
-        {
-            var formattedMessage = string.Format(format, args);
-            var value = "Error:        " + formattedMessage;
-            Console.WriteLine(value);
-            logBuilder.AppendLine(value);
-            ErrorMessages.Add(formattedMessage);
-        }
+        var value = "Error:        " + formattedMessage;
+        Console.WriteLine(value);
+        logBuilder.AppendLine(value);
+        ErrorMessages.Add(formattedMessage);
+    }
 
-        public void WriteDbOperation(string operation)
-        {
-            var value = "DB Operation: " + operation;
-            Console.WriteLine(value);
-            logBuilder.AppendLine(value);
-        }
+    public void WriteDbOperation(string operation)
+    {
+        var value = "DB Operation: " + operation;
+        Console.WriteLine(value);
+        logBuilder.AppendLine(value);
+        WriteDbOperations.Add(operation);
     }
 }

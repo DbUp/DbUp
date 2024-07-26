@@ -3,163 +3,156 @@ using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
 
-namespace DbUp.Engine.Transactions
+namespace DbUp.Engine.Transactions;
+
+/// <summary>
+/// Manages Sql Database Connections
+/// </summary>
+public abstract class DatabaseConnectionManager : IConnectionManager
 {
+    readonly IConnectionFactory connectionFactory;
+    ITransactionStrategy transactionStrategy;
+    readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
+    IDbConnection upgradeConnection;
+    IConnectionFactory connectionFactoryOverride;
+
+    //The allowed TransactionModes
+    protected virtual AllowedTransactionMode AllowedTransactionModes => AllowedTransactionMode.All;
+
     /// <summary>
-    /// Manages Sql Database Connections
+    /// Manages Database Connections
     /// </summary>
-    public abstract class DatabaseConnectionManager : IConnectionManager
+    protected DatabaseConnectionManager(Func<IUpgradeLog, IDbConnection> connectionFactory) : this(new DelegateConnectionFactory(connectionFactory))
     {
-        readonly IConnectionFactory connectionFactory;
-        ITransactionStrategy transactionStrategy;
-        readonly Dictionary<TransactionMode, Func<ITransactionStrategy>> transactionStrategyFactory;
-        IDbConnection upgradeConnection;
-        IConnectionFactory connectionFactoryOverride;
+    }
 
-        //The allowed TransactionModes
-        protected virtual AllowedTransactionMode AllowedTransactionModes => AllowedTransactionMode.All;
+    /// <summary>
+    /// Manages Database Connections
+    /// </summary>
+    protected DatabaseConnectionManager(IConnectionFactory connectionFactory)
+    {
+        this.connectionFactory = connectionFactory;
+        TransactionMode = TransactionMode.NoTransaction;
+        transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>> {{TransactionMode.NoTransaction, () => new NoTransactionStrategy()}, {TransactionMode.SingleTransaction, () => new SingleTransactionStrategy()}, {TransactionMode.TransactionPerScript, () => new TransactionPerScriptStrategy()}, {TransactionMode.SingleTransactionAlwaysRollback, () => new SingleTransactionAlwaysRollbackStrategy()}};
+    }
 
-        /// <summary>
-        /// Manages Database Connections
-        /// </summary>
-        protected DatabaseConnectionManager(Func<IUpgradeLog, IDbConnection> connectionFactory) : this(new DelegateConnectionFactory(connectionFactory))
+    /// <summary>
+    /// Tells the connection manager is starting
+    /// </summary>
+    public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+    {
+        upgradeConnection = CreateConnection(upgradeLog);
+        if (upgradeConnection.State == ConnectionState.Closed)
+            upgradeConnection.Open();
+        if (transactionStrategy != null)
+            throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
+        if (!IsAllowed(TransactionMode))
+            throw new InvalidOperationException($"TransactionMode {TransactionMode} is not allowed for {GetType().Name}. Allowed modes are {AllowedTransactionModes}");
+        transactionStrategy = transactionStrategyFactory[TransactionMode]();
+        transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts);
+
+        return new DelegateDisposable(() =>
         {
-        }
+            transactionStrategy.Dispose();
+            upgradeConnection.Dispose();
+            transactionStrategy = null;
+            upgradeConnection = null;
+        });
+    }
 
-        /// <summary>
-        /// Manages Database Connections
-        /// </summary>
-        protected DatabaseConnectionManager(IConnectionFactory connectionFactory)
+    bool IsAllowed(TransactionMode mode)
+    {
+        switch (mode)
         {
-            this.connectionFactory = connectionFactory;
-            TransactionMode = TransactionMode.NoTransaction;
-            transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
-            {
-                {TransactionMode.NoTransaction, ()=>new NoTransactionStrategy()},
-                {TransactionMode.SingleTransaction, ()=>new SingleTransactionStrategy()},
-                {TransactionMode.TransactionPerScript, ()=>new TransactionPerScriptStrategy()},
-                {TransactionMode.SingleTransactionAlwaysRollback, ()=>new SingleTransactionAlwaysRollbackStrategy()}
-            };
-        }
-
-        /// <summary>
-        /// Tells the connection manager is starting
-        /// </summary>
-        public IDisposable OperationStarting(IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
-        {
-            upgradeConnection = CreateConnection(upgradeLog);
-            if (upgradeConnection.State == ConnectionState.Closed)
-                upgradeConnection.Open();
-            if (transactionStrategy != null)
-                throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
-            if (!IsAllowed(TransactionMode))
-                throw new InvalidOperationException($"TransactionMode {TransactionMode} is not allowed for {GetType().Name}. Allowed modes are {AllowedTransactionModes}");
-            transactionStrategy = transactionStrategyFactory[TransactionMode]();
-            transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts);
-
-            return new DelegateDisposable(() =>
-            {
-                transactionStrategy.Dispose();
-                upgradeConnection.Dispose();
-                transactionStrategy = null;
-                upgradeConnection = null;
-            });
-        }
-
-        private bool IsAllowed(TransactionMode mode)
-        {
-            switch (mode)
-            {
-                case TransactionMode.SingleTransaction:
-                    return AllowedTransactionModes.HasFlag(AllowedTransactionMode.SingleTransaction);
-                case TransactionMode.SingleTransactionAlwaysRollback:
-                    return AllowedTransactionModes.HasFlag(AllowedTransactionMode.SingleTransactionAlwaysRollback);
-                case TransactionMode.TransactionPerScript:
-                    return AllowedTransactionModes.HasFlag(AllowedTransactionMode.TransactionPerScript);
-                default:
-                    return true;
-            }
-        }
-
-        /// <summary>
-        /// Tries to connect to the database.
-        /// </summary>
-        public bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage)
-        {
-            try
-            {
-                errorMessage = "";
-                using (upgradeConnection = CreateConnection(upgradeLog))
-                {
-                    if (upgradeConnection.State == ConnectionState.Closed)
-                        upgradeConnection.Open();
-                    var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
-                    strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
-                    strategy.Execute(dbCommandFactory =>
-                    {
-                        using (var command = dbCommandFactory())
-                        {
-                            command.CommandText = "select 1";
-                            command.ExecuteScalar();
-                        }
-                    });
-                }
-
+            case TransactionMode.SingleTransaction:
+                return AllowedTransactionModes.HasFlag(AllowedTransactionMode.SingleTransaction);
+            case TransactionMode.SingleTransactionAlwaysRollback:
+                return AllowedTransactionModes.HasFlag(AllowedTransactionMode.SingleTransactionAlwaysRollback);
+            case TransactionMode.TransactionPerScript:
+                return AllowedTransactionModes.HasFlag(AllowedTransactionMode.TransactionPerScript);
+            default:
                 return true;
-            }
-            catch (Exception ex)
+        }
+    }
+
+    /// <summary>
+    /// Tries to connect to the database.
+    /// </summary>
+    public bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage)
+    {
+        try
+        {
+            errorMessage = "";
+            using (upgradeConnection = CreateConnection(upgradeLog))
             {
-                errorMessage = ex.Message;
-                return false;
+                if (upgradeConnection.State == ConnectionState.Closed)
+                    upgradeConnection.Open();
+                var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
+                strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
+                strategy.Execute(dbCommandFactory =>
+                {
+                    using (var command = dbCommandFactory())
+                    {
+                        command.CommandText = "select 1";
+                        command.ExecuteScalar();
+                    }
+                });
             }
-        }
 
-        /// <summary>
-        /// Executes an action using the specified transaction mode 
-        /// </summary>
-        /// <param name="action">The action to execute</param>
-        public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
+            return true;
+        }
+        catch (Exception ex)
         {
-            transactionStrategy.Execute(action);
+            errorMessage = ex.Message;
+            return false;
         }
+    }
 
-        /// <summary>
-        /// Executes an action which has a result using the specified transaction mode 
-        /// </summary>
-        /// <param name="actionWithResult">The action to execute</param>
-        /// <typeparam name="T">The result type</typeparam>
-        /// <returns>The result of the command</returns>
-        public T ExecuteCommandsWithManagedConnection<T>(Func<Func<IDbCommand>, T> actionWithResult)
-        {
-            return transactionStrategy.Execute(actionWithResult);
-        }
+    /// <summary>
+    /// Executes an action using the specified transaction mode 
+    /// </summary>
+    /// <param name="action">The action to execute</param>
+    public void ExecuteCommandsWithManagedConnection(Action<Func<IDbCommand>> action)
+    {
+        transactionStrategy.Execute(action);
+    }
 
-        /// <summary>
-        /// The transaction strategy that DbUp should use
-        /// </summary>
-        public TransactionMode TransactionMode { get; set; }
+    /// <summary>
+    /// Executes an action which has a result using the specified transaction mode 
+    /// </summary>
+    /// <param name="actionWithResult">The action to execute</param>
+    /// <typeparam name="T">The result type</typeparam>
+    /// <returns>The result of the command</returns>
+    public T ExecuteCommandsWithManagedConnection<T>(Func<Func<IDbCommand>, T> actionWithResult)
+    {
+        return transactionStrategy.Execute(actionWithResult);
+    }
 
-        /// <summary>
-        /// Specifies whether the db script output should be logged
-        /// </summary>
-        public bool IsScriptOutputLogged { get; set; }
+    /// <summary>
+    /// The transaction strategy that DbUp should use
+    /// </summary>
+    public TransactionMode TransactionMode { get; set; }
 
-        /// <summary>
-        /// Splits a script into commands, for example SQL Server separates command by the GO statement
-        /// </summary>
-        /// <param name="scriptContents">The script</param>
-        /// <returns>A list of SQL Commands</returns>
-        public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
+    /// <summary>
+    /// Specifies whether the db script output should be logged
+    /// </summary>
+    public bool IsScriptOutputLogged { get; set; }
 
-        public IDisposable OverrideFactoryForTest(IConnectionFactory connectionFactory)
-        {
-            connectionFactoryOverride = connectionFactory;
-            return new DelegateDisposable(() => connectionFactoryOverride = null);
-        }
+    /// <summary>
+    /// Splits a script into commands, for example SQL Server separates command by the GO statement
+    /// </summary>
+    /// <param name="scriptContents">The script</param>
+    /// <returns>A list of SQL Commands</returns>
+    public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
 
-        IDbConnection CreateConnection(IUpgradeLog upgradeLog)
-        {
-            return (connectionFactoryOverride ?? connectionFactory).CreateConnection(upgradeLog, this);
-        }
+    public IDisposable OverrideFactoryForTest(IConnectionFactory connectionFactory)
+    {
+        connectionFactoryOverride = connectionFactory;
+        return new DelegateDisposable(() => connectionFactoryOverride = null);
+    }
+
+    IDbConnection CreateConnection(IUpgradeLog upgradeLog)
+    {
+        return (connectionFactoryOverride ?? connectionFactory).CreateConnection(upgradeLog, this);
     }
 }

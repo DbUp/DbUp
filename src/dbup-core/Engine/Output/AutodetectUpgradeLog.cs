@@ -2,47 +2,47 @@
 using System;
 using DbUp.Engine.Output.LibLog;
 
-namespace DbUp.Engine.Output
+namespace DbUp.Engine.Output;
+
+public class AutodetectUpgradeLog : IUpgradeLog
 {
-    public class AutodetectUpgradeLog : IUpgradeLog
+    readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
+                          ?? LogToConsoleInstead;
+
+    public void WriteInformation(string format, params object[] args) => log(LogLevel.Info, () => format, null, args);
+
+    public void WriteError(string format, params object[] args) => log(LogLevel.Error, () => format, null, args);
+
+    public void WriteWarning(string format, params object[] args) => log(LogLevel.Warn, () => format, null, args);
+
+    static bool LogToConsoleInstead(LogLevel level, Func<string> format, Exception exception, object[] args)
     {
-        readonly Logger log = LogProvider.ForceResolveLogProvider()?.GetLogger("DbUp")
-                                      ?? LogToConsoleInstead;
-
-        public void WriteInformation(string format, params object[] args) => log(LogLevel.Info, () => format, null, args);
-
-        public void WriteError(string format, params object[] args) => log(LogLevel.Error, () => format, null, args);
-
-        public void WriteWarning(string format, params object[] args) => log(LogLevel.Warn, () => format, null, args);
-
-        static bool LogToConsoleInstead(LogLevel level, Func<string> format, Exception exception, object[] args)
+        ConsoleColor GetColor()
         {
-            ConsoleColor GetColor()
+            switch (level)
             {
-                switch (level)
-                {
-                    case LogLevel.Warn:
-                        return ConsoleColor.Yellow;
-                    case LogLevel.Fatal:
-                    case LogLevel.Error:
-                        return ConsoleColor.Red;
-                    default:
-                        return ConsoleColor.White;
-                }
+                case LogLevel.Warn:
+                    return ConsoleColor.Yellow;
+                case LogLevel.Fatal:
+                case LogLevel.Error:
+                    return ConsoleColor.Red;
+                default:
+                    return ConsoleColor.White;
             }
-
-            var oldColor = Console.ForegroundColor;
-            Console.ForegroundColor = GetColor();
-            try
-            {
-                Console.WriteLine(format(), args);
-            }
-            finally
-            {
-                Console.ForegroundColor = oldColor;
-            }
-            return true;
         }
+
+        var oldColor = Console.ForegroundColor;
+        Console.ForegroundColor = GetColor();
+        try
+        {
+            Console.WriteLine(format(), args);
+        }
+        finally
+        {
+            Console.ForegroundColor = oldColor;
+        }
+
+        return true;
     }
 }
 #endif

@@ -35,7 +35,7 @@ Task("Version")
 Task("Restore")
     .IsDependentOn("Version")
     .Does(() => {
-        DotNetRestore("src", new DotNetRestoreSettings() {
+        DotNetRestore("./src/DbUp.sln", new DotNetRestoreSettings() {
             ArgumentCustomization = args => args.Append("/p:Version=" + versionInfo.SemVer)
         });
     });
@@ -67,17 +67,7 @@ Task("Test")
         });
     });
 
-Task("Package")
-    .IsDependentOn("Test")
-    .Does(() => {
-
-        NuGetPack("./src/dbup/dbup.nuspec", new NuGetPackSettings() {
-            OutputDirectory = System.IO.Path.GetFullPath(outputDir),
-            Version = versionInfo.SemVer
-        });
-    });
-
 Task("Default")
-    .IsDependentOn("Package");
+    .IsDependentOn("Test");
 
 RunTarget(target);

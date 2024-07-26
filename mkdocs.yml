@@ -16,8 +16,12 @@ nav:
 - 'More Info':
   - 'Schema Downgrading': more-info/schema-downgrading.md
   - 'Script Providers': more-info/script-providers.md
+  - 'Script Types': more-info/script-types.md
   - Transactions: more-info/transactions.md
   - Pre-Processors: more-info/preprocessors.md
   - Logging: more-info/logging.md
   - Journaling: more-info/journaling.md
   - 'Variable Substitution': more-info/variable-substitution.md
+  - 'Convention Check': more-info/convention-check.md
+  - 'Html Report': more-info/html-report.md
+  - 'Run Group Order': more-info/run-group-order.md

@@ -477,6 +477,7 @@ namespace DbUp.Support
     public class SqlCommandReader : DbUp.Support.SqlParser, System.IDisposable
     {
         public SqlCommandReader(string sqlText, string delimiter = "GO", bool delimiterRequiresWhitespace = true) { }
+        protected string GetCurrentCommandTextFromBuffer() { }
         public void ReadAllCommands(System.Action<string> handleCommand) { }
     }
     public class SqlCommandSplitter

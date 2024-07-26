@@ -10,123 +10,123 @@ using TestStack.BDDfy;
 using TestStack.BDDfy.Xunit;
 using VerifyXunit;
 
-namespace DbUp.Tests.Common
+namespace DbUp.Tests.Common;
+
+[UsesVerify]
+public abstract class DatabaseSupportTestsBase
 {
-    [UsesVerify]
-    public abstract class DatabaseSupportTestsBase
+    readonly string? parentFilePath;
+    readonly IConnectionFactory testConnectionFactory;
+    readonly List<SqlScript> scripts = new();
+    readonly RecordingDbConnection recordingConnection;
+    readonly CaptureLogsLogger logger = new();
+
+    DatabaseUpgradeResult? result;
+    UpgradeEngineBuilder? upgradeEngineBuilder;
+
+    public DatabaseSupportTestsBase([CallerFilePath] string? parentFilePath = null)
     {
-        readonly string? parentFilePath;
-        readonly IConnectionFactory testConnectionFactory;
-        readonly List<SqlScript> scripts = new();
-        readonly RecordingDbConnection recordingConnection;
-        readonly CaptureLogsLogger logger = new ();
+        this.parentFilePath = parentFilePath;
+        testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
+        recordingConnection = new RecordingDbConnection(logger);
+    }
 
-        DatabaseUpgradeResult? result;
-        UpgradeEngineBuilder? upgradeEngineBuilder;
+    protected abstract UpgradeEngineBuilder DeployTo(SupportedDatabases to);
 
-        public DatabaseSupportTestsBase([CallerFilePath] string? parentFilePath = null)
-        {
-            this.parentFilePath = parentFilePath;
-            testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);
-            recordingConnection = new RecordingDbConnection(logger, "SchemaVersions");
-        }
+    protected abstract UpgradeEngineBuilder AddCustomNamedJournalToBuilder(
+        UpgradeEngineBuilder builder,
+        string schema,
+        string tableName
+    );
 
-        protected abstract UpgradeEngineBuilder DeployTo(SupportedDatabases to);
+    [BddfyFact]
+    public Task VerifyBasicSupport()
+    {
+        this
+            .Given(_ => DeployTo())
+            .And(_ => TargetDatabaseIsEmpty())
+            .And(_ => SingleScriptExists())
+            .When(_ => UpgradeIsPerformed())
+            .Then(_ => UpgradeIsSuccessful())
+            .BDDfy();
+        return CommandLogReflectsScript(nameof(VerifyBasicSupport));
+    }
 
-        protected abstract UpgradeEngineBuilder AddCustomNamedJournalToBuilder(
-            UpgradeEngineBuilder builder,
-            string schema,
-            string tableName
-        );
+    [BddfyFact]
+    public Task VerifyVariableSubstitutions()
+    {
+        this
+            .Given(_ => DeployTo())
+            .And(_ => TargetDatabaseIsEmpty())
+            .And(_ => SingleScriptWithVariableUsageExists())
+            .And(_ => VariableSubstitutionIsSetup())
+            .When(_ => UpgradeIsPerformed())
+            .Then(_ => UpgradeIsSuccessful())
+            .BDDfy();
 
-        [BddfyFact]
-        public Task VerifyBasicSupport()
-        {
-            this
-                .Given(_ => DeployTo())
-                .And(_ => TargetDatabaseIsEmpty())
-                .And(_ => SingleScriptExists())
-                .When(_ => UpgradeIsPerformed())
-                .Then(_ => UpgradeIsSuccessful())
-                .BDDfy();
-            return CommandLogReflectsScript(nameof(VerifyBasicSupport));
-        }
+        return CommandLogReflectsScript(nameof(VerifyVariableSubstitutions));
+    }
 
-        [BddfyFact]
-        public Task VerifyVariableSubstitutions()
-        {
-            this
-                .Given(_ => DeployTo())
-                .And(_ => TargetDatabaseIsEmpty())
-                .And(_ => SingleScriptWithVariableUsageExists())
-                .And(_ => VariableSubstitutionIsSetup())
-                .When(_ => UpgradeIsPerformed())
-                .Then(_ => UpgradeIsSuccessful())
-                .BDDfy();
-
-            return CommandLogReflectsScript(nameof(VerifyVariableSubstitutions));
-        }
-
-        [BddfyFact]
-        public Task VerifyJournalCreationIfNameChanged()
-        {
-            this
-                .Given(_ => DeployTo())
-                .And(_ => TargetDatabaseIsEmpty())
-                .And(_ => JournalTableNameIsCustomised())
-                .And(_ => SingleScriptExists())
-                .When(_ => UpgradeIsPerformed())
-                .Then(_ => UpgradeIsSuccessful())
-                .BDDfy();
-            return CommandLogReflectsScript(nameof(VerifyJournalCreationIfNameChanged));
-        }
+    [BddfyFact]
+    public Task VerifyJournalCreationIfNameChanged()
+    {
+        this
+            .Given(_ => DeployTo())
+            .And(_ => TargetDatabaseIsEmpty())
+            .And(_ => JournalTableNameIsCustomised())
+            .And(_ => SingleScriptExists())
+            .When(_ => UpgradeIsPerformed())
+            .Then(_ => UpgradeIsSuccessful())
+            .BDDfy();
+        return CommandLogReflectsScript(nameof(VerifyJournalCreationIfNameChanged));
+    }
 
 
-        void VariableSubstitutionIsSetup()
-        {
-            upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
-        }
+    void VariableSubstitutionIsSetup()
+    {
+        upgradeEngineBuilder.WithVariable("TestVariable", "SubstitutedValue");
+    }
 
-        void JournalTableNameIsCustomised()
-        {
-            upgradeEngineBuilder = AddCustomNamedJournalToBuilder(upgradeEngineBuilder!, "test", "TestSchemaVersions");
-        }
+    void JournalTableNameIsCustomised()
+    {
+        upgradeEngineBuilder = AddCustomNamedJournalToBuilder(upgradeEngineBuilder!, "test", "TestSchemaVersions");
+    }
 
-        Task CommandLogReflectsScript(string testName)
-        {
-            return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings(), sourceFile: parentFilePath!);
-        }
+    Task CommandLogReflectsScript(string testName)
+    {
+        return Verifier.Verify(logger.Log, VerifyHelper.GetVerifySettings(), sourceFile: parentFilePath!);
+    }
 
-        void UpgradeIsSuccessful()
-        {
-            result!.Successful.ShouldBe(true);
-        }
+    void UpgradeIsSuccessful()
+    {
+        result!.Successful.ShouldBe(true);
+    }
 
-        void UpgradeIsPerformed()
-        {
-            result = upgradeEngineBuilder!.Build().PerformUpgrade();
-        }
+    void UpgradeIsPerformed()
+    {
+        result = upgradeEngineBuilder!.Build().PerformUpgrade();
+    }
 
-        void SingleScriptExists()
-        {
-            scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
-        }
+    void SingleScriptExists()
+    {
+        scripts.Add(new SqlScript("Script0001.sql", "script1contents"));
+    }
 
-        void SingleScriptWithVariableUsageExists()
-        {
-            scripts.Add(new SqlScript("Script0001.sql", "print $TestVariable$"));
-        }
+    void SingleScriptWithVariableUsageExists()
+    {
+        scripts.Add(new SqlScript("Script0001.sql", "print $TestVariable$"));
+    }
 
-        void TargetDatabaseIsEmpty()
-        {
-        }
+    void TargetDatabaseIsEmpty()
+    {
+    }
 
-        void DeployTo()
-        {
-            upgradeEngineBuilder = DeployTo(DeployChanges.To)
-                .WithScripts(scripts)
-                .OverrideConnectionFactory(testConnectionFactory)
-                .LogTo(logger);
-        }
+    void DeployTo()
+    {
+        upgradeEngineBuilder = DeployTo(DeployChanges.To)
+            .WithScripts(scripts)
+            .LogTo(logger);
+
+        upgradeEngineBuilder.Configure(c => c.ConnectionManager = new TestConnectionManager(testConnectionFactory));
     }
 }
