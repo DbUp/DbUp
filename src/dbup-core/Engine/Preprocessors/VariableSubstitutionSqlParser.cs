@@ -26,7 +26,7 @@ public class VariableSubstitutionSqlParser : SqlParser
     /// Delimiter character for variables.
     /// Defaults to `$` but can be overridden in derived classes.
     /// </summary>
-    protected virtual char VariableDelimiter => '$';
+    protected virtual char VariableDelimiter => '!';
 
     /// <summary>
     /// Replaces variables in the parsed SQL

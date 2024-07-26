@@ -28,7 +28,7 @@ public class UpgradeEngineTests
             var connectionManager = new TestConnectionManager(dbConnection);
 
             var builder = new UpgradeEngineBuilder()
-                .WithScript(new SqlScript("1234", "create table $var$ (Id int)"))
+                .WithScript(new SqlScript("1234", "create table !var! (Id int)"))
                 .JournalTo(new NullJournal())
                 .WithVariable("var", "sub");
             builder.Configure(c => c.ScriptExecutor = new TestScriptExecutor(c, "dbo"));
