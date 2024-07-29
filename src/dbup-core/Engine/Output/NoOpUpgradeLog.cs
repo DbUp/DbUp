@@ -1,16 +1,15 @@
-﻿namespace DbUp.Engine.Output;
+using Microsoft.Extensions.Logging.Abstractions;
 
-public class NoOpUpgradeLog : IUpgradeLog
+namespace DbUp.Engine.Output;
+
+/// <summary>
+/// A logger that does nothing
+/// </summary>
+public class NoOpUpgradeLog : MicrosoftUpgradeLog
 {
-    public void WriteInformation(string format, params object[] args)
+    public NoOpUpgradeLog()
+        : base(NullLogger.Instance)
     {
-    }
-
-    public void WriteError(string format, params object[] args)
-    {
-    }
-
-    public void WriteWarning(string format, params object[] args)
-    {
+            
     }
 }

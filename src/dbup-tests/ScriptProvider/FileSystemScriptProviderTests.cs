@@ -158,7 +158,7 @@ public class FileSystemScriptProviderTests
         {
             filesToExecute
                 .Select(f => f.Name)
-                .ShouldContain("Folder1.dbup-tests.TestScripts.Test1__9.sql");
+                .ShouldContain("Folder1.DbUp.Tests.TestScripts.Test1__9.sql");
         }
 
         [Then]
@@ -218,7 +218,7 @@ public class FileSystemScriptProviderTests
         {
             filesToExecute
                 .Select(f => f.Name)
-                .ShouldContain("dbup-tests.TestScripts.Test1__9.sql");
+                .ShouldContain("DbUp.Tests.TestScripts.Test1__9.sql");
         }
 
         [Then]

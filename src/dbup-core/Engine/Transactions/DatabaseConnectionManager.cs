@@ -20,9 +20,15 @@ public abstract class DatabaseConnectionManager : IConnectionManager
     protected virtual AllowedTransactionMode AllowedTransactionModes => AllowedTransactionMode.All;
 
     /// <summary>
+    /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
+    /// </summary>
+    public int? ExecutionTimeoutSeconds { get; set; }
+    
+    /// <summary>
     /// Manages Database Connections
     /// </summary>
-    protected DatabaseConnectionManager(Func<IUpgradeLog, IDbConnection> connectionFactory) : this(new DelegateConnectionFactory(connectionFactory))
+    protected DatabaseConnectionManager(Func<IUpgradeLog, IDbConnection> connectionFactory) : this(
+        new DelegateConnectionFactory(connectionFactory))
     {
     }
 
@@ -33,7 +39,13 @@ public abstract class DatabaseConnectionManager : IConnectionManager
     {
         this.connectionFactory = connectionFactory;
         TransactionMode = TransactionMode.NoTransaction;
-        transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>> {{TransactionMode.NoTransaction, () => new NoTransactionStrategy()}, {TransactionMode.SingleTransaction, () => new SingleTransactionStrategy()}, {TransactionMode.TransactionPerScript, () => new TransactionPerScriptStrategy()}, {TransactionMode.SingleTransactionAlwaysRollback, () => new SingleTransactionAlwaysRollbackStrategy()}};
+        transactionStrategyFactory = new Dictionary<TransactionMode, Func<ITransactionStrategy>>
+        {
+            { TransactionMode.NoTransaction, () => new NoTransactionStrategy() },
+            { TransactionMode.SingleTransaction, () => new SingleTransactionStrategy() },
+            { TransactionMode.TransactionPerScript, () => new TransactionPerScriptStrategy() },
+            { TransactionMode.SingleTransactionAlwaysRollback, () => new SingleTransactionAlwaysRollbackStrategy() }
+        };
     }
 
     /// <summary>
@@ -45,11 +57,13 @@ public abstract class DatabaseConnectionManager : IConnectionManager
         if (upgradeConnection.State == ConnectionState.Closed)
             upgradeConnection.Open();
         if (transactionStrategy != null)
-            throw new InvalidOperationException("OperationStarting is meant to be called by DbUp and can only be called once");
+            throw new InvalidOperationException(
+                "OperationStarting is meant to be called by DbUp and can only be called once");
         if (!IsAllowed(TransactionMode))
-            throw new InvalidOperationException($"TransactionMode {TransactionMode} is not allowed for {GetType().Name}. Allowed modes are {AllowedTransactionModes}");
+            throw new InvalidOperationException(
+                $"TransactionMode {TransactionMode} is not allowed for {GetType().Name}. Allowed modes are {AllowedTransactionModes}");
         transactionStrategy = transactionStrategyFactory[TransactionMode]();
-        transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts);
+        transactionStrategy.Initialise(upgradeConnection, upgradeLog, executedScripts, ExecutionTimeoutSeconds);
 
         return new DelegateDisposable(() =>
         {
@@ -88,7 +102,7 @@ public abstract class DatabaseConnectionManager : IConnectionManager
                 if (upgradeConnection.State == ConnectionState.Closed)
                     upgradeConnection.Open();
                 var strategy = transactionStrategyFactory[TransactionMode.NoTransaction]();
-                strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>());
+                strategy.Initialise(upgradeConnection, upgradeLog, new List<SqlScript>(), ExecutionTimeoutSeconds);
                 strategy.Execute(dbCommandFactory =>
                 {
                     using (var command = dbCommandFactory())

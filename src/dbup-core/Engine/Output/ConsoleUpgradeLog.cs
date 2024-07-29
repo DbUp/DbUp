@@ -8,42 +8,40 @@ namespace DbUp.Engine.Output;
 public class ConsoleUpgradeLog : IUpgradeLog
 {
     /// <summary>
-    /// Writes an informational message to the log.
-    /// </summary>
-    /// <param name="format">The format.</param>
-    /// <param name="args">The args.</param>
-    public void WriteInformation(string format, params object[] args)
-    {
-        Write(ConsoleColor.White, format, args);
-    }
+    public void LogTrace(string format, params object[] args)
+        => Log(LoggingConstants.TraceLevel, ConsoleColor.Gray, format, args);
 
-    /// <summary>
-    /// Writes an error message to the log.
-    /// </summary>
-    /// <param name="format">The format.</param>
-    /// <param name="args">The args.</param>
-    public void WriteError(string format, params object[] args)
-    {
-        Write(ConsoleColor.Red, format, args);
-    }
+    /// <inheritdoc/>
+    public void LogDebug(string format, params object[] args)
+        => Log(LoggingConstants.DebugLevel, ConsoleColor.Magenta, format, args);
 
-    /// <summary>
-    /// Writes a warning message to the log.
-    /// </summary>
-    /// <param name="format">The format.</param>
-    /// <param name="args">The args.</param>
-    public void WriteWarning(string format, params object[] args)
-    {
-        Write(ConsoleColor.Yellow, format, args);
-    }
+    /// <inheritdoc/>
+    public void LogInformation(string format, params object[] args)
+        => Log(LoggingConstants.InfoLevel, ConsoleColor.White, format, args);
 
-    static void Write(ConsoleColor color, string format, object[] args)
+    /// <inheritdoc/>
+    public void LogWarning(string format, params object[] args)
+        => Log(LoggingConstants.WarnLevel, ConsoleColor.Yellow, format, args);
+
+    /// <inheritdoc/>
+    public void LogError(string format, params object[] args)
+        => Log(LoggingConstants.ErrorLevel, ConsoleColor.Red, format, args);
+
+    /// <inheritdoc/>
+    public void LogError(Exception ex, string format, params object[] args)
+        => Log(LoggingConstants.ErrorLevel, ConsoleColor.Red, format, args, ex);
+
+    static void Log(string level, ConsoleColor color, string format, object[] args, Exception ex = null)
     {
         var oldColor = Console.ForegroundColor;
         Console.ForegroundColor = color;
         try
         {
-            Console.WriteLine(format, args);
+            Console.WriteLine($"{DateTimeOffset.Now.ToString(LoggingConstants.TimestampFormat)} [{level}] {string.Format(format, args)}");
+            if (ex != null)
+            {
+                Console.WriteLine(ExceptionFormatter.Format(ex));
+            }
         }
         finally
         {

@@ -1,1 +1,7 @@
 mode: Mainline
+ignore:
+  sha: [
+    20cdee91421c19769ca233f820d1aa42bcfe0483, # Not clear why this commit confused the version counting
+    bf9c462420616527a2653b7313f7a37bde8b6b04
+  ]
+  commits-before: 2024-01-01T00:00:00 # Simplify calculations by choosing a cutoff date from where no branches exist

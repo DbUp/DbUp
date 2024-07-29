@@ -5,3 +5,4 @@ obj
 /src/dbup-tests/**/*received.txt
 tools
 .idea
+DbUp.sln.DotSettings.user
