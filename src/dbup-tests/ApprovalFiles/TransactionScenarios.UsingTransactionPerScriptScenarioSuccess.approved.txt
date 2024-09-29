@@ -1,6 +1,9 @@
 DB Operation: Open connection
 Info:         Beginning database upgrade
 DB Operation: Begin transaction
+DB Operation: Commit transaction
+DB Operation: Dispose transaction
+DB Operation: Begin transaction
 DB Operation: Execute non query command: IF NOT EXISTS (SELECT * FROM sys.schemas WHERE name = N'dbo') Exec('CREATE SCHEMA [dbo]')
 DB Operation: Dispose command
 DB Operation: Commit transaction
@@ -16,6 +19,15 @@ Info:         Executing Database Server script 'Script0002.sql'
 DB Operation: Begin transaction
 Info:         Ensuring tables exists and is latest version
 DB Operation: Execute non query command: print 'script2'
+DB Operation: Dispose command
+DB Operation: Commit transaction
+DB Operation: Dispose transaction
+Info:         Running script in ProvideScript method
+DB Operation: Execute scalar command: select 1
+Info:         Executing Database Server script 'ScriptWithChangeInProvideScriptMethod'
+DB Operation: Begin transaction
+Info:         Ensuring tables exists and is latest version
+DB Operation: Execute non query command: 
 DB Operation: Dispose command
 DB Operation: Commit transaction
 DB Operation: Dispose transaction
