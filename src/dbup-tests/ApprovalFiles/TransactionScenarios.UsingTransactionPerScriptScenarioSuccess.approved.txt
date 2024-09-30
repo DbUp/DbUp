@@ -19,5 +19,17 @@ DB Operation: Execute non query command: print 'script2'
 DB Operation: Dispose command
 DB Operation: Commit transaction
 DB Operation: Dispose transaction
+DB Operation: Begin transaction
+Info:         Running script in ProvideScript method
+DB Operation: Execute scalar command: select 1
+DB Operation: Commit transaction
+DB Operation: Dispose transaction
+Info:         Executing Database Server script 'ScriptWithChangeInProvideScriptMethod'
+DB Operation: Begin transaction
+Info:         Ensuring tables exists and is latest version
+DB Operation: Execute non query command: 
+DB Operation: Dispose command
+DB Operation: Commit transaction
+DB Operation: Dispose transaction
 Info:         Upgrade successful
 DB Operation: Dispose connection

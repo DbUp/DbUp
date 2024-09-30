@@ -66,14 +66,18 @@ public class EmbeddedScriptAndCodeProvider : IScriptProvider
     IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)
     {
         var script = typeof(IScript);
-        return connectionManager.ExecuteCommandsWithManagedConnection(dbCommandFactory => assembly
+        return  assembly
             .GetTypes()
             .Where(type => script.IsAssignableFrom(type) &&
                            type.IsClass &&
                            !type.IsAbstract
             )
-            .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", sqlScriptOptions, () => ((IScript)Activator.CreateInstance(s)).ProvideScript(dbCommandFactory)))
-            .ToList());
+            .Select(s => (SqlScript)new LazySqlScript(s.FullName + ".cs", sqlScriptOptions, () =>
+                connectionManager.ExecuteCommandsWithManagedConnection(
+                    dbCommandFactory =>
+                        ((IScript)Activator.CreateInstance(s))
+                        .ProvideScript(dbCommandFactory)))
+            ).ToList();
     }
 
     /// <summary>
