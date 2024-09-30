@@ -26,7 +26,8 @@ class ScriptInstanceProvider : IScriptProvider
     /// </summary>
     /// <param name="scripts">The IScript instances to include</param>
     /// <param name="namer">A function that returns the name of the script</param>
-    public ScriptInstanceProvider(Func<IScript, string> namer, params IScript[] scripts) : this(namer, new SqlScriptOptions(), scripts)
+    public ScriptInstanceProvider(Func<IScript, string> namer, params IScript[] scripts) : this(namer,
+        new SqlScriptOptions(), scripts)
     {
     }
 
@@ -36,7 +37,8 @@ class ScriptInstanceProvider : IScriptProvider
     /// <param name="scripts">The IScript instances to include</param>
     /// <param name="namer">A function that returns the name of the script</param>
     /// <param name="sqlScriptOptions">The sql script options.</param>
-    public ScriptInstanceProvider(Func<IScript, string> namer, SqlScriptOptions sqlScriptOptions, params IScript[] scripts)
+    public ScriptInstanceProvider(Func<IScript, string> namer, SqlScriptOptions sqlScriptOptions,
+        params IScript[] scripts)
     {
         this.scripts = scripts;
         this.namer = namer ?? throw new ArgumentNullException(nameof(namer));
@@ -45,10 +47,13 @@ class ScriptInstanceProvider : IScriptProvider
 
     public IEnumerable<SqlScript> GetScripts(IConnectionManager connectionManager)
     {
-        return connectionManager.ExecuteCommandsWithManagedConnection(
-            dbCommandFactory => scripts
-                .Select(s => new LazySqlScript(namer(s), sqlScriptOptions, () => s.ProvideScript(dbCommandFactory)))
-                .ToArray()
-        );
+        return scripts
+            .Select(s => new LazySqlScript(
+                    namer(s),
+                    sqlScriptOptions,
+                    () => connectionManager.ExecuteCommandsWithManagedConnection(s.ProvideScript)
+                )
+            )
+            .ToArray();
     }
 }
