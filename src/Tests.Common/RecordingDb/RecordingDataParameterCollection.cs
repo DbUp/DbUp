@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
@@ -9,12 +10,12 @@ namespace DbUp.Tests.Common.RecordingDb;
 class RecordingDataParameterCollection : IDataParameterCollection
 {
     readonly IUpgradeLog logger;
-    readonly List<object> backingList;
+    readonly ConcurrentBag<object?> backingList;
 
     public RecordingDataParameterCollection(IUpgradeLog logger)
     {
         this.logger = logger;
-        backingList = new List<object>();
+        backingList = new ConcurrentBag<object?>();
     }
 
     public IEnumerator GetEnumerator()
@@ -28,17 +29,17 @@ class RecordingDataParameterCollection : IDataParameterCollection
     }
 
     public int Count { get; private set; }
-    public object? SyncRoot { get; private set; }
+    public object SyncRoot { get; private set; } = new();
     public bool IsSynchronized { get; private set; }
 
-    public int Add(object value)
+    public int Add(object? value)
     {
-        logger.WriteInformation($"DB Operation: Add parameter to command: {value}");
+        logger.LogInformation("DB Operation: Add parameter to command: {0}", value);
         backingList.Add(value);
         return backingList.Count - 1;
     }
 
-    public bool Contains(object value)
+    public bool Contains(object? value)
     {
         throw new NotImplementedException();
     }
@@ -48,17 +49,17 @@ class RecordingDataParameterCollection : IDataParameterCollection
         throw new NotImplementedException();
     }
 
-    public int IndexOf(object value)
+    public int IndexOf(object? value)
     {
         throw new NotImplementedException();
     }
 
-    public void Insert(int index, object value)
+    public void Insert(int index, object? value)
     {
         throw new NotImplementedException();
     }
 
-    public void Remove(object value)
+    public void Remove(object? value)
     {
         throw new NotImplementedException();
     }
@@ -68,7 +69,7 @@ class RecordingDataParameterCollection : IDataParameterCollection
         throw new NotImplementedException();
     }
 
-    object IList.this[int index]
+    object? IList.this[int index]
     {
         get => throw new NotImplementedException();
         set => throw new NotImplementedException();

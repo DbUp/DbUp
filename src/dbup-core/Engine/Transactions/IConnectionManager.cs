@@ -48,4 +48,9 @@ public interface IConnectionManager
     /// Tries to connect to the database.
     /// </summary> 
     bool TryConnect(IUpgradeLog upgradeLog, out string errorMessage);
+
+    /// <summary>
+    /// Timeout for the transaction commands in seconds. If not set, the default timeout is used.
+    /// </summary>
+    int? ExecutionTimeoutSeconds { get; set; }
 }

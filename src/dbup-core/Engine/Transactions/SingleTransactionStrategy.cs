@@ -8,6 +8,7 @@ namespace DbUp.Engine.Transactions;
 class SingleTransactionStrategy : ITransactionStrategy
 {
     IDbConnection connection;
+    int? commandTimeout;
     IDbTransaction transaction;
     bool errorOccured;
     IUpgradeLog log;
@@ -24,6 +25,11 @@ class SingleTransactionStrategy : ITransactionStrategy
             action(() =>
             {
                 var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
+                {
+                    command.CommandTimeout = commandTimeout.Value;
+                }
+
                 command.Transaction = transaction;
                 return command;
             });
@@ -45,6 +51,11 @@ class SingleTransactionStrategy : ITransactionStrategy
             return actionWithResult(() =>
             {
                 var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
+                {
+                    command.CommandTimeout = commandTimeout.Value;
+                }
+
                 command.Transaction = transaction;
                 return command;
             });
@@ -56,13 +67,19 @@ class SingleTransactionStrategy : ITransactionStrategy
         }
     }
 
-    public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+    public void Initialise(
+        IDbConnection dbConnection,
+        IUpgradeLog upgradeLog,
+        List<SqlScript> executedScripts,
+        int? executionTimeoutSeconds
+    )
     {
         executedScriptsCollection = executedScripts;
         executedScriptsListBeforeExecution = executedScripts.ToArray();
         connection = dbConnection;
+        commandTimeout = executionTimeoutSeconds;
         log = upgradeLog;
-        upgradeLog.WriteInformation("Beginning transaction");
+        upgradeLog.LogInformation("Beginning transaction");
         transaction = connection.BeginTransaction();
     }
 
@@ -74,7 +91,7 @@ class SingleTransactionStrategy : ITransactionStrategy
         }
         else
         {
-            log.WriteWarning("Error occured when executing scripts, transaction will be rolled back");
+            log.LogWarning("Error occured when executing scripts, transaction will be rolled back");
             //Restore the executed scripts collection
             executedScriptsCollection.Clear();
             executedScriptsCollection.AddRange(executedScriptsListBeforeExecution);

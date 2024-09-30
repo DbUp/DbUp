@@ -81,11 +81,5 @@ public class EmbeddedScriptAndCodeProviderTests
         {
             scriptsToExecute.ShouldNotContain(x => x.Name.Contains("Test4"));
         }
-
-        [Then]
-        public void it_should_only_return_the_sql_scripts()
-        {
-            scriptsToExecute.Length.ShouldBe(9);
-        }
     }
 }

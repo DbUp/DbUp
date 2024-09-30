@@ -8,6 +8,7 @@ namespace DbUp.Engine.Transactions;
 class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
 {
     IDbConnection connection;
+    int? commandTimeout;
     IDbTransaction transaction;
     bool errorOccured;
     IUpgradeLog log;
@@ -24,6 +25,11 @@ class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
             action(() =>
             {
                 var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
+                {
+                    command.CommandTimeout = commandTimeout.Value;
+                }
+
                 command.Transaction = transaction;
                 return command;
             });
@@ -45,6 +51,11 @@ class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
             return actionWithResult(() =>
             {
                 var command = connection.CreateCommand();
+                if (commandTimeout.HasValue)
+                {
+                    command.CommandTimeout = commandTimeout.Value;
+                }
+
                 command.Transaction = transaction;
                 return command;
             });
@@ -56,13 +67,19 @@ class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
         }
     }
 
-    public void Initialise(IDbConnection dbConnection, IUpgradeLog upgradeLog, List<SqlScript> executedScripts)
+    public void Initialise(
+        IDbConnection dbConnection,
+        IUpgradeLog upgradeLog,
+        List<SqlScript> executedScripts,
+        int? executionTimeoutSeconds
+    )
     {
         executedScriptsCollection = executedScripts;
         executedScriptsListBeforeExecution = executedScripts.ToArray();
         connection = dbConnection;
+        commandTimeout = executionTimeoutSeconds;
         log = upgradeLog;
-        upgradeLog.WriteInformation("Beginning transaction");
+        upgradeLog.LogInformation("Beginning transaction");
         transaction = connection.BeginTransaction();
     }
 
@@ -70,11 +87,12 @@ class SingleTransactionAlwaysRollbackStrategy : ITransactionStrategy
     {
         if (!errorOccured)
         {
-            log.WriteInformation("Success! No errors have occurred when executing scripts, transaction will be rolled back");
+            log.LogInformation(
+                "Success! No errors have occurred when executing scripts, transaction will be rolled back");
         }
         else
         {
-            log.WriteWarning("Error occurred when executing scripts, transaction will be rolled back");
+            log.LogWarning("Error occurred when executing scripts, transaction will be rolled back");
         }
 
         // Always rollback
