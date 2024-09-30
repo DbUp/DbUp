@@ -1,17 +1,27 @@
 DbUp is a .NET library that helps you to deploy changes to SQL Server databases. It tracks which SQL scripts have been run already, and runs the change scripts that are needed to get your database up to date.
 
 ## Upgrading
-If you are upgrading from version 3 to 4, see [breaking changes](./breaking-changes). Other release notes are available in [the GitHub releases](https://github.com/DbUp/DbUp/releases). 
+If you are upgrading from version 3 to 4, see [breaking changes](./breaking-changes.md). Other release notes are available in [the GitHub releases](https://github.com/DbUp/DbUp/releases). 
 
 ## Getting started
-Start by creating a simple C# console project in Visual Studio, and adding your SQL scripts to it. From the Properties window, mark them as Embedded Resources:
 
-![DbUp Sample](./images/add-scripts.png)
+Create a simple console application
 
-Next, use NuGet to install the DbUp package:
-
+```ps1
+dotnet new console
+dotnet add . package DbUp
 ```
-Install-Package DbUp
+
+Add your SQL scripts to it a directory (ex: `Scripts`)
+
+Modify the `csproj` file to add the scripts as embedded resources
+
+```xml
+<Project Sdk="Microsoft.NET.Sdk">
+  <ItemGroup>
+    <EmbeddedResource Include="scripts/**/*.sql" />
+  </ItemGroup>
+</Project>
 ```
 
 Finally, in `Program.cs`, add the following code:
