@@ -9,7 +9,7 @@ DbUp has a simple logging abstraction in place using the `IUpgradeLog` interface
 * Use `builder.LogTo(new MyCustomLogger())` to provide your own logger based on `IUpgradeLog`.
 * Use `builder.LogTo(ILogger)` or `builder.LogTo(ILoggerFactory)` to provide a [Microsoft.Extensions.Logging compliant logging provider](https://learn.microsoft.com/en-us/dotnet/core/extensions/logging-providers#third-party-logging-providers).
 
-These calls use `builder.Configure((UpgradeConfigureation c) => c.AddLog(log))` under the covers.
+These calls use `builder.Configure((UpgradeConfiguration c) => c.AddLog(log))` under the covers.
 
 If no logger is specified, no logging is enabled.
 
