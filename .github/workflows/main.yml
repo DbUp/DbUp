@@ -61,7 +61,7 @@ jobs:
         working-directory: src  
 
       - name: Push NuGet packages to GitHub Packages ⬆️
-        if: ${{ format('{0}', env.GITHUB_TOKEN) != '' && startsWith(github.repository, 'DbUp/') }}
+        if: ${{ format('{0}', env.GITHUB_TOKEN) != '' && startsWith(github.repository, 'DbUp/') && github.event.pull_request.head.repo.full_name == github.repository && github.actor != 'dependabot[bot]' }}
         working-directory: artifacts
         run: dotnet nuget push *.nupkg --api-key ${{ secrets.GITHUB_TOKEN }} --source "https://nuget.pkg.github.com/DbUp/index.json"
         env:
