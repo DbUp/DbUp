@@ -250,11 +250,11 @@ public abstract class ScriptExecutor : IScriptExecutor
 
             var delimiterLine = new string('-', totalLength);
             Log().WriteInformation(delimiterLine);
-            Log().WriteInformation(string.Format(format, names.ToArray()));
+            Log().WriteInformation(format, names.ToArray());
             Log().WriteInformation(delimiterLine);
             foreach (var line in lines)
             {
-                Log().WriteInformation(string.Format(format, line.ToArray()));
+                Log().WriteInformation(format, line.ToArray());
             }
             Log().WriteInformation(delimiterLine);
             Log().WriteInformation("\r\n");
