@@ -263,11 +263,11 @@ public abstract class ScriptExecutor : IScriptExecutor
 
             var delimiterLine = new string('-', totalLength);
             Log().LogInformation(delimiterLine);
-            Log().LogInformation(string.Format(format, names.ToArray()));
+            Log().LogInformation(format, names.ToArray());
             Log().LogInformation(delimiterLine);
             foreach (var line in lines)
             {
-                Log().LogInformation(string.Format(format, line.ToArray()));
+                Log().LogInformation(format, line.ToArray());
             }
 
             Log().LogInformation(delimiterLine);
