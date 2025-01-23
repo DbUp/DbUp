@@ -194,7 +194,12 @@ public abstract class TableJournal : IJournal
         {
             command.CommandText = DoesTableExistSql();
             command.CommandType = CommandType.Text;
-            var executeScalar = Convert.ToInt32(command.ExecuteScalar());
+            var result = command.ExecuteScalar();
+
+            if (result is DBNull)
+                return false;
+
+            var executeScalar = Convert.ToInt32(result);
             return executeScalar == 1;
         }
     }
