@@ -20,10 +20,15 @@ public abstract class DatabaseConnectionManager : IConnectionManager
     protected virtual AllowedTransactionMode AllowedTransactionModes => AllowedTransactionMode.All;
 
     /// <summary>
+    /// Dummy query executed when trying to connect to the DB.
+    /// </summary>    
+    protected virtual string GetDummyQuery() => "select 1";
+
+    /// <summary>
     /// SQLCommand Timeout in seconds. If not set, the default SQLCommand timeout is not changed.
     /// </summary>
     public int? ExecutionTimeoutSeconds { get; set; }
-    
+
     /// <summary>
     /// Manages Database Connections
     /// </summary>
@@ -107,7 +112,7 @@ public abstract class DatabaseConnectionManager : IConnectionManager
                 {
                     using (var command = dbCommandFactory())
                     {
-                        command.CommandText = "select 1";
+                        command.CommandText = GetDummyQuery();
                         command.ExecuteScalar();
                     }
                 });
