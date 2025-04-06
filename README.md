@@ -31,6 +31,13 @@ The following providers are End of Life (EOL) and are no longer maintained:
 Maintenance and support for the extensions where not provided by the DbUp project. For questions and support on
 these extensions, please contact the project directly.
 
+## CLI
+
+[https://github.com/drewburlingame/dbup-cli](https://github.com/drewburlingame/dbup-cli)
+
+A dotnet tool that install all sql scripts from the specified folders. A simple configuration model provides the knobs to control how the scripts are applied. The only code that needs to be written is sql.
+
+
 ## DbUpX
 
 [https://github.com/fiscaltec/DbUpX](https://github.com/fiscaltec/DbUpX)
