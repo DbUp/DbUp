@@ -1,6 +1,4 @@
-﻿using System;
-using DbUp.Engine;
-using DbUp.Tests.Common;
+﻿using DbUp.Tests.Common;
 
 namespace DbUp.Tests;
 
