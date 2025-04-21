@@ -42,6 +42,15 @@ Extensions to DbUp supporting easy filtering, ordering and versioning:
 - protection against code reorganisation affecting long script names,
 - utilities for sorting and filtering scripts in helpful ways.
 
+## DbUp.Extensions
+
+[https://github.com/twenzel/DbUp.Extensions](https://github.com/twenzel/DbUp.Extensions)
+
+Extensions to DbUp supporting versioning and script providers:
+
+- a journaling system that stores hashes of script contents, so we know if they need to rerun,
+- a script provider for reading Liquibase changelog files
+
 # Contributing
 
 ## NuGet Feed
