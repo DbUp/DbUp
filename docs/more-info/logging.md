@@ -13,7 +13,7 @@ These calls use `builder.Configure((UpgradeConfiguration c) => c.AddLog(log))` u
 
 If no logger is specified, no logging is enabled.
 
-The first call to `upgradeConfigureation.AddLog(log)` will replace the default logger. Subsequent calls to `upgradeConfigureation.AddLog(log)` will combine the loggers and result in logs going to all specified loggers. To clear previously configured loggers call `builder.ResetConfiguredLoggers()`.
+The first call to `upgradeConfiguration.AddLog(log)` will replace the default logger. Subsequent calls to `upgradeConfiguration.AddLog(log)` will combine the loggers and result in logs going to all specified loggers. To clear previously configured loggers call `builder.ResetConfiguredLoggers()`.
 
 By default, the output of the scripts run by DbUp do not show up in the logs. To also display the script output (e.g.: text displayed by `PRINT` statements in Sql Server), use `builder.LogScriptOutput()`:
 
