@@ -136,7 +136,7 @@ public class UpgradeEngine
         var allScripts = GetDiscoveredScriptsAsEnumerable();
         var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
-        var sorted = allScripts.OrderBy(s => s.SqlScriptOptions.RunGroupOrder).ThenBy(s => s.Name, configuration.ScriptNameComparer);
+        var sorted = configuration.ScriptSortFunction(allScripts);
         var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames, configuration.ScriptNameComparer);
         return filtered.ToList();
     }
