@@ -26,15 +26,19 @@ public static class UpgradeEngineHtmlReport
     /// <param name="databaseName">The name of the database being upgraded</param>
     public static void GenerateUpgradeHtmlReport(this UpgradeEngine upgradeEngine, string fullPath, string serverName, string databaseName)
     {
-        var scriptsToRunList = upgradeEngine.GetScriptsToExecute();
         var htmlReport = new StringBuilder();
 
         htmlReport.Append(GetHtmlHeader(serverName, databaseName));
 
-        for (var i = 0; i < scriptsToRunList.Count; i++)
+        // Keep the transaction strategy active while accessing script contents, especially for LazySqlScript instances
+        // that need an active transaction strategy to generate their content via ExecuteCommandsWithManagedConnection
+        upgradeEngine.GetScriptsToExecuteWithActiveStrategy(scriptsToRunList =>
         {
-            htmlReport.Append(GetHtmlForScript(scriptsToRunList[i], i));
-        }
+            for (var i = 0; i < scriptsToRunList.Count; i++)
+            {
+                htmlReport.Append(GetHtmlForScript(scriptsToRunList[i], i));
+            }
+        });
 
         htmlReport.Append(GetHtmlFooter());
 
