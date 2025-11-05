@@ -150,6 +150,20 @@ public class UpgradeEngine
         }
     }
 
+    /// <summary>
+    /// Returns a list of scripts that will be executed when the upgrade is performed, 
+    /// but keeps the transaction strategy and connection active for the duration of the operation
+    /// </summary>
+    /// <param name="action">Action to perform with the scripts while transaction strategy is active</param>
+    internal virtual void GetScriptsToExecuteWithActiveStrategy(Action<List<SqlScript>> action)
+    {
+        using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
+        {
+            var scripts = GetScriptsToExecuteInsideOperation();
+            action(scripts);
+        }
+    }
+
     ///<summary>
     /// Creates version record for any new migration scripts without executing them.
     /// Useful for bringing development environments into sync with automated environments
