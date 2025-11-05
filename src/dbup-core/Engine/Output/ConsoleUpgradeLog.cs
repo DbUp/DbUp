@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DbUp.Engine.Output;
 
@@ -7,7 +7,7 @@ namespace DbUp.Engine.Output;
 /// </summary>
 public class ConsoleUpgradeLog : IUpgradeLog
 {
-    /// <summary>
+    /// <inheritdoc/>
     public void LogTrace(string format, params object[] args)
         => Log(LoggingConstants.TraceLevel, ConsoleColor.Gray, format, args);
 

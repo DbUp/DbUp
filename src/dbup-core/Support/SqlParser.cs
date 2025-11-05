@@ -1,8 +1,11 @@
-﻿using System;
+using System;
 using System.IO;
 
 namespace DbUp.Support;
 
+/// <summary>
+/// Base class for parsing SQL text.
+/// </summary>
 public abstract class SqlParser : StringReader
 {
     readonly string sqlText;
@@ -18,6 +21,9 @@ public abstract class SqlParser : StringReader
     const char OpenBracketChar = '[';
     const char CloseBracketChar = ']';
 
+    /// <summary>
+    /// Constant value indicating a failed read operation.
+    /// </summary>
     protected const int FailedRead = -1;
 
     /// <summary>
@@ -58,6 +64,9 @@ public abstract class SqlParser : StringReader
         }
     }
 
+    /// <summary>
+    /// Parses the SQL text.
+    /// </summary>
     protected void Parse()
     {
         while (Read() != FailedRead)
@@ -133,6 +142,7 @@ public abstract class SqlParser : StringReader
     /// </summary>
     protected virtual bool IsCustomStatement => false;
 
+    /// <inheritdoc/>
     public override int Read()
     {
         var result = base.Read();
@@ -150,6 +160,7 @@ public abstract class SqlParser : StringReader
         return result;
     }
 
+    /// <inheritdoc/>
     public override int Read(char[] buffer, int index, int count)
     {
         var read = base.Read(buffer, index, count);
@@ -158,6 +169,7 @@ public abstract class SqlParser : StringReader
         return read;
     }
 
+    /// <inheritdoc/>
     public override int ReadBlock(char[] buffer, int index, int count)
     {
         var read = base.ReadBlock(buffer, index, count);
@@ -165,6 +177,7 @@ public abstract class SqlParser : StringReader
         return read;
     }
 
+    /// <inheritdoc/>
     public override string ReadLine()
     {
         var readLine = base.ReadLine();
@@ -173,6 +186,7 @@ public abstract class SqlParser : StringReader
         return readLine;
     }
 
+    /// <inheritdoc/>
     public override string ReadToEnd()
     {
         CurrentIndex = sqlText.Length - 1;

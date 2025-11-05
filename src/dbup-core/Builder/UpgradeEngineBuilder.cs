@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using DbUp.Engine;
 
@@ -10,6 +10,9 @@ namespace DbUp.Builder;
 /// </summary>
 public class UpgradeEngineBuilder
 {
+    /// <summary>
+    /// List of callbacks to execute when building the upgrade engine.
+    /// </summary>
     protected readonly List<Action<UpgradeConfiguration>> callbacks = new();
 
     /// <summary>

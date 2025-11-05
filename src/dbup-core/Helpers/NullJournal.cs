@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Data;
 using DbUp.Engine;
 
@@ -27,8 +27,7 @@ public class NullJournal : IJournal
     /// <summary>
     /// Does not ensure table exists, simply returns.
     /// </summary>
-    /// <param name="script"></param>
-    /// <param name="dbCommandFactory"></param>
+    /// <param name="dbCommandFactory">Factory to create database commands.</param>
     public void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)
     {
     }

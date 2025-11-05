@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine.Output;
@@ -16,6 +16,9 @@ public abstract class DatabaseConnectionManager : IConnectionManager
     IDbConnection upgradeConnection;
     IConnectionFactory connectionFactoryOverride;
 
+    /// <summary>
+    /// Gets the allowed transaction modes for this connection manager.
+    /// </summary>
     //The allowed TransactionModes
     protected virtual AllowedTransactionMode AllowedTransactionModes => AllowedTransactionMode.All;
 
@@ -159,6 +162,11 @@ public abstract class DatabaseConnectionManager : IConnectionManager
     /// <returns>A list of SQL Commands</returns>
     public abstract IEnumerable<string> SplitScriptIntoCommands(string scriptContents);
 
+    /// <summary>
+    /// Overrides the connection factory for testing purposes.
+    /// </summary>
+    /// <param name="connectionFactory">The connection factory to use for testing.</param>
+    /// <returns>A disposable that restores the original factory when disposed.</returns>
     public IDisposable OverrideFactoryForTest(IConnectionFactory connectionFactory)
     {
         connectionFactoryOverride = connectionFactory;
