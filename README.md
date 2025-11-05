@@ -31,9 +31,9 @@ The following providers are End of Life (EOL) and are no longer maintained:
 Maintenance and support for the extensions where not provided by the DbUp project. For questions and support on
 these extensions, please contact the project directly.
 
-## DbUpX
+## DbUpX.Reborn (Previously DbUpX)
 
-[https://github.com/fiscaltec/DbUpX](https://github.com/fiscaltec/DbUpX)
+[https://github.com/mthpbs/DbUpX](https://github.com/mthpbs/DbUpX)
 
 Extensions to DbUp supporting easy filtering, ordering and versioning:
 
