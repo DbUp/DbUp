@@ -10,9 +10,9 @@ namespace DbUp.Tests.Common;
 public abstract class NoPublicApiChangesBase
 {
     private readonly Assembly assembly;
-    readonly string? callerFilePath;
+    readonly string callerFilePath;
 
-    public NoPublicApiChangesBase(Assembly assembly, [CallerFilePath] string? callerFilePath = null)
+    public NoPublicApiChangesBase(Assembly assembly, [CallerFilePath] string callerFilePath = "")
     {
         this.assembly = assembly;
         this.callerFilePath = callerFilePath;

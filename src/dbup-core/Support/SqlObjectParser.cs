@@ -1,15 +1,23 @@
-﻿using System;
+using System;
 using System.Text.RegularExpressions;
 using DbUp.Engine;
 
 namespace DbUp.Support;
 
+/// <summary>
+/// Parses SQL objects and performs quoting functions.
+/// </summary>
 public abstract class SqlObjectParser : ISqlObjectParser
 {
     readonly string quotePrefix;
     readonly string quoteSuffix;
     readonly Regex matchQuotes;
 
+    /// <summary>
+    /// Initializes a new instance of the <see cref="SqlObjectParser"/> class.
+    /// </summary>
+    /// <param name="quotePrefix">The prefix character used for quoting.</param>
+    /// <param name="quoteSuffix">The suffix character used for quoting.</param>
     protected SqlObjectParser(string quotePrefix, string quoteSuffix)
     {
         this.quotePrefix = quotePrefix;
@@ -51,6 +59,11 @@ public abstract class SqlObjectParser : ISqlObjectParser
         return $"{quotePrefix}{objectName}{quoteSuffix}";
     }
 
+    /// <summary>
+    /// Removes quotes from a SQL object name.
+    /// </summary>
+    /// <param name="objectName">The quoted object name.</param>
+    /// <returns>The unquoted object name.</returns>
     public virtual string UnquoteIdentifier(string objectName)
     {
         return matchQuotes.Match(objectName).Groups["unquoted"].Value;

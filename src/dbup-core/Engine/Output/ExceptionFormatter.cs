@@ -1,13 +1,26 @@
-﻿using System;
+using System;
 using System.Text;
 
 namespace DbUp.Engine.Output
 {
+    /// <summary>
+    /// Formats exceptions into readable strings.
+    /// </summary>
     public class ExceptionFormatter
     {
+        /// <summary>
+        /// Formats an exception into a readable string representation.
+        /// </summary>
+        /// <param name="ex">The exception to format.</param>
+        /// <returns>A formatted string representation of the exception.</returns>
         public static string Format(Exception ex)
             => GetMessageTree(ex);
 
+        /// <summary>
+        /// Formats an aggregate exception into a readable string representation.
+        /// </summary>
+        /// <param name="ex">The aggregate exception to format.</param>
+        /// <returns>A formatted string representation of the exception.</returns>
         public static string Format(AggregateException ex)
             => GetMessageTree(ex);
 

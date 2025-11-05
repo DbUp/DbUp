@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using JetBrains.Annotations;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -10,6 +10,10 @@ namespace DbUp.Engine.Output
     /// </summary>
     public class MicrosoftUpgradeLog : IUpgradeLog
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MicrosoftUpgradeLog"/> class.
+        /// </summary>
+        /// <param name="loggerFactory">The logger factory to create a logger from.</param>
         public MicrosoftUpgradeLog([NotNull] ILoggerFactory loggerFactory)
         {
             if (loggerFactory == null)
@@ -18,6 +22,10 @@ namespace DbUp.Engine.Output
             _logger = loggerFactory.CreateLogger<UpgradeEngine>();
         }
 
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MicrosoftUpgradeLog"/> class.
+        /// </summary>
+        /// <param name="logger">The logger to write to.</param>
         public MicrosoftUpgradeLog([NotNull] ILogger logger)
         {
             _logger = logger ?? throw new ArgumentNullException(nameof(logger));

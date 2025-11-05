@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
@@ -29,9 +29,10 @@ public abstract class ScriptExecutor : IScriptExecutor
     public int? ExecutionTimeoutSeconds { get; set; }
 
     /// <summary>
-    /// Initializes an instance of the <see cref="SqlScriptExecutor"/> class.
+    /// Initializes an instance of the <see cref="ScriptExecutor"/> class.
     /// </summary>
     /// <param name="connectionManagerFactory"></param>
+    /// <param name="sqlObjectParser">The SQL object parser.</param>
     /// <param name="log">The logging mechanism.</param>
     /// <param name="schema">The schema that contains the table.</param>
     /// <param name="variablesEnabled">Function that returns <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
@@ -81,6 +82,11 @@ public abstract class ScriptExecutor : IScriptExecutor
         });
     }
 
+    /// <summary>
+    /// Gets the SQL to verify that a schema exists.
+    /// </summary>
+    /// <param name="schema">The schema name.</param>
+    /// <returns>The SQL statement to verify the schema.</returns>
     protected abstract string GetVerifySchemaSql(string schema);
 
     /// <summary>
@@ -89,6 +95,12 @@ public abstract class ScriptExecutor : IScriptExecutor
     /// </summary>
     protected virtual bool UseTheSameTransactionForJournalTableAndScripts => true;
 
+    /// <summary>
+    /// Preprocesses script contents by applying variable substitution and other preprocessors.
+    /// </summary>
+    /// <param name="script">The script to preprocess.</param>
+    /// <param name="variables">Variables to substitute in the script.</param>
+    /// <returns>The preprocessed script contents.</returns>
     protected virtual string PreprocessScriptContents(SqlScript script, IDictionary<string, string> variables)
     {
         if (variables == null)
@@ -194,13 +206,27 @@ public abstract class ScriptExecutor : IScriptExecutor
         return script.SqlScriptOptions.ScriptType == ScriptType.RunOnce;
     }
 
+    /// <summary>
+    /// Executes commands within an exception handler that can be overridden to provide provider-specific error handling.
+    /// </summary>
+    /// <param name="index">The zero-based index of the command being executed.</param>
+    /// <param name="script">The script being executed.</param>
+    /// <param name="executeCallback">The action to execute.</param>
     protected abstract void ExecuteCommandsWithinExceptionHandler(int index, SqlScript script, Action executeCallback);
 
+    /// <summary>
+    /// Executes a non-query command.
+    /// </summary>
+    /// <param name="command">The command to execute.</param>
     protected virtual void ExecuteNonQuery(IDbCommand command)
     {
         command.ExecuteNonQuery();
     }
 
+    /// <summary>
+    /// Executes a command and logs the output.
+    /// </summary>
+    /// <param name="command">The command to execute.</param>
     protected virtual void ExecuteAndLogOutput(IDbCommand command)
     {
         using (var reader = command.ExecuteReader())
@@ -212,12 +238,17 @@ public abstract class ScriptExecutor : IScriptExecutor
     /// <summary>
     /// Quotes the sql object.
     /// </summary>
-    /// <param name="schema"></param>
+    /// <param name="objectName">The object name to quote.</param>
+    /// <returns>The quoted object name.</returns>
     protected string QuoteSqlObjectName(string objectName)
     {
         return sqlObjectParser.QuoteIdentifier(objectName);
     }
 
+    /// <summary>
+    /// Writes the contents of a data reader to the log.
+    /// </summary>
+    /// <param name="reader">The data reader to write.</param>
     protected virtual void WriteReaderToLog(IDataReader reader)
     {
         do
@@ -275,5 +306,8 @@ public abstract class ScriptExecutor : IScriptExecutor
         } while (reader.NextResult());
     }
 
+    /// <summary>
+    /// Gets the logger function.
+    /// </summary>
     protected Func<IUpgradeLog> Log { get; private set; }
 }

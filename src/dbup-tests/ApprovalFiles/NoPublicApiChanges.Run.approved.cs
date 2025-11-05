@@ -358,6 +358,7 @@ namespace DbUp.Engine.Transactions
         public DbUp.Engine.Transactions.TransactionMode TransactionMode { get; set; }
         public void ExecuteCommandsWithManagedConnection(System.Action<System.Func<System.Data.IDbCommand>> action) { }
         public T ExecuteCommandsWithManagedConnection<T>(System.Func<System.Func<System.Data.IDbCommand>, T> actionWithResult) { }
+        protected virtual string GetDummyQuery() { }
         public System.IDisposable OperationStarting(DbUp.Engine.Output.IUpgradeLog upgradeLog, System.Collections.Generic.List<DbUp.Engine.SqlScript> executedScripts) { }
         public System.IDisposable OverrideFactoryForTest(DbUp.Engine.Transactions.IConnectionFactory connectionFactory) { }
         public abstract System.Collections.Generic.IEnumerable<string> SplitScriptIntoCommands(string scriptContents);

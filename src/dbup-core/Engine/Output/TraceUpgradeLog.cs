@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 
 namespace DbUp.Engine.Output;
@@ -8,7 +8,7 @@ namespace DbUp.Engine.Output;
 /// </summary>
 public class TraceUpgradeLog : IUpgradeLog
 {
-    /// <summary>
+    /// <inheritdoc/>
     public void LogTrace(string format, params object[] args)
         => Log(LoggingConstants.TraceLevel, format, args);
 
@@ -36,18 +36,8 @@ public class TraceUpgradeLog : IUpgradeLog
     {
         Trace.WriteLine($"{DateTimeOffset.Now.ToString(LoggingConstants.TimestampFormat)} [{level}] {string.Format(format, args)}");
         if (ex != null)
-            /// <summary>
-            /// Writes an error message to the log.
-            /// </summary>
-            /// <param name="format">The format.</param>
-            /// <param name="args">The args.</param>
         {
             Trace.WriteLine(ExceptionFormatter.Format(ex));
         }
-        /// <summary>
-        /// Writes a warning message to the log.
-        /// </summary>
-        /// <param name="format">The format.</param>
-        /// <param name="args">The args.</param>
     }
 }
