@@ -37,10 +37,9 @@ these extensions, please contact the project directly.
 
 A dotnet tool that install all sql scripts from the specified folders. A simple configuration model provides the knobs to control how the scripts are applied. The only code that needs to be written is sql.
 
+## DbUpX.Reborn (Previously DbUpX)
 
-## DbUpX
-
-[https://github.com/fiscaltec/DbUpX](https://github.com/fiscaltec/DbUpX)
+[https://github.com/mthpbs/DbUpX](https://github.com/mthpbs/DbUpX)
 
 Extensions to DbUp supporting easy filtering, ordering and versioning:
 
@@ -48,6 +47,15 @@ Extensions to DbUp supporting easy filtering, ordering and versioning:
 - a concept of "dependency comments" in scripts that let you more easily control the ordering of scripts,
 - protection against code reorganisation affecting long script names,
 - utilities for sorting and filtering scripts in helpful ways.
+
+## DbUp.Extensions
+
+[https://github.com/twenzel/DbUp.Extensions](https://github.com/twenzel/DbUp.Extensions)
+
+Extensions to DbUp supporting versioning and script providers:
+
+- a journaling system that stores hashes of script contents, so we know if they need to rerun,
+- a script provider for reading Liquibase changelog files
 
 # Contributing
 
