@@ -16,10 +16,10 @@
 
   <ItemGroup>
     <ProjectReference Include="..\dbup-core\dbup-core.csproj"/>
-    <PackageReference Include="Assent" Version="2.3.2" />
+    <PackageReference Include="Assent" Version="3.0.1" />
     <PackageReference Include="System.Runtime.InteropServices.RuntimeInformation" Version="4.3.0"/>
-    <PackageReference Include="TestStack.BDDfy.Xunit" Version="1.2.0"/>
-    <PackageReference Include="Shouldly" Version="4.2.1"/>
+    <PackageReference Include="TestStack.BDDfy.Xunit" Version="2.0.1" />
+    <PackageReference Include="Shouldly" Version="4.3.0" />
   </ItemGroup>
 
 </Project>
