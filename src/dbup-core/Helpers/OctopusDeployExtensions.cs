@@ -1,12 +1,19 @@
-﻿using System;
+using System;
 using System.Linq;
 using DbUp.Engine;
 
 // ReSharper disable once CheckNamespace
 namespace DbUp;
 
+/// <summary>
+/// Extension methods for integrating with Octopus Deploy.
+/// </summary>
 public static class OctopusDeployExtensions
 {
+    /// <summary>
+    /// Writes executed scripts to Octopus Deploy task summary.
+    /// </summary>
+    /// <param name="result">The database upgrade result containing executed scripts.</param>
     public static void WriteExecutedScriptsToOctopusTaskSummary(this DatabaseUpgradeResult result)
     {
         Console.WriteLine("##octopus[stdout-highlight]");

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 
 namespace DbUp.Engine.Transactions;
 
@@ -8,6 +8,9 @@ namespace DbUp.Engine.Transactions;
 [Flags]
 public enum AllowedTransactionMode
 {
+    /// <summary>
+    /// No transaction modes are allowed.
+    /// </summary>
     None = 0,
 
     /// <summary>
@@ -25,5 +28,8 @@ public enum AllowedTransactionMode
     /// </summary>
     SingleTransactionAlwaysRollback = 4,
 
+    /// <summary>
+    /// All transaction modes are allowed.
+    /// </summary>
     All = SingleTransaction | TransactionPerScript | SingleTransactionAlwaysRollback
 }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Filters;
@@ -40,7 +40,7 @@ public class UpgradeConfiguration
     /// <summary>
     /// Adds additional log which captures details about the upgrade.
     /// </summary>
-    /// <param name="additionalLog"></param>
+    /// <param name="logger">The logger to add.</param>
     public void AddLog(IUpgradeLog logger)
     {
         if (logger is not null)

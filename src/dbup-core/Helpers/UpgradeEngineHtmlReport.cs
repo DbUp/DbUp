@@ -1,10 +1,13 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using DbUp.Engine;
 
 namespace DbUp.Helpers;
 
+/// <summary>
+/// Helper methods for generating HTML reports from upgrade engines.
+/// </summary>
 public static class UpgradeEngineHtmlReport
 {
     /// <summary>

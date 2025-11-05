@@ -1,5 +1,8 @@
-﻿namespace DbUp.Support;
+namespace DbUp.Support;
 
+/// <summary>
+/// Defines how a script should be executed.
+/// </summary>
 public enum ScriptType
 {
     /// <summary>

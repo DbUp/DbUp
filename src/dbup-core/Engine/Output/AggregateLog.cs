@@ -1,11 +1,18 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
 namespace DbUp.Engine.Output
 {
+    /// <summary>
+    /// Aggregates multiple loggers into a single logger.
+    /// </summary>
     public class AggregateLog : IAggregateLog
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="AggregateLog"/> class.
+        /// </summary>
+        /// <param name="loggers">The collection of loggers to aggregate.</param>
         public AggregateLog(IEnumerable<IUpgradeLog> loggers = null)
         {
             this._loggers = (loggers ?? Enumerable.Empty<IUpgradeLog>()).ToList();
