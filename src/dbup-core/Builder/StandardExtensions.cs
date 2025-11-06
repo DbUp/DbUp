@@ -154,6 +154,18 @@ public static class StandardExtensions
     }
 
     /// <summary>
+    /// Allows specifying a custom sorting function for scripts. The default sort is by RunGroupOrder and then name.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="scriptSortFunction">A function that defines a sort for the scripts to run. The resulting order does not have to be strict, but in such a case scripts that are considered equal may not run in a consistent order.</param>
+    /// <returns></returns>
+    public static UpgradeEngineBuilder OrderScripts(this UpgradeEngineBuilder builder, Func<IEnumerable<SqlScript>, IEnumerable<SqlScript>> scriptSortFunction)
+    {
+        builder.Configure(c => c.ScriptSortFunction = scriptSortFunction);
+        return builder;
+    }
+
+    /// <summary>
     /// Adds a custom script provider to the upgrader.
     /// </summary>
     /// <param name="builder">The builder.</param>
