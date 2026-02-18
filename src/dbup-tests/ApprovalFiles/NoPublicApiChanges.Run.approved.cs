@@ -24,6 +24,8 @@ public static class StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder WithScript(this DbUp.Builder.UpgradeEngineBuilder builder, string name, DbUp.Engine.IScript script, DbUp.Engine.SqlScriptOptions sqlScriptOptions) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScript(this DbUp.Builder.UpgradeEngineBuilder builder, string name, string contents, DbUp.Engine.SqlScriptOptions sqlScriptOptions) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptNameComparer(this DbUp.Builder.UpgradeEngineBuilder builder, System.Collections.Generic.IComparer<string> comparer) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptSorter(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptSorter sorter) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptSorter(this DbUp.Builder.UpgradeEngineBuilder builder, System.Func<System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>, System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>> sortFunction) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScripts(this DbUp.Builder.UpgradeEngineBuilder builder, params DbUp.Engine.IScript[] scripts) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScripts(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptProvider scriptProvider) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScripts(this DbUp.Builder.UpgradeEngineBuilder builder, params DbUp.Engine.SqlScript[] scripts) { }
@@ -60,8 +62,6 @@ public static class StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Text.Encoding encoding, DbUp.Engine.SqlScriptOptions sqlScriptOptions) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter, System.Text.Encoding encoding, DbUp.Engine.SqlScriptOptions sqlScriptOptions) { }
-    public static DbUp.Builder.UpgradeEngineBuilder WithScriptSorter(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptSorter sorter) { }
-    public static DbUp.Builder.UpgradeEngineBuilder WithScriptSorter(this DbUp.Builder.UpgradeEngineBuilder builder, System.Func<System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>, System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>> sortFunction) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransactionAlwaysRollback(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransactionPerScript(this DbUp.Builder.UpgradeEngineBuilder builder) { }
