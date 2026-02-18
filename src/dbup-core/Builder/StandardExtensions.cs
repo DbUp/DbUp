@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
@@ -6,6 +6,7 @@ using DbUp;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
+using DbUp.Engine.Sorters;
 using DbUp.Engine.Transactions;
 using DbUp.ScriptProviders;
 using DbUp.Support;
@@ -154,14 +155,26 @@ public static class StandardExtensions
     }
 
     /// <summary>
-    /// Allows specifying a custom sorting function for scripts. The default sort is by RunGroupOrder and then name.
+    /// Sets the sorter that orders scripts before execution. The default sort is by RunGroupOrder and then name.
     /// </summary>
     /// <param name="builder">The builder.</param>
-    /// <param name="scriptSortFunction">A function that defines a sort for the scripts to run. The resulting order does not have to be strict, but in such a case scripts that are considered equal may not run in a consistent order.</param>
-    /// <returns></returns>
-    public static UpgradeEngineBuilder OrderScripts(this UpgradeEngineBuilder builder, Func<IEnumerable<SqlScript>, IEnumerable<SqlScript>> scriptSortFunction)
+    /// <param name="sorter">The script sorter.</param>
+    /// <returns>The same builder.</returns>
+    public static UpgradeEngineBuilder WithScriptSorter(this UpgradeEngineBuilder builder, IScriptSorter sorter)
     {
-        builder.Configure(c => c.ScriptSortFunction = scriptSortFunction);
+        builder.Configure(c => c.ScriptSorter = sorter);
+        return builder;
+    }
+
+    /// <summary>
+    /// Sets the sorter that orders scripts before execution using a delegate. The default sort is by RunGroupOrder and then name.
+    /// </summary>
+    /// <param name="builder">The builder.</param>
+    /// <param name="sortFunction">A function that defines a sort for the scripts to run. The resulting order does not have to be strict, but in such a case scripts that are considered equal may not run in a consistent order.</param>
+    /// <returns>The same builder.</returns>
+    public static UpgradeEngineBuilder WithScriptSorter(this UpgradeEngineBuilder builder, Func<IEnumerable<SqlScript>, IEnumerable<SqlScript>> sortFunction)
+    {
+        builder.Configure(c => c.ScriptSorter = new DelegateScriptSorter(sortFunction));
         return builder;
     }
 

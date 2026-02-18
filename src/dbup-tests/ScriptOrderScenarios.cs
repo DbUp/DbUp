@@ -91,20 +91,10 @@ public class ScriptOrderScenarios
     {
         var upgradeEngine = testProvider
             .Builder
-            .OrderScripts(scripts => scripts.OrderByDescending(s => s.Name, new ScriptNameComparer(StringComparer.Ordinal)))
+            .WithScriptSorter(scripts => scripts.OrderByDescending(s => s.Name, new ScriptNameComparer(StringComparer.Ordinal)))
             .Build();
         result = upgradeEngine.PerformUpgrade();
     }
-
-    void WhenDatabaseIsUpgradedWithNullSort()
-    {
-        var upgradeEngine = testProvider
-            .Builder
-            .OrderScripts(null)
-            .Build();
-        result = upgradeEngine.PerformUpgrade();
-    }
-
 
     public class TestScriptProvider : IScriptProvider
     {

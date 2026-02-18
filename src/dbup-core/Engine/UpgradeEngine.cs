@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using DbUp.Builder;
@@ -136,7 +136,7 @@ public class UpgradeEngine
         var allScripts = GetDiscoveredScriptsAsEnumerable();
         var executedScriptNames = new HashSet<string>(configuration.Journal.GetExecutedScripts());
 
-        var sorted = configuration.ScriptSortFunction(allScripts);
+        var sorted = configuration.ScriptSorter.Sort(allScripts, configuration.ScriptNameComparer);
         var filtered = configuration.ScriptFilter.Filter(sorted, executedScriptNames, configuration.ScriptNameComparer);
         return filtered.ToList();
     }
