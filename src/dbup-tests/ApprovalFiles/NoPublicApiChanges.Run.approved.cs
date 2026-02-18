@@ -60,6 +60,8 @@ public static class StandardExtensions
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter, System.Text.Encoding encoding) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Text.Encoding encoding, DbUp.Engine.SqlScriptOptions sqlScriptOptions) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithScriptsFromFileSystem(this DbUp.Builder.UpgradeEngineBuilder builder, string path, System.Func<string, bool> filter, System.Text.Encoding encoding, DbUp.Engine.SqlScriptOptions sqlScriptOptions) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptSorter(this DbUp.Builder.UpgradeEngineBuilder builder, DbUp.Engine.IScriptSorter sorter) { }
+    public static DbUp.Builder.UpgradeEngineBuilder WithScriptSorter(this DbUp.Builder.UpgradeEngineBuilder builder, System.Func<System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>, System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>> sortFunction) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransaction(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransactionAlwaysRollback(this DbUp.Builder.UpgradeEngineBuilder builder) { }
     public static DbUp.Builder.UpgradeEngineBuilder WithTransactionPerScript(this DbUp.Builder.UpgradeEngineBuilder builder) { }
@@ -125,6 +127,7 @@ namespace DbUp.Builder
         public DbUp.Support.ScriptNameComparer ScriptNameComparer { get; set; }
         public System.Collections.Generic.List<DbUp.Engine.IScriptPreprocessor> ScriptPreprocessors { get; }
         public System.Collections.Generic.List<DbUp.Engine.IScriptProvider> ScriptProviders { get; }
+        public DbUp.Engine.IScriptSorter ScriptSorter { get; set; }
         public System.Collections.Generic.Dictionary<string, string> Variables { get; }
         public bool VariablesEnabled { get; set; }
         public void AddLog(DbUp.Engine.Output.IUpgradeLog logger) { }
@@ -178,6 +181,10 @@ namespace DbUp.Engine
     public interface IScriptProvider
     {
         System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> GetScripts(DbUp.Engine.Transactions.IConnectionManager connectionManager);
+    }
+    public interface IScriptSorter
+    {
+        System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Sort(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> scripts, DbUp.Support.ScriptNameComparer comparer);
     }
     public interface ISqlObjectParser
     {
@@ -335,6 +342,19 @@ namespace DbUp.Engine.Preprocessors
         protected override void ReadCustomStatement() { }
         public string ReplaceVariables(System.Collections.Generic.IDictionary<string, string> variables) { }
         protected virtual bool ValidVariableNameCharacter(char c) { }
+    }
+}
+namespace DbUp.Engine.Sorters
+{
+    public class DefaultScriptSorter : DbUp.Engine.IScriptSorter
+    {
+        public DefaultScriptSorter() { }
+        public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Sort(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> scripts, DbUp.Support.ScriptNameComparer comparer) { }
+    }
+    public class DelegateScriptSorter : DbUp.Engine.IScriptSorter
+    {
+        public DelegateScriptSorter(System.Func<System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>, System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript>> sortFunction) { }
+        public System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> Sort(System.Collections.Generic.IEnumerable<DbUp.Engine.SqlScript> scripts, DbUp.Support.ScriptNameComparer comparer) { }
     }
 }
 namespace DbUp.Engine.Transactions

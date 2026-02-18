@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using DbUp.Engine;
 using DbUp.Engine.Filters;
 using DbUp.Engine.Output;
+using DbUp.Engine.Sorters;
 using DbUp.Engine.Transactions;
 using DbUp.Support;
 
@@ -70,6 +71,11 @@ public class UpgradeConfiguration
     public IScriptExecutor ScriptExecutor { get; set; }
 
     /// <summary>
+    /// Gets or sets the script sorter, which orders the scripts before execution. The default sort is by RunGroupOrder then name.
+    /// </summary>
+    public IScriptSorter ScriptSorter { get; set; } = new DefaultScriptSorter();
+
+    /// <summary>
     /// Gets or sets the comparer used to sort scripts and match script names against the log of already run scripts.
     /// The default comparer is <see cref="StringComparer.Ordinal"/>.
     /// By implementing your own comparer you can make the matching and ordering case insensitive,
@@ -102,6 +108,7 @@ public class UpgradeConfiguration
         if (Journal == null) throw new ArgumentException("A journal is required. Please use one of the Journal extension methods before calling Build().");
         if (ScriptProviders.Count == 0) throw new ArgumentException("No script providers were added. Please use one of the WithScripts extension methods before calling Build().");
         if (ConnectionManager == null) throw new ArgumentException("The ConnectionManager is null. What do you expect to upgrade?");
+        if (ScriptSorter == null) throw new ArgumentException("The ScriptSorter is null. Did you remove the default when you intended to replace it?");
     }
 
     /// <summary>
