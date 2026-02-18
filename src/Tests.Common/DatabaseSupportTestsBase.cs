@@ -16,7 +16,7 @@ namespace DbUp.Tests.Common;
 
 public abstract class DatabaseSupportTestsBase
 {
-    readonly string? parentFilePath;
+    readonly string parentFilePath;
     readonly IConnectionFactory testConnectionFactory;
     readonly List<SqlScript> scripts = new();
     readonly RecordingDbConnection recordingConnection;
@@ -26,7 +26,7 @@ public abstract class DatabaseSupportTestsBase
     UpgradeEngineBuilder? upgradeEngineBuilder;
 
 
-    public DatabaseSupportTestsBase([CallerFilePath] string? parentFilePath = null)
+    public DatabaseSupportTestsBase([CallerFilePath] string parentFilePath = "")
     {
         this.parentFilePath = parentFilePath;
         testConnectionFactory = new DelegateConnectionFactory(_ => recordingConnection);

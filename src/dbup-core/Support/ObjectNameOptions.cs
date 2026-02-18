@@ -1,5 +1,8 @@
-﻿namespace DbUp.Support;
+namespace DbUp.Support;
 
+/// <summary>
+/// Options for processing SQL object names.
+/// </summary>
 public enum ObjectNameOptions
 {
     /// <summary>

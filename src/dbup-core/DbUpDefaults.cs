@@ -1,7 +1,10 @@
-﻿using System.Text;
+using System.Text;
 
 namespace DbUp;
 
+/// <summary>
+/// Default configuration values for DbUp.
+/// </summary>
 public static class DbUpDefaults
 {
     /// <summary>

@@ -10,6 +10,9 @@ namespace DbUp.Engine;
 /// </summary>
 public class UpgradeEngine
 {
+    /// <summary>
+    /// The configuration for this upgrade engine.
+    /// </summary>
     protected readonly UpgradeConfiguration configuration;
 
     /// <summary>
@@ -116,11 +119,19 @@ public class UpgradeEngine
         }
     }
 
+    /// <summary>
+    /// Gets the list of scripts that have been executed but are no longer discovered by script providers.
+    /// </summary>
+    /// <returns>A list of script names that were executed but are no longer found.</returns>
     public virtual List<string> GetExecutedButNotDiscoveredScripts()
     {
         return GetExecutedScripts().Except(GetDiscoveredScriptsAsEnumerable().Select(x => x.Name)).ToList();
     }
 
+    /// <summary>
+    /// Gets all scripts discovered by the configured script providers.
+    /// </summary>
+    /// <returns>A list of all discovered scripts.</returns>
     public virtual List<SqlScript> GetDiscoveredScripts()
     {
         return GetDiscoveredScriptsAsEnumerable().ToList();
@@ -141,6 +152,10 @@ public class UpgradeEngine
         return filtered.ToList();
     }
 
+    /// <summary>
+    /// Gets the list of scripts that have been executed.
+    /// </summary>
+    /// <returns>A list of executed script names.</returns>
     public virtual List<string> GetExecutedScripts()
     {
         using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
@@ -150,11 +165,25 @@ public class UpgradeEngine
         }
     }
 
+    /// <summary>
+    /// Returns a list of scripts that will be executed when the upgrade is performed, 
+    /// but keeps the transaction strategy and connection active for the duration of the operation
+    /// </summary>
+    /// <param name="action">Action to perform with the scripts while transaction strategy is active</param>
+    internal virtual void GetScriptsToExecuteWithActiveStrategy(Action<List<SqlScript>> action)
+    {
+        using (configuration.ConnectionManager.OperationStarting(configuration.Log, new List<SqlScript>()))
+        {
+            var scripts = GetScriptsToExecuteInsideOperation();
+            action(scripts);
+        }
+    }
+
     ///<summary>
     /// Creates version record for any new migration scripts without executing them.
     /// Useful for bringing development environments into sync with automated environments
     ///</summary>
-    ///<returns></returns>
+    ///<returns>The result of the marking operation.</returns>
     public virtual DatabaseUpgradeResult MarkAsExecuted()
     {
         var marked = new List<SqlScript>();
@@ -185,6 +214,11 @@ public class UpgradeEngine
         }
     }
 
+    /// <summary>
+    /// Creates version record for scripts up to and including the specified script without executing them.
+    /// </summary>
+    /// <param name="latestScript">The name of the latest script to mark as executed.</param>
+    /// <returns>The result of the marking operation.</returns>
     public virtual DatabaseUpgradeResult MarkAsExecuted(string latestScript)
     {
         var marked = new List<SqlScript>();

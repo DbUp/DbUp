@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Text;
 
 // ReSharper disable MemberCanBePrivate.Global
@@ -65,6 +65,10 @@ public class SqlCommandReader : SqlParser
         commandScriptBuilder.Length = 0;
     }
 
+    /// <summary>
+    /// Gets the current command text from the buffer.
+    /// </summary>
+    /// <returns>The current command text.</returns>
     protected string GetCurrentCommandTextFromBuffer()
     {
         return commandScriptBuilder.ToString().Trim();

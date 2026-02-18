@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -23,6 +23,7 @@ public class AdHocSqlRunner
     /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
     /// </summary>
     /// <param name="commandFactory">The command factory.</param>
+    /// <param name="sqlObjectParser">The SQL object parser.</param>
     /// <param name="schema">The schema.</param>
     /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>
     /// <remarks>Sets the <c>variablesEnabled</c> setting to <c>true</c>.</remarks>
@@ -35,6 +36,7 @@ public class AdHocSqlRunner
     /// Initializes a new instance of the <see cref="AdHocSqlRunner"/> class.
     /// </summary>
     /// <param name="commandFactory">The command factory.</param>
+    /// <param name="sqlObjectParser">The SQL object parser.</param>
     /// <param name="schema">The schema.</param>
     /// <param name="variablesEnabled">Function indicating <c>true</c> if variables should be replaced, <c>false</c> otherwise.</param>
     /// <param name="additionalScriptPreprocessors">The additional script preprocessors.</param>

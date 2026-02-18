@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using DbUp.Engine;
@@ -40,6 +40,9 @@ public abstract class TableJournal : IJournal
             : sqlObjectParser.QuoteIdentifier(schema) + "." + sqlObjectParser.QuoteIdentifier(table);
     }
 
+    /// <summary>
+    /// Gets or sets the schema name for the journal table.
+    /// </summary>
     protected string SchemaTableSchema { get; private set; }
 
     /// <summary>
@@ -52,10 +55,20 @@ public abstract class TableJournal : IJournal
     /// </summary>
     protected string FqSchemaTableName { get; private set; }
 
+    /// <summary>
+    /// Gets the connection manager function.
+    /// </summary>
     protected Func<IConnectionManager> ConnectionManager { get; private set; }
 
+    /// <summary>
+    /// Gets the log function.
+    /// </summary>
     protected Func<IUpgradeLog> Log { get; private set; }
 
+    /// <summary>
+    /// Gets the list of executed scripts from the journal table.
+    /// </summary>
+    /// <returns>An array of executed script names.</returns>
     public string[] GetExecutedScripts()
     {
         return ConnectionManager().ExecuteCommandsWithManagedConnection(dbCommandFactory =>
@@ -99,6 +112,12 @@ public abstract class TableJournal : IJournal
         }
     }
 
+    /// <summary>
+    /// Gets the command to insert a script into the journal table.
+    /// </summary>
+    /// <param name="dbCommandFactory">Factory to create database commands.</param>
+    /// <param name="script">The script to insert.</param>
+    /// <returns>A command to insert the script.</returns>
     protected virtual IDbCommand GetInsertScriptCommand(Func<IDbCommand> dbCommandFactory, SqlScript script)
     {
         var command = dbCommandFactory();
@@ -118,6 +137,11 @@ public abstract class TableJournal : IJournal
         return command;
     }
 
+    /// <summary>
+    /// Gets the command to retrieve journal entries from the table.
+    /// </summary>
+    /// <param name="dbCommandFactory">Factory to create database commands.</param>
+    /// <returns>A command to retrieve journal entries.</returns>
     protected IDbCommand GetJournalEntriesCommand(Func<IDbCommand> dbCommandFactory)
     {
         var command = dbCommandFactory();
@@ -126,6 +150,11 @@ public abstract class TableJournal : IJournal
         return command;
     }
 
+    /// <summary>
+    /// Gets the command to create the journal table.
+    /// </summary>
+    /// <param name="dbCommandFactory">Factory to create database commands.</param>
+    /// <returns>A command to create the table.</returns>
     protected IDbCommand GetCreateTableCommand(Func<IDbCommand> dbCommandFactory)
     {
         var command = dbCommandFactory();
@@ -163,11 +192,19 @@ public abstract class TableJournal : IJournal
         return sqlObjectParser.UnquoteIdentifier(quotedIdentifier);
     }
 
+    /// <summary>
+    /// Called after the journal table has been created.
+    /// </summary>
+    /// <param name="dbCommandFactory">Factory to create database commands.</param>
     protected virtual void OnTableCreated(Func<IDbCommand> dbCommandFactory)
     {
         // TODO: Now we could run any migration scripts on it using some mechanism to make sure the table is ready for use.
     }
 
+    /// <summary>
+    /// Ensures that the journal table exists and is up to date.
+    /// </summary>
+    /// <param name="dbCommandFactory">Factory to create database commands.</param>
     public virtual void EnsureTableExistsAndIsLatestVersion(Func<IDbCommand> dbCommandFactory)
     {
         if (!journalExists && !DoesTableExist(dbCommandFactory))
@@ -187,6 +224,11 @@ public abstract class TableJournal : IJournal
         journalExists = true;
     }
 
+    /// <summary>
+    /// Checks if the journal table exists in the database.
+    /// </summary>
+    /// <param name="dbCommandFactory">Factory to create database commands.</param>
+    /// <returns>True if the table exists, false otherwise.</returns>
     protected virtual bool DoesTableExist(Func<IDbCommand> dbCommandFactory)
     {
         Log().LogInformation("Checking whether journal table exists");

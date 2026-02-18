@@ -1,5 +1,8 @@
-﻿namespace DbUp.Engine.Output
+namespace DbUp.Engine.Output
 {
+    /// <summary>
+    /// Interface for aggregating multiple loggers.
+    /// </summary>
     public interface IAggregateLog : IUpgradeLog
     {
         /// <summary>

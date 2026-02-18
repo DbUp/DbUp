@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using DbUp.Engine.Transactions;
 
 namespace DbUp.Engine;
@@ -8,6 +8,11 @@ namespace DbUp.Engine;
 /// </summary>
 public class ScriptExecutedEventArgs : EventArgs
 {
+    /// <summary>
+    /// Initializes a new instance of the <see cref="ScriptExecutedEventArgs"/> class.
+    /// </summary>
+    /// <param name="script">The script that was executed.</param>
+    /// <param name="connectionManager">The connection manager used for execution.</param>
     public ScriptExecutedEventArgs(SqlScript script, IConnectionManager connectionManager)
     {
         Script = script;
