@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+#if NET6_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Linq;
 using DbUp.Engine;
 using DbUp.Engine.Transactions;
@@ -17,9 +20,14 @@ class ScriptInstanceProvider : IScriptProvider
     /// </summary>
     /// <param name="scripts">The IScript instances to include</param>
     public ScriptInstanceProvider(params IScript[] scripts)
-        : this(s => s.GetType().FullName + ".cs", scripts)
+        : this(GetDefaultNamer(), scripts)
     {
     }
+
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("Default namer uses GetType().FullName which may be trimmed or null in AOT.")]
+#endif
+    static Func<IScript, string> GetDefaultNamer() => s => s.GetType().FullName + ".cs";
 
     /// <summary>
     /// Provider used to directly include an IScript instance during migrations
