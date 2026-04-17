@@ -1,5 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+#if NET6_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Reflection;
 using System.Text;
 using DbUp;
@@ -592,6 +595,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("This method scans all types in the assembly, which is not compatible with trimmable/AOT applications.")]
+#endif
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly)
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), _ => true));
@@ -606,6 +612,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("This method scans all types in the assembly, which is not compatible with trimmable/AOT applications.")]
+#endif
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, SqlScriptOptions sqlScriptOptions)
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, s => s.EndsWith(".sql", StringComparison.OrdinalIgnoreCase), sqlScriptOptions));
@@ -620,6 +629,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("This method scans all types in the assembly, which is not compatible with trimmable/AOT applications.")]
+#endif
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter)
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter));
@@ -635,6 +647,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("This method scans all types in the assembly, which is not compatible with trimmable/AOT applications.")]
+#endif
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter)
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter));
@@ -651,6 +666,9 @@ public static class StandardExtensions
     /// <returns>
     /// The same builder
     /// </returns>
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("This method scans all types in the assembly, which is not compatible with trimmable/AOT applications.")]
+#endif
     public static UpgradeEngineBuilder WithScriptsAndCodeEmbeddedInAssembly(this UpgradeEngineBuilder builder, Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, SqlScriptOptions sqlScriptOptions)
     {
         return WithScripts(builder, new EmbeddedScriptAndCodeProvider(assembly, filter, codeScriptFilter, sqlScriptOptions));

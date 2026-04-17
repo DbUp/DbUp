@@ -1,5 +1,8 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+#if NET6_0_OR_GREATER
+using System.Diagnostics.CodeAnalysis;
+#endif
 using System.Linq;
 using System.Reflection;
 using DbUp.Engine;
@@ -55,6 +58,9 @@ public class EmbeddedScriptAndCodeProvider : IScriptProvider
     /// <param name="filter">The embedded script filter.</param>
     /// <param name="codeScriptFilter">The embedded script filter. If null, filter is used.</param>
     /// <param name="sqlScriptOptions">The sql script options.</param>
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("ScriptsFromScriptClasses scans all types in the assembly, which is not compatible with trimmable/AOT applications.")]
+#endif
     public EmbeddedScriptAndCodeProvider(Assembly assembly, Func<string, bool> filter, Func<string, bool> codeScriptFilter, SqlScriptOptions sqlScriptOptions)
     {
         this.assembly = assembly;
@@ -63,6 +69,9 @@ public class EmbeddedScriptAndCodeProvider : IScriptProvider
         embeddedScriptProvider = new EmbeddedScriptProvider(assembly, filter, DbUpDefaults.DefaultEncoding, sqlScriptOptions);
     }
 
+#if NET6_0_OR_GREATER
+    [RequiresUnreferencedCode("Scans all types in the assembly, which is not compatible with trimmable/AOT applications.")]
+#endif
     IEnumerable<SqlScript> ScriptsFromScriptClasses(IConnectionManager connectionManager)
     {
         var script = typeof(IScript);
