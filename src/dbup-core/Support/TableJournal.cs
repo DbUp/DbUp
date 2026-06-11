@@ -251,7 +251,7 @@ public abstract class TableJournal : IJournal
     protected virtual string DoesTableExistSql()
     {
         return string.IsNullOrEmpty(SchemaTableSchema)
-            ? $"select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{UnquotedSchemaTableName}'"
+            ? $"select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{UnquotedSchemaTableName}' and TABLE_SCHEMA = database()"
             : $"select 1 from INFORMATION_SCHEMA.TABLES where TABLE_NAME = '{UnquotedSchemaTableName}' and TABLE_SCHEMA = '{SchemaTableSchema}'";
     }
 }
