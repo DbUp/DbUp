@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Linq;
 using DbUp.Builder;
 using DbUp.Engine;
 using DbUp.Engine.Output;
@@ -87,6 +88,164 @@ public class UpgradeEngineTests
         public void the_scripts_are_not_run()
         {
             scriptExecutor.DidNotReceiveWithAnyArgs().Execute(null);
+        }
+    }
+
+    public class when_marking_as_executed_a_script_that_was_not_discovered : SpecificationFor<UpgradeEngine>
+    {
+        InMemoryJournal journal;
+        DatabaseUpgradeResult result;
+
+        public override UpgradeEngine Given()
+        {
+            var scriptProvider = Substitute.For<IScriptProvider>();
+            scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript>
+            {
+                new("Script1.sql", "foo"),
+                new("Script2.sql", "bar"),
+                new("Script3.sql", "baz")
+            });
+
+            journal = new InMemoryJournal(new CaptureLogsLogger());
+            journal.AddScriptsAsPreviouslyExecuted(new List<SqlScript> {new("Script1.sql", "foo")});
+
+            var config = new UpgradeConfiguration {ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())};
+            config.ScriptProviders.Add(scriptProvider);
+            config.ScriptExecutor = Substitute.For<IScriptExecutor>();
+            config.Journal = journal;
+
+            return new UpgradeEngine(config);
+        }
+
+        protected override void When()
+        {
+            result = Subject.MarkAsExecuted("ScriptThatWasNotDiscovered.sql");
+        }
+
+        [Then]
+        public void the_result_is_unsuccessful()
+        {
+            result.Successful.ShouldBeFalse();
+        }
+
+        [Then]
+        public void the_error_identifies_the_script_that_was_not_found()
+        {
+            result.Error.ShouldNotBeNull();
+            result.Error.Message.ShouldContain("ScriptThatWasNotDiscovered.sql");
+        }
+
+        [Then]
+        public void no_scripts_are_reported_as_marked()
+        {
+            result.Scripts.ShouldBeEmpty();
+        }
+
+        [Then]
+        public void the_journal_is_left_unchanged()
+        {
+            journal.GetExecutedScripts().ShouldBe(new[] {"Script1.sql"});
+        }
+    }
+
+    public class when_marking_as_executed_a_pending_script_by_name : SpecificationFor<UpgradeEngine>
+    {
+        InMemoryJournal journal;
+        DatabaseUpgradeResult result;
+
+        public override UpgradeEngine Given()
+        {
+            var scriptProvider = Substitute.For<IScriptProvider>();
+            scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript>
+            {
+                new("Script1.sql", "foo"),
+                new("Script2.sql", "bar"),
+                new("Script3.sql", "baz")
+            });
+
+            journal = new InMemoryJournal(new CaptureLogsLogger());
+            journal.AddScriptsAsPreviouslyExecuted(new List<SqlScript> {new("Script1.sql", "foo")});
+
+            var config = new UpgradeConfiguration {ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())};
+            config.ScriptProviders.Add(scriptProvider);
+            config.ScriptExecutor = Substitute.For<IScriptExecutor>();
+            config.Journal = journal;
+
+            return new UpgradeEngine(config);
+        }
+
+        protected override void When()
+        {
+            result = Subject.MarkAsExecuted("Script2.sql");
+        }
+
+        [Then]
+        public void the_result_is_successful()
+        {
+            result.Successful.ShouldBeTrue();
+        }
+
+        [Then]
+        public void only_the_named_script_is_marked()
+        {
+            result.Scripts.Select(s => s.Name).ShouldBe(new[] {"Script2.sql"});
+        }
+
+        [Then]
+        public void only_the_named_script_is_added_to_the_journal()
+        {
+            journal.GetExecutedScripts().ShouldBe(new[] {"Script1.sql", "Script2.sql"});
+        }
+    }
+
+    // Preserved pre-existing behaviour, documented here so it is a conscious
+    // choice rather than an accident: when the named script has already been
+    // executed, it is not part of the scripts-to-execute list the marking loop
+    // walks, so the loop's stop condition never matches and every pending
+    // script is marked - the "up to and including" semantics applied to a
+    // name that is discovered but no longer pending. The fix for undiscovered
+    // names deliberately does not change this case.
+    public class when_marking_as_executed_a_script_that_was_already_executed : SpecificationFor<UpgradeEngine>
+    {
+        InMemoryJournal journal;
+        DatabaseUpgradeResult result;
+
+        public override UpgradeEngine Given()
+        {
+            var scriptProvider = Substitute.For<IScriptProvider>();
+            scriptProvider.GetScripts(Arg.Any<IConnectionManager>()).Returns(new List<SqlScript>
+            {
+                new("Script1.sql", "foo"),
+                new("Script2.sql", "bar"),
+                new("Script3.sql", "baz")
+            });
+
+            journal = new InMemoryJournal(new CaptureLogsLogger());
+            journal.AddScriptsAsPreviouslyExecuted(new List<SqlScript> {new("Script1.sql", "foo")});
+
+            var config = new UpgradeConfiguration {ConnectionManager = new TestConnectionManager(Substitute.For<IDbConnection>())};
+            config.ScriptProviders.Add(scriptProvider);
+            config.ScriptExecutor = Substitute.For<IScriptExecutor>();
+            config.Journal = journal;
+
+            return new UpgradeEngine(config);
+        }
+
+        protected override void When()
+        {
+            result = Subject.MarkAsExecuted("Script1.sql");
+        }
+
+        [Then]
+        public void the_result_is_successful()
+        {
+            result.Successful.ShouldBeTrue();
+        }
+
+        [Then]
+        public void all_pending_scripts_are_marked()
+        {
+            journal.GetExecutedScripts().ShouldBe(new[] {"Script1.sql", "Script2.sql", "Script3.sql"});
         }
     }
 
