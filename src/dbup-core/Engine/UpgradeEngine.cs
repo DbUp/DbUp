@@ -229,6 +229,13 @@ public class UpgradeEngine
             {
                 var scriptsToExecute = GetScriptsToExecuteInsideOperation();
 
+                if (!GetDiscoveredScriptsAsEnumerable().Any(script => script.Name.Equals(latestScript)))
+                {
+                    throw new ArgumentException(
+                        $"The script '{latestScript}' was not found in the scripts discovered by the configured script providers. No scripts were marked as executed.",
+                        nameof(latestScript));
+                }
+
                 foreach (var script in scriptsToExecute)
                 {
                     executedScript = script;
